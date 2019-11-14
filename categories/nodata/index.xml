@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>nodata on dboop.com</title>
+    <link>/categories/nodata/</link>
+    <description>Recent content in nodata on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 07 Jul 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/nodata/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>hello world</title>
+      <link>/post/2018/07/07/hello-world/</link>
+      <pubDate>Sat, 07 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/07/07/hello-world/</guid>
+      <description>首次尝试用GIT写博客
+也在适应MARKDOWN语法..
+##mark基本语法 这是加粗的文字 这是倾斜的文字` 这是斜体加粗的文字 这是加删除线的文字 &amp;gt;这是引用的内容 &amp;gt;&amp;gt;这是引用的内容
+[点这里显示dboop首页](&amp;ldquo;http://www.dboop.com&amp;quot; &amp;ldquo;dboop.com首页&amp;rdquo;) - 列表内容 + 列表内容 * 列表内容
+注意：- + * 跟内容之间都要有一个空格 1.列表内容 2.列表内容
+ aa   3.列表内容
+注意：序号跟内容之间要有空格
+姓名|技能|排行 &amp;ndash;|:&amp;ndash;:|&amp;ndash;: 刘备|哭|大哥 关羽|打|二哥 张飞|骂|三弟
+ 有一个就行，为了对齐，多加了几个 文字默认居左 -两边加：表示文字居中 -右边加：表示文字居右 注：原生的语法两边都要用 | 包起来。此处省略  单行代码：代码之间分别用一个反引号包起来
+create database hero;
+代码块：代码之间分别用三个反引号包起来，且两边的反引号单独占一行
+() function fun(){ echo &amp;quot;这是一句非常牛逼的代码&amp;quot;; } fun(); ()
+done</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>markdown on dboop.com</title>
+    <link>/categories/markdown/</link>
+    <description>Recent content in markdown on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 12 Aug 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/markdown/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>markdown博客语法示例</title>
+      <link>/post/2017/08/12/markdown%E5%8D%9A%E5%AE%A2%E8%AF%AD%E6%B3%95%E7%A4%BA%E4%BE%8B/</link>
+      <pubDate>Sat, 12 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017/08/12/markdown%E5%8D%9A%E5%AE%A2%E8%AF%AD%E6%B3%95%E7%A4%BA%E4%BE%8B/</guid>
+      <description>Mysql：
+h1级Mysql h2级Mysql h3级Mysql h4级Mysql h5级Mysql h6级Mysql 分割线：三个以上的短线 即可作出分割线
+超链接：连接名称 我是链接名  点我刷新
+另一种超链接写法：[链接名][链接代号] here 然后在别的地方定义 3 这个详细链接信息，
+直接展示链接的写法：http://www.boop.com
+键盘键 Ctrl+[ and Ctrl+]
+code格式：反引号 Use the printf() function.
+There is a literal backtick (`) here.针对在代码区段内插入反引号的情况
+强调： 斜体强调 粗体强调
+图片 使用 icon 图标文字 
+段落：以一个空行开始，以一个空行结束，中间的就是一个段落。
+表格：左对齐
+   Item Value     A $1600   b $12   P $1    表格：居中对齐
+   Item Value     A $1600   b $12   P $1    无序列表：使用 - 加一个空格（）</description>
+    </item>
+    
+  </channel>
+</rss>

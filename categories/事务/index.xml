@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>事务 on dboop.com</title>
+    <link>/categories/%E4%BA%8B%E5%8A%A1/</link>
+    <description>Recent content in 事务 on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 01 Mar 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/%E4%BA%8B%E5%8A%A1/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>mysql事务隔离级别(查看和修改)</title>
+      <link>/post/2018/03/01/mysql%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E6%9F%A5%E7%9C%8B%E5%92%8C%E4%BF%AE%E6%94%B9/</link>
+      <pubDate>Thu, 01 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/03/01/mysql%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E6%9F%A5%E7%9C%8B%E5%92%8C%E4%BF%AE%E6%94%B9/</guid>
+      <description>#查 select @@tx_isolation; #当前会话 select @@global.tx_isolation; #系统默认 show global variables like &#39;%iso%&#39;; #系统默认 #改 set tx_isolation=&#39;read-committed&#39;; #设置当前会话隔离级别 set global transaction isolation level read committed; #设置系统  关于隔离级别的理解:
+1.read uncommitted
+可以看到未提交的数据（脏读），
+2.read committed
+读取提交的数据。但是，可能多次读取的数据结果不一致（不可重复读，幻读）。用读写的观点就是：读取的行数据，可以写。
+3.repeatable read(MySQL默认隔离级别)
+可以重复读取，但有幻读。读写观点：读取的数据行不可写，但是可以往表中新增数据。在MySQL中，其他事务新增的数据，看不到，不会产生幻读。采用多版本并发控制（MVCC）机制解决幻读问题。
+4.serializable
+可读，不可写。像Java中的锁，写数据必须等待另一个事务结束。</description>
+    </item>
+    
+  </channel>
+</rss>
