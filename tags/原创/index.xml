@@ -6,10 +6,20 @@
     <description>Recent content in 原创 on dboop.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 16 Sep 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 14 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/%E5%8E%9F%E5%88%9B/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>mysql中的锁</title>
+      <link>/post/2019/11/14/mysql%E4%B8%AD%E7%9A%84%E9%94%81/</link>
+      <pubDate>Thu, 14 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/11/14/mysql%E4%B8%AD%E7%9A%84%E9%94%81/</guid>
+      <description>开个坑，准备写mysql的锁 ACID事务的概念
+原子性：哪怕一个事务持续了10小时，交易还是“全有还是全无”。 如果事务崩溃，则状态返回到事务之前（事务回滚）。 隔离性：如果2个事务A和B同时运行，则无论A在事务B之前/之后还是期间完成，事务A和B的结果都必须相同。 持久性：事务提交后（即成功结束），无论发生什么情况（崩溃或错误），数据都会保留在数据库中。 一致性：仅将有效数据（就关系约束和功能约束而言）写入数据库。 一致性与原子性和隔离性有关。 在同一事务中，您可以运行多个SQL查询来读取，创建，更新和删除数据。当两个事务使用相同的数据时，混乱就开始了。</description>
+    </item>
     
     <item>
       <title>Innodb_row_lock_waits和Innodb_row_lock_current_waits报警处理</title>

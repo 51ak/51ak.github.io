@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>事务 | dboop.com</title>
+    <title>mysql中的锁 | dboop.com</title>
     <link rel="stylesheet" href="/css/style.css" />
   
     
@@ -59,22 +59,37 @@
   <body>
     <br/>
 
+<div class="article-meta">
+<h1><span class="title">mysql中的锁</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
 
 
-<h1>事务</h1>
 
+<main>
+<p>开个坑，准备写mysql的锁
+ACID事务的概念</p>
 
+<p>原子性：哪怕一个事务持续了10小时，交易还是“全有还是全无”。 如果事务崩溃，则状态返回到事务之前（事务回滚）。
+隔离性：如果2个事务A和B同时运行，则无论A在事务B之前/之后还是期间完成，事务A和B的结果都必须相同。
+持久性：事务提交后（即成功结束），无论发生什么情况（崩溃或错误），数据都会保留在数据库中。
+一致性：仅将有效数据（就关系约束和功能约束而言）写入数据库。 一致性与原子性和隔离性有关。
+在同一事务中，您可以运行多个SQL查询来读取，创建，更新和删除数据。当两个事务使用相同的数据时，混乱就开始了。</p>
 
-
-<ul>
+</main>
+<h2 class="date">发布日期:2019/11/14</h2>
+<p class="terms">
   
-  <li>
-    <span class="date">2019/11/14</span>
-    <a href="/post/2019/11/14/mysql%E4%B8%AD%E7%9A%84%E9%94%81/">[原创/精品]mysql中的锁</a>
-  </li>
   
-</ul>
-
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/%E9%94%81">锁</a> <a href="/categories/sql">sql</a> <a href="/categories/%E4%BA%8B%E5%8A%A1">事务</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
     <footer>
       
 <script>
