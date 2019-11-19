@@ -23,6 +23,11 @@
   </url>
   
   <url>
+    <loc>/post/2019/05/07/mysql5.7%E5%A4%8D%E5%88%B6%E5%BB%BA%E8%AE%AE/</loc>
+    <lastmod>2019-05-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/2019/05/05/mysql%E5%A4%8D%E5%88%B6%E6%85%A2%E5%8E%9F%E5%9B%A0%E5%AE%9A%E4%BD%8D%E7%A3%81%E7%9B%98io%E7%93%B6%E9%A2%88centos/</loc>
     <lastmod>2019-05-05T00:00:00+00:00</lastmod>
   </url>
@@ -374,7 +379,7 @@
   
   <url>
     <loc>/categories/%E5%A4%8D%E5%88%B6/</loc>
-    <lastmod>2019-05-05T00:00:00+00:00</lastmod>
+    <lastmod>2019-05-07T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

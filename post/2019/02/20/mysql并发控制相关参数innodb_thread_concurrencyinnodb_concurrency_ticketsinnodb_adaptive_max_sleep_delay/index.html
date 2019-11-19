@@ -70,6 +70,12 @@
 <main>
 
 
+<p>目录：</p>
+
+<p>[TOC]</p>
+
+<p>正文：</p>
+
 <p>mysql的innodb存储引擎控制并发的方式有很多，最常见的应该就属通过设置：innodb_thread_concurrency 设置mysql进入innodb的并发线程数</p>
 
 <p>相关的参数有4个：</p>
@@ -81,14 +87,11 @@
 <li>innodb_adaptive_max_sleep_delay</li>
 </ul>
 
-<h4 id="先说结论">先说结论</h4>
-
-<ul>
-<li>对并发不高的业务，不建议设置innodb_thread_concurrency(默认：innodb_thread_concurrency=0)</li>
-<li>不建议统一设置innodb_thread_concurrency来限制并发数。</li>
-<li>只对特殊的业务场景，适度设置，以限制innodb并发，将高压力下线程之间抢占CPU而造成线程上下文切换的情况尽量阻塞在Innodb层之外（innodb_thread_concurrency）。</li>
-<li>预防大SQL大事务占有太多资源，妨碍其他小事务通行（innodb_concurrency_tickets）</li>
-</ul>
+<p><strong>先说结论</strong>
+- 对并发不高的业务，不建议设置innodb_thread_concurrency(默认：innodb_thread_concurrency=0)
+- 不建议统一设置innodb_thread_concurrency来限制并发数。
+- 只对特殊的业务场景，适度设置，以限制innodb并发，将高压力下线程之间抢占CPU而造成线程上下文切换的情况尽量阻塞在Innodb层之外（innodb_thread_concurrency）。
+- 预防大SQL大事务占有太多资源，妨碍其他小事务通行（innodb_concurrency_tickets）</p>
 
 <h1 id="参数解释">参数解释</h1>
 

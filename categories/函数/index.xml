@@ -17,7 +17,10 @@
       <pubDate>Sun, 08 Oct 2017 00:00:00 +0000</pubDate>
       
       <guid>/post/2017/10/08/mysql%E4%B8%ADsql%E8%AF%AD%E5%8F%A5%E7%9A%84%E4%B8%80%E4%BA%9B%E5%86%99%E6%B3%95%E6%8A%80%E5%B7%A7/</guid>
-      <description>一行转多行  url列以分号分隔，将其一行转化为多行，借助自增长表help_topic 实现。
+      <description>目录：
+[TOC]
+正文：
+一行转多行  url列以分号分隔，将其一行转化为多行，借助自增长表help_topic 实现。
 select a.dboop_id,dboop_code,tab_name,tabid,refer_dboop, substring_index(substring_index(a.url,&#39;;&#39;,b.help_topic_id+1),&#39;;&#39;,-1) as urls from t_dboop_mapping a join mysql.help_topic b on (length(a.url) - length(replace(a.url,&#39;;&#39;,&#39;&#39;))+1) &amp;gt; b.help_topic_id;  多行转一行  分组后汇总成一行，testid以逗号分隔
 select tabID,group_concat(distinct cast(testid as char(8))) as testid from tab_test group by tabID  COALESCE COALESCE(value,…)是一个可变参函数，可以使用多个参数。
 select coalesce(null,2,3); // Return 2 select coalesce(null,null,3); // Return 3 select coalesce(1,2,3); // Return 1  这个参数使用的场合为：假如某个字段默认是null，你想其返回的不是null，而是比如0或其他值，可以使用这个函数
