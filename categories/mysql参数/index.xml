@@ -38,7 +38,7 @@ Trx id counter 581112825 Purge done for trx&amp;rsquo;s n:o &amp;lt; 581112824 u
       
       <guid>/post/2019/05/07/mysql5.7%E5%A4%8D%E5%88%B6%E5%BB%BA%E8%AE%AE/</guid>
       <description>目录：
-@[TOC]
+[TOC]
 正文：
 关于复制选型  MGR:有条件上MGR的，上MGR,对网络要求较高。 半同步复制：用默认的AFTER_SYNC模式，一般实例都建议使用(重点推荐) 异步复制：对从实例要求延时不高的，日志类的等等可以用  半同步复制 设置：主库执行 install plugin rpl_semi_sync_master soname &#39;semisync_master.so&#39;; SET GLOBAL rpl_semi_sync_master_enabled=1;  设置：备库执行 1：安装slave插件 install plugin rpl_semi_sync_slave soname &#39;semisync_slave.so&#39;; set global slave_parallel_workers=8;  2：启用slave半同步复制 set global rpl_semi_sync_slave_enabled=1; ##启用slave半同步复制，可以写到配置文件中  3：重启slave上的IO线程 如果没有重启，则默认还是异步复制，重启后，slave会在master上注册为半同步复制的slave角色。
 stop slave io_thread; start slave io_thread;  或者：
