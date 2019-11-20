@@ -67,7 +67,7 @@
     <item>
       <title>innodb</title>
       <link>/categories/innodb/</link>
-      <pubDate>Thu, 14 Nov 2019 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 16 Sep 2019 00:00:00 +0000</pubDate>
       
       <guid>/categories/innodb/</guid>
       <description></description>
@@ -367,15 +367,6 @@
       <pubDate>Tue, 12 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E9%AB%98%E5%8F%AF%E7%94%A8/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>高并发</title>
-      <link>/categories/%E9%AB%98%E5%B9%B6%E5%8F%91/</link>
-      <pubDate>Wed, 20 Feb 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/%E9%AB%98%E5%B9%B6%E5%8F%91/</guid>
       <description></description>
     </item>
     

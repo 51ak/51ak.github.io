@@ -66,15 +66,49 @@
 </div>
 
 
+<nav id="TableOfContents">
+<ul>
+<li><a href="#查询管理器">查询管理器</a>
+<ul>
+<li><a href="#1-查询解析器">1.查询解析器</a></li>
+<li><a href="#2-查询重写器">2.查询重写器</a></li>
+<li><a href="#3-统计信息">3.统计信息</a></li>
+</ul></li>
+<li><a href="#4-查询优化器">4.查询优化器</a>
+<ul>
+<li><a href="#4-1-索引">4.1 索引</a></li>
+<li><a href="#4-2-访问路径">4.2 访问路径</a>
+<ul>
+<li><a href="#完全扫描full-scan">完全扫描Full scan</a></li>
+<li><a href="#范围扫描range-scan">范围扫描Range Scan</a></li>
+<li><a href="#索引查找-unique-scan">索引查找 Unique scan</a></li>
+<li><a href="#按行id访问-access-by-row-id-备注-书签查找">按行ID访问 Access by row id （备注：书签查找）</a></li>
+<li><a href="#其他路径">其他路径</a></li>
+</ul></li>
+<li><a href="#4-3-join-操作">4.3 Join 操作</a>
+<ul>
+<li><a href="#4-3-1-嵌套循环联接nested-loop-join">4.3.1 嵌套循环联接Nested loop join</a></li>
+<li><a href="#4-3-2-哈希联接hash-join">4.3.2 哈希联接Hash join</a></li>
+<li><a href="#4-3-3-合并联接merge-join">4.3.3 合并联接Merge join</a></li>
+<li><a href="#4-3-4-哪一个是最好的">4.3.4 哪一个是最好的？</a></li>
+</ul></li>
+<li><a href="#4-4-简单的例子">4.4 简单的例子</a></li>
+<li><a href="#4-5-动态编程-启发式的贪婪算法">4.5 <strong>动态编程，启发式的贪婪算法</strong></a>
+<ul>
+<li><a href="#4-5-1-动态编程-dynamic-programming">4.5.1 动态编程 Dynamic Programming</a></li>
+<li><a href="#4-5-2-贪婪算法-greedy-algorithms">4.5.2 贪婪算法 Greedy algorithms</a></li>
+<li><a href="#4-5-3-其他算法">4.5.3 其他算法</a></li>
+<li><a href="#4-5-4-真正的优化器">4.5.4 真正的优化器</a></li>
+</ul></li>
+<li><a href="#4-6-查询计划缓存">4.6 查询计划缓存</a></li>
+<li><a href="#4-7-查询执行器">4.7 查询执行器</a></li>
+</ul></li>
+</ul>
+</nav>
+
 
 <main>
 
-
-<p>目录：</p>
-
-<p>[TOC]</p>
-
-<p>正文：</p>
 
 <h1 id="查询管理器">查询管理器</h1>
 
