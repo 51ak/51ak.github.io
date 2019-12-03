@@ -17,14 +17,7 @@
       <pubDate>Thu, 14 Nov 2019 00:00:00 +0000</pubDate>
       
       <guid>/post/2019/11/14/mysql%E4%B8%AD%E7%9A%84%E9%94%81/</guid>
-      <description>开个坑，准备写mysql的锁
-select是不是一个事务，有没有锁
-ACID事务的概念  原子性：哪怕一个事务持续了10小时，交易还是“全有还是全无”。 如果事务崩溃，则状态返回到事务之前（事务回滚）。 隔离性：如果2个事务A和B同时运行，则无论A在事务B之前/之后还是期间完成，事务A和B的结果都必须相同。 持久性：事务提交后（即成功结束），无论发生什么情况（崩溃或错误），数据都会保留在数据库中。 一致性：仅将有效数据（就关系约束和功能约束而言）写入数据库。 一致性与原子性和隔离性有关。  解读：
-事务隔离级别 pass
-mysql的锁类别 pass
-二次提次 pass
-select是不是一个事务，有没有锁http://blog.itpub.net/7728585/viewspace-2142302/ innodb的select是一个事务，他有trx_t结构体，并且放到了mysql_trx_list链表中，但是这种事务叫做只读事务. 在实际的使用中他没有自己的锁结构也没有自己的undo segment，这一点很好理解因为这个操作 始终是非锁定的，至少在innodb一级是这样(lock0lock.cc lock_table 都没调用)，但是在MYSQL中，我们会发现实际上select语句也会 获得MDL LOCK。(再次声明这里只是说innodb select没有表级别锁存在，但是MYSQL上层会有MDL LOCK) 对于只读事务源码注释给出的流程如下： Auto-commit non-locking read-only: * NOT_STARTED -&amp;gt; ACTIVE -&amp;gt; NOT_STARTED 而我们一般的2pc TRX流程如下： XA (2PC): * NOT_STARTED -&amp;gt; ACTIVE -&amp;gt; PREPARED -&amp;gt; COMMITTED -&amp;gt; NOT_STARTED 可以看到他实际上就是没有commit的步骤，没有undo reodo这些当然是不需要的。但是不可否认它是一个事务 另外当需要一个事务的时候在现在innodb版本中调用如下： trx_allocate_for_mysql &amp;ndash;&amp;gt; trx_allocate_for_background &amp;ndash;&amp;gt; trx_create_low 其实innodb中的事物比想象的要大很多，一个innodb的ddl是一个事物，一个innodb的select是一个事物，很多内部修改数据字典的操作也是一个事物 当然我们平时做的DML那更是事物了，上面说了只读事物这里简单提一下ddl事物和内部事物。 这里将trx_t结构体重关于他们标志给出来：
-innodb的ddl事物： bool ddl; /*!&amp;lt; true if it is an internal transaction for DDL */ 函数调用： trx_start_for_ddl_low&amp;ndash;&amp;gt;trx_start_internal_low 可以看到一个ddl既是一个内部事物也是一个ddl事物</description>
+      <description>开个坑，准备写mysql的锁</description>
     </item>
     
     <item>
