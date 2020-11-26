@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>使用 on dboop.com</title>
+    <link>/categories/%E4%BD%BF%E7%94%A8/</link>
+    <description>Recent content in 使用 on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 23 Feb 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/%E4%BD%BF%E7%94%A8/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>redis安全删key脚本(模糊匹配，长list，大set等）</title>
+      <link>/post/2017/02/23/redis%E5%AE%89%E5%85%A8%E5%88%A0key%E8%84%9A%E6%9C%AC%E6%A8%A1%E7%B3%8A%E5%8C%B9%E9%85%8D%E9%95%BFlist%E5%A4%A7set%E7%AD%89/</link>
+      <pubDate>Thu, 23 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017/02/23/redis%E5%AE%89%E5%85%A8%E5%88%A0key%E8%84%9A%E6%9C%AC%E6%A8%A1%E7%B3%8A%E5%8C%B9%E9%85%8D%E9%95%BFlist%E5%A4%A7set%E7%AD%89/</guid>
+      <description>两种情况：
+1.删除指定前缀开头的rediskey ,扫描和删除过程中对线上无感知
+2.删除一个大的list,set,zset,hash，这种得分批次减少大小，一直缩到0再删
+第一种情况：只要知道线上操作的时候我们要用scan来代替 keys ，这一点就行了，简单脚本如下：
+del.sh
+ for((i = 1; i &amp;lt;= 50000; i++)) do b=$[ $i * 100 ] echo $b redis-cli -h test.m.cnhza.kvstore.aliyuncs.com -a test:Paasword scan $b match cache:info_* count 100 |xargs -i redis-cli -h test.m.cnhza.kvstore.aliyuncs.com -a test:Paasword del {} redis-cli -h test.m.cnhza.kvstore.aliyuncs.com -a test:Paasword scan $b match cache:userb* count 100 |xargs -i redis-cli -h test.m.cnhza.kvstore.aliyuncs.com -a test:Paasword del {} redis-cli -h test.m.cnhza.kvstore.aliyuncs.com -a test:Paasword scan $b match cache:userc* count 100 |xargs -i redis-cli -h test.</description>
+    </item>
+    
+  </channel>
+</rss>

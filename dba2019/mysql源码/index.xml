@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mysql源码 on dboop.com</title>
+    <link>/categories/mysql%E6%BA%90%E7%A0%81/</link>
+    <description>Recent content in mysql源码 on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 11 Apr 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/mysql%E6%BA%90%E7%A0%81/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>51ak带你看MYSQL5.7源码4：实现SQL黑名单功能</title>
+      <link>/post/2018/04/11/51ak%E5%B8%A6%E4%BD%A0%E7%9C%8Bmysql5.7%E6%BA%90%E7%A0%814%E5%AE%9E%E7%8E%B0sql%E9%BB%91%E5%90%8D%E5%8D%95%E5%8A%9F%E8%83%BD/</link>
+      <pubDate>Wed, 11 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/04/11/51ak%E5%B8%A6%E4%BD%A0%E7%9C%8Bmysql5.7%E6%BA%90%E7%A0%814%E5%AE%9E%E7%8E%B0sql%E9%BB%91%E5%90%8D%E5%8D%95%E5%8A%9F%E8%83%BD/</guid>
+      <description>上一篇我们实现了，屏掉了MYSQL的DELTE语句的执行功能。
+想了想这种改动太暴力了，不够优雅
+现在我们要改变一下思路，做一个MYSQL的黑名单功能。
+什么叫黑名单呢?
+就是说属于屏掉在带黑名单里的关键字的SQL的执行
+举例来说，
+我们发现有个上线故障，导致有大量的SQL在查一个表 SELECT * FROM A WHERE &amp;hellip;
+我们设置个黑名单： SELECT * FROM A
+那么所有这种查询将不执行，直接返回，这对线上服务的快速缓解问题是有很大帮助的。
+现在我们来尝试在源码上定制这个功能
+首先按上一篇文章说的，找到sql_parse.cc 定位 到这个函数 void mysql_parse(THD *thd, Parser_state *parser_state
+通过 这一行
+DBUG_PRINT(&amp;ldquo;mysql_parse&amp;rdquo;, (&amp;ldquo;query: &amp;lsquo;%s&amp;rsquo;&amp;ldquo;, thd-&amp;gt;query().str)); 可以看到执行的SQL文本，现在只需要判断这个文本是否包含指定的字符串就可以了。 所以我们在入口的地方加上判断，如下：
+void mysql_parse(THD *thd, Parser_state *parser_state) { int error MY_ATTRIBUTE((unused)); DBUG_ENTER(&amp;quot;mysql_parse&amp;quot;); DBUG_PRINT(&amp;quot;mysql_parse&amp;quot;, (&amp;quot;query: &#39;%s&#39;&amp;quot;, thd-&amp;gt;query().str)); DBUG_EXECUTE_IF(&amp;quot;parser_debug&amp;quot;, turn_parser_debug_on();); #这里加我们的代码，目的是如果判断SQL文本中有指定字符abc ，直接退出。 std::string str_blacklist=&amp;quot;abc&amp;quot;; std::string sqlstr_dba= thd-&amp;gt;query().str; std::string::size_type idx_blacki = sqlstr_dba.find( str_blacklist ); if ( idx_blacki != std::string::npos ) { DBUG_PRINT(&amp;quot;find blacklist sqlst&amp;quot;,(&amp;quot;query: &#39;%s&#39;&amp;quot;, thd-&amp;gt;query().</description>
+    </item>
+    
+    <item>
+      <title>51ak带你看MYSQL5.7源码3：修改代码实现你的第一个Mysql版本</title>
+      <link>/post/2018/03/23/51ak%E5%B8%A6%E4%BD%A0%E7%9C%8Bmysql5.7%E6%BA%90%E7%A0%813%E4%BF%AE%E6%94%B9%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AAmysql%E7%89%88%E6%9C%AC/</link>
+      <pubDate>Fri, 23 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/03/23/51ak%E5%B8%A6%E4%BD%A0%E7%9C%8Bmysql5.7%E6%BA%90%E7%A0%813%E4%BF%AE%E6%94%B9%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AAmysql%E7%89%88%E6%9C%AC/</guid>
+      <description>经过开发和测试环境部署
+现在到了我们动手的时候了，万事开头难，首先我们实现个小功能
+今天我们准备实现这样一个功能：数据永远也不会被DELETE掉
+当你把这个版本的MYSQL放到线上环境以后，就永远不用担心有人来DELETE你的数据了
+思路很简单：顺腾摸瓜找到Delete所在的FUNC在函数开头就返回一个OK
+问题来了，怎么找到这个函数?
+有两种：一种很有灵性的同学，可能一眼就看到了sql/sql_delete.cc 这个文件 ，猜到是这个文件
+另一种方法就是基础一点，我们顺着这样的代码一层一层找到这里也行。
+dispatch_command |-&amp;gt;mysql_parse |-&amp;gt;mysql_execute_command -&amp;gt;mysql_update/mysql_delete 为了快速上手，我们用第一种方法，直接打开sql/sql_delete.cc 找到这个方法:
+bool Sql_cmd_delete::execute(THD *thd) { DBUG_ASSERT(thd-&amp;gt;lex-&amp;gt;sql_command == SQLCOM_DELETE); LEX *const lex= thd-&amp;gt;lex; SELECT_LEX *const select_lex= lex-&amp;gt;select_lex; SELECT_LEX_UNIT *const unit= lex-&amp;gt;unit; TABLE_LIST *const first_table= select_lex-&amp;gt;get_table_list(); TABLE_LIST *const all_tables= first_table; if (delete_precheck(thd, all_tables)) return true; DBUG_ASSERT(select_lex-&amp;gt;offset_limit == 0); unit-&amp;gt;set_limit(select_lex); /* Push ignore / strict error handler */ Ignore_error_handler ignore_handler; Strict_error_handler strict_handler; if (thd-&amp;gt;lex-&amp;gt;is_ignore()) thd-&amp;gt;push_internal_handler(&amp;amp;ignore_handler); else if (thd-&amp;gt;is_strict_mode()) thd-&amp;gt;push_internal_handler(&amp;amp;strict_handler); /*注:我们要改的就是这里,直接返回一个true,而把真正要执行的地方给注释掉了*/ bool res =true; /*MYSQL_DELETE_START(const_cast&amp;lt;char*&amp;gt;(thd-&amp;gt;query().</description>
+    </item>
+    
+    <item>
+      <title>51ak带你看MYSQL5.7源码2：编译现有的代码</title>
+      <link>/post/2018/03/22/51ak%E5%B8%A6%E4%BD%A0%E7%9C%8Bmysql5.7%E6%BA%90%E7%A0%812%E7%BC%96%E8%AF%91%E7%8E%B0%E6%9C%89%E7%9A%84%E4%BB%A3%E7%A0%81/</link>
+      <pubDate>Thu, 22 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/03/22/51ak%E5%B8%A6%E4%BD%A0%E7%9C%8Bmysql5.7%E6%BA%90%E7%A0%812%E7%BC%96%E8%AF%91%E7%8E%B0%E6%9C%89%E7%9A%84%E4%BB%A3%E7%A0%81/</guid>
+      <description>现在把刚才在VSCODE里看到的源码，安装成服务。
+测试机：CENTOS6 (虚机配置为4c+4g )，
+YUM安装相关组件
+ yum -y install gcc-c++ ncurses-devel cmake make perl gcc autoconf automake zlib libxml libgcrypt libtool bison  执行完成后看一下现有的BOOTST版本 如果有删掉
+root@wjz-3-227 ~]# rpm -qa boost* boost-filesystem-1.41.0-18.el6.x86_64 boost-system-1.41.0-18.el6.x86_64 [root@wjz-3-227 ~]# yum -y remove boost-* Loaded plugins: fastestmirror, refresh-packagekit, security Setting up Remove Process Resolving Dependencies --&amp;gt; Running transaction check  上传我们编辑好的文件到测试机，放在/work目录下
+拷贝安装BOOST
+ root@wjz-3-227 mysql-server]# ll total 108 drwxr-xr-x. 8 root root 4096 Mar 22 2018 boost_1_59_0 -rw-r--r--.</description>
+    </item>
+    
+    <item>
+      <title>51ak带你看MYSQL5.7源码1：main入口函数</title>
+      <link>/post/2018/03/21/51ak%E5%B8%A6%E4%BD%A0%E7%9C%8Bmysql5.7%E6%BA%90%E7%A0%811main%E5%85%A5%E5%8F%A3%E5%87%BD%E6%95%B0/</link>
+      <pubDate>Wed, 21 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/03/21/51ak%E5%B8%A6%E4%BD%A0%E7%9C%8Bmysql5.7%E6%BA%90%E7%A0%811main%E5%85%A5%E5%8F%A3%E5%87%BD%E6%95%B0/</guid>
+      <description>去MYSQL官网下源码：https://dev.mysql.com/downloads/mysql/
+选 SOURCE CODE
+下载解压。选VS code来查看，
+用VS打开发现这些目录 ，根据了解到的目录结构说明，我们关注标红的两个目录，SQL是MYSQL的核心代码 ，STORGE里是各个存储引擎的代码
+打开sql/main.cc 发现只有一个函数，引用了同级目录下的mysqld_main(int argc, char **argv);
+F12跟过去，到了msyqld.cc下的这个过程 ，这里就是整个SERVER进程 的入口
+接下来就一个巨大的代码段，来启动MYSQLD进程
+我按个人的理解加了注释如下：
+#ifdef _WIN32 int win_main(int argc, char **argv) #else int mysqld_main(int argc, char **argv) #endif { /* Perform basic thread library and malloc initialization, to be able to read defaults files and parse options. */ my_progname= argv[0]; /*注: 记下mysql进程名*/ #ifndef _WIN32 #ifdef WITH_PERFSCHEMA_STORAGE_ENGINE pre_initialize_performance_schema(); #endif /*WITH_PERFSCHEMA_STORAGE_ENGINE */ // For windows, my_init() is called from the win specific mysqld_main if (my_init()) // init my_sys library &amp;amp; pthreads { sql_print_error(&amp;quot;my_init() failed.</description>
+    </item>
+    
+  </channel>
+</rss>

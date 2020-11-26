@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Markdown on Classic</title>
+    <link>/tags/markdown/</link>
+    <description>Recent content in Markdown on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 26 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/markdown/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL的drop/truncate Table影响分析和最佳实践</title>
+      <link>/dba/droptable/</link>
+      <pubDate>Thu, 26 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/droptable/</guid>
+      <description>[TOC]
+【0.前言】 曾几何时，你可也想过MySQL上直接Drop张大表,会有什么影响，能否直接写个 drop table abc; 或者 truncate table abcd; 如果这张表足够大，比如1亿行记录，drop 的时间需要多久，期间我的MySQL是否能正常访问？
+首先明确一点，现在讨论的是要删掉的大表一定是没人访问的表，否则如果这张表仍然还有被高频的访问，你敢直接删那基本上就是茅坑里点灯，找死！ 如果MySQL版本是5.5.23以下，直接DROP一张大表，也是守着茅坑睡觉，离死不远。 好，现在明确了这张表肯定没人访问了，你的MySQL版本也足够新，并不表示你就远离了茅坑，但如果这张表足够大，仍然有被崩到的风险。
+大表：我们定义为5000万行以上，或者单表文件大于100G
+我们要讨论的是当前MySQL最流行，最通用，也是最拉风的innodb存储引擎,其他引擎一般DROP表没有这么慢，也没有这么凶险，例如第二流行的myisam存储引擎，删表就是飞一般的感觉
+【1.drop table 的风险和避免方法】 当我们思考Drop table 的影响时，我们把数据库想象成一个图书馆，把每张表想象成一本书，这张表很大，表示这是本很厚很厚的书放在磁盘上。 然后数据库为了提升性能，把书的部分甚至全部都用电子版的方式放到了图书馆的电脑里。 当我们删除这张表的时候，我们要做的主要有三件事：
+ 把硬盘上的这个文件删了(国书馆里的人这本书烧了) 把内存中的这个库已经加载加来的Page删了，腾出空间(把电子版也统统销) 把MySQL元数据字典中这张表关联信息删了(把这本书在这个地方存在过的记录销毁)  其中1,2两步，一个IO操作，一个内存操作都可能会因为表太大，而变得很慢，很耗时，而我们知道关系型数据库的特点是为保证事务，一般在整个操作过程中是要加锁的，所以不难理解大表的删除操作会引起各种各样的风险。
+可能会引起：
+ MySQL长时间阻塞其他事务执行，大量请求堆积，实例假死。(锁) 磁盘IO被短时间大量占用，数据库性能明显下降(IO) 内存里的page大量置换，引起线程阻塞，实例假死（内存)  怎么解决和避免：
+ io占用的问题，对这个表建一个硬链，使Drop table 表的时候并没有真的去磁盘上删那个巨大的ibd文件，事后再用truncate的方式慢慢的删除这个文件，事实上现在的SSD盘和卡直接删问题也不大 内存和IO占用的问题，升级MySQL版本，MySQL 官方在5.5.23以后引入了 lazy drop table 来优化drop 操作(拐杖敲黑板3次，并没有说完全消除)，极大的降低了DROP表带来的影响。使99%的DROP表操作都是安全的。 道路千万行，低峰第一条。选择低峰时间段，找个夜深人静，月黑风高的夜里去做这件事总是更好的选择。  【2.一组drop表的测试】 drop一张5亿记录的大表究竟需要多久时间，1秒？5秒？10秒？2分钟？3小时？还是一两天？你是否有过靠谱的预计
+先看一组新鲜的热气腾腾的，一组测试，看看不同条件下drop一张表所有的时间
+测试环境  硬件:128G内存 3T宝存卡 xfs 系统:CentOS Linux release 7.6.1810 MySQL version: 5.7.26 innodb参数:innodb_buffer_pool_instances=1     表文件大小 创建硬链ln BufferPool大小 BufferPool繁忙 影响其他表的访问 执行drop table用时(秒)     240G 否 64G 是 无明显影响 27.</description>
+    </item>
+    
+  </channel>
+</rss>

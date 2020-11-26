@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>sqlserver on dboop.com</title>
+    <link>/categories/sqlserver/</link>
+    <description>Recent content in sqlserver on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 02 Apr 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/sqlserver/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Sqlserver上线规范(准入条例)</title>
+      <link>/post/2019/04/02/sqlserver%E4%B8%8A%E7%BA%BF%E8%A7%84%E8%8C%83%E5%87%86%E5%85%A5%E6%9D%A1%E4%BE%8B/</link>
+      <pubDate>Tue, 02 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/04/02/sqlserver%E4%B8%8A%E7%BA%BF%E8%A7%84%E8%8C%83%E5%87%86%E5%85%A5%E6%9D%A1%E4%BE%8B/</guid>
+      <description>##核心规则 不在数据库中存储图片、文件，不使用大文本类型【必须】 不使用外键，由程序保证数据一致性【必须】 禁止使用存储过程、触发器 【必须】 每张表数据量控制在2000W以下 ，如预计会超出，需提前做好拆分或者归档迁移计划【强烈建议】
+##表的字义 a) 尽可能少的使用允许NULL 字段 b) 聚集索引字段应该尽可能的少（不超过3个字段,不多与200字节） c) 鼓励使用GUID字段 代替IDENTITY（1，1）自增字段。推荐使用自定义扩展的GUID( YYYYmmDDHHMMssms+3位机器编号+6位随机数字),尤其是对快速增长的表 linq(修改映射文件，在此字段前添加：[Column(Storage=&amp;ldquo;cID&amp;rdquo;, IsDbGenerated=true)]) d) 在使用INDENTITY字段，需考虑IDENTITY字段在特殊情况的“非连续性”，“非顺序性” e) 表记录中的单行最大占用空间，原则上要求在8K以下，避免单行数据的分页存储 f) 使用varhcar(max)，navarchar(max) varbinary(max)代替text,ntext,image g) 建议多使用time,date 等SQL2008新类型来节省存储空间和查询时的转换运算 h) XML类型字段：要考虑到该类型字段索引的宠大开销,事实上不推荐使用XML存储列. i) 对数据有效性的验证优先采用 CHECK约束 j) 主键和聚集索引是可以分开定义,网站相关代码不允许用外键(ERP相关可考虑) k) 所有定义字段需要填写说明. EXEC sys.sp_addextendedproperty l) 在不影响业务的前题下，多用空间换时间 m) 建表需要有备注
+--建表示例 CREATE TABLE [dbo].[job_info]( [job_id] int identity(1,1) NOT NULL primary key, [job_name] varchar(500) NOT NULL, ) ON [PRIMARY] GO EXEC sys.sp_addextendedproperty @name=N&#39;MS_Description&#39;, @value=N&#39;表:存储作业信息,主键自增--wenjing.zhang&#39; , @level0type=N&#39;SCHEMA&#39;,@level0name=N&#39;dbo&#39;,@level1type=N&#39;TABLE&#39;,@level1name=N&#39;job_info&#39;, @level2type=N&#39;COLUMN&#39;,@level2name=N&#39;job_id&#39; GO EXEC sys.</description>
+    </item>
+    
+    <item>
+      <title>Sqlserver字符串与表格互相转换的函数和方法</title>
+      <link>/post/2019/04/02/sqlserver%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%8E%E8%A1%A8%E6%A0%BC%E4%BA%92%E7%9B%B8%E8%BD%AC%E6%8D%A2%E7%9A%84%E5%87%BD%E6%95%B0%E5%92%8C%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Tue, 02 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/04/02/sqlserver%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%8E%E8%A1%A8%E6%A0%BC%E4%BA%92%E7%9B%B8%E8%BD%AC%E6%8D%A2%E7%9A%84%E5%87%BD%E6%95%B0%E5%92%8C%E6%96%B9%E6%B3%95/</guid>
+      <description>##A.将逗号分隔的字符串分拆成表格的方法： 拆分的方法有很多，临时表.SUBSTRING &amp;hellip;但都不如XML来得清凉爽快
+declare @tempstr varchar(500) set @tempstr=&#39;54,57,55,56,59&#39; declare @Xmlstr xml set @Xmlstr=Co nVERT(xml,&#39;&amp;lt;root&amp;gt;&amp;lt;v&amp;gt;&#39; + REPLACE(@tempstr, &#39;,&#39;, &#39;&amp;lt;/v&amp;gt;&amp;lt;v&amp;gt;&#39;) + &#39;&amp;lt;/v&amp;gt;&amp;lt;/root&amp;gt;&#39;) SELECT ids=N.v.value(&#39;.&#39;, &#39;int&#39;) FROM @Xmlstr.nodes(&#39;/root/v&#39;) N(v)  写成函数如下：
+create FUNCTIo n [dbo].[ufn_sys_Str2Table] ( @SplitStr nvarchar(max), @Separator nvarchar(10) = &#39;,&#39; ) RETURNS @ResultTable TABLE ( [sid] INT IDENTITY(1, 1) , [svalue] nvarchar(max) ) as begin --把字串转成XML declare @Tempxml xml; set @Tempxml=Co nVERT(xml,&#39;&amp;lt;d&amp;gt;&#39;+REPLACE(@SplitStr,@Separator,&#39;&amp;lt;/d&amp;gt;&amp;lt;d&amp;gt;&#39;)+&#39;&amp;lt;/d&amp;gt;&#39;) --把XML转成表 insert into @ResultTable ([svalue]) select co nvert(nvarchar(max),Tb.co.query(&#39;data(.)&#39;) ) as rvalue from @Tempxml.</description>
+    </item>
+    
+    <item>
+      <title>Sqlserver执行计划缓存</title>
+      <link>/post/2019/03/02/sqlserver%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E7%BC%93%E5%AD%98/</link>
+      <pubDate>Sat, 02 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/03/02/sqlserver%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E7%BC%93%E5%AD%98/</guid>
+      <description>DBCC FREEPROCCACHE &amp;ndash;清除执行计划缓存
+1. 使用存储过程，或者 sp_executesql 的方式调用会被重复使用的语句，而不要直接用 ad-hoc 语句或者 dynamic SQL 。 2. 在语句里引用对象（表、视图、存储过程等），到带上它的 schema 名字，而不光是对象自己的名字。 3. 将 数据库 Parameterization 属性设置成 Forced 这个属性是开启数据库强制参数化。也就是说，对于在这个数据库下运行的大部分语句，SQL Server 都会先参数化，再运行。如果应用经常用 adhoc 的方式调用一样的语句，强制参数化可能会有所帮助 4. 统计信息更新 统计信息手工或者自动更新后，对和它有关的执行计划都不再能重用，而会产生重编译。 5. Create Procedure ... with Recompile 选项 和 Exce ... with Recomplie 选项 在重建或者调用存储过程的时候使用 &amp;quot;with Recomplie&amp;quot;，会强制 Sql Server 在调用这个存储过程的时候，永远都要先编译，再运行。 6. 用户使用了 sp_recomplie 7. 用户在调用语句的时候，使用了 &amp;quot;Keep Plan&amp;quot; 或者 &amp;quot;KeepFixed Plan&amp;quot; 这样的查询提示 ```declare @p1 int exec sp_prepexec @p1 output,N&#39;@P0 bigint&#39;,N&#39;select top 1 r.</description>
+    </item>
+    
+    <item>
+      <title>sqlserver表长期没人访问的下线步骤</title>
+      <link>/post/2018/04/29/sqlserver%E8%A1%A8%E9%95%BF%E6%9C%9F%E6%B2%A1%E4%BA%BA%E8%AE%BF%E9%97%AE%E7%9A%84%E4%B8%8B%E7%BA%BF%E6%AD%A5%E9%AA%A4/</link>
+      <pubDate>Sun, 29 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/04/29/sqlserver%E8%A1%A8%E9%95%BF%E6%9C%9F%E6%B2%A1%E4%BA%BA%E8%AE%BF%E9%97%AE%E7%9A%84%E4%B8%8B%E7%BA%BF%E6%AD%A5%E9%AA%A4/</guid>
+      <description>很多公司因为历史原因，需要下线SQLSERVER里的表或者库。在下线前需要排查确定这些表无人访问
+下线步骤  整理库表的最后访问时间（一般是最近一个月的） 改掉程序中对这些复制订阅表的从库访问（如果有） 在测试环境sp_rename 这些表，加上指定后缀(_dbadel) 如果有问题回滚sp_rename 保留2周后备份删除  获得表的最后访问时间 IF OBJECT_ID(&#39;tempdb.dbo.#tableused&#39;, &#39;U&#39;) IS NULL BEGIN CREATE TABLE #tableused ( DBName VARCHAR(100) , TableName VARCHAR(100) , reads BIGINT , writes bigint, last_system_seek DATETIME , last_user_seek DATETIME , last_user_scan DATETIME , last_user_lookup DATETIME , last_user_update DATETIME , tableCreateTime DATETIME ) END EXEC sp_msforeachdb &#39; declare @dbname varchar(200); select @dbname=&#39;&#39;?&#39;&#39; if (@dbname not in (&#39;&#39;system&#39;&#39;) and db_id(@dbname)&amp;gt;4) and @dbname not like &#39;&#39;%dbo%&#39;&#39; --在这里排掉不需要统计的库 begin execute ( &#39;&#39; use &#39;&#39;+ @dbname+&#39;&#39;; insert into #tableused select &#39;&#39;&#39;&#39;&#39;&#39;+ @dbname+&#39;&#39;&#39;&#39;&#39;&#39;, obj.</description>
+    </item>
+    
+  </channel>
+</rss>

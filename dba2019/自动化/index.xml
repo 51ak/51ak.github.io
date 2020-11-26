@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>自动化 on dboop.com</title>
+    <link>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/</link>
+    <description>Recent content in 自动化 on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 01 Nov 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>谈谈数据库运维自动化</title>
+      <link>/post/2017/11/01/%E8%B0%88%E8%B0%88%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%90%E7%BB%B4%E8%87%AA%E5%8A%A8%E5%8C%96/</link>
+      <pubDate>Wed, 01 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017/11/01/%E8%B0%88%E8%B0%88%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%90%E7%BB%B4%E8%87%AA%E5%8A%A8%E5%8C%96/</guid>
+      <description>谈谈数据库运维自动化 当你写了太多的数据库脚本，做了太多的自动化工作时，面对零散的新需求，尝试自动化时是否需要按使用频率提高自动化水平。
+假如有个常见需求，数据库里删除一个大表里的部分数据，或者redis删除一个key
+做为运维，需要考虑表有多大，是否要循环删除，删除条件是否有索引， redis的数据类型，如果是list,set,zset，需要考虑大小，是否需要循环清理
+ 第一阶段，把循环删除动作写在一个循环脚本里。 运行脚本完成这次任务  第二阶段，把这个脚本做成通用性，以后再有类似的同样的需求，可以传参过来完成  第三阶段，判断各种情况，如,size,索引，类型 等。加上判断，以适应更多的情况  第四阶段，处理异常，加上各种异常时的处理或重试机制  第五阶段，做成页面化，可人性化的工具化，降低使用成本，目标是非dba的其他rd或运维人员- 可以简单使用  第六阶段，做成服务化，让目标受众除dba以外的人可以平滑（甚至无感知的）使用，将多个自动化系统集成到一个工具或一种服务  后面的就不清楚了，回想我记过的n多脚本和工具
+10% 停在第一阶段
+40% 停在第二阶段
+20% 停在第三，四阶体贴
+25% 停在第五阶段 （没错，就是这么喜欢搞页面化！）
+5% 搞成业务都不知道后面有运维在支撑。</description>
+    </item>
+    
+  </channel>
+</rss>
