@@ -6,7 +6,17 @@
     <description>Recent content in Dbas on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 26 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="/dba/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 07 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/dba/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>丐帮PK赛</title>
+      <link>/dba/gaibangpk/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/gaibangpk/</guid>
+      <description>【2020-12-07.爬楼梯问题】 题目:有5932768阶楼梯，每次可以上一层或两层，有多少种上楼梯的方法？
+ 出题人:P 答题人:K 出题时间:10:07 答题时间:10:25(用时18分钟) 答题结果:失败!算不出来，想到了用斐波那契，但算不出来 正确答案:8841574181489338589 解答:每一层楼梯的方法不是他决定的,是他上一级台阶有几种方法和上上一级台阶有几种方法,加一块就是他有几种方法.  (未完待续)</description>
+    </item>
+    
     <item>
       <title>MySQL的drop/truncate Table影响分析和最佳实践</title>
       <link>/dba/droptable/</link>
