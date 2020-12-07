@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>丐帮 on Classic</title>
+    <link>/categories/%E4%B8%90%E5%B8%AE/</link>
+    <description>Recent content in 丐帮 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 07 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E4%B8%90%E5%B8%AE/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>丐帮PK赛</title>
+      <link>/dba/gaibangpk/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/gaibangpk/</guid>
+      <description>【2020-12-07.爬楼梯问题】 题目:有5932768阶楼梯，每次可以上一层或两层，有多少种上楼梯的方法？
+ 出题人:P 答题人:K 出题时间:10:07 答题时间:10:25(用时18分钟) 答题结果:失败!算不出来，想到了用斐波那契，但算不出来 正确答案:8841574181489338589 解答:每一层楼梯的方法不是他决定的,是他上一级台阶有几种方法和上上一级台阶有几种方法,加一块就是他有几种方法.  (未完待续)</description>
+    </item>
+    
+  </channel>
+</rss>
