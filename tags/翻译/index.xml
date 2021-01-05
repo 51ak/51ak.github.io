@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>innodb on Classic</title>
-    <link>/categories/innodb/</link>
-    <description>Recent content in innodb on Classic</description>
+    <title>翻译 on Classic</title>
+    <link>/tags/%E7%BF%BB%E8%AF%91/</link>
+    <description>Recent content in 翻译 on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 05 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="/categories/innodb/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 05 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E7%BF%BB%E8%AF%91/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>MySQL的innodb中Next-Key锁的动画解析</title>
       <link>/dba/innodb_lock_2020/</link>

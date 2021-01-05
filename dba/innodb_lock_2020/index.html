@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    <link rel="stylesheet" href="/css/katex.min.css" >
+    <script  src="/js/katex.min.js" ></script>
+    <script  src="/js/auto-render.min.js" ></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body);
+        });
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?242679792d86ec941c1d90707fd24674";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">2020分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">2019分类</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL的innodb中Next-Key锁的动画解析</span></h1>
+</div>
+
+
+  <main>
+    <p>[toc]</p>
+<blockquote>
+<p>去年的某个时候，一个叫红的朋友在微信上问我MySQL间隙锁的案例，当时我正忙着做一个数据库迁移的大项目，没有时间去认真看那个CASE，后来想看的时候，发现找不到了。像我这么内向而又腼腆的人不好意思追问了，昨天看到这篇jahfer写的博客:
+<a href="https://jahfer.com/posts/innodb-locks/">https://jahfer.com/posts/innodb-locks/</a>
+觉得在介绍Next-Key锁的这方面很有创意的使用了自制的动画（非常简陋的动画但是有效)，不管是创意还是内容都值得一看，翻译全文如下：</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>作者:jahfer</li>
+<li>翻译:51ak</li>
+</ul>
+</blockquote>
+<p>&ndash;</p>
+<p><em>最近，我在调试MySQL高并发问题时有机会深入理解了InnoDB的锁定机制，这篇文章是我学习innodb锁行为的一个总结。</em></p>
+<h1 id="0概念介绍">0.概念介绍</h1>
+<p>InnoDB只有几个锁定概念,但是它们的使用和行为取决于当前连接正在使用的事务隔离级别</p>
+<blockquote>
+<p>…the isolation level is the setting that fine-tunes the balance between performance and reliability, consistency, and reproducibility of results when multiple transactions are making changes and performing queries at the same time. 引自MySQL官方文档  <a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-transaction-isolation-levels.html">https://dev.mysql.com/doc/refman/5.7/en/innodb-transaction-isolation-levels.html</a></p>
+</blockquote>
+<p>InnoDB一共有4种隔离级别（按最严格到最宽松的顺序）</p>
+<ul>
+<li>SERIALIZABLE 序列化</li>
+<li>REPEATABLE READ (default) 可重复读</li>
+<li>READ COMMITTED 读已提交</li>
+<li>READ UNCOMMITTED 读未提交</li>
+</ul>
+<p>每种隔离级别下的锁行为差异非常大，而我们现在只分析前两种隔离级别（SERIALIZABLE，REPEATABLE READ),首先让我们创建一个<code>book</code> 表。</p>
+<pre><code>CREATE TABLE `books` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `author_id` bigint(20) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `borrowed` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_books_on_author_id` (`author_id`)
+);
+
+INSERT INTO `books` (`author_id`, `title`)
+VALUES
+  (101, &quot;The Pragmatic Programmer&quot;),
+  (102, &quot;Clean Code&quot;),
+  (102, &quot;The Clean Coder&quot;),
+  (104, &quot;Ruby Under a Microscope&quot;);
+</code></pre><p>这张表像这样</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th style="text-align:center">author_id</th>
+<th style="text-align:center">title</th>
+<th style="text-align:right">borrowed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td style="text-align:center">101</td>
+<td style="text-align:center">The Pragmatic Programmer</td>
+<td style="text-align:right">FALSE</td>
+</tr>
+<tr>
+<td>2</td>
+<td style="text-align:center">102</td>
+<td style="text-align:center">Clean Code</td>
+<td style="text-align:right">FALSE</td>
+</tr>
+<tr>
+<td>3</td>
+<td style="text-align:center">102</td>
+<td style="text-align:center">The Clean Coder</td>
+<td style="text-align:right">FALSE</td>
+</tr>
+<tr>
+<td>4</td>
+<td style="text-align:center">104</td>
+<td style="text-align:center">Ruby Under a Microscope</td>
+<td style="text-align:right">FALSE</td>
+</tr>
+</tbody>
+</table>
+<h1 id="1innodb锁类型">1.InnoDB锁类型</h1>
+<p>在深入研究细节之前，我们应该从一个重要的概念开始，这个概念适用于我们将在本文中介绍的所有锁。InnoDB锁可以分为“共享”的和“排它”的</p>
+<blockquote>
+<ul>
+<li>共享（S）锁允许持有该锁的事务select行。</li>
+<li>排它（X）锁允许持有该锁的事务update或delete行。</li>
+<li>MySQL官文档 《14.7.1 InnoDB的锁定》https://dev.mysql.com/doc/refman/5.7/en/innodb-locking.html#innodb-shared-exclusive-locks</li>
+</ul>
+</blockquote>
+<p>就像它们的名字所暗示的那样，共享锁可以由多个并发事务持有，因为它们只能读取该行。如果想执行写操作，就必须获得一个排它锁，而且每次只能由一个事务持有。当其他事务持有共享锁时，也不能加上排它锁，这就是InnoDB保证事务持有共享锁期间数据不会被改动的方法。</p>
+<p>共享(S)锁只需要在索引树上（不一定是主键索引)锁定用到的行数，这是因为读只要求在这个请求中找到的行数上是可以重复读的。
+相对的，排它（X)锁需要在受影响的记录的PrimaryKEY上加锁，这将影响所有相关的二级索引。</p>
+<h1 id="2next-key锁">2.Next-Key锁</h1>
+<p>这篇文章主要是想讲一种锁类型:<strong>Next-Key</strong>锁。不多废话，一个Next-Key锁事实上是两种锁的组合：记录锁(record lock)和间隙锁(gap lock)。</p>
+<h2 id="21-记录锁-record-locks">2.1 记录锁 Record Locks</h2>
+<p>记录锁是InnoDB里最简单的一种锁，它锁定索引上的指定行。
+例如：如果我们不想事务进行时别人更新我们用到的行，我们可以请求一个共享的读锁：</p>
+<pre><code>-- 开启一个事务
+BEGIN;
+-- 执行一个读
+SELECT *
+FROM `books`
+-- 显示的声明要持有一个共享(S) 锁
+WHERE `id` = 2 LOCK IN SHARE MODE;
+
+</code></pre><p>现在我们去查查<code>performance_schema.metadata_locks</code> 表, 将会看到一个共享读锁(SHARED_READ lock):</p>
+<pre><code>mysql&gt; SELECT OBJECT_NAME, LOCK_TYPE, LOCK_DURATION, LOCK_STATUS
+    -&gt; FROM performance_schema.metadata_locks
+    -&gt; WHERE OBJECT_NAME=&quot;books&quot;;
++-------------+-------------+---------------+-------------+
+| OBJECT_NAME | LOCK_TYPE   | LOCK_DURATION | LOCK_STATUS |
++-------------+-------------+---------------+-------------+
+| books       | SHARED_READ | TRANSACTION   | GRANTED     |
++-------------+-------------+---------------+-------------+
+1 row in set (0.00 sec)
+
+</code></pre><p>多个事务都可以持有这个锁，持有这个锁能保证没有其他连接更新WHERE id=2这本书。直到锁被释放（事务COMMIT 或者 ROLLBACK.)</p>
+<p>看完了怎么为读请求申请一个锁，现在再看看怎样申请一个写请求的锁：</p>
+<pre><code>-- 开启一个事务
+BEGIN;
+-- 执行一个读
+SELECT *
+FROM `books`
+-- 显示的声明要持有一个排它(X) 锁
+WHERE `id` = 2 FOR UPDATE;
+
+</code></pre><p>这个查询和上面的稍微有点不同，这里我们为 id=2这行记录申请了一个排它锁,意味着其他任务连接想获得这行记录的锁都要等我们这个事务进行完。因为我们给InnoDB发信号说我们要UPDATE这行记录(SQL中我们用了 <code>select ... from 表 for update </code>)，如果其他事务想更新就会产生脏数据。</p>
+<pre><code>mysql&gt; SELECT OBJECT_NAME, LOCK_TYPE, LOCK_DURATION, LOCK_STATUS
+    -&gt; FROM performance_schema.metadata_locks
+    -&gt; WHERE OBJECT_NAME=&quot;books&quot;;
++-------------+--------------+---------------+-------------+
+| OBJECT_NAME | LOCK_TYPE    | LOCK_DURATION | LOCK_STATUS |
++-------------+--------------+---------------+-------------+
+| books       | SHARED_WRITE | TRANSACTION   | GRANTED     |
++-------------+--------------+---------------+-------------+
+</code></pre><p>这里我们看到了一个<code>SHARED_WRITE </code>锁，跟上面的<code>SHARED_READ</code>不一样。需要注意的是它们同时ShARED锁，但是实际上不同的，在这里我们获得的是一个WRITE锁，这个锁实际上是也确实是排它(X)锁。为了避免说到更多的细节，这篇文章里我们不打算详细说SHARED_WRITE (IX) vs. SHARED_READ (IS) 锁的区别了，如果你好奇的话可以看这篇官方文档：https://dev.mysql.com/doc/refman/5.7/en/innodb-locking.html#innodb-intention-locks</p>
+<p>未完待续</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h2 class="author">jahfer</h2>
+<h2 class="date">2021/01/05</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/innodb">innodb</a> <a href="/categories/lock">lock</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E7%BF%BB%E8%AF%91">翻译</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
