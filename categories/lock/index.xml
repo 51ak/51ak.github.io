@@ -8,14 +8,14 @@
     <language>zh-cn</language>
     <lastBuildDate>Tue, 05 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="/categories/lock/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>MySQL的innodb中Next-Key锁的动画解析</title>
+      <title>MySQL的innodb中Next-Key锁的解析</title>
       <link>/dba/innodb_lock_2020/</link>
       <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>
       
       <guid>/dba/innodb_lock_2020/</guid>
       <description>[toc]
- 去年的某个时候，一个叫红的朋友在微信上问我MySQL间隙锁的案例，当时我正忙着做一个数据库迁移的大项目，没有时间去认真看那个CASE，后来想看的时候，发现找不到了。像我这么内向而又腼腆的人不好意思追问了，昨天看到这篇jahfer写的博客: https://jahfer.com/posts/innodb-locks/ 觉得在介绍Next-Key锁的这方面很有创意的使用了自制的动画（非常简陋的动画但是有效)，不管是创意还是内容都值得一看，翻译全文如下：
-   作者:jahfer 翻译:51ak   &amp;ndash;
+ 去年的某个时候，一个朋友在微信上问我MySQL间隙锁的案例，当时正在赶一个项目，没来得及看那个CASE，后来找不到了。昨天看到这篇jahfer写的博客: https://jahfer.com/posts/innodb-locks/ 觉得在介绍Next-Key锁的这方面很有创意的使用了自制的动画（非常简陋的动画 没啥用，我换成了截图做标记了)，不管是创意还是内容都值得一看
+   作者:jahfer 翻译:51ak   &amp;ndash;翻译全文如下：
 最近，我在调试MySQL高并发问题时有机会深入理解了InnoDB的锁定机制，这篇文章是我学习innodb锁行为的一个总结。
 0.概念介绍 InnoDB只有几个锁定概念,但是它们的使用和行为取决于当前连接正在使用的事务隔离级别
  …the isolation level is the setting that fine-tunes the balance between performance and reliability, consistency, and reproducibility of results when multiple transactions are making changes and performing queries at the same time. 引自MySQL官方文档 https://dev.mysql.com/doc/refman/5.7/en/innodb-transaction-isolation-levels.html
