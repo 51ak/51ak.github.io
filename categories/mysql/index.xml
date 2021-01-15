@@ -6,7 +6,16 @@
     <description>Recent content in mysql on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 05 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="/categories/mysql/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 15 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="/categories/mysql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL binlog 问答</title>
+      <link>/dba/mysqlbinlogquestion/</link>
+      <pubDate>Fri, 15 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/mysqlbinlogquestion/</guid>
+      <description>binlog 是什么?  MySQL 的二进制日志 ,不是纯文本类的 记录的是数据库变动的日志(insert,update,delete,create,replace,grant &amp;hellip;.) 不包括 select,set 等  binlog 重要吗？是不是一定要开？  几乎是最重要的MySQL日志，严谨点说是最重要的之一 如果没有特殊情况，一定要开！为什么？你再往后看&amp;hellip;)  binlog 有什么作用？  高可用同步，经常用它来同步主库和从库的数据。 它本身就是记录了数据库变化的日志，放在那让你看也是它作为“日志”的作用 恢复指定时间点的数据, 想把数据库恢复到指定时间眯，得靠它 回滚数据 ，误删除数据时用到 审计 变更捕获到其他平台(kafka,es或其他数据库)  binlog 怎么开启，放在哪，怎么存储的？ binlog 有几种格式，应该用哪种？ binlog 怎么查看？ binlog 解析工具有哪些？ binlog 同步工具有哪些？ binlog 怎么生成回滚? 出现误删除/更新 数据时，如果用binlog挽救 应该怎么保存备份binlog?值不值得异地备份？ binlog 是否能保证 癫痫患者外出一定要有人随行，这么简单的一句话，要说多少次老张才能记得住，管不了他的嘴，也管不了他的腿，只有深深的无奈。。。你要不是我爸，我管你是死是活，操的是哪门子心。</description>
+    </item>
+    
     <item>
       <title>MySQL的innodb中Next-Key锁的解析</title>
       <link>/dba/innodb_lock_2020/</link>
