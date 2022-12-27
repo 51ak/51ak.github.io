@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ops on Classic</title>
+    <link>/ops/</link>
+    <description>Recent content in Ops on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 26 Sep 2022 00:00:00 +0000</lastBuildDate><atom:link href="/ops/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Python入门之书上没有的东西</title>
+      <link>/ops/python%E5%85%A5%E9%97%A8%E4%B9%8B%E4%B9%A6%E4%B8%8A%E6%B2%A1%E6%9C%89%E7%9A%84%E4%B8%9C%E8%A5%BF/</link>
+      <pubDate>Mon, 26 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/python%E5%85%A5%E9%97%A8%E4%B9%8B%E4%B9%A6%E4%B8%8A%E6%B2%A1%E6%9C%89%E7%9A%84%E4%B8%9C%E8%A5%BF/</guid>
+      <description>分享分  为Python零基础同学做了一场入门分享 准备了1个小时的ppt 现场因为有很多演示，共花了90分钟 还好今天没人过来抢会议室。  ppt 说重点：  三天打鱼两天晒网的学习Python是不现实的，每天抽小半个小时敲代码，坚持下去，一两个星期就能入门。 最先要学的不是基础知识，而是环境配置和工具的选择 基础知识不用啃得太死，差不多理解了有印象就行，后面随着练习会不断强化，自然就学会了 练习为王，千万不要死看书，不动手。 多写，多练习，遇到报错顺着问题解决，一开始有卡住的找朋友同事帮忙，后面要学着自己搜索 多利用搜索引擎，随着技能的提升，会不断的有新问题出现。 要针对一个具体的目标和小型项目来进行练习。  </description>
+    </item>
+    
+    <item>
+      <title>vscode在mac上用PyQt5制作窗口应用</title>
+      <link>/ops/python%E5%88%B6%E4%BD%9Cmac%E7%A8%8B%E5%BA%8F/</link>
+      <pubDate>Tue, 20 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/python%E5%88%B6%E4%BD%9Cmac%E7%A8%8B%E5%BA%8F/</guid>
+      <description>环境准备  vscode python3 (我用的是python3.9)  安装PyQt5 pip3 install PyQt5 pip3 install PyQt5-tools VSCode中安装和配置pyqt插件 安装了后点设置
+Qtdesigner：这里写入designer.app的完整路径 {这里写python的安装绝对路径}/site-packages/qt5_applications/Qt/bin/Designer.app/Contents/MacOS/Designer
+至此就完成了环境准备
+设计一个窗体程序 建一个项目文件夹，然后右键新建一个form 打开的design窗口，拖动控件，完成窗体设计 保存窗体到 form1.ui 直接cmd+s 保存即可，这里的form1名字可以随意起
+编译form1.ui到py文件 右键选compile
+这里还可以继续调整生成py文件（如果有需要的话）
+新建一个启动文件 main.py import sys from PyQt5.QtWidgets import QMainWindow,QApplication,QWidget from Ui_form1 import Ui_Dialog #导入你写的界面类 class MyMainWindow(QMainWindow,Ui_Dialog): #这里也要记得改 def __init__(self,parent =None): super(MyMainWindow,self).__init__(parent) self.setupUi(self) if __name__ == &amp;quot;__main__&amp;quot;: app = QApplication(sys.argv) myWin = MyMainWindow() myWin.show() sys.exit(app.exec_()) 调试和生成程序 调试代码 用pyton单应用启动调试main.py ，顺利的话会出现刚刚设计好的窗体。 如果有报错的话，解决它
+安装pyinstall  pip3 install pyinstaller 编译和生成一个可执行文件  sudo pyinstaller --windowed --onefile --clean --noconfirm main.</description>
+    </item>
+    
+    <item>
+      <title>Sysbench做压力测试</title>
+      <link>/ops/sysbench%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/</link>
+      <pubDate>Sat, 12 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/sysbench%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/</guid>
+      <description>0.环境 1.安装sysbench  curl -s https://packagecloud.io/install/repositories/akopytov/sysbench/script.rpm.sh | sudo bash yum -y install sysbench 2.执行压测 10.10.0.1 上执行 sysbench /usr/share/sysbench/oltp_read_write.lua --tables=5 --table_size=2000000 --mysql-user=dba --mysql-password******* --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest prepare sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest --tables=5 --table_size=2000000 --threads=300 --time=120 --report-interval=60 run &amp;gt;&amp;gt; /root/sb/proxy300.log sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest --tables=5 --table_size=2000000 --threads=20 --time=120 --report-interval=10 run sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest --tables=5 --table_size=2000000 --threads=20 --time=120 --report-interval=10 run sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.</description>
+    </item>
+    
+    <item>
+      <title>服务器过保日期批量查询python</title>
+      <link>/ops/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E4%BF%9D%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2python%E8%84%9A%E6%9C%AC/</link>
+      <pubDate>Sat, 09 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E4%BF%9D%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2python%E8%84%9A%E6%9C%AC/</guid>
+      <description>浪潮服务器过保查询  import json import urllib import requests # def chenck_hardware_info(sn): url = &#39;https://www.inspur.com/eportal/ui&#39; sn_file = &amp;quot;/tm/sn.text&amp;quot; def request_datatime(sn): params = { &amp;quot;struts.portlet.action&amp;quot;: &amp;quot;/portlet/download-front!serverConfig.action&amp;quot;, &amp;quot;sn&amp;quot;: sn, &amp;quot;src&amp;quot;: &amp;quot;inspur&amp;quot;, &amp;quot;language&amp;quot;: &amp;quot;CN&amp;quot;, &amp;quot;pageId&amp;quot;: &amp;quot;2317460&amp;quot;, &amp;quot;moduleId&amp;quot;: &amp;quot;82efecfc33da48b4a66567cb3dcbe5f3&amp;quot; } headers = { &amp;quot;Referer&amp;quot;: &amp;quot;https://www.inspur.com/eportal/ui?pageId=2317460&amp;quot;, &amp;quot;Cookie&amp;quot;: &amp;quot;JSESSIONID=****; ........(这里写cookie地址)&amp;quot; } r = requests.post(url, headers=headers, params=urllib.parse.urlencode(params)) resp = r.text[1:len(r.text)-1] resp = json.loads(resp) #print(resp[&#39;Date&#39;]) return resp[&#39;warranty1&#39;] def post_info(sn): r1 = request_datatime(sn) url = &amp;quot;http://cmdbbackend.dev.tujia.com/api/inventoryitem/sn/update/life&amp;quot; headers = { &amp;quot;OPS-Token&amp;quot;:&amp;quot;IHmioqYhb0XgBAsEiHeK_guibinw&amp;quot;, &amp;quot;Content-Type&amp;quot;:&amp;quot;application/json&amp;quot; } data = [{ &amp;quot;serialNo&amp;quot;: sn, &amp;quot;contractPeriod&amp;quot;: r1 }] r = requests.</description>
+    </item>
+    
+    <item>
+      <title>MacOS里的grep,sed,awk等命令不好用怎么办</title>
+      <link>/ops/macos%E9%87%8C%E7%9A%84grepawksed%E7%AD%89%E5%91%BD%E4%BB%A4%E4%B8%8D%E5%A5%BD%E7%94%A8%E6%80%8E%E4%B9%88%E5%8A%9E/</link>
+      <pubDate>Tue, 27 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/macos%E9%87%8C%E7%9A%84grepawksed%E7%AD%89%E5%91%BD%E4%BB%A4%E4%B8%8D%E5%A5%BD%E7%94%A8%E6%80%8E%E4%B9%88%E5%8A%9E/</guid>
+      <description>问题  工作用的电脑是mac 经常发现linux上常用的sed,grep命令用不起来，各种报错 后来查了一下发现mac里的sed和linux的不是一个版本的软件   Mac OS X uses BSD sed and not GNU sed. When you use a GNU sed extension with Mac OS X sed, you get different results, or failures. Classically, sed does not support numeric offsets, forwards or backwards. You&amp;rsquo;ll need to revise your script to work on Mac OS X.
+ 解决 使用以下命令安装GNU命令套件： brew install coreutils 使用以下命令安装gnu-sed： brew install gnu-sed --with-default-names 以上命令安装的gnu套件的命令都是带有g前缀的  gcat &amp;ndash;&amp;gt; linux里的cat gsed &amp;ndash;&amp;gt; linux里的sed ggrep &amp;ndash;&amp;gt; linux里的grep gawk &amp;ndash;&amp;gt; linux里的awk &amp;hellip;  如果想直接代替，不输入g前缀则 vim .</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_grep,sed,awk,find命令</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_grepsedawkfind%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Wed, 07 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_grepsedawkfind%E5%91%BD%E4%BB%A4/</guid>
+      <description>grep ##zcat 是用于查看压缩的文件 ##gzip 套件包含许多可以 “在原地” 处理压缩文件的实用程序。zcat、zgrep、zless、zdiff 等实用程序的作用分别与 cat、grep、less 和 diff 相同，但是它们操作压缩的文件。 zcat web.log.gz | grep aqzt.com | head ###Grep &#39;OR&#39; 或操作 grep &amp;quot;pattern1\|pattern2&amp;quot; file.txt grep -E &amp;quot;pattern1|pattern2&amp;quot; file.txt grep -e pattern1 -e pattern2 file.txt egrep &amp;quot;pattern1|pattern2&amp;quot; file.txt awk &#39;/pattern1|pattern2/&#39; file.txt sed -e &#39;/pattern1/b&#39; -e &#39;/pattern2/b&#39; -e d file.txt #找出文件（filename）中包含123或者包含abc的行 grep -E &#39;123|abc&#39; filename #用egrep同样可以实现 egrep &#39;123|abc&#39; filename #awk 的实现方式 awk &#39;/123|abc/&#39; filename ###Grep &#39;AND&#39; 与操作 grep -E &#39;pattern1.*pattern2&#39; file.txt # in that order grep -E &#39;pattern1.</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_scp和rsync</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_scp%E5%92%8Crsync/</link>
+      <pubDate>Sat, 15 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_scp%E5%92%8Crsync/</guid>
+      <description>scp 从本地复制到远程 在本地服务器上将/data/mysqlbackup目录下所有的文件传输到服务器10.0.0.2的/data/mysqlbackup目录下，命令为：
+scp -r /data/mysqlbackup root@10.0.0.2:/data/mysqlbackup
+从远程复制到本地 在本地服务器上操作，将服务器10.0.0.2上/data/mysqlbackup/目录下所有的文件全部复制到本地的/root目录下，命令为： scp -r root@10.0.0.2:/data/mysqlbackup /root
+rsync  time=$(date &#39;+%Y-%m-%d-%H-test1_binlog.0001&#39;) time1=$(date &#39;+%Y-%m-%d-%H-test2_binlog.0001&#39;) #cp /data/mysqlbackup/log/test1_binlog.0001 /data/mysqlbackup/log/$time #cp /data/mysqlbackup/log/test2_binlog.0001 /data/mysqlbackup/log/$time1 /usr/bin/rsync -av --bwlimit=10000 /data/mysqlbackup/log/test1_binlog.0001 /data/mysqlbackup/log/$time /usr/bin/rsync -av --bwlimit=10000 /data/mysqlbackup/log/test2_binlog.0001 /data/mysqlbackup/log/$time1 cat /dev/null &amp;gt; /data/mysqlbackup/log/test1_binlog.0001 cat /dev/null &amp;gt; /data/mysqlbackup/log/test2_binlog.0001 find /data/mysqlbackup/log/ -ctime +5 -exec rm -f {} \; ##剪切参考，IO速度限制的cp和mv(限速1024 KB/s) ##cp: rsync --bwlimit=1024 {src} {dest} ##mv: rsync --bwlimit=1024 --remove-source-files {src} {dest} ##使用ssh方式rsync，不用服务端，简单方便，SSH需要认证，就不用每次输入密码 #ssh-keygen -t rsa -N &#39;&#39; -f ~/.</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_ssh无密码认证</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_ssh%E6%97%A0%E5%AF%86%E7%A0%81%E8%AE%A4%E8%AF%81/</link>
+      <pubDate>Fri, 14 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_ssh%E6%97%A0%E5%AF%86%E7%A0%81%E8%AE%A4%E8%AF%81/</guid>
+      <description>A机添加B机ssh信任 # B机执行 ssh-keygen -t rsa 一路回车 cat /root/.ssh/idrsa.pub # A机执行 vim /root/.ssh/authorized_keys 将B机的pub信息加入 ssh ssh-keygen -t rsa -N &amp;quot;&amp;quot; -f ~/.ssh/id_rsa -q -b 2048 -C &amp;quot;test@ppabc.cn&amp;quot; ssh无密码认证 RSA ssh-keygen -t rsa cat ~/.ssh/id_rsa.pub &amp;gt;&amp;gt; ~/.ssh/authorized_keys chmod 600 ~/.ssh/authorized_keys ssh无密码认证 DSA ssh-keygen -t dsa -P &#39;&#39; -f ~/.ssh/id_dsa cat ~/.ssh/id_dsa.pub &amp;gt;&amp;gt; ~/.ssh/authorized_keys chmod 600 ~/.ssh/authorized_keys 查看生产的密匙 cat ~/.ssh/id_dsa
+用ssh -v 显示详细的登陆信息查找原因： ssh -v localhost 拷贝本地生产的key到远程服务器端（两种方法）  方法1  cat ~/.ssh/id_dsa.pub | ssh 远程用户名@远程服务器ip &#39;cat - &amp;gt;&amp;gt; ~/.</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_iptables</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_iptables/</link>
+      <pubDate>Fri, 07 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_iptables/</guid>
+      <description>安装和启动 systemctl status iptables yum install iptables-services systemctl start iptables #启动 systemctl status iptables #查看运行状态 systemctl restart iptables.service #重启 systemctl stop iptables.service #停止 systemctl enable iptables.service #设置开机启动 systemctl disable iptables.service #禁止开机启动 常用命令 iptables -h #查询帮助 iptables -L -n #列出（filter表）所有规则 iptables -L -n --line-number #列出（filter表）所有规则，带编号 iptables -L -n -t nat #列出（nat表）所有规则 iptables -F #清除（filter表）中所有规则 iptables -F -t nat #清除（nat表）中所有规则 service iptables save #保存配置（保存配置后必须重启iptables） systemctl restart iptables.service #重启 查看： iptables -L -n --line-number iptables -t nat -A PREROUTING -p tcp -d 127.</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_date和time</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_time/</link>
+      <pubDate>Thu, 06 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_time/</guid>
+      <description>日期加减  ####昨天日期（1天以前） date -d last-day +%Y-%m-%d date -d &amp;quot;1 days ago&amp;quot; +%Y-%m-%d date -d &#39;-1 days&#39; +%Y-%m-%d ####下周一日期 date -d &#39;next monday&#39; +%Y-%m-%d ####明天日期 date -d next-day +%Y-%m-%d date -d &#39;1 days&#39; +%Y-%m-%d ####前天 （2天以前） ‘n days ago&#39; 表示n天前的那一天 date -d &amp;quot;2 days ago&amp;quot; +%Y-%m-%d ####上个月的今天 date -d last-month +%Y-%m-%d ####下个月的今天 date -d next-month +%Y-%m-%d ###当前时间 date +%Y-%m-%d_%H_%M_%S ###注意 : 当你不希望出现无意义的 0 时(比如说 1999/03/07)，则可以在标记中插入 – 符号 ###比如说 date +%-H:%-M:%-S 会把时分秒中无意义的 0 给去掉，像是原本的 08:09:04 会变为 8:9:4。 date +%Y%-m%-d ##201766 日期方面 : %a : 星期几 (Sun.</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_python</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_python/</link>
+      <pubDate>Wed, 05 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_python/</guid>
+      <description>python安装 yum install -y gcc zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel yum install -y libffi-devel cd /opt/ wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tar.xz tar -xvJf Python-3.7.0.tar.xz mkdir -p /usr/local/python3 cd Python-3.7.4 ./configure --prefix=/usr/local/python3 make &amp;amp;&amp;amp; make install ln -s /usr/local/python3/bin/python3 /usr/local/bin/python3 ln -s /usr/local/python3/bin/pip3 /usr/local/bin/pip3 python3 -V pip3 -V </description>
+    </item>
+    
+    <item>
+      <title>常用脚本_linux性能</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E6%80%A7%E8%83%BD%E6%9F%A5%E7%9C%8B/</link>
+      <pubDate>Sat, 01 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E6%80%A7%E8%83%BD%E6%9F%A5%E7%9C%8B/</guid>
+      <description>System_info wget https://www.dboop.com/download/System_info.sh &amp;amp;&amp;amp; sh System_info.sh cpu wget https://www.dboop.com/download/cpu.sh &amp;amp;&amp;amp; sh cpu.sh disk wget https://www.dboop.com/download/disk.sh &amp;amp;&amp;amp; sh disk.sh iostat  wget https://www.dboop.com/download/iostat.sh &amp;amp;&amp;amp; sh iostat.sh loadavg  wget https://www.dboop.com/download/loadavg.sh &amp;amp;&amp;amp; sh loadavg.sh memory wget https://www.dboop.com/download/memory.sh &amp;amp;&amp;amp; sh memory.sh show_disks  wget https://www.dboop.com/download/show_disks.sh &amp;amp;&amp;amp; sh show_disks.sh swap  wget https://www.dboop.com/download/swap.sh &amp;amp;&amp;amp; sh swap.sh vmstat wget https://www.dboop.com/download/vmstat.sh &amp;amp;&amp;amp; sh vmstat.sh 内存 # 查内存占用情况 ps -e -o &#39;pid,comm,args,pcpu,rsz,vsz,stime,user,uid&#39; # 其中rsz是是实际内存 ps -e -o &#39;pid,comm,args,pcpu,rsz,vsz,stime,user,uid&#39; | grep java | sort -nrk5 # 其中rsz为实际内存，上例实现按内存排序，由大到小 # 查内存占用情况 ps -aux | sort -k4nr | head -n 10 # 使用指令查看占用的物理内存， ps aux|awk &#39;{sum+=$6} END {print sum/1024}&#39; # 使用指令，核实进程的最大使用内存量 ps -eo pid,rss,pmem,pcpu,vsz,args --sort=rss # 查内存命令 ps p 916 -L -o pcpu,pmem,pid,tid,time,tname,cmd # 排查高CPU占用介绍的PS命令 ps -mp 9004 -o THREAD,tid,time,rss,size,%mem # 分析具体的对象数目和占用内存大小 jmap -histo:live [pid] # 利用MAT工具分析是否存在内存泄漏等等。 jmap -dump:live,format=b,file=xxx.</description>
+    </item>
+    
+    <item>
+      <title>git常用命令整理</title>
+      <link>/ops/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</link>
+      <pubDate>Thu, 25 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</guid>
+      <description>重新初始化，删掉历史版本记录  1、创建并切换到lastest_branch分支 git checkout --orphan latest_branch 2、添加所有文件 git add -A 3、提交更改 git commit -am &amp;quot;删除历史版本记录，初始化仓库&amp;quot; 4、删除分支 git branch -D master 5、将当前分支重命名 git branch -m master 6、强制更新存储库 git push -f origin master 新建 Git 仓库 # 把当前目录变更成一个 Git 仓库 $ git init # 新建一个目录，将其初始化为 Git 仓库 $ git init [project-name] # 克隆远程仓库 $ git clone [url] Git 配置信息 # 显示当前的 Git 配置 $ git config --list # 编辑 Git 配置文件 $ git config -e [--global] # 设置提交代码时的用户信息 $ git config [--global] user.</description>
+    </item>
+    
+    <item>
+      <title>Linux服务器共享目录Centos7</title>
+      <link>/ops/linux%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/</link>
+      <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/linux%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/</guid>
+      <description>0.环境 服务器：
+ 10.10.0.1 源机器 10.10.0.2 目标机器1 10.10.0.3 目标机器2 目标： 将10.10.0.1机器上的 /public/downloadnew 文件夹共享给10.10.0.2/3两台机器  三台机器共享写入 /data/www/dboop/static/download目录
+1.安装nfs yum -y install nfs-utils rpcbind # 开机启动 systemctl enable rpcbind.service systemctl enable nfs-server.service # 重启服务 systemctl restart rpcbind.service systemctl restart nfs-server.service 2.共享设置 10.10.0.1 上执行 mkdir /public/downloadnew ln -s /public/downloadnew /data/www/dboop/static/download -f vim /etc/exports #输入 /public 10.10.0.2(insecure,rw,sync,no_root_squash) 10.10.0.3(insecure,rw,sync,no_root_squash) exportfs -rv 10.10.0.2/3 上执行 vim /etc/fstab #输入 10.10.0.1:/public /mnt/public nfs defaults 0 0 mkdir /mnt/public mount -a df -h ln -s /mnt/public/downloadnew /data/www/dboop/static/download -f 到此 10.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,93 @@
+---
+title: MySQL高可用架构之orchestrator
+author: 51ak
+date: '2022-10-17'
+toc: true
+categories:
+  - mysql
+  - mysql复制
+  - raft
+  - 高可用
+  - proxy
+tags:
+  - 原创
+---
+
+## orchestrator的介绍
+- GitHub公司的用go语言编写并开源的一个MySQL高可用管理工具
+- MySQL高可用性和复制拓扑管理工具，支持复制拓扑结构的调整，自动故障转移和手动主从切换等。
+- 提供Web界面展示MySQL复制的拓扑关系及状态，通过Web可更改MySQL实例的复制关系和部分配置信息
+- 同时也提供命令行和api接口，方便运维管理。
+- 相对比MHA来看最重要的是解决了管理节点的单点问题，其通过raft协议保证本身的高可用。
+
+### 特点：
+- 自动发现MySQL的复制拓扑，并且在web上展示。
+- 重构复制关系，可以在web进行拖图来进行复制关系变更。
+- 检测主异常，并可以自动或手动恢复，通过Hooks进行自定义脚本。
+- 支持命令行和web界面管理复制。
+
+
+### 功能限制：
+- slave不能手动提升为master
+- 不支持多源复制
+- 不支持并行复制
+- 不支持与PXC联合使用
+
+## orchestrator的安装
+### 安装环境
+- centos7.8服务器三台（虚拟机) 用于部署orchestrator,称为:管理机
+- 一个MySQL8.0集群，用于存放orchestrator的元数据，称为:元数据MySQL
+- 每个被维护的MySQL实例上都创建了管理员权限的用户dba_orch,称为:MySQL实例
+
+
+### 安装步骤
+#### 每台管理机上执行以下步骤
+- 下载最新版orchestrator-3.2.6-1
+```
+cd /data/soft/
+wget "https://github.com/openark/orchestrator/releases/download/v3.2.6/orchestrator-3.2.6-1.x86_64.rpm"
+rpm -ivh  orchestrator-3.2.6-1.x86_64.rpm #这里产生报错
+error: Failed dependencies:
+        jq >= 1.5 is needed by orchestrator-1:3.2.6-1.x86_64
+
+```
+- 处理报错：jq >= 1.5 is needed by orchestrator-1:3.2.6-1.x86_64
+```
+[root@dboop01 /data/soft]# wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+2022-10-17 15:47:32 (65.0 KB/s) - ‘epel-release-latest-7.noarch.rpm’ saved [15608/15608]
+
+[root@dboop01 /data/soft]# rpm -ivh epel-release-latest-7.noarch.rpm
+warning: epel-release-latest-7.noarch.rpm: Header V4 RSA/SHA256 Signature, key ID 352c64e5: NOKEY
+Preparing...                          ################################# [100%]
+Updating / installing...
+   1:epel-release-7-14                ################################# [100%]
+
+[root@dboop01 /data/soft]# yum install jq
+Installed:
+  jq.x86_64 0:1.6-2.el7                                                                                                                                  
+Dependency Installed:
+  oniguruma.x86_64 0:6.8.2-2.el7                                                                                                                         
+Complete!
+
+[root@dboop01 /data/soft]# rpm -ivh epel-release-latest-7.noarch.rpm
+Preparing...                          ################################# [100%]
+        package epel-release-7-14.noarch is already installed
+
+
+
+```
+
+- 继续安装orchestrator-3.2.6-1.x86_64
+
+```
+[root@dboop01 /data/soft]#rpm -ivh  orchestrator-3.2.6-1.x86_64.rpm
+Preparing...                          ################################# [100%]
+Updating / installing...
+   1:orchestrator-1:3.2.6-1           ################################# [100%]
+
+```
+
+- 完成三台管理机的orchestrator安装
+
+
+

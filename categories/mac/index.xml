@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mac on Classic</title>
+    <link>/categories/mac/</link>
+    <description>Recent content in mac on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 27 Jul 2021 00:00:00 +0000</lastBuildDate><atom:link href="/categories/mac/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MacOS里的grep,sed,awk等命令不好用怎么办</title>
+      <link>/ops/macos%E9%87%8C%E7%9A%84grepawksed%E7%AD%89%E5%91%BD%E4%BB%A4%E4%B8%8D%E5%A5%BD%E7%94%A8%E6%80%8E%E4%B9%88%E5%8A%9E/</link>
+      <pubDate>Tue, 27 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/macos%E9%87%8C%E7%9A%84grepawksed%E7%AD%89%E5%91%BD%E4%BB%A4%E4%B8%8D%E5%A5%BD%E7%94%A8%E6%80%8E%E4%B9%88%E5%8A%9E/</guid>
+      <description>问题  工作用的电脑是mac 经常发现linux上常用的sed,grep命令用不起来，各种报错 后来查了一下发现mac里的sed和linux的不是一个版本的软件   Mac OS X uses BSD sed and not GNU sed. When you use a GNU sed extension with Mac OS X sed, you get different results, or failures. Classically, sed does not support numeric offsets, forwards or backwards. You&amp;rsquo;ll need to revise your script to work on Mac OS X.
+ 解决 使用以下命令安装GNU命令套件： brew install coreutils 使用以下命令安装gnu-sed： brew install gnu-sed --with-default-names 以上命令安装的gnu套件的命令都是带有g前缀的  gcat &amp;ndash;&amp;gt; linux里的cat gsed &amp;ndash;&amp;gt; linux里的sed ggrep &amp;ndash;&amp;gt; linux里的grep gawk &amp;ndash;&amp;gt; linux里的awk &amp;hellip;  如果想直接代替，不输入g前缀则 vim .</description>
+    </item>
+    
+  </channel>
+</rss>

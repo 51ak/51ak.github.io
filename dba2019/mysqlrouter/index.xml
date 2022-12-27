@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mysqlrouter on dboop.com</title>
+    <link>/categories/mysqlrouter/</link>
+    <description>Recent content in mysqlrouter on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 03 May 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/mysqlrouter/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Mysqlrouter在centos报错open_files_limit1024的限制</title>
+      <link>/post/2019/05/03/mysqlrouter%E5%9C%A8centos%E6%8A%A5%E9%94%99open_files_limit1024%E7%9A%84%E9%99%90%E5%88%B6/</link>
+      <pubDate>Fri, 03 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/05/03/mysqlrouter%E5%9C%A8centos%E6%8A%A5%E9%94%99open_files_limit1024%E7%9A%84%E9%99%90%E5%88%B6/</guid>
+      <description>YUM安装的Mysqlrouter在centos 会有open_files_limit 1024 的限制
+运行一段时间会报 limit 用超的报错.查看限制和解决方法如下
+查看限制 lsof -p 29198 jps ulimit -a lsof | wc -l  centos6需要编辑如下配置文件 vim /etc/init.d/mysqlrouter 增加以下信息 ulimit -HS -n 65535  然后运行如下命令生效。 service mysqlrouter restart
+centos7需要编辑如下配置文件，[Service]下添加以下配置信息 vi /usr/lib/systemd/system/mysqlrouter.service [Service] LimitCORE=infinity LimitNOFILE=65535 LimitNPROC=65535  然后运行如下命令生效。
+systemctl daemon-reload systemctl restart mysqlrouter.service</description>
+    </item>
+    
+    <item>
+      <title>搭建一套完整的Mysql5.7innodbcluster(GroupReplication&#43;mysqlrouter)</title>
+      <link>/post/2017/12/23/%E6%90%AD%E5%BB%BA%E4%B8%80%E5%A5%97%E5%AE%8C%E6%95%B4%E7%9A%84mysql5.7innodbclustergroupreplication-mysqlrouter/</link>
+      <pubDate>Sat, 23 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017/12/23/%E6%90%AD%E5%BB%BA%E4%B8%80%E5%A5%97%E5%AE%8C%E6%95%B4%E7%9A%84mysql5.7innodbclustergroupreplication-mysqlrouter/</guid>
+      <description>先说三个大步骤：
+搭Mysql5.7 Group Replication ,配置成单主模式
+安装Mysqlshell,配innodbcluster
+安装Mysql-router
+第一步：搭Mysql5.7 Group Replication ,配置成单主模式
+为了节省步骤，我们用RPM方式安装
+yum install -y libaio yum install libnuma* -y rpm -qa | grep -i mysql # 这一步找到旧的mysql rpm -e mysql-libs-5.1.73-8.el6_8.x86_64 --nodeps #我测试的实例上只有这个，删了 rpm -ivh mysql-community-common-5.7.20-1.el6.x86_64.rpm rpm -ivh mysql-community-libs-5.7.20-1.el6.x86_64.rpm rpm -ivh mysql-community-devel-5.7.20-1.el6.x86_64.rpm rpm -ivh mysql-community-client-5.7.20-1.el6.x86_64.rpm rpm -ivh mysql-community-libs-compat-5.7.20-1.el6.x86_64.rpm rpm -ivh mysql-community-embedded-5.7.20-1.el6.x86_64.rpm rpm -ivh mysql-community-server-5.7.20-1.el6.x86_64.rpm rpm -qa | grep mysql　#验证  拷贝cnf.和服务文件
+cp mysqld33* /etc/init.d/ cp -r mysql33* /home/wokofo/  配置文件：</description>
+    </item>
+    
+  </channel>
+</rss>

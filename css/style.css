@@ -1,0 +1,121 @@
+body {
+  max-width: 1280px;
+  margin: auto;
+  padding: .2em;
+  line-height: 1.5em;
+  font-size: 14px;
+}
+
+/* Table of Contents, if wanted
+
+Add to yaml:
+
+output:
+  blogdown::html_page:
+    toc: true
+
+    */
+
+#TableOfContents, #TOC {
+  border: 1px solid #eee;
+  border-radius: 5px;
+}
+
+/* Header and Footer */
+.menu li { display: inline-block; }
+.article-meta, .menu a {
+  text-decoration: none;
+  background: #9ce498;
+  color: #0e6209;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.terms { font-size: 12px; }
+.article-meta{ text-align: left;}
+.menu, footer { text-align: center; }
+.title { font-size: 16px; }
+footer a { text-decoration: none; }
+
+.pull-left {
+    float: left
+}
+.pull-right {
+    float: right
+}
+
+a {
+  color: #006400;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Adjust background at your leisure! */
+header {
+    position: relative;
+    width: 100%;
+    height: 1.75rem;
+    /*font-family: "Lucida Console" , "Liberation Mono";*/
+    font-size: 14px;
+    background: #2E8B57;
+    border-bottom: 1px solid #000;
+}
+
+header ul,
+header ol {
+    margin: 0;
+    padding: 0;
+    list-style: none
+}
+header nav {
+    padding: 0 0.5rem
+}
+
+header a {
+    color: #fff;
+    line-height: 1.75rem;
+    padding: 0 0.5rem
+}
+header a:hover,
+header .current a {
+    color: #fff
+}
+
+/* Code Boxes */
+pre {
+  border: 1px solid #ddd;
+  box-shadow: 5px 5px 5px #eee;
+  background: #f8f8f8;
+  padding: 1em;
+  overflow-x: auto;
+}
+code { background: #f9f9f9; }
+pre code { background: none; }
+
+/* Images, tables, misc. */
+img, iframe, video { max-width: 100%; text-align: left;  }
+main { hyphens: auto; }
+blockquote {
+  background: #f9f9f9;
+  border-left: 5px solid #ccc;
+  padding: 3px 1em 3px;
+}
+
+table {
+  margin: auto;
+  border-top: 1px solid #666;
+  border-bottom: 1px solid #666;
+}
+table thead th { border-bottom: 1px solid #ddd; }
+th, td { padding: 5px; }
+tr:nth-child(even) { background: #eee }
+h2{font-size:16px;font-weight: bold; color:green}
+h3{font-size:14px;font-weight: bold; color:green}
+h3{font-size:12px;font-weight: bold; color:green}
+.f_import{color:#FF8080}
+.f_red{color:red}
+.f_blue{color:blue}
+.f_zhuan{color:#999}

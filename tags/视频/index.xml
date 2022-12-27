@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>视频 on Classic</title>
+    <link>/tags/%E8%A7%86%E9%A2%91/</link>
+    <description>Recent content in 视频 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 11 Mar 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E8%A7%86%E9%A2%91/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL原理_innodb存储格式详解(二)</title>
+      <link>/mysql/mysql%E5%8E%9F%E7%90%86_innodb%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F%E8%AF%A6%E8%A7%A32/</link>
+      <pubDate>Wed, 11 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%8E%9F%E7%90%86_innodb%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F%E8%AF%A6%E8%A7%A32/</guid>
+      <description>MySQL用page页来管理和存储数据文件，这些page页是如何被组织起来的，真实的数据(data,index) 真实是怎么存放在ibd文件和内存中的呢，了解存储格式，将帮助我们更好的理解MySQL是如何工作的，从而更好的理解其他数据库知识点（索引，MVCC,等等），本视频中我将利用Python脚本把这些难以理解的数据页解析出来并图形化展示给大家，望大家知其然而知其所以然
+视频较长，分两段录制，录制时音量较小，注意控制下声音大小。
+  下面是分析.idb文件的脚本，执行结果的明细部分</description>
+    </item>
+    
+    <item>
+      <title>MySQL原理_innodb存储格式详解(一)</title>
+      <link>/mysql/mysql%E5%8E%9F%E7%90%86_innodb%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Tue, 10 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%8E%9F%E7%90%86_innodb%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F%E8%AF%A6%E8%A7%A3/</guid>
+      <description>MySQL用page页来管理和存储数据文件，这些page页是如何被组织起来的，真实的数据(data,index) 真实是怎么存放在ibd文件和内存中的呢，了解存储格式，将帮助我们更好的理解MySQL是如何工作的，从而更好的理解其他数据库知识点（索引，MVCC,等等），本视频中我将利用Python脚本把这些难以理解的数据页解析出来并图形化展示给大家，望大家知其然而知其所以然
+视频较长，分两段录制，录制时音量较小，注意控制下声音大小。
+  核心问题：MySQL（*innodb)是如何组织，存储表数据的？
+innodb单表最大能到多少，为什么？
+为什么innodb数据文件的大小始终可以被16384整除？
+int 和bigint 差别有多大?
+varchar(10) 和varchar(100) 差别有多大？varchar(1000)呢? TEXT 呢?
+1页(page)=基本单位，存储和读取的核心，每页大小默认：16k
+1区(extend)=64页,64*16k=1M
+1组(space)=256区, 256*1M=256M
+每个page都有个编号，整型最大 2^32 x 16k = 64T （单表大小上限）
+下面是分析.idb文件的脚本，执行结果截图 </description>
+    </item>
+    
+  </channel>
+</rss>

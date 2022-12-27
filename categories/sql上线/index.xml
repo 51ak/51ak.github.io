@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>SQL上线 on Classic</title>
+    <link>/categories/sql%E4%B8%8A%E7%BA%BF/</link>
+    <description>Recent content in SQL上线 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 08 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/sql%E4%B8%8A%E7%BA%BF/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>数据库多环境SQL上线</title>
+      <link>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%9A%E7%8E%AF%E5%A2%83sql%E4%B8%8A%E7%BA%BF/</link>
+      <pubDate>Fri, 08 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%9A%E7%8E%AF%E5%A2%83sql%E4%B8%8A%E7%BA%BF/</guid>
+      <description>数据库多环境分类 MySQL数据库按环境区分有以下几种数据库  正式环境数据库：又称生产环境 验证环境数据库：上线验证环境，介于测试和生产之间的一个环境 测试环境数据库：又细分为   test0测试环境：默认测试环境 test1测试环境: test1测试环境简称t1环境，和test0环境是并行关系 test2,test3&amp;hellip; 未来会有更多的测试环境  开发环境：又称Dev环境，用于研发本地调试代码  Oralce测试环境参考MySQL的测试环境 数据库多环境上线的问题  SQL上线（建表/改表，改数据等） 需要在每个环境下都提个流程，研发的重复工作量大 研发可能会忘掉部分环境下执行某个SQL，造成各种环境和线上环境的差异越来越大  解决方式  提供一个多环境SQL上线流程，研发可以勾选每次上线要执行的环境 提供一个多环境数据库表结构对比工具 提供一个不同环境的数据库对象自动同步工具  多环境SQL上线流程 这里只演示MySQL多环境上线流程，Oracle的多环境上线流程和这个一模一样
+步骤1.选择数据库 步骤2.填写上线内容  注意1：这里可以自由勾选要执行的数据库环境，红色的是线上环境，绿色的是测试和验证环境，蓝色的是开发环境 注意2：所有环境都会执行SQL验证，所有环境通过验证，才可以进入下一步  步骤3.流程审批  如果通过了系统的SQL审核，会出现如下图的界面，进入流程审批 3.负责人审批是必选步骤 4.测试审批是用户可选步骤 5.DBA审批会根据用户提供的SQL内容，系统判定是否有dba介入（建表/改表/大范围修改数据DBA会审批，否则会自动跳过这一步）  步骤4.用户执行  审批完成以后，由发起人自由选择在合适的时间，点击上线按扭   步骤5.执行结果  执行完成后，会显示每个环境的执行结果。   后台配置 这个流程也是在dboop平台上用xml配置的，后台界面如下</description>
+    </item>
+    
+  </channel>
+</rss>

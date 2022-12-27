@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>python on Classic</title>
+    <link>/categories/python/</link>
+    <description>Recent content in python on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 26 Sep 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/python/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Python入门之书上没有的东西</title>
+      <link>/ops/python%E5%85%A5%E9%97%A8%E4%B9%8B%E4%B9%A6%E4%B8%8A%E6%B2%A1%E6%9C%89%E7%9A%84%E4%B8%9C%E8%A5%BF/</link>
+      <pubDate>Mon, 26 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/python%E5%85%A5%E9%97%A8%E4%B9%8B%E4%B9%A6%E4%B8%8A%E6%B2%A1%E6%9C%89%E7%9A%84%E4%B8%9C%E8%A5%BF/</guid>
+      <description>分享分  为Python零基础同学做了一场入门分享 准备了1个小时的ppt 现场因为有很多演示，共花了90分钟 还好今天没人过来抢会议室。  ppt 说重点：  三天打鱼两天晒网的学习Python是不现实的，每天抽小半个小时敲代码，坚持下去，一两个星期就能入门。 最先要学的不是基础知识，而是环境配置和工具的选择 基础知识不用啃得太死，差不多理解了有印象就行，后面随着练习会不断强化，自然就学会了 练习为王，千万不要死看书，不动手。 多写，多练习，遇到报错顺着问题解决，一开始有卡住的找朋友同事帮忙，后面要学着自己搜索 多利用搜索引擎，随着技能的提升，会不断的有新问题出现。 要针对一个具体的目标和小型项目来进行练习。  </description>
+    </item>
+    
+    <item>
+      <title>vscode在mac上用PyQt5制作窗口应用</title>
+      <link>/ops/python%E5%88%B6%E4%BD%9Cmac%E7%A8%8B%E5%BA%8F/</link>
+      <pubDate>Tue, 20 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/python%E5%88%B6%E4%BD%9Cmac%E7%A8%8B%E5%BA%8F/</guid>
+      <description>环境准备  vscode python3 (我用的是python3.9)  安装PyQt5 pip3 install PyQt5 pip3 install PyQt5-tools VSCode中安装和配置pyqt插件 安装了后点设置
+Qtdesigner：这里写入designer.app的完整路径 {这里写python的安装绝对路径}/site-packages/qt5_applications/Qt/bin/Designer.app/Contents/MacOS/Designer
+至此就完成了环境准备
+设计一个窗体程序 建一个项目文件夹，然后右键新建一个form 打开的design窗口，拖动控件，完成窗体设计 保存窗体到 form1.ui 直接cmd+s 保存即可，这里的form1名字可以随意起
+编译form1.ui到py文件 右键选compile
+这里还可以继续调整生成py文件（如果有需要的话）
+新建一个启动文件 main.py import sys from PyQt5.QtWidgets import QMainWindow,QApplication,QWidget from Ui_form1 import Ui_Dialog #导入你写的界面类 class MyMainWindow(QMainWindow,Ui_Dialog): #这里也要记得改 def __init__(self,parent =None): super(MyMainWindow,self).__init__(parent) self.setupUi(self) if __name__ == &amp;quot;__main__&amp;quot;: app = QApplication(sys.argv) myWin = MyMainWindow() myWin.show() sys.exit(app.exec_()) 调试和生成程序 调试代码 用pyton单应用启动调试main.py ，顺利的话会出现刚刚设计好的窗体。 如果有报错的话，解决它
+安装pyinstall  pip3 install pyinstaller 编译和生成一个可执行文件  sudo pyinstaller --windowed --onefile --clean --noconfirm main.</description>
+    </item>
+    
+    <item>
+      <title>show engine innodb status 工具化实现</title>
+      <link>/mysql/mysql%E7%9A%84showinnodbstatus/</link>
+      <pubDate>Wed, 06 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84showinnodbstatus/</guid>
+      <description>为什么要写这个工具 当MySQL出现性能问题时，DBA经常得去innodb status ，
+但是innodb status的输出信息非常丰富也很复杂。滚了几个屏幕的指标，像这样的得翻好几页，几百行的结果。
+ 哪些是重要的指标 指标具体代表什么意思 指标的值是否正常  非常考验DBA的眼力。
+考虑到以上的不方便，写了个小脚本把这些指标提取出来，并将指标对应的中文意思和合理取值范围做了详细的备注。
+实现思路  当用户选中MySQL实例，并点击show engine innnodb statutus按钮时 后台进程去该实例执行 show engine innnodb statutus 语句 返回结果做正则筛选，将各种指标和值保存在一个字典中 提前准备好一个指标的字典，字典里记了该值的中文说明和取值范围（取值范围这个还没做好） 两个字典一合并，输出一个分好类的可视化结果  指标提取和定义 脚本内容是定义了一个数据字典去翻译这些指标
+{ &amp;quot;background_thread&amp;quot;:(&amp;quot;后台进程:除掉用户请求的活动会话，MySQL后台进程也会定时的进行一系列工作。&amp;quot;,[(&amp;quot;master_thread_loops_active&amp;quot;,&amp;quot;&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;后台master线程avtive执行次数合计值&amp;lt;/b&amp;gt;,后台master线程的每次循环时会选择一种状态来执行(active、shutdown、idle),active次数/idle次数 比值越高，代表系统的写操作越繁忙。&amp;quot;), (&amp;quot;master_thread_loops_idle&amp;quot;,&amp;quot;&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;后台master线程idle执行次数合计值&amp;lt;/b&amp;gt;,和上一个指标连起来看,idle次数越高，代表系统的写操作越少。所以该指标值越大，系统写资源越充足&amp;quot;), (&amp;quot;master_thread_log_flush_and_writes&amp;quot;,&amp;quot;Bytes&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;后台master线程刷新redo日志&amp;lt;/b&amp;gt;,定期刷新redo日志，和参数innodb_flush_log_at_timeout控制刷新时间&amp;quot;) ] ) ,&amp;quot;bufferpool_memory&amp;quot;:(&amp;quot;缓冲池:有关已读和已写页面的统计信息。可以从这些数字中获得缓冲池的使用情况。&amp;quot;,[ (&amp;quot;total_large_memory_allocated&amp;quot;,&amp;quot;Bytes&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;分配给InnoDB Buffer Pool的总内存&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;dictionary_memory_allocated&amp;quot;,&amp;quot;Bytes&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;分配给InnoDB数据字典的内存&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;buffer_pool_size&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;分配给IBP的内存，单位pages&amp;lt;/b&amp;gt;,每页16k&amp;quot;) ,(&amp;quot;buffer_pool_hit&amp;quot;,&amp;quot;/1000&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool命中率&amp;lt;/b&amp;gt;每1000次请求有*次命中buffer pool,非常重要&amp;quot;) ,(&amp;quot;free_buffers&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool Free List 总大小，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;database_pages&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool LRU List 总大小，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;old_database_pages&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool old LRU 总大小，单位pages(冷端)&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;modified_db_pages&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool中脏页的数量，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pending_reads&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;等待读入Buffer Pool的页数量，单位pages&amp;lt;/b&amp;gt;,理论上不应该有等待队列&amp;quot;) ,(&amp;quot;pending_writes_lru&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;LRU中buffer中等待被刷的脏页数，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pending_writes_flush_list&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在checkpoint期间要刷新的缓冲池页数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pending_writes_single_page&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在缓冲池中写入挂起的独立页的数目&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_made_young&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;热点页数&amp;lt;/b&amp;gt;,在缓冲池LRU list中年轻的总页数(移动新页面到sublist的头部)&amp;quot;) ,(&amp;quot;pages_made_not_young&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;old sublist中的page数，冷端的page数&amp;lt;/b&amp;gt;,在缓冲池LRU列表中不年轻的页面总数(保留旧页面在sublist中，不改变)&amp;quot;) ,(&amp;quot;pages_made_young_per_sec&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒LRU链中被young的page数&amp;lt;/b&amp;gt;,oungs/s度量标准仅用于old pages，基于对page的访问次数，而不是页的数量。对页进行多次访问都会被计算。如果见到非常低的值，可能需要减小延迟或增加old page LRU list 的比例。增大后，页面需要更长的时间才会移动到尾部，这就增加了再次访问page，从而使他们made young的可能性增大&amp;quot;) ,(&amp;quot;pages_made_non_young_per_sec&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒LRU链中未被young的page数&amp;lt;/b&amp;gt;，可以一定程度上看出库的繁忙程度和命中率,Not young，如果在执行大表扫描时未看到较高的non-young和non-youngs/s，请增加innodb_old_blocks_time。&amp;quot;) ,(&amp;quot;pages_read&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool中读取的page总数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_created&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在bufferpool中创建的page数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_written&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool写入的page数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_read_per_sec&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool中读取的page数/秒&amp;lt;/b&amp;gt;, 比较重要，代表库的繁忙程度&amp;quot;) ,(&amp;quot;pages_created_per_sec&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在bufferpool中创建的page数/秒&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_written_per_sec&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool写入的page数/秒&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_read_ahead&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒平均预读操作次数&amp;lt;/b&amp;gt;k&amp;quot;) ,(&amp;quot;evicted_without_access&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒驱逐的page数&amp;lt;/b&amp;gt;k&amp;quot;) ,(&amp;quot;random_read_ahead&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒钟随机预读操作的次数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;lrn_len&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;LRU的长度&amp;lt;/b&amp;gt;&amp;quot;) ] ) .</description>
+    </item>
+    
+    <item>
+      <title>服务器过保日期批量查询python</title>
+      <link>/ops/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E4%BF%9D%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2python%E8%84%9A%E6%9C%AC/</link>
+      <pubDate>Sat, 09 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E4%BF%9D%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2python%E8%84%9A%E6%9C%AC/</guid>
+      <description>浪潮服务器过保查询  import json import urllib import requests # def chenck_hardware_info(sn): url = &#39;https://www.inspur.com/eportal/ui&#39; sn_file = &amp;quot;/tm/sn.text&amp;quot; def request_datatime(sn): params = { &amp;quot;struts.portlet.action&amp;quot;: &amp;quot;/portlet/download-front!serverConfig.action&amp;quot;, &amp;quot;sn&amp;quot;: sn, &amp;quot;src&amp;quot;: &amp;quot;inspur&amp;quot;, &amp;quot;language&amp;quot;: &amp;quot;CN&amp;quot;, &amp;quot;pageId&amp;quot;: &amp;quot;2317460&amp;quot;, &amp;quot;moduleId&amp;quot;: &amp;quot;82efecfc33da48b4a66567cb3dcbe5f3&amp;quot; } headers = { &amp;quot;Referer&amp;quot;: &amp;quot;https://www.inspur.com/eportal/ui?pageId=2317460&amp;quot;, &amp;quot;Cookie&amp;quot;: &amp;quot;JSESSIONID=****; ........(这里写cookie地址)&amp;quot; } r = requests.post(url, headers=headers, params=urllib.parse.urlencode(params)) resp = r.text[1:len(r.text)-1] resp = json.loads(resp) #print(resp[&#39;Date&#39;]) return resp[&#39;warranty1&#39;] def post_info(sn): r1 = request_datatime(sn) url = &amp;quot;http://cmdbbackend.dev.tujia.com/api/inventoryitem/sn/update/life&amp;quot; headers = { &amp;quot;OPS-Token&amp;quot;:&amp;quot;IHmioqYhb0XgBAsEiHeK_guibinw&amp;quot;, &amp;quot;Content-Type&amp;quot;:&amp;quot;application/json&amp;quot; } data = [{ &amp;quot;serialNo&amp;quot;: sn, &amp;quot;contractPeriod&amp;quot;: r1 }] r = requests.</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_python</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_python/</link>
+      <pubDate>Wed, 05 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_python/</guid>
+      <description>python安装 yum install -y gcc zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel yum install -y libffi-devel cd /opt/ wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tar.xz tar -xvJf Python-3.7.0.tar.xz mkdir -p /usr/local/python3 cd Python-3.7.4 ./configure --prefix=/usr/local/python3 make &amp;amp;&amp;amp; make install ln -s /usr/local/python3/bin/python3 /usr/local/bin/python3 ln -s /usr/local/python3/bin/pip3 /usr/local/bin/pip3 python3 -V pip3 -V </description>
+    </item>
+    
+  </channel>
+</rss>

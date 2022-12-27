@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mysql复制 on dboop.com</title>
+    <link>/categories/mysql%E5%A4%8D%E5%88%B6/</link>
+    <description>Recent content in mysql复制 on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 27 May 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/mysql%E5%A4%8D%E5%88%B6/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>记一次主从复制错误处理和修复过程(mysql5.7 gtid)</title>
+      <link>/post/2019/05/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E5%92%8C%E4%BF%AE%E5%A4%8D%E8%BF%87%E7%A8%8Bmysql5.7-gtid/</link>
+      <pubDate>Mon, 27 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/05/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E5%92%8C%E4%BF%AE%E5%A4%8D%E8%BF%87%E7%A8%8Bmysql5.7-gtid/</guid>
+      <description>MYSQL的复制会在极端条件下出现主从不一致的问题 原因有很多种,这里记一下比较完整的处理过程 网上的很多处理方法都是基于早期版本的没有GIID环境
+stop slave; SET GLOBAL SQL_SLAVE_SKIP_COUNTER = 1 ; start slave;  这篇会介绍GIID下的复制错误快速恢复和修复过程
+##收到报警 收到报警,一个从节点Slave_SQL_Running状态异常 当时是周末的晚上,看到报警时已经DOWN了10分钟了 联VPN到线上又花了几分钟 上线确认以下信息,确认是有问题
+show slave status \G #得到以下关键信息 Last_SQL_Error_Timestamp: 报错时间 Slave_SQL_Running: 报错进程 Slave_SQL_Running_State: 报错信息 Could not execute Delete_rows event on table \*; Can&#39;t find record in &#39;\*&#39;, Error_code: 1032; handler error HA_ERR_KEY_NOT_FOUND; the event&#39;s master log mysql-bin.002339, end_log_pos 162227594  ##问题已确认,第二步确定影响 因为这个从库已经不同步了,需要保证业务没有影响 show processlist; 发现正常读业务已经被中件间切走了,只有BI的一个业务线因为用了DNS直连没有切走, 比较坑的是这个BI线不确定是谁负责的,但考虑BI应用读脏数据影响不大,就直接把问题交给值班人员让他联系了.(这里提一下,我们只有BI类应用会出现这种问题,业务类的访问已经都对接了具体的人)
+##开始尝试修复复制 这里说的尝试修复是快速的修复问题,不能保证100%成功 使用的方法还是跳过报错的事务,使整个复制进行下去
+show slave status \G #找关键的Slave_SQL_Running_State 列的Error_code 内容 ,这里面是1032 #查系统表找到这个GTID:ed3e8c5d-b102-11e8-9dbc-1418773c97b3:534249277 并跳过它 select LAST_SEEN_TRANSACTION from performance_schema.</description>
+    </item>
+    
+  </channel>
+</rss>

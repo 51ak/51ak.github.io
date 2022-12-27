@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>relaylog on Classic</title>
+    <link>/categories/relaylog/</link>
+    <description>Recent content in relaylog on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 14 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/relaylog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL的7种日志(一):概况</title>
+      <link>/mysql/mysql7%E7%A7%8D%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Mon, 14 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql7%E7%A7%8D%E6%97%A5%E5%BF%97/</guid>
+      <description>0.前言 和其他关系型数据库一样
+MySQL也重度依靠数据库日志来完成一系统的功能。
+总结了以下7种重要的日志。今天先简单给这7兄弟做个整体介绍。
+接下来会分三个章节分别说清楚（binlog/redolog/undolog 这三位不省心的兄弟在做什么).
+1.日志的分类 Binlog:  MySQL最重要的日志（没有之一），记录了所有的DDL和DML语句(除了数据查询语句select、show等)，以事件形式记录 DBA依赖它做：高可用方案，异构数据迁移，备份和恢复，误更新回滚。。。。等等 ，是整个MySQL的灵魂 研发/大数据人员依赖Binlog做数据订阅，数据同步  relaylog:  它是依赖于binlog的日志，格式也和binlog一样。 是MySQL复制进程把“别的实例的binlog&amp;quot;复制到本地后，就叫做relaylog. 作用是为了MySQL高可用复制服务的一种日志。  Slowlog:  慢查询日志用来记录在MySQL中响应时间超过阀值的语句，则会被记录到慢查询日志中。由long_query_time参数控制，默认值10秒， 一般线上环境，我们设置为:0.2秒 或0.5秒 两种标准 一般DBA通常会用脚本将日志收集归类，分析后对部分规则产生报警。 这个日志是文本类型的，打开就能看到，比较简单，很容易理解，也很有用  genlog:  一般轻易不开启，开启以后，会将所有经过的SQL都记录到日志里，非常费资源。 定位奇怪的问题时会用到。审计的时候也能用到。 不建议打开，定位问题后，要及时关闭  errorlog:  数据库产生warning,error时会打印的日志，实例启动失败了，或者实例崩溃了必看的日志。平时做好监控。建议开启死锁print，在errorlog中也能看到死锁信息。  redolog：  可能是最难理解的一个日志了，不同于上面的那些日志，redolog是innodb存储引擎的日志，不是MySQL自身的日志 redolog经常会和binlog/undolog搞混 记住最重要的一点：redolog是为了数据库突然关机或崩溃的时候用的。它的作用是：为了不丢失修改。 redolog通常是物理日志，记录的是数据页的物理修改（区别于binlog的逻辑修改)，而不是某一行或某几行修改成怎样怎样，它用来恢复提交后的物理数据页(恢复数据页，且只能恢复到最后一次提交的位置)。  undolog:  undo和redonlog一样也是是innodb存储引擎的日志，用来回滚行记录到某个版本。undo log一般是逻辑日志，根据每行记录进行记录。 它的作用除了和redolog一起保证数据库突然关机或崩溃的时候，数据不丢失，不混乱。它还是MVCC事务特性的重要组成部分。  小结： 简单介绍完7种日志，其中的三个日志（binlog/redolog/undolog) 涉及知识点非常多，会分别写一篇，慢慢聊。
+&amp;ndash; done</description>
+    </item>
+    
+  </channel>
+</rss>

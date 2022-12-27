@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Innodb_row_lock_current_waits on dboop.com</title>
+    <link>/categories/innodb_row_lock_current_waits/</link>
+    <description>Recent content in Innodb_row_lock_current_waits on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 16 Sep 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/innodb_row_lock_current_waits/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Innodb_row_lock_waits和Innodb_row_lock_current_waits报警处理</title>
+      <link>/post/2019/09/16/innodb_row_lock_waits%E5%92%8Cinnodb_row_lock_current_waits%E6%8A%A5%E8%AD%A6%E5%A4%84%E7%90%86/</link>
+      <pubDate>Mon, 16 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/09/16/innodb_row_lock_waits%E5%92%8Cinnodb_row_lock_current_waits%E6%8A%A5%E8%AD%A6%E5%A4%84%E7%90%86/</guid>
+      <description>刚才有RD部门负责人在企业微信上问我他们的一个MYSQL实例Innodb_row_lock_waits在报警，这个是什么情况？
+得益于我们把数据库的报警，发送给了RD负责人，每个负责人会对自己业务线的数据库性能比较关心，比DBA还要关心。 通常DBA收到这种row_lock报警只要不是连续的长时间报，一般会忽略。 这也是我们努力做数据库负责人制度的原因。
+回归正题，处理Innodb_row_lock_waits或者Innodb_row_lock_current_waits报警。
+报警判断 首先第一步这不是个严重的报警，如果没有其他并发报警. 但这个报警一般会对业务来说，行数增多，意味着更多的锁等待时长
+行锁的报警规则设置如下： &amp;lt;counter_node&amp;gt;&amp;lt;counter&amp;gt;Innodb_row_lock_waits&amp;lt;/counter&amp;gt;&amp;lt;checkpoint&amp;gt;0,10,30,80,5000&amp;lt;/checkpoint&amp;gt;&amp;lt;weight&amp;gt;1&amp;lt;/weight&amp;gt;&amp;lt;/counter_node&amp;gt;
+报警排查 show engine innodb status \G
+观察结果TRANSACTIONS 这一段：
+TRANSACTIONS
+Trx id counter 581112825 Purge done for trx&amp;rsquo;s n:o &amp;lt; 581112824 undo n:o &amp;lt; 0 state: running but idle History list length 34 LIST OF TRANSACTIONS FOR EACH SESSION: &amp;mdash;TRANSACTION 421991409852768, not started 0 lock struct(s), heap size 1136, 0 row lock(s) &amp;mdash;TRANSACTION 421991409917520, not started 0 lock struct(s), heap size 1136, 0 row lock(s) &amp;mdash;TRANSACTION 421991409914784, not started 0 lock struct(s), heap size 1136, 0 row lock(s) &amp;mdash;TRANSACTION 421991409911136, not started 0 lock struct(s), heap size 1136, 0 row lock(s)</description>
+    </item>
+    
+  </channel>
+</rss>

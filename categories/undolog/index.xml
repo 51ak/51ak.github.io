@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>undolog on Classic</title>
+    <link>/categories/undolog/</link>
+    <description>Recent content in undolog on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 28 Jul 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/undolog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL的事务隔离和MVCC</title>
+      <link>/mysql/mysql%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%92%8Cmvcc/</link>
+      <pubDate>Thu, 28 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%92%8Cmvcc/</guid>
+      <description>0.前言:为什么要写这篇文章？ 事务隔离和mvcc的重要性 不同于很多MySQL的原理，只需要DBA掌握，事务对于研发人员也是必须掌握的知识点和原理。并发程度越高，数据库里的锁和事务越明显，越重要。所以：数据库事务和mvcc是研发和DBA都要熟练掌握的另一方面的原因是现有的资料对mvcc写得不够直观 现有的对mvcc原理的讲解停留在画图阶段，我觉得光画图还不够，要实打实的一个字节一个字节的看MySQL真实的数据文件是怎么实现的。利用自研的MySQL数据文件分析工具（ 参考：innodb存储格式 )。可以很直观的把mvcc实现的底层逻辑给展示出来。
+ 以下两篇文章，可以协助你更好的理解本章节的内容
+  MySQL行格式(compact,redundant,dynamic,compressed) ) MySQ事务id:trx_id )  环境准备  MySQL版本:8.0.22 事务隔离级别:REPEATABLE-READ (默认隔离级别)  建一张表dboopuser并insert几条数据 drop table dboopuser; create table dboopuser( userid int unsigned not null primary key , age smallint unsigned not null default 0, username varchar(20) not null default &#39;&#39;, userimg varchar(255) not null default &#39;&#39; ) ENGINE=InnoDB COMMENT=&#39;测试user表--用于mvcc测试20220727&#39; ; insert into dboopuser(userid,age,username,userimg) values(9527,25,&#39;cccccccccc&#39;,&#39;http://www.dboop.com/img/user/2002_innodbtrx_527.jpg&#39;); insert into dboopuser(userid,age,username,userimg) values(9528,15,&#39;dddddddddddddd&#39;,&#39;http://www.dboop.com/img/user/2002_innodbtrx_528.jpg&#39;); insert into dboopuser(userid,age,username,userimg) values(9529,25,&#39;eeeeeeeeeeeeeeeee&#39;,&#39;http://www.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的7种日志(三):UndoLog</title>
+      <link>/mysql/mysql%E7%9A%84undo%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Sat, 28 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84undo%E6%97%A5%E5%BF%97/</guid>
+      <description>0.前言 续：
+ MySQL的7种日志(一):概况 MySQL的7种日志(二):RedoLog
+ 1.什么是undolog  undo：撤销或取消，以撤销/回滚操作为目的，返回指定某个状态的操作。 undolog：数据库事务开始之前，会将要修改的记录存放到 Undo 日志里，当事务回滚时或者数据库崩溃时，可以利用Undo日志，撤销未提交事务对数据库产生的影响。 undolog在事务开始前产生；事务在提交时，并不会立刻删除undolog，innodb会将该事务对应的 undo log 放入到删除列表中，后面会通过后台线程purge thread进行回收处理。 undolog属于逻辑日志，记录一个变化过程。例如执行一个delete，undo log会记录一个insert；执行一个update，undo log会记录一个相反的update。  2.undolog的作用  实现事务的原子性 当事务回滚时或者数据库崩溃时，利用Undo日志，撤销未提交事务对数据库产生的影响。事务处理过程中，如果出现了错误或者用户执行了 ROLLBACK 语句，MySQL 可以利用 Undo Log 中的备份将数据恢复到事务开始之前的状态。 实现多版本并发控制（MVCC） Undo Log 在 MySQL InnoDB 存储引擎中用来实现多版本并发控制。事务未提交之前，Undo Log 保存了未提交之前的版本数据，Undo Log 中的数据可作为数据旧版本快照 供其他并发事务进行快照读。（构建read view视图）  3.undolog的存储 3.1 物理存储位置 找到具体存放的位置 MySQL5.6.3 之前的版本undolog存储在系统共享表空间里，后续的版本推荐存话在单独的文件中
+mysql&amp;gt; show global variables like &#39;%undo%&#39;; +--------------------------+-------------------------+ | Variable_name | Value | +--------------------------+-------------------------+ | innodb_max_undo_log_size | 1073741824 | | innodb_undo_directory | /data/mysql3306/innolog | | innodb_undo_log_encrypt | OFF | | innodb_undo_log_truncate | ON | | innodb_undo_tablespaces | 2 | +--------------------------+-------------------------+ 5 rows in set (0.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的7种日志(一):概况</title>
+      <link>/mysql/mysql7%E7%A7%8D%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Mon, 14 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql7%E7%A7%8D%E6%97%A5%E5%BF%97/</guid>
+      <description>0.前言 和其他关系型数据库一样
+MySQL也重度依靠数据库日志来完成一系统的功能。
+总结了以下7种重要的日志。今天先简单给这7兄弟做个整体介绍。
+接下来会分三个章节分别说清楚（binlog/redolog/undolog 这三位不省心的兄弟在做什么).
+1.日志的分类 Binlog:  MySQL最重要的日志（没有之一），记录了所有的DDL和DML语句(除了数据查询语句select、show等)，以事件形式记录 DBA依赖它做：高可用方案，异构数据迁移，备份和恢复，误更新回滚。。。。等等 ，是整个MySQL的灵魂 研发/大数据人员依赖Binlog做数据订阅，数据同步  relaylog:  它是依赖于binlog的日志，格式也和binlog一样。 是MySQL复制进程把“别的实例的binlog&amp;quot;复制到本地后，就叫做relaylog. 作用是为了MySQL高可用复制服务的一种日志。  Slowlog:  慢查询日志用来记录在MySQL中响应时间超过阀值的语句，则会被记录到慢查询日志中。由long_query_time参数控制，默认值10秒， 一般线上环境，我们设置为:0.2秒 或0.5秒 两种标准 一般DBA通常会用脚本将日志收集归类，分析后对部分规则产生报警。 这个日志是文本类型的，打开就能看到，比较简单，很容易理解，也很有用  genlog:  一般轻易不开启，开启以后，会将所有经过的SQL都记录到日志里，非常费资源。 定位奇怪的问题时会用到。审计的时候也能用到。 不建议打开，定位问题后，要及时关闭  errorlog:  数据库产生warning,error时会打印的日志，实例启动失败了，或者实例崩溃了必看的日志。平时做好监控。建议开启死锁print，在errorlog中也能看到死锁信息。  redolog：  可能是最难理解的一个日志了，不同于上面的那些日志，redolog是innodb存储引擎的日志，不是MySQL自身的日志 redolog经常会和binlog/undolog搞混 记住最重要的一点：redolog是为了数据库突然关机或崩溃的时候用的。它的作用是：为了不丢失修改。 redolog通常是物理日志，记录的是数据页的物理修改（区别于binlog的逻辑修改)，而不是某一行或某几行修改成怎样怎样，它用来恢复提交后的物理数据页(恢复数据页，且只能恢复到最后一次提交的位置)。  undolog:  undo和redonlog一样也是是innodb存储引擎的日志，用来回滚行记录到某个版本。undo log一般是逻辑日志，根据每行记录进行记录。 它的作用除了和redolog一起保证数据库突然关机或崩溃的时候，数据不丢失，不混乱。它还是MVCC事务特性的重要组成部分。  小结： 简单介绍完7种日志，其中的三个日志（binlog/redolog/undolog) 涉及知识点非常多，会分别写一篇，慢慢聊。
+&amp;ndash; done</description>
+    </item>
+    
+  </channel>
+</rss>

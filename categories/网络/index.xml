@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>网络 on dboop.com</title>
+    <link>/categories/%E7%BD%91%E7%BB%9C/</link>
+    <description>Recent content in 网络 on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 26 Jul 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/%E7%BD%91%E7%BB%9C/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>socket timeout exception和常见网络丢包情况--笔记</title>
+      <link>/post/2019/07/26/socket-timeout-exception%E5%92%8C%E5%B8%B8%E8%A7%81%E7%BD%91%E7%BB%9C%E4%B8%A2%E5%8C%85%E6%83%85%E5%86%B5-%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Fri, 26 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/07/26/socket-timeout-exception%E5%92%8C%E5%B8%B8%E8%A7%81%E7%BD%91%E7%BB%9C%E4%B8%A2%E5%8C%85%E6%83%85%E5%86%B5-%E7%AC%94%E8%AE%B0/</guid>
+      <description>今天参加了一场内部的网络方面的分享 这是现场记下和整理的笔记  socket timeout exception出现一般有两种情况 一、超时时间过短 慢查询、负载高等  二、网络连接丢包 TCP重试机制：20ms重传，指数递增。  数据库传输路径 网卡&amp;ndash;&amp;gt;驱动&amp;ndash;&amp;gt;硬件缓存&amp;ndash;》内核
+网卡 网卡在内存中分配一个缓冲区:sk_buffer 如果无法及时写到sk_buffer ,会产生丢包 ()
+写入SK_BUFFER后，网卡立即发起一个CPU硬件中断
+驱动 CPU接受到后，触发网卡驱动的软中断程序，消费SK_BUFFER上的数据，交给内核协议处理
+硬件缓存 默认将sk_buffer队列数据写入到CPU队列，如果满了也会丢弃
+内核 数据我进到IP层后 因为窗口可调整不会丢包,但TCP握手还是会丢包
+client发送sync SERVER在收到后 SYNC_QUEUE半连接队列，然后返回syn+ack client 收到后 发送ack server 收到后写入accept_queue 全连接队列
+server收到client的syn后，把相关信息放到半连接队列中 server回复syn+ack给client server收到client的ack，如果这时全连接队列没满，那么从连接队列拿出相关信息放入到全连接队列中，否则按tcp_abort_on_overflow指示的执行。
+当这两个连接满时会发生丢包，试如下参数 /proc/sys/net/ipv4/tcp_abort_on_overflow 为0表示当队列满时丢弃 /proc/sys/net/ipv4/tcp_abort_on_overflow 为1表示当队列满时发送RST报文
+应用进程过程中常见的可能导致超时的情况: 1.JVM Full GC 2.上游服务较慢 3.慢SQL 4.使用了慢Redis命令 5.系统CPU使用率较高(可能是外部进程使用较高，可能是Java进程中存在死锁或死循环) 6.磁盘IO wait导致 7.打开的文件数过多
+监控  NIC缓冲区到driver buffer缓冲区过程中，如果NIC缓冲区消费能力小于NIC写入能力，则会发生网络丢包 命令行可以通过ifconfig 查看overruns对应的值 或者cat /proc/net/dev里面fifo列对应的值 命令行可以通过ifconfig 查看dropped对应的值 或者cat /proc/net/dev里面dropped列对应的值
+当出现这两种值时，需要使用top 检查cpu core0的idle比例，如果cpu idle较低， 可能需要更换配置更好的机器。</description>
+    </item>
+    
+  </channel>
+</rss>

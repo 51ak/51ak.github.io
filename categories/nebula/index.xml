@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>nebula on Classic</title>
+    <link>/categories/nebula/</link>
+    <description>Recent content in nebula on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 29 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/nebula/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>图数据库nebula源码编译安装</title>
+      <link>/dba/nebula%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/</link>
+      <pubDate>Wed, 29 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/nebula%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/</guid>
+      <description>环境准备 当前机器环境centos7
+硬件要求    类型 要求     CPU 架构	x86_64   内存 4 GB   硬盘 10 GB，SSD    环境依赖（针对centos7)    软件名称 版本 备注     glibc 2.17 及以上 执行命令ldd &amp;ndash;version检查版本。   g++ 8.5.0 及以上 执行命令g++ -v检查版本。   cmake 3.14.0 及以上 执行命令cmake &amp;ndash;version检查版本。    yum安装准备 cd /etc/yum.repos.d/mv CentOS-Base.repo CentOS-Base.repo.backwget -O CentOS-Base.repo http://mirrors.</description>
+    </item>
+    
+    <item>
+      <title>图数据库nebula性能监控</title>
+      <link>/dba/nebula%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7/</link>
+      <pubDate>Thu, 23 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/nebula%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7/</guid>
+      <description>目的 nebulaGraph官方自带的Nebula Dashboard 监控工具里的监控指标和筛选粒度已经足够丰富。但基于以下原因，还是在此基础上自己做了层监控
+ 缺少关键指标的定义，对除DBA以外的用户不友好。我们希望把性能数据让研发同学也能看到 缺少一个对所有服务器的横向对比和集中展示Dashboard 与我们现有的DBA监控不在一个平台，需要多平台切换使用 没有性能指标评分，同样的指标，没有给出是否合格的标准和提示 官方已经提供了可以直接读取性能数据的接口 http://%s/stats，在些基础上二次开发监控的难度会很低，预估开发工作量1pd ,实际开发工作量1.5pd  1.指标筛选 官方提供的性能接口里有几百项指标，我们从graph,storage,rockdb 三个层面，筛选了60几个重点的，需要关注的指标，筛选的依据是
+ 是否能从指标定位到资源或性能问题（响应时间等） 是否在排查问题出现时，有助于定位异常（命令次数，qps等) 是否有类似的指标已经存在。  最终，挑选了以下指标 2.编写收集代码（Python） 这部分因为有官方接口，所以直接请求就可以了
+for nodeid,nodehost in grpahlist: dict_result=self.get_nebula_stats(nodehost) #入库 dict_result def get_nebula_stats(self,nodehost) dict_result={} urlstr=&amp;#39;http://%s/stats?format=json&amp;#39;%(nodehost,) mlist=self.get_urldata(urlstr) for dictc in mlist: for k,v in dictc.items(): if k in dict_graph: keyname=dict_graph[k][0] dict_result[keyname]=v return dict_result 3.性能评价 这是非常重要的一步，沿用我在2005年做的数据库性能模型的方法（参考：https://github.com/51ak/DatabaseRating/）
+ 对我们的每一项指标，我们需要对其取值范围进行判断，给其打分：优，良，中，劣。 标记为:weight 对每一项指标，对其权重做标记（0-5）,标记为：height 由weight和height计算出这个实例的健康程度 但是我们的nebula服务只有一个集群，不需要太细化，所以我们只做了weight标记  做weight标记的逻辑是定义如下的一个区间列表
+dict_graph={ &amp;#34;num_active_queries.sum.60&amp;#34;:(&amp;#34;num_active_queries&amp;#34;,(-4,5,10,50,1000000)), &amp;#34;num_active_sessions.sum.60&amp;#34;:(&amp;#34;num_active_sessions&amp;#34;,(-4,5,10,50,1000000)), &amp;#34;num_opened_sessions.rate.60&amp;#34;:(&amp;#34;num_opened_sessions&amp;#34;,(-4,100,500,10000,10000000)), &amp;#34;num_queries.rate.60&amp;#34;:(&amp;#34;num_queries_rate&amp;#34;,(-4,100,500,10000,10000000)), &amp;#34;num_queries.sum.60&amp;#34;:(&amp;#34;num_queries_sum&amp;#34;,(-4,5000,50000,900000,100000000)), &amp;#34;num_sentences.rate.60&amp;#34;:(&amp;#34;num_sentences_rate&amp;#34;,(-4,100,500,10000,10000000)), &amp;#34;num_sentences.sum.60&amp;#34;:(&amp;#34;num_sentences_sum&amp;#34;,(-4,5000,50000,900000,100000000)), &amp;#34;query_latency_us.</description>
+    </item>
+    
+    <item>
+      <title>图数据库nebula实时慢日志收集和展示</title>
+      <link>/dba/nebula%E6%85%A2%E6%9F%A5%E8%AF%A2%E7%9B%91%E6%8E%A7/</link>
+      <pubDate>Fri, 17 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/nebula%E6%85%A2%E6%9F%A5%E8%AF%A2%E7%9B%91%E6%8E%A7/</guid>
+      <description>目的 因为我们的图数据库从neo4j社区版转到nebula graph方向。最近在项目压测的时候，一开始很平稳，运行一段时间后，NQL会越来越慢，发现性能巨差。nebula经常卡死，表现为：
+ nebula-storaged.service和nebula-graphd.service服务经常挂掉。 业务侧反馈执行什么NQL都很慢 nebula show query里发现有大量（300-500个）running的进程。平时很快的NQL也卡在那  系统资源
+ 内存紧张 ，大量的虚拟内存被占用 io,cpu也较高  在做了一些参数调优后，发现状态有所缓解，但是一段时间后，还是会慢慢卡死，从现象上推测是有一种或几种慢NQL多次执行后，把系统资源消耗完了，导致大面积的堵塞。所以面临的需求还是要有个慢查询排查工具。
+参考上一次做oracle慢日志收集展示的方法， https://www.dboop.com/oracle/oracle%E6%80%8E%E6%A0%B7%E5%AE%9E%E6%97%B6%E6%94%B6%E9%9B%86%E5%B1%95%E7%A4%BA%E6%85%A2%E6%9F%A5%E8%AF%A2/
+变化的是：
+ 因为nebula的集群就一个，不需要做oracle慢日志的大表套小表，数担据量不大就建了一张monitor_nebula_slow表存放数据. nebula抓到的慢查询里的NQL是没有去参数化的，需要自己做去参数化，把相同类型的NQL，标识为同一个md5id   1.建一张表，每隔1分钟（时间可调，但我们的场景1分钟足够了） CREATE TABLE `monitor_nebula_slow` (`logid` int unsigned NOT NULL AUTO_INCREMENT,`SessionID` varchar(50) NOT NULL DEFAULT &#39;&#39;,`ExecutionPlanID` varchar(50) NOT NULL DEFAULT &#39;&#39;,`User` varchar(50) NOT NULL DEFAULT &#39;&#39;,`Host` varchar(50) NOT NULL DEFAULT &#39;&#39;,`StartTime` datetime DEFAULT NULL,`DurationInUSec` int unsigned NOT NULL DEFAULT &#39;0&#39;,`Status` varchar(50) NOT NULL DEFAULT &#39;&#39;,`Query` varchar(5000) NOT NULL DEFAULT &#39;&#39;,`_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,`md5id` varchar(64) NOT NULL DEFAULT &#39;&#39;,PRIMARY KEY (`logid`),KEY `ix_monitor_nebula_slow` (`_timestamp`)) ENGINE=InnoDB AUTO_INCREMENT=13231 DEFAULT CHARSET=utf8mb32.</description>
+    </item>
+    
+  </channel>
+</rss>

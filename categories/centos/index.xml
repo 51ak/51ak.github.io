@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>centos on Classic</title>
+    <link>/categories/centos/</link>
+    <description>Recent content in centos on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 12 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/centos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Sysbench做压力测试</title>
+      <link>/ops/sysbench%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/</link>
+      <pubDate>Sat, 12 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/sysbench%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/</guid>
+      <description>0.环境 1.安装sysbench  curl -s https://packagecloud.io/install/repositories/akopytov/sysbench/script.rpm.sh | sudo bash yum -y install sysbench 2.执行压测 10.10.0.1 上执行 sysbench /usr/share/sysbench/oltp_read_write.lua --tables=5 --table_size=2000000 --mysql-user=dba --mysql-password******* --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest prepare sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest --tables=5 --table_size=2000000 --threads=300 --time=120 --report-interval=60 run &amp;gt;&amp;gt; /root/sb/proxy300.log sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest --tables=5 --table_size=2000000 --threads=20 --time=120 --report-interval=10 run sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest --tables=5 --table_size=2000000 --threads=20 --time=120 --report-interval=10 run sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.</description>
+    </item>
+    
+    <item>
+      <title>MacOS里的grep,sed,awk等命令不好用怎么办</title>
+      <link>/ops/macos%E9%87%8C%E7%9A%84grepawksed%E7%AD%89%E5%91%BD%E4%BB%A4%E4%B8%8D%E5%A5%BD%E7%94%A8%E6%80%8E%E4%B9%88%E5%8A%9E/</link>
+      <pubDate>Tue, 27 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/macos%E9%87%8C%E7%9A%84grepawksed%E7%AD%89%E5%91%BD%E4%BB%A4%E4%B8%8D%E5%A5%BD%E7%94%A8%E6%80%8E%E4%B9%88%E5%8A%9E/</guid>
+      <description>问题  工作用的电脑是mac 经常发现linux上常用的sed,grep命令用不起来，各种报错 后来查了一下发现mac里的sed和linux的不是一个版本的软件   Mac OS X uses BSD sed and not GNU sed. When you use a GNU sed extension with Mac OS X sed, you get different results, or failures. Classically, sed does not support numeric offsets, forwards or backwards. You&amp;rsquo;ll need to revise your script to work on Mac OS X.
+ 解决 使用以下命令安装GNU命令套件： brew install coreutils 使用以下命令安装gnu-sed： brew install gnu-sed --with-default-names 以上命令安装的gnu套件的命令都是带有g前缀的  gcat &amp;ndash;&amp;gt; linux里的cat gsed &amp;ndash;&amp;gt; linux里的sed ggrep &amp;ndash;&amp;gt; linux里的grep gawk &amp;ndash;&amp;gt; linux里的awk &amp;hellip;  如果想直接代替，不输入g前缀则 vim .</description>
+    </item>
+    
+    <item>
+      <title>git常用命令整理</title>
+      <link>/ops/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</link>
+      <pubDate>Thu, 25 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</guid>
+      <description>重新初始化，删掉历史版本记录  1、创建并切换到lastest_branch分支 git checkout --orphan latest_branch 2、添加所有文件 git add -A 3、提交更改 git commit -am &amp;quot;删除历史版本记录，初始化仓库&amp;quot; 4、删除分支 git branch -D master 5、将当前分支重命名 git branch -m master 6、强制更新存储库 git push -f origin master 新建 Git 仓库 # 把当前目录变更成一个 Git 仓库 $ git init # 新建一个目录，将其初始化为 Git 仓库 $ git init [project-name] # 克隆远程仓库 $ git clone [url] Git 配置信息 # 显示当前的 Git 配置 $ git config --list # 编辑 Git 配置文件 $ git config -e [--global] # 设置提交代码时的用户信息 $ git config [--global] user.</description>
+    </item>
+    
+    <item>
+      <title>Linux服务器共享目录Centos7</title>
+      <link>/ops/linux%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/</link>
+      <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/linux%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/</guid>
+      <description>0.环境 服务器：
+ 10.10.0.1 源机器 10.10.0.2 目标机器1 10.10.0.3 目标机器2 目标： 将10.10.0.1机器上的 /public/downloadnew 文件夹共享给10.10.0.2/3两台机器  三台机器共享写入 /data/www/dboop/static/download目录
+1.安装nfs yum -y install nfs-utils rpcbind # 开机启动 systemctl enable rpcbind.service systemctl enable nfs-server.service # 重启服务 systemctl restart rpcbind.service systemctl restart nfs-server.service 2.共享设置 10.10.0.1 上执行 mkdir /public/downloadnew ln -s /public/downloadnew /data/www/dboop/static/download -f vim /etc/exports #输入 /public 10.10.0.2(insecure,rw,sync,no_root_squash) 10.10.0.3(insecure,rw,sync,no_root_squash) exportfs -rv 10.10.0.2/3 上执行 vim /etc/fstab #输入 10.10.0.1:/public /mnt/public nfs defaults 0 0 mkdir /mnt/public mount -a df -h ln -s /mnt/public/downloadnew /data/www/dboop/static/download -f 到此 10.</description>
+    </item>
+    
+  </channel>
+</rss>

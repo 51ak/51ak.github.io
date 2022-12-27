@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>dboop on Classic</title>
+    <link>/categories/dboop/</link>
+    <description>Recent content in dboop on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 25 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/dboop/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>万物不如MySQL_万物皆可Join</title>
+      <link>/dba/%E4%B8%87%E7%89%A9%E7%9A%86%E5%8F%AFsql/</link>
+      <pubDate>Thu, 25 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E4%B8%87%E7%89%A9%E7%9A%86%E5%8F%AFsql/</guid>
+      <description>当前数据库架构越来越复杂
+  数据库MongoDB,Redis,Es,Kafka,Postgresql&amp;hellip;
+  加上传统的关系型数据库（MySQL,Oracle,SQLServer)
+  你是否因为各种数据库的查询语言不同而头晕眼花，到处撞墙！
+   你是否各种分库分表后，不同的数据库之前没办法join联合查询而一蹶不振   你是否业务同学发给你一个excel，让你查这些订单的明细而不知所措，来回倒腾。   你是否在焦急的等待着BI大数据同事帮你把不同数据源的表都抽到一起才能join出想要的数据？   怎么办？怎么办？ 没办法!!! 拆开的数据库没办法放在一台服务器上 各种数据库也没办法统一成一种 大数据部门的同步任务正在走流程 走完的流程，他们也不能保证数据同步任务不中断 Excel不是数据库不能用SQL 怎么办？怎么办？ 这种混乱就没人能治吗？ 不要让这些问题挡住你前进的脚本 dboop平台的统一查询平台横空出世 不再区分数据库类型 所有的数据库种类都支持MySQL语法 是的，你没有听错 不管什么类型的数据库 统统只需要记住MySQL语法了 Oracle,SQLServer,MongoDB,kafka DBA在运维的每一种数据库 都可以当成MySQL一样使用了  kafka当成MySQL Mongo当成MySQL  而且这些表都是可以互相join ,union 的   现在我们来休验一下这神奇的黑科技 第一步 我们有个这样的excel 第二步 把excel上传到平台上 第三步 得到一个可以查询的excel文件 第四步 用excel join MySQL 这就是我们说的： 几个问题 问题1:查询会不会影响线上业务  绑定了dba的高可用架构系统，可以自动路由到专门给bi取数服务的专用只读实例上。不会对线上应用产生影响 理论上bi抽数进程会和它产生资源抢占，但是因为bi抽数多数是凌晨进行，两个并不冲突
+ 问题2:查询的性能怎样  快，非常快，普通的单表查询0.</description>
+    </item>
+    
+  </channel>
+</rss>

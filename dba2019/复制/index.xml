@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>复制 on dboop.com</title>
+    <link>/categories/%E5%A4%8D%E5%88%B6/</link>
+    <description>Recent content in 复制 on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 07 May 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/%E5%A4%8D%E5%88%B6/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>mysql5.7复制建议</title>
+      <link>/post/2019/05/07/mysql5.7%E5%A4%8D%E5%88%B6%E5%BB%BA%E8%AE%AE/</link>
+      <pubDate>Tue, 07 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/05/07/mysql5.7%E5%A4%8D%E5%88%B6%E5%BB%BA%E8%AE%AE/</guid>
+      <description>关于复制选型  MGR:有条件上MGR的，上MGR,对网络要求较高。 半同步复制：用默认的AFTER_SYNC模式，一般实例都建议使用(重点推荐) 异步复制：对从实例要求延时不高的，日志类的等等可以用  半同步复制 设置：主库执行 install plugin rpl_semi_sync_master soname &#39;semisync_master.so&#39;; SET GLOBAL rpl_semi_sync_master_enabled=1;  设置：备库执行 1：安装slave插件 install plugin rpl_semi_sync_slave soname &#39;semisync_slave.so&#39;; set global slave_parallel_workers=8;  2：启用slave半同步复制 set global rpl_semi_sync_slave_enabled=1; ##启用slave半同步复制，可以写到配置文件中  3：重启slave上的IO线程 如果没有重启，则默认还是异步复制，重启后，slave会在master上注册为半同步复制的slave角色。
+stop slave io_thread; start slave io_thread;  或者：
+stop slave; set global slave_parallel_type=&#39;LOGICAL_CLOCK&#39;; start slave;  状态 show global variables like &amp;lsquo;rpl_semi%&amp;lsquo;; 主上：  rpl_semi_sync_master_enabled：表示主上是否开启半同步复制功能，可以动态修改。可选值：ON\OFF rpl_semi_sync_master_timeout：为了防止半同步复制中主在没有收到S发出的确认发生堵塞，用来设置超时，超过这个时间值没有收到信息，则切换到异步复制，执行操作。默认为10000毫秒，等于10秒，这个参数动态可调，表示主库在某次事务中，如果等待时间超过10秒，那么则降级为异步复制模式，不再等待SLAVE从库。如果主库再次探测到，SLAVE从库恢复了，则会自动再次回到半同步复制模式。可以设置成1000，即1秒。 rpl_semi_sync_master_wait_for_slave_count：控制slave应答的数量，默认是1，表示master接收到几个slave应答后才commit。 rpl_semi_sync_master_wait_no_slave ：当一个事务被提交，但是Master没有Slave连接，这时M不可能收到任何确认信息，但M会在时间限制范围内继续等待。如果没有Slave链接，会切换到异步复制。是否允许master每个事务提交后都要等待slave的接收确认信号。默认为on，每一个事务都会等待。如果为off，则slave追赶上后，也不会开启半同步复制模式，需要手工开启。 rpl_semi_sync_master_wait_point：该参数表示半同步复制的主在哪个点等待从的响应，默认AFTER_SYNC，在得到slave的应答后再commit，可选值AFTER_COMMIT。  从上：  rpl_semi_sync_slave_enabled：表示从上是否开启半同步复制功能，可以动态修改。可选值：ON\OFF  show global status like &amp;lsquo;rpl_semi%&amp;lsquo;;  Rpl_semi_sync_master_clients ：说明支持和注册半同步复制的已连Slave数。 Rpl_semi_sync_master_net_avg_wait_time ：master等待slave回复的平均等待时间，单位毫秒。 Rpl_semi_sync_master_net_wait_time ：master总的等待时间。 Rpl_semi_sync_master_net_waits ：master等待slave回复的的总的等待次数，即半同步复制的总次数，不管失败还是成功，不算半同步失败后的异步复制。 Rpl_semi_sync_master_no_times ：master关闭半同步复制的次数。 Rpl_semi_sync_master_no_tx ：master没有收到slave的回复而提交的次数，可以理解为master等待超时的次数，即半同步模式不成功提交数量。 Rpl_semi_sync_master_status ：ON是活动状态（半同步），OFF是非活动状态（异步），用于表示主服务器使用的是异步复制模式，还是半同步复制模式。 Rpl_semi_sync_slave_status ：Slave上的半同步复制状态，ON表示已经被启用，OFF表示非活动状态。 Rpl_semi_sync_master_tx_avg_wait_time ：master花在每个事务上的平均等待时间。 Rpl_semi_sync_master_tx_wait_time ：master总的等待时间。 Rpl_semi_sync_master_tx_waits ：master等待成功的次数，即master没有等待超时的次数，也就是成功提交的次数 Rpl_semi_sync_master_wait_pos_backtraverse ：master提交后来的先到了，而先来的还没有到的次数。 Rpl_semi_sync_master_wait_sessions ：前有多少个session因为slave的回复而造成等待。 Rpl_semi_sync_master_yes_tx ：master成功接收到slave的回复的次数，即半同步模式成功提交数量。</description>
+    </item>
+    
+    <item>
+      <title>Mysql复制慢原因定位,磁盘IO瓶颈(centos)</title>
+      <link>/post/2019/05/05/mysql%E5%A4%8D%E5%88%B6%E6%85%A2%E5%8E%9F%E5%9B%A0%E5%AE%9A%E4%BD%8D%E7%A3%81%E7%9B%98io%E7%93%B6%E9%A2%88centos/</link>
+      <pubDate>Sun, 05 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/05/05/mysql%E5%A4%8D%E5%88%B6%E6%85%A2%E5%8E%9F%E5%9B%A0%E5%AE%9A%E4%BD%8D%E7%A3%81%E7%9B%98io%E7%93%B6%E9%A2%88centos/</guid>
+      <description>线上一mysql实例报复制延时
+1.查看相关性能监控
+如下图所示,写入量在每秒1500,WQPS在3000左右
+SSH上机器确认下
+2.top 查看和定位下资源等待情况(%Cpu(s): 2.0 us, 0.8 sy, 0.0 ni, 97.0 id, 0.3 wa) 如下图所示 wa在30%以上,明显的IO等待 ,这里的wa是CPU WAIT IO 时间
+3.iostat 查看定位实时更新磁盘工作情况( rkB/s, wkB/s,avgrq-sz,avgqu-sz ,%util)
+如下图所示,sdb这组SSD 写入wkb/s 和 avgrq ,util使用率都比较高 确认IO瓶颈
+4.联系RD业务负责人,确认是导数据引起的.调整复制参数以加快复制速度</description>
+    </item>
+    
+  </channel>
+</rss>

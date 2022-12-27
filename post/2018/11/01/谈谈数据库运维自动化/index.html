@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>谈谈数据库运维自动化 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/theme-override.css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.css" integrity="sha384-D+9gmBxUQogRLqvARvNLmA9hS2x//eK1FhVb9PiU86gmcrBrJAQT8okdJ4LMp2uv" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.js" integrity="sha384-483A6DwYfKeDa0Q52fJmxFXkcPCFfnXMoXblOkJ4JcA8zATN6Tm78UNL72AKk+0O" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/contrib/auto-render.min.js" integrity="sha384-yACMu8JWxKzSp/C1YV86pzGiQ/l1YUfE8oPuahJQxzehAjEt2GiQuy/BIvl9KyeF" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body);
+        });
+    </script>
+
+<header>
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">/home/dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">~/首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">~/分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">谈谈数据库运维自动化</span></h1>
+<h2 class="author">51ak</h2>
+<h2 class="date">2018/11/01</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E8%BF%90%E7%BB%B4">运维</a> <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96">自动化</a> <a href="/categories/%E8%BF%90%E7%BB%B4%E8%87%AA%E5%8A%A8%E5%8C%96">运维自动化</a> 
+  
+  
+  
+  
+</p>
+</div>
+
+
+
+<main>
+<p>谈谈数据库运维自动化
+当你写了太多的数据库脚本，做了太多的自动化工作时，面对零散的新需求，尝试自动化时是否需要按使用频率提高自动化水平。</p>
+
+<p>假如有个常见需求，数据库里删除一个大表里的部分数据，或者redis删除一个key</p>
+
+<p>做为运维，需要考虑表有多大，是否要循环删除，删除条件是否有索引， redis的数据类型，如果是list,set,zset，需要考虑大小，是否需要循环清理</p>
+
+<ul>
+<li>第一阶段，把循环删除动作写在一个循环脚本里。 运行脚本完成这次任务</li>
+<li></li>
+<li>第二阶段，把这个脚本做成通用性，以后再有类似的同样的需求，可以传参过来完成</li>
+<li></li>
+<li>第三阶段，判断各种情况，如,size,索引，类型  等。加上判断，以适应更多的情况</li>
+<li></li>
+<li>第四阶段，处理异常，加上各种异常时的处理或重试机制</li>
+<li></li>
+<li>第五阶段，做成页面化，可人性化的工具化，降低使用成本，目标是非dba的其他rd或运维人员- 可以简单使用</li>
+<li></li>
+<li>第六阶段，做成服务化，让目标受众除dba以外的人可以平滑（甚至无感知的）使用，将多个自动化系统集成到一个工具或一种服务</li>
+</ul>
+
+<p>后面的就不清楚了，回想我记过的n多脚本和工具</p>
+
+<p>10% 停在第一阶段</p>
+
+<p>40% 停在第二阶段</p>
+
+<p>20% 停在第三，四阶体贴</p>
+
+<p>25% 停在第五阶段 （没错，就是这么喜欢搞页面化！）</p>
+
+<p>5% 搞成业务都不知道后面有运维在支撑。</p>
+
+</main>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      dboop.com by 51ak | <a href="https://github.com/51ak">Github</a> |
+      
+    </footer>
+  </body>
+</html>
+

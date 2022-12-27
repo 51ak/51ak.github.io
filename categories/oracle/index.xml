@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>oracle on Classic</title>
+    <link>/categories/oracle/</link>
+    <description>Recent content in oracle on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 25 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/oracle/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>万物不如MySQL_万物皆可Join</title>
+      <link>/dba/%E4%B8%87%E7%89%A9%E7%9A%86%E5%8F%AFsql/</link>
+      <pubDate>Thu, 25 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E4%B8%87%E7%89%A9%E7%9A%86%E5%8F%AFsql/</guid>
+      <description>当前数据库架构越来越复杂
+  数据库MongoDB,Redis,Es,Kafka,Postgresql&amp;hellip;
+  加上传统的关系型数据库（MySQL,Oracle,SQLServer)
+  你是否因为各种数据库的查询语言不同而头晕眼花，到处撞墙！
+   你是否各种分库分表后，不同的数据库之前没办法join联合查询而一蹶不振   你是否业务同学发给你一个excel，让你查这些订单的明细而不知所措，来回倒腾。   你是否在焦急的等待着BI大数据同事帮你把不同数据源的表都抽到一起才能join出想要的数据？   怎么办？怎么办？ 没办法!!! 拆开的数据库没办法放在一台服务器上 各种数据库也没办法统一成一种 大数据部门的同步任务正在走流程 走完的流程，他们也不能保证数据同步任务不中断 Excel不是数据库不能用SQL 怎么办？怎么办？ 这种混乱就没人能治吗？ 不要让这些问题挡住你前进的脚本 dboop平台的统一查询平台横空出世 不再区分数据库类型 所有的数据库种类都支持MySQL语法 是的，你没有听错 不管什么类型的数据库 统统只需要记住MySQL语法了 Oracle,SQLServer,MongoDB,kafka DBA在运维的每一种数据库 都可以当成MySQL一样使用了  kafka当成MySQL Mongo当成MySQL  而且这些表都是可以互相join ,union 的   现在我们来休验一下这神奇的黑科技 第一步 我们有个这样的excel 第二步 把excel上传到平台上 第三步 得到一个可以查询的excel文件 第四步 用excel join MySQL 这就是我们说的： 几个问题 问题1:查询会不会影响线上业务  绑定了dba的高可用架构系统，可以自动路由到专门给bi取数服务的专用只读实例上。不会对线上应用产生影响 理论上bi抽数进程会和它产生资源抢占，但是因为bi抽数多数是凌晨进行，两个并不冲突
+ 问题2:查询的性能怎样  快，非常快，普通的单表查询0.</description>
+    </item>
+    
+    <item>
+      <title>定时收集存储过程函数视图信息入库(Oracle,MySQL)</title>
+      <link>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%87%BD%E6%95%B0%E8%A7%86%E5%9B%BE%E4%BF%A1%E6%81%AForaclemysql/</link>
+      <pubDate>Thu, 04 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%87%BD%E6%95%B0%E8%A7%86%E5%9B%BE%E4%BF%A1%E6%81%AForaclemysql/</guid>
+      <description>需求 下午接到运维转来的一个权限申请流程：大数据部门研发要求开通保垒机权限。以方便在保垒机上安装SQL客户端去查看存储过程和视图的内容
+保垒机直连数据库查询，这种不可控的方式，早在去年我就把这个历史问题给禁止掉了，没想到现在还有人要求开通
+经过沟通得知，对方想查看Oracle数据库里的一些老的存储过程的代码。而DBA平台上只有表结构相关的数据字典，没有存储过程和视图的数据字典
+所以，别慌，不就这点需求吗，马上就可以加上。
+ 为什么DBA平台上的数据字典不包括存储过程和视图？ 因为存储过程/函数/视图 也是被我禁掉的，研发人员上线不可以写存储过程和视图。 所以就没想过要在DBA运维平台上做这块功能
+ 但是因为
+ 历史原因，以前的Oracle数据库上已经存在很多的视图和存储过程 第三方原因，公司采购的一些第三方服务和软件，带了存储过程和视图 这些被禁止使用的数据库对象，也需要做统一维护  拆解  这些数据库对象的信息用定时任务收集线上的表结构到本地，存为两份 一份入库，做为快照信息，展示给用户。 一份落本地文件，上传到git，用git做版本管理   为什么不在用户请求查看某个数据库对象的信息时，实时查询给用户？
+ 1.因为历史原因，我们有的库有几万个数据库对象，当用户选择一个库时，list列表加载很慢，所以一开始设计的时候，我们做了快照 2.一份快照，还可以用作数据库对象的git版本管理   建表 在dboop库中建表
+ CREATE TABLE `info_objects` ( `objectid` int NOT NULL AUTO_INCREMENT, `dbid` int NOT NULL DEFAULT &#39;0&#39;, `TABLE_SCHEMA` varchar(64) NOT NULL DEFAULT &#39;&#39;, `object_name` varchar(255) NOT NULL DEFAULT &#39;&#39;, `object_type` varchar(64) NOT NULL DEFAULT &#39;&#39;, `object_text` longtext, `cstatus` smallint NOT NULL DEFAULT &#39;1&#39;, `dba_freshtime` datetime NOT NULL DEFAULT &#39;1990-01-01 00:00:00&#39;, PRIMARY KEY (`objectid`), UNIQUE KEY `idx_infoobjects_id` (`dbid`,`object_name`,`object_type`), KEY `idx_info_objects_time` (`dba_freshtime`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 实现数据字典收集入库 建Oracle采集任务  &amp;lt;!</description>
+    </item>
+    
+    <item>
+      <title>Oracle运维DBA常用命令集合</title>
+      <link>/oracle/oracle%E8%BF%90%E7%BB%B4dba%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Wed, 30 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E8%BF%90%E7%BB%B4dba%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</guid>
+      <description>-- 写在开始 linesize/pagesize set linesize 9999 set pagesize 9999 查看ORACLE SID
+select * from v$instance select instance_name,host_name from v$instance; 查看数据库的运行天数
+select INSTANCE_NAME,round(sysdate-STARTUP_TIME) run_day from gv$instance; 查看alert log
+show parameter dump; 查看当前DB的scn
+select dbms_flashback.get_system_change_number from dual; select current_scn from v$database; scn转时间戳
+select scn_to_timestamp(991159) scn from dual; 时间转换为scn
+select timestamp_to_scn(to_timestamp(&#39;2019-01-27 18:19:20.123456789&#39;,&#39;YYYY-MM-DD HH24:MI:SS.FF&#39;)) scn from dual; scn和时间的对应关系
+select scn,to_char(time_dp,&#39;yyyy-mm-dd hh24:mi:ss&#39;) time from sys.smon_scn_time where rownum&amp;lt;10 order by 1,2; 查看数据库所有用户及用户状态
+-- SYSADM用户是线上应用用户 select USERNAME,ACCOUNT_STATUS from dba_users; select current_scn from v$database; 查看存储过程数量</description>
+    </item>
+    
+    <item>
+      <title>Oracle实时慢日志收集和展示</title>
+      <link>/oracle/oracle%E6%80%8E%E6%A0%B7%E5%AE%9E%E6%97%B6%E6%94%B6%E9%9B%86%E5%B1%95%E7%A4%BA%E6%85%A2%E6%9F%A5%E8%AF%A2/</link>
+      <pubDate>Fri, 11 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E6%80%8E%E6%A0%B7%E5%AE%9E%E6%97%B6%E6%94%B6%E9%9B%86%E5%B1%95%E7%A4%BA%E6%85%A2%E6%9F%A5%E8%AF%A2/</guid>
+      <description>Oracle怎样实时收集展示慢查询？ 当网上搜相关问题或问一个身边的OracleDBA ，通常会有两种类型的答案
+ 看awr报告 扔过来一段SQL脚本。   类似于MySQL的慢日志方案：Slowlog--logstash--&amp;gt;es--&amp;gt;MySQL--&amp;gt;web页
+但Oracle没有现成的slowlog可以用。
+ 所以我们先后采用尝试了以下三种方法。
+方法一：定时收集awr报告 我们去年和黄老师一起尝试了定时生成awr报告，获取topSQL入库后，再收集展示的方法，这个方案需要对OracleAWR的缓存表理解得很深入，黄老师哼哼哧哧花了一个月时间，最终完成了统一收集，并通过web页展示，但总体效果不好。 主要缺点在于
+ 不能做到实时，甚至不能准实时（取决于多长时间生成一次awr报告） 只能每个实例取topSQL 方案呆板且不理性 总结：实现难度大，效果差  方法二：Oracle中间件记录慢查询 去年年底的时候我们在写一个Oracle中件间，业务访问Oracle数据库需要连接到Proxy上，然后在Proxy上记录查询日志，这种方法理论上是完全可以的，但是当我去尝试去实现这个功能的时候发现很困难，因为我们采用了端口中转的方式，可以抓到客户端和服务端的通信包，但是不能对应上这些通信包的对应关系。这就导致计算SQL执行时间这一步没法实现。 然后我们架构组也在做jdbc层的中件间，这个是100%可以轻松实现的，但只适用于java程序，对于非java代码访问数据库就无能为力了 总结：收集得很准，但开发工作量大，需要很长的时间
+方法三：定时直接读取正在执行的SQL 这个方案是我们年前做了一个Oracle长时间无响应SQL的报警功能（超过60秒没执行完的SQL会发钉钉报警），然后一次故障处理时，法爷说这个功能改一下刚好可以做慢查询收集整理。
+于是我们快速的试了下这个方案（代价很小，花了半个小时就完成了，任务配置和报表展示）
+ 新建存放慢SQL信息的表一个字典表/一个慢SQL表（5分钟） 配置一个每分钟去所有Oracle实例上收集的任务（15分钟） 配合已有CMDB信息，完成慢SQL和研发负责人的对应，写一个SQL （5分钟） 用这个SQL配置出来一张可展示的报表，设置成全体研发可见（5分钟） 总结：零开发工作，只要建个表，配置一个定时job和报表，就可以完成，效果不错  得到这样的一张这样的：实时展示Oracle慢查询的报表 &amp;ndash; done</description>
+    </item>
+    
+    <item>
+      <title>从零写一个兼容MySQL/Oracle的Proxy中件间（四）:性能测试和改进</title>
+      <link>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B44/</link>
+      <pubDate>Tue, 18 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B44/</guid>
+      <description>续： 从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》 从零写一个兼容MySQL/Oracle的Proxy中件间（二）:SQL捕获和改写 从零写一个兼容MySQL/Oracle的Proxy中件间（三）:MySQL协议捕获和转发
+1.过去的三个文章我们实现了以下功能]  Oracle登录捕获：捕获了Oracle通信协议中的用户登录包 Oracle用户解析：抓到了用户传用户名和密码的内容（密码是加密串） SQL请求包：同时通过对比，确定了用户发送SQL请求的通信包 OracleSQL日志：分析这些包，把SQL语句拿出来，记到日志里。 OracleSQL改写：用户发起的SQL 经过中间层改写到了服务端收到的是另一个SQL执行返回结果。 MySQL兼容：增加配置文件，使中间件可以支持两种数据库 MySQL协议解析：将经过proxy的MySQL包里的SQL语句解析出来，记录到日志  在没更新的这几天里我又偷偷完成了配置变更等小功能。现在中件间其实已经在理论上可以发布使用了
+在投入使用前，在测试环境对这个半成品的中件间做了些基准测试。
+在测试环境上生成了5张表，每张表200万行数据，对其进行直连和proxy模式压测。
+以下是测试报告： 结论是：加了Proxy，性能下降了14% ，在情理之中，一般的SQL中间层因为多了层中转，响应时间会降低20ms左右。tps/qps在不做连接池的情况下会下降10%。 分析性能下降的原因：
+因为在proxy存把经过的网络包都拆开来分析其中的内容，且把SQL语句存在日志里，这些步骤是比较费资源和时间的。
+为了提升Proxy性能，降低中间层的性能影响，我们加了个配置参数
+cat /data/proxy/conf/proxy3308.cnf [basic] logfile = /data/proxy/log/3308.log daemon = true [proxy] proxytype = mysql bind = 0.0.0.0:3308 server = 127.0.0.2:3308 isssl = false iscatchquery = false #增加是否“拆包” false时，Proxy进入高性能模式 iscatchlogin = false maxsquerylsize = 16384 当 iscatchquery=false时，Proxy进入高性能模式
+if Iscatchquery { #只有iscatchquery为true时才解析包。 switch ProxyType { case &amp;quot;mysql&amp;quot;: log.Printf(&amp;quot;mysql:sqlPipeMySQL\n&amp;quot;) sqlPipeMySQL(srcCon, dstCon) case &amp;quot;oracle&amp;quot;: log.</description>
+    </item>
+    
+    <item>
+      <title>从零写一个兼容MySQL/Oracle的Proxy中件间（三）:MySQL协议捕获和转发</title>
+      <link>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B43/</link>
+      <pubDate>Mon, 10 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B43/</guid>
+      <description>续： 从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》 从零写一个兼容MySQL/Oracle的Proxy中件间（二）:SQL捕获和改写
+1.过去的两天我们实现了以下功能]  Oracle登录捕获：捕获了Oracle通信协议中的用户登录包 Oracle用户解析：抓到了用户传用户名和密码的内容（密码是加密串） SQL请求包：同时通过对比，确定了用户发送SQL请求的通信包 OracleSQL日志：分析这些包，把SQL语句拿出来，记到日志里。 OracleSQL改写：用户发起的SQL 经过中间层改写到了服务端收到的是另一个SQL执行返回结果。   MySQL兼容：增加配置文件，使中件间可以支持两种数据库 MySQL协议解析：将经过proxy的MySQL包里的SQL语句解析出来，记录到日志  开始动手：
+步骤一：中件间可以同时支持MySQL和Oracle 中件间的配置应该放在哪，理论上是想放在MySQL或zk里，当配置有变更的时候，中件间获得变更，但这个实现有点麻烦，可能得写好久，就先一个本地的配置文件
+准备一个配置文件
+proxy] proxytype = mysql bind = 0.0.0.0:1106 server = 10.26.*.*:3307 isssl = false iscatchquery = true iscatchlogin = false maxsquerysize = 4096 [proxybak] #proxytype = oracle #bind = 0.0.0.0:1106 #server = 10.26.*.*:1521 #isssl = false #iscatchquery = true #iscatchlogin = false #maxsquerylsize = 4096 然后在通信进程中收到包时处理
+func (t *Proxy) pipeSend(dstCon, srcCon *Conn, chSend chan int64) { defer pipeClose(dstCon) switch ProxyType { case &amp;quot;mysql&amp;quot;: log.</description>
+    </item>
+    
+    <item>
+      <title>从零写一个兼容MySQL/Oracle的Proxy中件间（二）:SQL捕获和改写</title>
+      <link>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B42/</link>
+      <pubDate>Thu, 06 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B42/</guid>
+      <description>续上一篇： 从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》
+0.前言 昨天的文字里写开发这个中间件的原由和要解决的问题，有朋友留言
+网上有现成的开源中间件为啥不用。
+ 答：网上有很多MySQL的中件间，Oralce目前还没有可以免费使用的中件间. 这可能就是开源和闭源的差别。
+ Oracle自带的功能已经可以实现想要的功能（高可用/审计日志）
+ 答：
+ Oracle官方的高可用方案RAC，无疑是非常非常非常优秀的,但我们现有的硬件不支持做跨机房RAC,以及我们迁移时需要proxy中间层来降低业务中断时间。 Oracle的审计日志太笨重/不支持慢日志/不支持SQL黑名单。   1.昨天我们实现了以下功能]  捕获了Oracle通信协议中的用户登录包 抓到了用户传用户名和密码的内容（密码是加密串） 同时通过对比，确定了用户发送SQL请求的通信包   SQL日志：分析这些包，把SQL语句拿出来，记到日志里。 SQL改写：用户发起的SQL 经过中间层改写到了服务端收到的是另一个SQL执行返回结果。  开始动手：
+步骤一：从Oracle通信包中分解出SQL语句 已知有以下两种head的包是在传递SQL
+0x1 0xf 0x0 0x0 0x6 0x0 0x0 0x0 0x0 0x0 0x11 0x6b 0x4 0xa5 0x10 0x0 0x0 0x35 0x1c 0x0 0x0 0x1 0x0 0x0 0x0 0x3 0x5e 0x5 0x61 0x80 0x0 0x0 0x0 0x0 0x0 0x0 0xfe 0xff 0xff 0xff 0x1 0x0 0x0 0x0 0x6 0x0 0x0 0x0 0x0 0x0 0x3 0x5e 0x6 0x61 0x80 0x0 0x0 0x0 0x0 0x0 0x0 0xfe 0xff 0xff 0xff 0xff 0xff 0xff 0xff 0x24 0x0 0x0 0x0 0xfe 0xff 0xff 0xff 0xff 0xff 0xff 1.</description>
+    </item>
+    
+    <item>
+      <title>从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》</title>
+      <link>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B41/</link>
+      <pubDate>Wed, 05 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B41/</guid>
+      <description>0.前言 MySQL由于开源的原因，有各式各样的中件间Proxy ，极大的丰富了做高可用或迁移的方案，习惯了MySQL生态圈的灵活和便利，Oracle官方不开源代码和协议，没有中间件proxy，显得很笨重。
+比如以下的方案就会很不好办：
+ 实时抓取Oralce的访问SQL日志 慢日志捕获和收集 高可用中件间Proxy在故障时自动切换 SQL访问黑名单。  基于以上的一些困难，打算自己从头写一个兼容MySQL/Oracle的中件间，希望从中件间层同时支持两种数据库。方便我们做数据库的高可用管理和从Oracle到MySQL的迁移。
+这个计划是在年前的2021年最后一次组内会议上提出来的构想。元旦放假期间我就一直在想这事怎么搞
+问题的难点在于：Oracle的client/server端通信没有文档的说明，没人能说清楚Oracle是怎么交互的。
+这两天用最原始的方法抓包，一个包一个包的去看，找到包的规律，分析它的通信协议。竟然发现这个方法可行
+1.步骤 1.写一个Python脚本去连接（192.168.1.1:1521）上的Oracle  #!/usr/bin/env python ## coding: utf-8 import cx_Oracle conn = cx_Oracle.connect(&#39;dboopreader/dbooppassword@192.168.1.1:1521/testdb&#39;) print(&amp;quot;连接成功&amp;quot;) conn.close() print(&amp;quot;连接关闭&amp;quot;) 通过wireshark抓包，发现一次简单的连接，有38个通信包。
+2.捕获这些包，发现它的规律 挨个点开这些包，发现了一些有用的信息，然后发现wireshark的包看起来不方便， 本地模拟一个端口1522端口，劫持这些请求，打印出来，得到如下这种的tcp包
+抓到:127.0.0.1到192.168.1.1的包 二进制展示如下: 0.0x7 0xaf 0x0 0x0 0x6 0x0 0x0 0x0 0x0 0x0 0x2 0x54 0x3 0x54 0x3 0x3 0x2a 0x6 0x1 0x1 20.0x1 0x6f 0x1 0x1 0xc 0x1 0x1 0x1 0x1 0x1 0x1 0x1 0x7f 0xff 0x3 0xe 0x3 0x3 0x1 0x1 40.</description>
+    </item>
+    
+  </channel>
+</rss>

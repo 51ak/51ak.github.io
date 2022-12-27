@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mysqls on Classic</title>
+    <link>/mysql/</link>
+    <description>Recent content in Mysqls on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 03 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="/mysql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL中间件对比:ProxySQL/MaxScale/ShardingSphere</title>
+      <link>/mysql/mysql%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/</link>
+      <pubDate>Thu, 03 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/</guid>
+      <description>MySQL中件间对比 目标：对比以下3款MySQL中件间
+ ProxySQL MaxScale ShardingSphere  一.Proxy基础能力 兼容性  ProxySQL:良好 MaxScale:mairdb更友好，MGR支持不好 ShardingSphere:良好  发行方  ProxySQL:sysown MaxScale:mairdb ShardingSphere:京东  发布/更新/生态  ProxySQL:c++, 5.1k stars,最新版v2.4.4 1个半月前发布 MaxScale:c,1.6k stars,最新版22.08.2 3个半月前发布 ShardingSphere:java,17.6k stars,最新版5.2.1 16天前发布  运维便利性  ProxySQL:简单 MaxScale:普通 ShardingSphere:复杂（配置文件多且复杂）  二.Proxy高可用架构支持 主从架构下的从库故障  如何探测到   ALL: 每N秒主动探测一次
+  如何响应故障   ALL:探测不到，主动处理: - ShardingSphere:从路由表中标记下线 - proxysql:从group中标记下线 - MaxScale:标记下线
+  切换后状态   ALL:复制拓扑可用
+  影响时长   ALL:1-5 秒</description>
+    </item>
+    
+    <item>
+      <title>MySQL高可用组件之ProxySQL</title>
+      <link>/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Bproxysql/</link>
+      <pubDate>Tue, 25 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Bproxysql/</guid>
+      <description>ProxySQL是什么 介绍  MySQL一款开源的中间件的产品 支持读写分离 支持 Query 路由功能 支持动态指定某个SQL进行缓存 支持动态加载（无需重启ProxySQL服务） 故障切换和SQL过滤功能。  ProxySQL初始化 安装 wget https://github.com/sysown/proxysql/releases/download/v2.4.4/proxysql-2.4.4-1-centos7.x86_64.rpm rpm -ivh proxysql-2.4.4-1-centos7.x86_64.rpm 产生报错： warning: proxysql-2.4.4-1-centos7.x86_64.rpm: Header V4 RSA/SHA512 Signature, key ID 8217c97e: NOKEY error: Failed dependencies: gnutls is needed by proxysql-2.4.4-1.x86_64 libgnutls.so.28()(64bit) is needed by proxysql-2.4.4-1.x86_64 libgnutls.so.28(GNUTLS_1_4)(64bit) is needed by proxysql-2.4.4-1.x86_64 libgnutls.so.28(GNUTLS_3_0_0)(64bit) is needed by proxysql-2.4.4-1.x86_64 libgnutls.so.28(GNUTLS_3_1_0)(64bit) is needed by proxysql-2.4.4-1.x86_64 执行： yum install -y gnutls rpm -ivh proxysql-2.4.4-1-centos7.x86_64.rpm 检查安装情况  rpm -ql proxysql /etc/logrotate.</description>
+    </item>
+    
+    <item>
+      <title>MySQL高可用组件之orchestrator</title>
+      <link>/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Borchestrator/</link>
+      <pubDate>Mon, 17 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Borchestrator/</guid>
+      <description>orchestrator是什么 介绍  GitHub公司的用go语言编写并开源的一个MySQL高可用管理工具 MySQL高可用性和复制拓扑管理工具，支持复制拓扑结构的调整，自动故障转移和手动主从切换等。 提供Web界面展示MySQL复制的拓扑关系及状态，通过Web可更改MySQL实例的复制关系和部分配置信息 同时也提供命令行和api接口，方便运维管理。 相对比MHA来看最重要的是解决了管理节点的单点问题，其通过raft协议保证本身的高可用。  特点  自动发现MySQL的复制拓扑，并且在web上展示。 重构复制关系，可以在web进行拖图来进行复制关系变更。 检测主异常，并可以自动或手动恢复，通过Hooks进行自定义脚本。 支持命令行和web界面管理复制。  功能限制  slave不能手动提升为master 不支持多源复制 不支持并行复制 不支持与PXC联合使用  注意事项  对主机名依赖严重，习惯用ip来管理实例的，需要注意确保主机名可解析 主从拓扑结果目前不支持两个实例互为主备或环形结构 自动故障转移，只负责将主从切换了，把从设置为主，其他的变更（dns或proxy变更以及运维信息的变更等需要自己写hook脚本）  orchestrator的工作原理 orchestrator的探测机制  orchestrator会每隔InstancePollSeconds（默认5s）时间用以下SQL去被监控的实例上读取实例状态  show global status like &#39;Uptime&#39; select @@global.hostname, ifnull(@@global.report_host, &#39;&#39;), @@global.server_id, @@global.version, @@global.version_comment, @@global.read_only, @@global.binlog_format, @@global.log_bin, @@global.log_slave_updates show master status show global status like &#39;rpl_semi_sync_%_status&#39; select @@global.gtid_mode, @@global.server_uuid, @@global.gtid_executed, @@global.gtid_purged, @@global.master_info_repository = &#39;TABLE&#39;, @@global.binlog_row_image show slave status select count(*) &amp;gt; 0 and MAX(User_name) !</description>
+    </item>
+    
+    <item>
+      <title>MySQL的参数对比方法</title>
+      <link>/mysql/mysql%E7%9A%84%E5%8F%82%E6%95%B0%E5%AF%B9%E6%AF%94%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Mon, 10 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84%E5%8F%82%E6%95%B0%E5%AF%B9%E6%AF%94%E6%96%B9%E6%B3%95/</guid>
+      <description>什么时候需要对比MySQL参数  迁移时，从一个集群到另一个集群 升级时，从一个版本到另一个版本 巡检时，需要关注重点参数是否有人为修改过 其他时候，自己去想  怎么对比 实例少时，比如两个集群的几组实例  可以去每台机器上把重点参数打印出来 手动对比  大量数据库实例的对比，需要用脚本工具实现 第一步，建一个收集表 CREATE TABLE `info_variables` ( `instanceid` int NOT NULL DEFAULT &#39;0&#39;, `var_key` varchar(100) NOT NULL DEFAULT &#39;&#39;, `var_value` varchar(1000) NOT NULL DEFAULT &#39;&#39;, `linkname` varchar(50) NOT NULL DEFAULT &#39;&#39;, clustertype varchar(10) not null default &#39;&#39;, `_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY (`instanceid`,`var_key`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8; 第二步，建一个收集任务  我是在dboop平台上配置的，执行show global variables再 insert 到info_variables表  第三步，清理指标 delete from info_variables where var_key like &#39;wsrep%&#39;; delete from info_variables where var_key like &#39;performance_schema_%&#39;; delete from info_variables where var_key like &#39;ssl_%&#39;; delete from info_variables where var_key like &#39;log%&#39;; delete from info_variables where var_key like &#39;group%&#39;; delete from info_variables where var_key like &#39;validate%&#39;; delete from info_variables where var_key like &#39;gtid%&#39;; delete from info_variables where var_value like &#39;%/%&#39;; delete from info_variables where var_key in ( &#39;datadir &#39;, &#39;hostname &#39;, &#39;innodb_data_home_dir &#39;, &#39;innodb_log_group_home_dir &#39;, &#39;innodb_undo_directory &#39;, &#39;port &#39;, &#39;relay_log &#39;, &#39;relay_log_basename &#39;, &#39;relay_log_index &#39;, &#39;report_port &#39;, &#39;server_id &#39;, &#39;slave_load_tmpdir &#39;, &#39;socket &#39;, &#39;tmpdir &#39; ); 第四步，形成报告  可以按需求出报告或报表 甚至做可视化的参数对比页面  重点关注参数 时间类：  explicit_defaults_for_timestamp time_zone  自增主键：  auto_increment_increment auto_increment_offset innodb_autoextend_increment innodb_autoinc_lock_mode  连接属性：  join_buffer_size max_tmp_tables wait_timeout max_allowed_packet max_connections  字符编码：  character_set_server transaction_isolation collation_connection collation_database collation_server  mode:  sql_mode   以上参数的变化和不一致，可能会在迁移或升级过程中带来严重的后果，需慎重。</description>
+    </item>
+    
+    <item>
+      <title>MySQL的事务隔离和MVCC</title>
+      <link>/mysql/mysql%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%92%8Cmvcc/</link>
+      <pubDate>Thu, 28 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%92%8Cmvcc/</guid>
+      <description>0.前言:为什么要写这篇文章？ 事务隔离和mvcc的重要性 不同于很多MySQL的原理，只需要DBA掌握，事务对于研发人员也是必须掌握的知识点和原理。并发程度越高，数据库里的锁和事务越明显，越重要。所以：数据库事务和mvcc是研发和DBA都要熟练掌握的另一方面的原因是现有的资料对mvcc写得不够直观 现有的对mvcc原理的讲解停留在画图阶段，我觉得光画图还不够，要实打实的一个字节一个字节的看MySQL真实的数据文件是怎么实现的。利用自研的MySQL数据文件分析工具（ 参考：innodb存储格式 )。可以很直观的把mvcc实现的底层逻辑给展示出来。
+ 以下两篇文章，可以协助你更好的理解本章节的内容
+  MySQL行格式(compact,redundant,dynamic,compressed) ) MySQ事务id:trx_id )  环境准备  MySQL版本:8.0.22 事务隔离级别:REPEATABLE-READ (默认隔离级别)  建一张表dboopuser并insert几条数据 drop table dboopuser; create table dboopuser( userid int unsigned not null primary key , age smallint unsigned not null default 0, username varchar(20) not null default &#39;&#39;, userimg varchar(255) not null default &#39;&#39; ) ENGINE=InnoDB COMMENT=&#39;测试user表--用于mvcc测试20220727&#39; ; insert into dboopuser(userid,age,username,userimg) values(9527,25,&#39;cccccccccc&#39;,&#39;http://www.dboop.com/img/user/2002_innodbtrx_527.jpg&#39;); insert into dboopuser(userid,age,username,userimg) values(9528,15,&#39;dddddddddddddd&#39;,&#39;http://www.dboop.com/img/user/2002_innodbtrx_528.jpg&#39;); insert into dboopuser(userid,age,username,userimg) values(9529,25,&#39;eeeeeeeeeeeeeeeee&#39;,&#39;http://www.</description>
+    </item>
+    
+    <item>
+      <title>show engine innodb status 工具化实现</title>
+      <link>/mysql/mysql%E7%9A%84showinnodbstatus/</link>
+      <pubDate>Wed, 06 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84showinnodbstatus/</guid>
+      <description>为什么要写这个工具 当MySQL出现性能问题时，DBA经常得去innodb status ，
+但是innodb status的输出信息非常丰富也很复杂。滚了几个屏幕的指标，像这样的得翻好几页，几百行的结果。
+ 哪些是重要的指标 指标具体代表什么意思 指标的值是否正常  非常考验DBA的眼力。
+考虑到以上的不方便，写了个小脚本把这些指标提取出来，并将指标对应的中文意思和合理取值范围做了详细的备注。
+实现思路  当用户选中MySQL实例，并点击show engine innnodb statutus按钮时 后台进程去该实例执行 show engine innnodb statutus 语句 返回结果做正则筛选，将各种指标和值保存在一个字典中 提前准备好一个指标的字典，字典里记了该值的中文说明和取值范围（取值范围这个还没做好） 两个字典一合并，输出一个分好类的可视化结果  指标提取和定义 脚本内容是定义了一个数据字典去翻译这些指标
+{ &amp;quot;background_thread&amp;quot;:(&amp;quot;后台进程:除掉用户请求的活动会话，MySQL后台进程也会定时的进行一系列工作。&amp;quot;,[(&amp;quot;master_thread_loops_active&amp;quot;,&amp;quot;&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;后台master线程avtive执行次数合计值&amp;lt;/b&amp;gt;,后台master线程的每次循环时会选择一种状态来执行(active、shutdown、idle),active次数/idle次数 比值越高，代表系统的写操作越繁忙。&amp;quot;), (&amp;quot;master_thread_loops_idle&amp;quot;,&amp;quot;&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;后台master线程idle执行次数合计值&amp;lt;/b&amp;gt;,和上一个指标连起来看,idle次数越高，代表系统的写操作越少。所以该指标值越大，系统写资源越充足&amp;quot;), (&amp;quot;master_thread_log_flush_and_writes&amp;quot;,&amp;quot;Bytes&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;后台master线程刷新redo日志&amp;lt;/b&amp;gt;,定期刷新redo日志，和参数innodb_flush_log_at_timeout控制刷新时间&amp;quot;) ] ) ,&amp;quot;bufferpool_memory&amp;quot;:(&amp;quot;缓冲池:有关已读和已写页面的统计信息。可以从这些数字中获得缓冲池的使用情况。&amp;quot;,[ (&amp;quot;total_large_memory_allocated&amp;quot;,&amp;quot;Bytes&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;分配给InnoDB Buffer Pool的总内存&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;dictionary_memory_allocated&amp;quot;,&amp;quot;Bytes&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;分配给InnoDB数据字典的内存&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;buffer_pool_size&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;分配给IBP的内存，单位pages&amp;lt;/b&amp;gt;,每页16k&amp;quot;) ,(&amp;quot;buffer_pool_hit&amp;quot;,&amp;quot;/1000&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool命中率&amp;lt;/b&amp;gt;每1000次请求有*次命中buffer pool,非常重要&amp;quot;) ,(&amp;quot;free_buffers&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool Free List 总大小，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;database_pages&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool LRU List 总大小，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;old_database_pages&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool old LRU 总大小，单位pages(冷端)&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;modified_db_pages&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool中脏页的数量，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pending_reads&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;等待读入Buffer Pool的页数量，单位pages&amp;lt;/b&amp;gt;,理论上不应该有等待队列&amp;quot;) ,(&amp;quot;pending_writes_lru&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;LRU中buffer中等待被刷的脏页数，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pending_writes_flush_list&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在checkpoint期间要刷新的缓冲池页数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pending_writes_single_page&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在缓冲池中写入挂起的独立页的数目&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_made_young&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;热点页数&amp;lt;/b&amp;gt;,在缓冲池LRU list中年轻的总页数(移动新页面到sublist的头部)&amp;quot;) ,(&amp;quot;pages_made_not_young&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;old sublist中的page数，冷端的page数&amp;lt;/b&amp;gt;,在缓冲池LRU列表中不年轻的页面总数(保留旧页面在sublist中，不改变)&amp;quot;) ,(&amp;quot;pages_made_young_per_sec&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒LRU链中被young的page数&amp;lt;/b&amp;gt;,oungs/s度量标准仅用于old pages，基于对page的访问次数，而不是页的数量。对页进行多次访问都会被计算。如果见到非常低的值，可能需要减小延迟或增加old page LRU list 的比例。增大后，页面需要更长的时间才会移动到尾部，这就增加了再次访问page，从而使他们made young的可能性增大&amp;quot;) ,(&amp;quot;pages_made_non_young_per_sec&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒LRU链中未被young的page数&amp;lt;/b&amp;gt;，可以一定程度上看出库的繁忙程度和命中率,Not young，如果在执行大表扫描时未看到较高的non-young和non-youngs/s，请增加innodb_old_blocks_time。&amp;quot;) ,(&amp;quot;pages_read&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool中读取的page总数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_created&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在bufferpool中创建的page数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_written&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool写入的page数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_read_per_sec&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool中读取的page数/秒&amp;lt;/b&amp;gt;, 比较重要，代表库的繁忙程度&amp;quot;) ,(&amp;quot;pages_created_per_sec&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在bufferpool中创建的page数/秒&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_written_per_sec&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool写入的page数/秒&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_read_ahead&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒平均预读操作次数&amp;lt;/b&amp;gt;k&amp;quot;) ,(&amp;quot;evicted_without_access&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒驱逐的page数&amp;lt;/b&amp;gt;k&amp;quot;) ,(&amp;quot;random_read_ahead&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒钟随机预读操作的次数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;lrn_len&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;LRU的长度&amp;lt;/b&amp;gt;&amp;quot;) ] ) .</description>
+    </item>
+    
+    <item>
+      <title>MySQL复制参数_slave_rows_search_algorithms及无主键表的处理</title>
+      <link>/mysql/mysql%E5%A4%8D%E5%88%B6%E5%8F%82%E6%95%B0slave_rows_search_algorithms/</link>
+      <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%A4%8D%E5%88%B6%E5%8F%82%E6%95%B0slave_rows_search_algorithms/</guid>
+      <description>0.起因 线上MySQL实例，今天报大量延时，且卡住不动。（表现为seconds_behind_master不断上涨，从库gtid不动）
+同时二级从库有复制SQL进程报错
+[ERROR] [MY-010584] [Repl] Slave SQL for channel &#39;&#39;: Could not execute Update_rows event on table 「表名」; Can&#39;t find record in &#39;「表名」&#39;, Error_code: 1032; handler error HA_ERR_END_OF_FILE; the event&#39;s master log mysql-bin.000****, end_log_pos *******, Error_code: MY-001032 1.排查问题 排查问题时
+ 确认该实例上的从库不提供线上实时业务访问（业务可以接受延时）。不需要做从库切流量动作 先是看了一下从库的多线程复制是database级的，开启多线程复制到logical_clock ,问题并没有恢复       set global slave_parallel_type=&amp;lsquo;logical_clock&amp;rsquo;; set global slave_parallel_workers=4; start slave sql_thread;```
+ 排除掉是线程数不够的原因 发现processlist中是在等Applying batch of row changes (update)  确定是卡在sql进程，再看relaylog确实持续增长800M(表示该实例写入不频繁)   解析relaylog 发现是普通的update语句大约有8000次左右  这个量级的update且是row模式，理论1分钟内就追上了。   查看锁datalocks，发现有大量的行数50几万，都是同一个表的  slave的sql进程不应该有这个量级的行锁。   查看表结构发现这个表是无主键的表，里面大约有50几万条记录，无主键无索引  2.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的7种日志(三):UndoLog</title>
+      <link>/mysql/mysql%E7%9A%84undo%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Sat, 28 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84undo%E6%97%A5%E5%BF%97/</guid>
+      <description>0.前言 续：
+ MySQL的7种日志(一):概况 MySQL的7种日志(二):RedoLog
+ 1.什么是undolog  undo：撤销或取消，以撤销/回滚操作为目的，返回指定某个状态的操作。 undolog：数据库事务开始之前，会将要修改的记录存放到 Undo 日志里，当事务回滚时或者数据库崩溃时，可以利用Undo日志，撤销未提交事务对数据库产生的影响。 undolog在事务开始前产生；事务在提交时，并不会立刻删除undolog，innodb会将该事务对应的 undo log 放入到删除列表中，后面会通过后台线程purge thread进行回收处理。 undolog属于逻辑日志，记录一个变化过程。例如执行一个delete，undo log会记录一个insert；执行一个update，undo log会记录一个相反的update。  2.undolog的作用  实现事务的原子性 当事务回滚时或者数据库崩溃时，利用Undo日志，撤销未提交事务对数据库产生的影响。事务处理过程中，如果出现了错误或者用户执行了 ROLLBACK 语句，MySQL 可以利用 Undo Log 中的备份将数据恢复到事务开始之前的状态。 实现多版本并发控制（MVCC） Undo Log 在 MySQL InnoDB 存储引擎中用来实现多版本并发控制。事务未提交之前，Undo Log 保存了未提交之前的版本数据，Undo Log 中的数据可作为数据旧版本快照 供其他并发事务进行快照读。（构建read view视图）  3.undolog的存储 3.1 物理存储位置 找到具体存放的位置 MySQL5.6.3 之前的版本undolog存储在系统共享表空间里，后续的版本推荐存话在单独的文件中
+mysql&amp;gt; show global variables like &#39;%undo%&#39;; +--------------------------+-------------------------+ | Variable_name | Value | +--------------------------+-------------------------+ | innodb_max_undo_log_size | 1073741824 | | innodb_undo_directory | /data/mysql3306/innolog | | innodb_undo_log_encrypt | OFF | | innodb_undo_log_truncate | ON | | innodb_undo_tablespaces | 2 | +--------------------------+-------------------------+ 5 rows in set (0.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的7种日志(二):RedoLog</title>
+      <link>/mysql/mysql%E7%9A%84redo%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Fri, 13 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84redo%E6%97%A5%E5%BF%97/</guid>
+      <description>0.前言 续上一篇： MySQL的7种日志(一):概况
+上一篇我准备写MySQL日志还是2个月前的事，这两个月里生活发生了天翻地覆的变化，都没时间更新。
+昨天跟朋友聊天立了flag说今天要续写一篇
+于是中午吃饭时在纸上画了一个流程图。来介绍下MySQL里的RedoLog
+1.几个问题 redolog和binlog一样记录的是数据修改后的记录。区别是什么，存在的意义是什么？  如果不要redolog，直接修改数据行不行？ 答：可以，但是随机读写性能差 先写redolog还是先改数据？答：先写内存里的数据，再写redolog，再写binlog，再写磁盘里的数据 先写redolog还是先写binlog? 答：先写redolog,再写binlog 如果写完redolog，还没来得写binlog时就停电了,怎么办？答：修改不要了，从undolog中回滚数据 如果写完redolog,binlog时还没来得数据落盘就停电了,怎么办？答：重做redolog，提交数据。修改有效  redolog和undolog的关系  答：redolog用来恢复丢失数据（恢复到最后一次提交位置）也称之为前滚操作，undolog是用来回滚到之前的版本，称之为回滚操作  relaylog的作用  答：redolog是用来做崩溃恢复使用的，这种崩溃恢复不需要我们人为的参与，MySQL自己内部自己实现了这种崩溃恢复的功能，我们只管享受这种功能给我们带来的服务即可，这种服务给我们的感受就是：MySQL数据库异常宕机的时候，重启服务之后，数据库中之前提交的记录都不会丢失数据仍然可以正常恢复，不管这种提交的记录是否已经更到具体的表所对应的磁盘page也中。  2.修改数据的流程  当我们要更新一条数据时，比如有一条SQL update userinfo set name=&#39;dboop&#39; where name=&#39;张三&#39;; 最直接的方法：从磁盘上找到对应的数据库文件，把它修改完存放到磁盘中。  方法是可以的，很多简单的程序修改文件也是用的方法，但是性能差。   而数据库中一般会有以下几种方式来写入数据修改  按页组织数据，一些关联近的数据存放在一个页中，MySQL中默认一页是16k 读取和修改数据都是需要先把页加载到内存中,MySQL是放到innodb_buffer_pool中 先改内存，再合适的时候再写入磁盘 先改日志再改数据 日志也是先写内存中的日志buffer，再合适的时候刷入磁盘    下图是简化版的一个数据修改，真实的流程比这复杂很多，这里的数据修改不只是update，按页组织的insert/update/delete操作都是对页修改
+3.Redolog在数据库意外崩溃时的作用 当故障发生时，数据库意外当机，有部分内存中已修改的页（脏页）没来得及刷新到磁盘里。
+在写入redo log时，会顺便记录XID，即当前事务id。在写入binlog时，也会写入XID。
+如果在写入redo log之前崩溃，那么此时redo log与binlog中都没有，是一致的情况，崩溃也无所谓。
+如果在写入redo log prepare阶段后立马崩溃，之后会在崩恢复时，由于redo log没有被标记为commit。于是拿着redo log中的XID去binlog中查找，此时肯定是找不到的，那么执行回滚操作。
+如果在写入binlog后立马崩溃，在恢复时，由redo log中的XID可以找到对应的binlog，这个时候直接提交即可。
+总的来说，在崩溃恢复后，只要redo log不是处于commit阶段，那么就拿着redo log中的XID去binlog中寻找，找得到就提交，否则就回滚。
+在这样的机制下，两阶段提交能在崩溃恢复时，能够对提交中断的事务进行补偿，来确保redo log与binlog的数据一致性
+4.Redolog的刷盘 4.</description>
+    </item>
+    
+    <item>
+      <title>MySQL中show processlist详细解释</title>
+      <link>/mysql/mysql%E4%B8%ADshow-processlist%E8%AF%A6%E7%BB%86%E8%A7%A3%E9%87%8A/</link>
+      <pubDate>Sun, 27 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E4%B8%ADshow-processlist%E8%AF%A6%E7%BB%86%E8%A7%A3%E9%87%8A/</guid>
+      <description>0.概况 MySQL执行SHOW PROCESSLIST命令后，显示的各个字段的含义如下所示：
+   列 说明     id 一个标识，要kill一个语句的时候有用。   user 显示当前用户   host 这条语句是从那个服务器的哪个端口上发出的，可以用来追踪出问题语句的用户   db 当前连接连接使用哪个数据库   command 显示当前连接的执行的命令，一般就是休眠（sleep），查询（query），连接（connect）   time 状态持续的时间，单位是秒。   state 当前连接的sql语句的状态，很重要的列   info sql语句。    1.详细说明 id 一个标识，要kill一个语句的时候有用。
+user 显示当前用户
+host 这条语句是从那个服务器的哪个端口上发出的，可以用来追踪出问题语句的用户
+db 当前连接连接使用哪个数据库
+command (重要) 共有以下几种状态
+ Command 说明 Sleep 休眠，但是连接保持，可以通过设置超时时间的变量，使得连接在超时时间之后，断开连接。 Query 查询。Query的范围包括Create、Insert、Select、Delete、Drop语句类型。 Connect 连接。建立连接过程。  time 状态持续的时间，单位是秒
+state (重要)  Checking table 正在检查数据表。 Closing tables 正在将表中修改的数据刷新到磁盘中，同时正在关闭已经用完的表。 Connect Out 复制从服务器正在连接主服务器 Copying to tmp table on disk 由于临时结果集大于 tmp_table_size，正在将临时表从内存存储转为磁盘存储以此节省内存。 Creating tmp table 正在创建临时表以存放部分查询结果。 deleting from main table 服务器正在执行多表删除中的第一部分，刚删除第一个表。 deleting from reference tables 服务器正在执行多表删除中的第二部分，正在删除其他表的记录。 Flushing tables 正在执行 FLUSH TABLES，等待其他线程关闭数据表。 Killed 发送了一个kill请求给某线程，那么这个线程将会检查kill标志位，同时会放弃下一个kill请求。MySQL会在每次的主循环中检查kill标志位，不过有些情况下该线程可能会过一段时间才能死掉。如果该线程被其他线程锁住了，那么kill请求会在锁释放时马上生效。 Locked 被其他查询锁住了。 Sending data 正在处理 SELECT 查询的记录，同时正在把结果发送给客户端。 Sorting for group 正在为 GROUP BY 做排序。 Sorting for order 正在为 ORDER BY 做排序。 Opening tables 正尝试打开一个表。 Removing duplicates 正在执行一个 SELECT DISTINCT 方式的查询，但是MySQL无法在前一个阶段优化掉那些重复的记录。因此，MySQL需要再次去掉重复的记录，然后再把结果发送给客户端。 Reopen table 获得了对一个表的锁，但是必须在表结构修改之后才能获得这个锁。已经释放锁，关闭数据表，正尝试重新打开数据表。 Repair by sorting 修复指令正在排序以创建索引。 Repair with keycache 修复指令正在利用索引缓存一个一个地创建新索引。 Searching rows for update 正在将符合条件的记录找出来以备更新。必须在 UPDATE 要修改相关的记录之前就完成。 Sleeping 正在等待客户端发送新请求。 System lock 正在等待取得一个外部的系统锁。 Upgrading lock INSERT DELAYED 正在尝试取得一个锁表以插入新记录。 Updating 正在搜索匹配的记录，并且修改它们 User Lock 正在等待GET_LOCK()。 Waiting for tables 该线程得到通知，数据表结构已经被修改了，需要重新打开数据表以取得新的结构。然后，为了能的重新打开数据表，必须等到所有其他线程关闭这个表。 waiting for handler insert INSERT DELAYED 已经处理完了所有待处理的插入操作，正在等待新的请求。  info SQL语句</description>
+    </item>
+    
+    <item>
+      <title>MySQL复制故障修复_无主键表大事务卡住</title>
+      <link>/mysql/mysql%E5%A4%8D%E5%88%B6%E6%95%85%E9%9A%9C%E8%A7%A3%E5%86%B3_%E5%A4%A7%E4%BA%8B%E5%8A%A1%E5%8D%A1%E4%BD%8F/</link>
+      <pubDate>Fri, 18 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%A4%8D%E5%88%B6%E6%95%85%E9%9A%9C%E8%A7%A3%E5%86%B3_%E5%A4%A7%E4%BA%8B%E5%8A%A1%E5%8D%A1%E4%BD%8F/</guid>
+      <description>0.故障现象 生产环境MySQL复制报警，现象
+ 从库复制延时越来越大,gtid一直停留在固定的地方不变 从库的relaylog越来越大，1G以上，但是增长不明显。 从库当前没有业务访问，不存在资源紧张 主库上最近一段时间没有明显的大批量写入  1.原因定位  从上面的现象卡，基本上可以推断是大事务卡住了， 我看的时候法爷已经把relaylog解出来了，也很明显的看到有很多的delete。 根据以上推断我们去主库上查时间点的日志，发现了： 一个SQL是 delete from t1 where c1=&#39;&#39; 删除了65万行数据 于是问题定位：生产环境的windows机器上有同事用navicat删除了线上MySQL的数据。  简单的一个SQL ，但是因为一些原因综合在一起引起了雪崩
+ 不幸的是：这张表是个没主键的表，导致从库追日志进程卡住，无法正常执行 幸运的是：这些从库没有业务访问，没有造成实际影响  2.安全规范 首先：生产环境的windows机器安装navicat访问数据库这种行为，肯定是不被允许的，
+但是因为“历史原因”我们依然有少量同学（不超过10人）有这种特殊需求。
+原计划是3月底推动消除的，
+经过此事以后，DBA会加快推进禁止在生产环境安装数据库客户端连接数据库这个规范。
+有时候就是这样，觉得这个地方可能有风险，我们排个期来解决，通常就会没等到期限就先暴出来了
+ 问：为什么我们不用限制账号访问来源的方法？ 答：因为一些原因,加ip限制代价太大，且不利于未来的docker虚拟化。
+ 3.问题修复 共有3个从节点，我和另外两个DBA用了三种不同的方式来修复
+方法一：我用的方法，就很暴力的在从库上reset master 再set 跳过这个事务 use db_test; truncate table t1; stop slave ; reset master; set @@GLOBAL.GTID_PURGED=&#39;59939d78-de2d-11eb-ac46-e43d1a074d20:16020676&#39; start slave; 方法二：法爷用了相对温和的方法，模拟一个事务的方法。 use db_test; stop slave; SET gtid_next=&#39;59939d78-de2d-11eb-ac46-e43d1a074d20:16020676&#39; truncate table t1; SET gtid_next=&#39;automatic&#39;; start slave; 我和法爷讨论了一下，相对来说这个是更安全的方法。保证了事务的连续，偷换了一个事务的内容</description>
+    </item>
+    
+    <item>
+      <title>MySQL5.7升级到8.0(一):SQL语法变化</title>
+      <link>/mysql/mysql5.7%E5%8D%87%E7%BA%A7%E5%88%B08.0%E7%9A%84%E5%8F%98%E6%9B%B41sql%E8%AF%AD%E6%B3%95/</link>
+      <pubDate>Mon, 14 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql5.7%E5%8D%87%E7%BA%A7%E5%88%B08.0%E7%9A%84%E5%8F%98%E6%9B%B41sql%E8%AF%AD%E6%B3%95/</guid>
+      <description>不常用 废弃了 GROUP BY 分组的排序 ASC 和 DESC, 存储过程中包含此语法的无法正常执行;
+  不常用 最新版可能不支持 &amp;amp;&amp;amp;, ||, ! 的语法, 需要使用标准 SQL 的 AND, OR, NOT 进行替换;
+  不常用 外键的名字在整个 schema 中必须唯一;
+  常用 支持公共表表达式cte, 窗口函数 不再支持5.6，5.7 的土方法实现递规这种写法废了！不能再用了
+ SELECT * FROM(SELECT @rn:= CASE WHEN @id = id THEN @rn + 1 ELSE 1 END AS rownum,@id:= id as id, volume, dateFROM(SELECT * from table_001 WHERE fdate &amp;lt;= &#39;2022-02-16&#39; ORDER BY id, date DESC) a ,(SELECT @rn=0, @id=0) b )aWHERE rownum &amp;lt;= 5   不常用 支持备份锁(backup lock)</description>
+    </item>
+    
+    <item>
+      <title>MySQL的7种日志(一):概况</title>
+      <link>/mysql/mysql7%E7%A7%8D%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Mon, 14 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql7%E7%A7%8D%E6%97%A5%E5%BF%97/</guid>
+      <description>0.前言 和其他关系型数据库一样
+MySQL也重度依靠数据库日志来完成一系统的功能。
+总结了以下7种重要的日志。今天先简单给这7兄弟做个整体介绍。
+接下来会分三个章节分别说清楚（binlog/redolog/undolog 这三位不省心的兄弟在做什么).
+1.日志的分类 Binlog:  MySQL最重要的日志（没有之一），记录了所有的DDL和DML语句(除了数据查询语句select、show等)，以事件形式记录 DBA依赖它做：高可用方案，异构数据迁移，备份和恢复，误更新回滚。。。。等等 ，是整个MySQL的灵魂 研发/大数据人员依赖Binlog做数据订阅，数据同步  relaylog:  它是依赖于binlog的日志，格式也和binlog一样。 是MySQL复制进程把“别的实例的binlog&amp;quot;复制到本地后，就叫做relaylog. 作用是为了MySQL高可用复制服务的一种日志。  Slowlog:  慢查询日志用来记录在MySQL中响应时间超过阀值的语句，则会被记录到慢查询日志中。由long_query_time参数控制，默认值10秒， 一般线上环境，我们设置为:0.2秒 或0.5秒 两种标准 一般DBA通常会用脚本将日志收集归类，分析后对部分规则产生报警。 这个日志是文本类型的，打开就能看到，比较简单，很容易理解，也很有用  genlog:  一般轻易不开启，开启以后，会将所有经过的SQL都记录到日志里，非常费资源。 定位奇怪的问题时会用到。审计的时候也能用到。 不建议打开，定位问题后，要及时关闭  errorlog:  数据库产生warning,error时会打印的日志，实例启动失败了，或者实例崩溃了必看的日志。平时做好监控。建议开启死锁print，在errorlog中也能看到死锁信息。  redolog：  可能是最难理解的一个日志了，不同于上面的那些日志，redolog是innodb存储引擎的日志，不是MySQL自身的日志 redolog经常会和binlog/undolog搞混 记住最重要的一点：redolog是为了数据库突然关机或崩溃的时候用的。它的作用是：为了不丢失修改。 redolog通常是物理日志，记录的是数据页的物理修改（区别于binlog的逻辑修改)，而不是某一行或某几行修改成怎样怎样，它用来恢复提交后的物理数据页(恢复数据页，且只能恢复到最后一次提交的位置)。  undolog:  undo和redonlog一样也是是innodb存储引擎的日志，用来回滚行记录到某个版本。undo log一般是逻辑日志，根据每行记录进行记录。 它的作用除了和redolog一起保证数据库突然关机或崩溃的时候，数据不丢失，不混乱。它还是MVCC事务特性的重要组成部分。  小结： 简单介绍完7种日志，其中的三个日志（binlog/redolog/undolog) 涉及知识点非常多，会分别写一篇，慢慢聊。
+&amp;ndash; done</description>
+    </item>
+    
+    <item>
+      <title>MySQL常用脚本_binlog解析和回滚</title>
+      <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_binlog/</link>
+      <pubDate>Sat, 10 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_binlog/</guid>
+      <description>解析binlog 方法1:mysqlbinlog mysqlbinlog --no-defaults --base64-output=decode-rows -vv --database=dboop --start-datetime=&#39;2020-10-11 00:00:00&#39; --stop-datetime=&#39;2020-10-11 15:00:00&#39; mysql-bin.000075 &amp;gt;75.sql 常用参数 database：只列出该数据库下的binlog数据，但无法过滤由触发器执行的SQL。 base64-output=decode-rows -vv：显示具体 SQL 语句。 skip-gtids=true：忽略 GTID 显示。  输出结果  # at 20001 #201011 12:04:09 server id 1 end_log_pos 20094 CRC32 0x2b305ac Query thread_id=53 exec_time=0 error_code=0 SET TIMESTAMP=1651011012/*!*/; BEGIN /*!*/; 上面输出包括信息：
+ position: 位于文件中的位置，即第一行的（# at 20001）,说明该事件记录从文件第20001个字节开始 timestamp: 事件发生的时间戳，即第二行的（#201011 12:04:09） server id: 服务器标识（1） end_log_pos 表示下一个事件开始的位置（即当前事件的结束位置+1） thread_id: 执行该事件的线程id （thread_id=53） exec_time: 事件执行的花费时间 error_code: 错误码，0意味着没有发生错误 type:事件类型Query  方法2:my2sql wget https://www.</description>
+    </item>
+    
+    <item>
+      <title>MySQL常用脚本_故障定位</title>
+      <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E6%95%85%E9%9A%9C%E5%AE%9A%E4%BD%8D/</link>
+      <pubDate>Mon, 05 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E6%95%85%E9%9A%9C%E5%AE%9A%E4%BD%8D/</guid>
+      <description>当前正在运行的SQL select id,user,db,info,Command,Time,State from information_schema.processlist where info is not null and user not in (&#39;dba&#39;,&#39;repl&#39;) order by time desc limit 50; -- 杀连接 select concat(&#39;kill &#39;,id,&#39;;&#39;) as ids from information_schema.processlist where time&amp;gt;50 and info is not null and user like &#39;%&#39; and db like &#39;%&#39; order by time desc ; -- 杀连接shell mysqlw -h 127.0.0.1 -P 3306 -e &amp;quot;select concat(&#39;kill &#39;,id,&#39;;&#39;) as ids from information_schema.processlist where db like &#39;dboop%&#39; and user like &#39;%&#39; &amp;quot; &amp;gt;&amp;gt;3306kill.</description>
+    </item>
+    
+    <item>
+      <title>MySQL常用脚本_mysqldump</title>
+      <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_mysqldump/</link>
+      <pubDate>Sun, 04 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_mysqldump/</guid>
+      <description>常用命令 备份整个实例(dump全实例) mysqldump -uroot -p123456 -h127.0.0.1 -P3306 --single-transaction --column-statistics=0 --skip_add_locks --skip-lock-tables --master-data=2 -A | gzip &amp;gt; /data/mysqlbackup/dboop_dump`date &#39;+%m-%d-%Y&#39;`.sql.gz 备份实例中的用户库(用于实例迁移或升级) mysql -uroot -p123456 -h127.0.0.1 -P3306 -e &amp;quot;show databases&amp;quot; |grep -Ev &amp;quot;Database|information_schema|mysql|performance_schema&amp;quot; | xargs mysqldump -uroot -p123456 -h127.0.0.1 -P3306 --single-transaction --column-statistics=0 --skip_add_locks --skip-lock-tables --master-data=2 --databases &amp;gt; /data/mysqlbackup/dboop_dump0401.sql -- 此时mysql.user用户也没有迁移过来,如果需要迁移用户,参考: https://www.dboop.com/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E7%94%A8%E6%88%B7%E7%9B%B8%E5%85%B3/ 导出db1、db2两个数据库的所有数据 mysqldump -uroot -p123456 --set-gtid-purged=OFF --skip_add_locks --skip-lock-tables --databases db1 db2 &amp;gt; /data/mysqlbackup/dboop_dump0401.sql 导出db1中的a1、a2表 mysqldump -uroot -p123456 --set-gtid-purged=OFF --skip_add_locks --skip-lock-tables --databases db1 --tables a1 a2 &amp;gt; /data/mysqlbackup/dboop_dump0401.</description>
+    </item>
+    
+    <item>
+      <title>MySQL常用脚本_用户相关</title>
+      <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E7%94%A8%E6%88%B7%E7%9B%B8%E5%85%B3/</link>
+      <pubDate>Fri, 02 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E7%94%A8%E6%88%B7%E7%9B%B8%E5%85%B3/</guid>
+      <description>生成随机密码 select substring(md5(rand()), 1, 15); select left(replace(uuid(), &#39;-&#39;, &#39;.&#39;),15); 创建用户及赋权 MySQL5.6及以前 grant select on 库名.* to `用户名`@`主机名` identified by &#39;密码&#39;; MySQL5.7+ create user `用户名`@`主机名` identified by &#39;密码&#39;; grant select on 库名.* to `用户名`@`主机名`; MySQL8.0 create user `用户名`@`主机名`identified with mysql_native_password by &#39;密码&#39;; GRANT select on 库名.* TO `用户名`@`主机名`; 常用语句 -- 创建一个管理员帐号 create user &#39;dba&#39;@&#39;%&#39; IDENTIFIED BY &#39;********&#39;; GRANT ALL PRIVILEGES ON *.* TO &#39;dba&#39;@&#39;%&#39; WITH GRANT OPTION; -- 创建一个复制帐号 create user repl@&#39;%&#39; identified with mysql_native_password by &#39;********&#39;; GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的锁:innodb锁粒度详解</title>
+      <link>/mysql/mysql%E9%94%81_innodb%E9%94%81%E7%B2%92%E5%BA%A6/</link>
+      <pubDate>Sat, 13 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E9%94%81_innodb%E9%94%81%E7%B2%92%E5%BA%A6/</guid>
+      <description>锁定义 lock_rec_not_gap锁  Record Locks
+ A record lock is a lock on an index record. For example, SELECT c1 FROM t WHERE c1 = 10 FOR UPDATE; prevents any other transaction from inserting, updating, or deleting rows where the value of t.c1 is 10. Record locks always lock index records, even if a table is defined with no indexes. For such cases, InnoDB creates a hidden clustered index and uses this index for record locking.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的行格式(Compact、Redundant、Dynamic和Compressed)</title>
+      <link>/mysql/mysql%E7%9A%84%E8%A1%8C%E6%A0%BC%E5%BC%8Fcompact_redundant_dynamic_compressed/</link>
+      <pubDate>Thu, 18 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84%E8%A1%8C%E6%A0%BC%E5%BC%8Fcompact_redundant_dynamic_compressed/</guid>
+      <description>前言  MySQL的默认存储引擎innodb是按16k大小的page来组织存储数据的 MySQL的*.ibd 数据文件，大小一定是能被16kB整除的 在逻辑上innodb是按btree来组织数据存储的 针对每一行具体的数据，共有4种存储方式可供选择：Compact、Redundant、Dynamic和Compressed 其中：Redundant 已经被淘汰了，不建议使用 Compact/Dynamic/Compressed 用的是同一个原理，只在细节上有点变化，不影响其实现逻辑 所以我们说行格式的时候，就可以从compact格式来分析，后两种是compact格式的变种   以下原理部分，都只说compact行格式。(?因为compact是基础，后两种都是基于它衍生出来的)
+ 行格式在哪里看，怎么修改行格式 查看 mysql&amp;gt; show table status like &#39;%dbooptest%&#39; \G *************************** 1. row *************************** Name: dbooptest Engine: InnoDB Version: 10 Row_format: Dynamic Rows: 9 Avg_row_length: 1820 Data_length: 16384 Max_data_length: 0 Index_length: 0 Data_free: 0 Auto_increment: NULL Create_time: 2020-06-10 20:22:49 Update_time: 2020-06-10 20:22:49 Check_time: NULL Collation: utf8mb4_unicode_ci Checksum: NULL Create_options: Comment: 测试 1 row in set (0.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的事务id:trx_id</title>
+      <link>/mysql/mysql%E7%9A%84%E4%BA%8B%E5%8A%A1id_trx_id/</link>
+      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84%E4%BA%8B%E5%8A%A1id_trx_id/</guid>
+      <description>什么是事务id(trx_id)  可以理解为MySQL官方存储引擎innodb维护的一个全局自增变量:max_trx_id, 一个6字节长度的整数。(max_trx_id如果一直增长，理论上也是有溢出的可能性的，超过2的48次方后，会重新从0开始，这时候会破坏事务的顺序规则) 每当一个事务开始时，需要申请一个新的trx_id值时，就获取max_trx_id的最新值，然后将max_trx_id值加1。  事务id的作用  主要是用来记录事务开始的顺序 会用在各种事务冲突和mvcc中  如何查看事务id 查看当前事务的trx_id  select TRX_ID from INFORMATION_SCHEMA.INNODB_TRX where TRX_MYSQL_THREAD_ID = CONNECTION_ID() 查看当前的事务id列表（活动)  select TRX_ID from INFORMATION_SCHEMA.INNODB_TRX 查看当前的事务id列表（活动+非活动) 看innodb status 的TRANSACTIONS 部分
+show engine innodb status \G # 找到这一部分 TRANSACTIONS 部分 TRANSACTIONS Trx id counter 2419 -- 当前最大事务 ID Purge done for trx&#39;s n:o &amp;lt; 2419 undo n:o &amp;lt; 0 state: running but idle History list length 0 LIST OF TRANSACTIONS FOR EACH SESSION: ---TRANSACTION 421658589187480, not started 0 lock struct(s), heap size 1136, 0 row lock(s) ---TRANSACTION 421658589186624, not started 0 lock struct(s), heap size 1136, 0 row lock(s) ---TRANSACTION 421658589185768, not started 0 lock struct(s), heap size 1136, 0 row lock(s) 上面是我搭的测试环境，所以没有活跃事务， 需要注意的是几个事务id都非常大（例：421658589187480） 这个后面会解释说明</description>
+    </item>
+    
+    <item>
+      <title>MySQL原理_innodb存储格式详解(二)</title>
+      <link>/mysql/mysql%E5%8E%9F%E7%90%86_innodb%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F%E8%AF%A6%E8%A7%A32/</link>
+      <pubDate>Wed, 11 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%8E%9F%E7%90%86_innodb%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F%E8%AF%A6%E8%A7%A32/</guid>
+      <description>MySQL用page页来管理和存储数据文件，这些page页是如何被组织起来的，真实的数据(data,index) 真实是怎么存放在ibd文件和内存中的呢，了解存储格式，将帮助我们更好的理解MySQL是如何工作的，从而更好的理解其他数据库知识点（索引，MVCC,等等），本视频中我将利用Python脚本把这些难以理解的数据页解析出来并图形化展示给大家，望大家知其然而知其所以然
+视频较长，分两段录制，录制时音量较小，注意控制下声音大小。
+  下面是分析.idb文件的脚本，执行结果的明细部分</description>
+    </item>
+    
+    <item>
+      <title>MySQL原理_innodb存储格式详解(一)</title>
+      <link>/mysql/mysql%E5%8E%9F%E7%90%86_innodb%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Tue, 10 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%8E%9F%E7%90%86_innodb%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F%E8%AF%A6%E8%A7%A3/</guid>
+      <description>MySQL用page页来管理和存储数据文件，这些page页是如何被组织起来的，真实的数据(data,index) 真实是怎么存放在ibd文件和内存中的呢，了解存储格式，将帮助我们更好的理解MySQL是如何工作的，从而更好的理解其他数据库知识点（索引，MVCC,等等），本视频中我将利用Python脚本把这些难以理解的数据页解析出来并图形化展示给大家，望大家知其然而知其所以然
+视频较长，分两段录制，录制时音量较小，注意控制下声音大小。
+  核心问题：MySQL（*innodb)是如何组织，存储表数据的？
+innodb单表最大能到多少，为什么？
+为什么innodb数据文件的大小始终可以被16384整除？
+int 和bigint 差别有多大?
+varchar(10) 和varchar(100) 差别有多大？varchar(1000)呢? TEXT 呢?
+1页(page)=基本单位，存储和读取的核心，每页大小默认：16k
+1区(extend)=64页,64*16k=1M
+1组(space)=256区, 256*1M=256M
+每个page都有个编号，整型最大 2^32 x 16k = 64T （单表大小上限）
+下面是分析.idb文件的脚本，执行结果截图 </description>
+    </item>
+    
+  </channel>
+</rss>

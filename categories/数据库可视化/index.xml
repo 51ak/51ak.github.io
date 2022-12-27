@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>数据库可视化 on dboop.com</title>
+    <link>/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8F%AF%E8%A7%86%E5%8C%96/</link>
+    <description>Recent content in 数据库可视化 on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 03 Dec 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8F%AF%E8%A7%86%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>数据可视化:动态趋势图</title>
+      <link>/post/2019/12/03/%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96%E5%8A%A8%E6%80%81%E8%B6%8B%E5%8A%BF%E5%9B%BE/</link>
+      <pubDate>Tue, 03 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/12/03/%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96%E5%8A%A8%E6%80%81%E8%B6%8B%E5%8A%BF%E5%9B%BE/</guid>
+      <description>可视化效果 当然上面的图是不会动的
+特意录了段视频，来看看效果： 数据库自动化流程的动态展示效果视图http://www.dboop.com/img/timebar.mp4
+制作过程 数据源： 这个可视化效果需要4列 ： - 第一列：时间分类（一般是月份,年份） - 第二列：时间（一般是小时，天） - 第三列：项目分类 - 第四列：具体的值
+这里我们用MYSQL数据源中拉取 制作一张报表 我们看一下完整的报表编辑示意图： 报表内容解释 &amp;lt;page&amp;gt; &amp;lt;viewtype&amp;gt;timebar&amp;lt;/viewtype&amp;gt; &amp;lt;!--定义我们这个图形的类别，在张报表里我们用timebar：动态柱图，还有很多:line,bar,mutibar,map,tree,table,edittable...等可选 --&amp;gt; &amp;lt;connstr&amp;gt;&amp;lt;!--这里写数据库ID,需要提前申请好访问这个DB的权限--&amp;gt;&amp;lt;/connstr&amp;gt; &amp;lt;sqlstr&amp;gt; &amp;lt;![CDATA[ select DATE_FORMAT(addtime,&#39;%Y年%m月&#39;) as ftitle,DATE_FORMAT(addtime,&#39;%Y-%m-%d&#39;) as addtime,applytype,convert(sum(counts),unsigned) as counts from processlist where addtime between %s and %s group by addtime,applytype order by addtime ]]&amp;gt; &amp;lt;/sqlstr&amp;gt; &amp;lt;sqlpara&amp;gt;#1&amp;lt;/sqlpara&amp;gt; &amp;lt;sqlpara&amp;gt;#2&amp;lt;/sqlpara&amp;gt; &amp;lt;!--这时是给SQL传参--&amp;gt; &amp;lt;title&amp;gt;数据库自动化流程:&amp;lt;/title&amp;gt; &amp;lt;!--timebar的标题--&amp;gt; &amp;lt;maxdisplay&amp;gt;20&amp;lt;/maxdisplay&amp;gt; &amp;lt;!--最多显示多少项--&amp;gt; &amp;lt;playInterval&amp;gt;100&amp;lt;/playInterval&amp;gt; &amp;lt;!--刷新间隔，单位毫秒，默认是50毫秒--&amp;gt; &amp;lt;height&amp;gt;800px&amp;lt;/height&amp;gt; &amp;lt;!--动态图表的高度，可以不填--&amp;gt; &amp;lt;/page&amp;gt; &amp;lt;para&amp;gt; &amp;lt;name&amp;gt;开始日期&amp;lt;/name&amp;gt; &amp;lt;type&amp;gt;date&amp;lt;/type&amp;gt; &amp;lt;defaultvalue&amp;gt;getdate()-1y&amp;lt;/defaultvalue&amp;gt; &amp;lt;!--定文了一个日期选择框，默认值是一年前的今天 --&amp;gt; &amp;lt;/para&amp;gt; &amp;lt;para&amp;gt; &amp;lt;name&amp;gt;结束日期&amp;lt;/name&amp;gt; &amp;lt;type&amp;gt;date&amp;lt;/type&amp;gt; &amp;lt;defaultvalue&amp;gt;getdate()&amp;lt;/defaultvalue&amp;gt;&amp;lt;!</description>
+    </item>
+    
+  </channel>
+</rss>

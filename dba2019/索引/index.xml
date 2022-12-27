@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>索引 on dboop.com</title>
+    <link>/categories/%E7%B4%A2%E5%BC%95/</link>
+    <description>Recent content in 索引 on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 08 Dec 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/%E7%B4%A2%E5%BC%95/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>mysql统计信息</title>
+      <link>/post/2019/12/08/mysql%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF/</link>
+      <pubDate>Sun, 08 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/12/08/mysql%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF/</guid>
+      <description>MySQL统计信息相关的参数： 1.innodb_stats_auto_recalc，MySQL 5.7中默认为开启状态 是否自动触发更新统计信息，仅影响持久化存储的统计信息的表，阈值是变化的数据超过表行数的10%。也就是说，一个表索引统计信息是持久化存储的，并且表中数据变化了超过10%，如果innodb_stats_auto_recalc为ON，就会自动更新统计信息，否则不会自动更新
+2. innodb_stats_on_metadata（是否自动更新统计信息），MySQL 5.7中默认为关闭状态 InnoDB在执show table status 或者访问INFORMATION_SCHEMA.TABLES或者INFORMATION_SCHEMA.STATISTICS 系统表的时候更新持久化统计信息（类似于ANALYZE TABLE），innodb_stats_on_metadata不管打开还是关闭，都不影响持久化存储统计信息
+某个索引的统计信息更新时间参考mysql.innodb_index_stats这个系统表
+select * from mysql.innodb_index_stats where table_name = &#39;info_dboop&#39;;  3. innodb_stats_persistent（持久化统计信息开关），MySQL 5.7中默认为打开，持久化存储统计信息 该选项设置为ON时候，统计信息会持久化存储到磁盘中，而不是存在在内存中，相反，如果是非持久化存储的（存在内存中），相应的统计信息会随着服务器的关闭而丢失。
+4. innodb_stats_persistent_sample_pages （持久化更新统计信息时候索引页的取样页数） 默认是20个page 如果设置的过高(max65535)，那么在更新统计信息的时候，会增加ANALYZE TABLE的执行时间。 MySQL可以在表上指定一个统计信息取样的page个数，并且可以修改表上的统计取样page个数
+-- 创建表的时候指定一个统计取样page数据 create table info_dboop ( id int, username varchar(50) )ENGINE=InnoDB, STATS_PERSISTENT=1, STATS_AUTO_RECALC=1, STATS_SAMPLE_PAGES=25; --修改表的统计取样page数据 ALTER TABLE info_dboop STATS_SAMPLE_PAGES 60  5. innodb_stats_transient_sample_pages（临时性更新统计信息时候索引页的取样页数） 默认值是8 innodb_stats_persistent设置为disable的情况下，也即非持久化明确关闭的时候，innodb_stats_transient_sample_pages才生效，这个值是否生效，要依赖于innodb_stats_on_metadata，而innodb_stats_on_metadata又依赖于innodb_stats_persistent
+6. innodb_stats_sample_pages 已弃用 mysql统计信息更新时机 持久化统计信息在以下情况会被自动更新：  INNODB_STATS_AUTO_RECALC=ON 情况下，表中10%的数据被修改 增加新的索引  非持久化统计信息在以下情况会被自动更新：  距上一次更新统计信息，表1/16的数据被修改 执行ANALYZE TABLE innodb_stats_on_metadata=ON情况下，执SHOW TABLE STATUS, SHOW INDEX, 查询 INFORMATION_SCHEMA下的TABLES, STATISTICS 启用&amp;ndash;auto-rehash功能情况下，使用mysql client登录 表第一次被打开  持久化统计信息  非持久化统计信息的缺点显而易见，数据库重启后如果大量表开始更新统计信息，会对实例造成很大影响，所以目前都会使用持久化统计信息。 持久化统计信息保存在表mysql.</description>
+    </item>
+    
+  </channel>
+</rss>

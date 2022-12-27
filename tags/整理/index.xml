@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>整理 on Classic</title>
+    <link>/tags/%E6%95%B4%E7%90%86/</link>
+    <description>Recent content in 整理 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 09 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E6%95%B4%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>服务器过保日期批量查询python</title>
+      <link>/ops/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E4%BF%9D%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2python%E8%84%9A%E6%9C%AC/</link>
+      <pubDate>Sat, 09 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E4%BF%9D%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2python%E8%84%9A%E6%9C%AC/</guid>
+      <description>浪潮服务器过保查询  import json import urllib import requests # def chenck_hardware_info(sn): url = &#39;https://www.inspur.com/eportal/ui&#39; sn_file = &amp;quot;/tm/sn.text&amp;quot; def request_datatime(sn): params = { &amp;quot;struts.portlet.action&amp;quot;: &amp;quot;/portlet/download-front!serverConfig.action&amp;quot;, &amp;quot;sn&amp;quot;: sn, &amp;quot;src&amp;quot;: &amp;quot;inspur&amp;quot;, &amp;quot;language&amp;quot;: &amp;quot;CN&amp;quot;, &amp;quot;pageId&amp;quot;: &amp;quot;2317460&amp;quot;, &amp;quot;moduleId&amp;quot;: &amp;quot;82efecfc33da48b4a66567cb3dcbe5f3&amp;quot; } headers = { &amp;quot;Referer&amp;quot;: &amp;quot;https://www.inspur.com/eportal/ui?pageId=2317460&amp;quot;, &amp;quot;Cookie&amp;quot;: &amp;quot;JSESSIONID=****; ........(这里写cookie地址)&amp;quot; } r = requests.post(url, headers=headers, params=urllib.parse.urlencode(params)) resp = r.text[1:len(r.text)-1] resp = json.loads(resp) #print(resp[&#39;Date&#39;]) return resp[&#39;warranty1&#39;] def post_info(sn): r1 = request_datatime(sn) url = &amp;quot;http://cmdbbackend.dev.tujia.com/api/inventoryitem/sn/update/life&amp;quot; headers = { &amp;quot;OPS-Token&amp;quot;:&amp;quot;IHmioqYhb0XgBAsEiHeK_guibinw&amp;quot;, &amp;quot;Content-Type&amp;quot;:&amp;quot;application/json&amp;quot; } data = [{ &amp;quot;serialNo&amp;quot;: sn, &amp;quot;contractPeriod&amp;quot;: r1 }] r = requests.</description>
+    </item>
+    
+    <item>
+      <title>MacOS里的grep,sed,awk等命令不好用怎么办</title>
+      <link>/ops/macos%E9%87%8C%E7%9A%84grepawksed%E7%AD%89%E5%91%BD%E4%BB%A4%E4%B8%8D%E5%A5%BD%E7%94%A8%E6%80%8E%E4%B9%88%E5%8A%9E/</link>
+      <pubDate>Tue, 27 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/macos%E9%87%8C%E7%9A%84grepawksed%E7%AD%89%E5%91%BD%E4%BB%A4%E4%B8%8D%E5%A5%BD%E7%94%A8%E6%80%8E%E4%B9%88%E5%8A%9E/</guid>
+      <description>问题  工作用的电脑是mac 经常发现linux上常用的sed,grep命令用不起来，各种报错 后来查了一下发现mac里的sed和linux的不是一个版本的软件   Mac OS X uses BSD sed and not GNU sed. When you use a GNU sed extension with Mac OS X sed, you get different results, or failures. Classically, sed does not support numeric offsets, forwards or backwards. You&amp;rsquo;ll need to revise your script to work on Mac OS X.
+ 解决 使用以下命令安装GNU命令套件： brew install coreutils 使用以下命令安装gnu-sed： brew install gnu-sed --with-default-names 以上命令安装的gnu套件的命令都是带有g前缀的  gcat &amp;ndash;&amp;gt; linux里的cat gsed &amp;ndash;&amp;gt; linux里的sed ggrep &amp;ndash;&amp;gt; linux里的grep gawk &amp;ndash;&amp;gt; linux里的awk &amp;hellip;  如果想直接代替，不输入g前缀则 vim .</description>
+    </item>
+    
+    <item>
+      <title>git常用命令整理</title>
+      <link>/ops/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</link>
+      <pubDate>Thu, 25 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</guid>
+      <description>重新初始化，删掉历史版本记录  1、创建并切换到lastest_branch分支 git checkout --orphan latest_branch 2、添加所有文件 git add -A 3、提交更改 git commit -am &amp;quot;删除历史版本记录，初始化仓库&amp;quot; 4、删除分支 git branch -D master 5、将当前分支重命名 git branch -m master 6、强制更新存储库 git push -f origin master 新建 Git 仓库 # 把当前目录变更成一个 Git 仓库 $ git init # 新建一个目录，将其初始化为 Git 仓库 $ git init [project-name] # 克隆远程仓库 $ git clone [url] Git 配置信息 # 显示当前的 Git 配置 $ git config --list # 编辑 Git 配置文件 $ git config -e [--global] # 设置提交代码时的用户信息 $ git config [--global] user.</description>
+    </item>
+    
+  </channel>
+</rss>

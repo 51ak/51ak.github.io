@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>自动化流程 on Classic</title>
+    <link>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/</link>
+    <description>Recent content in 自动化流程 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 04 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>定时收集存储过程函数视图信息入库(Oracle,MySQL)</title>
+      <link>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%87%BD%E6%95%B0%E8%A7%86%E5%9B%BE%E4%BF%A1%E6%81%AForaclemysql/</link>
+      <pubDate>Thu, 04 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%87%BD%E6%95%B0%E8%A7%86%E5%9B%BE%E4%BF%A1%E6%81%AForaclemysql/</guid>
+      <description>需求 下午接到运维转来的一个权限申请流程：大数据部门研发要求开通保垒机权限。以方便在保垒机上安装SQL客户端去查看存储过程和视图的内容
+保垒机直连数据库查询，这种不可控的方式，早在去年我就把这个历史问题给禁止掉了，没想到现在还有人要求开通
+经过沟通得知，对方想查看Oracle数据库里的一些老的存储过程的代码。而DBA平台上只有表结构相关的数据字典，没有存储过程和视图的数据字典
+所以，别慌，不就这点需求吗，马上就可以加上。
+ 为什么DBA平台上的数据字典不包括存储过程和视图？ 因为存储过程/函数/视图 也是被我禁掉的，研发人员上线不可以写存储过程和视图。 所以就没想过要在DBA运维平台上做这块功能
+ 但是因为
+ 历史原因，以前的Oracle数据库上已经存在很多的视图和存储过程 第三方原因，公司采购的一些第三方服务和软件，带了存储过程和视图 这些被禁止使用的数据库对象，也需要做统一维护  拆解  这些数据库对象的信息用定时任务收集线上的表结构到本地，存为两份 一份入库，做为快照信息，展示给用户。 一份落本地文件，上传到git，用git做版本管理   为什么不在用户请求查看某个数据库对象的信息时，实时查询给用户？
+ 1.因为历史原因，我们有的库有几万个数据库对象，当用户选择一个库时，list列表加载很慢，所以一开始设计的时候，我们做了快照 2.一份快照，还可以用作数据库对象的git版本管理   建表 在dboop库中建表
+ CREATE TABLE `info_objects` ( `objectid` int NOT NULL AUTO_INCREMENT, `dbid` int NOT NULL DEFAULT &#39;0&#39;, `TABLE_SCHEMA` varchar(64) NOT NULL DEFAULT &#39;&#39;, `object_name` varchar(255) NOT NULL DEFAULT &#39;&#39;, `object_type` varchar(64) NOT NULL DEFAULT &#39;&#39;, `object_text` longtext, `cstatus` smallint NOT NULL DEFAULT &#39;1&#39;, `dba_freshtime` datetime NOT NULL DEFAULT &#39;1990-01-01 00:00:00&#39;, PRIMARY KEY (`objectid`), UNIQUE KEY `idx_infoobjects_id` (`dbid`,`object_name`,`object_type`), KEY `idx_info_objects_time` (`dba_freshtime`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 实现数据字典收集入库 建Oracle采集任务  &amp;lt;!</description>
+    </item>
+    
+    <item>
+      <title>数据库多环境SQL上线</title>
+      <link>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%9A%E7%8E%AF%E5%A2%83sql%E4%B8%8A%E7%BA%BF/</link>
+      <pubDate>Fri, 08 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%9A%E7%8E%AF%E5%A2%83sql%E4%B8%8A%E7%BA%BF/</guid>
+      <description>数据库多环境分类 MySQL数据库按环境区分有以下几种数据库  正式环境数据库：又称生产环境 验证环境数据库：上线验证环境，介于测试和生产之间的一个环境 测试环境数据库：又细分为   test0测试环境：默认测试环境 test1测试环境: test1测试环境简称t1环境，和test0环境是并行关系 test2,test3&amp;hellip; 未来会有更多的测试环境  开发环境：又称Dev环境，用于研发本地调试代码  Oralce测试环境参考MySQL的测试环境 数据库多环境上线的问题  SQL上线（建表/改表，改数据等） 需要在每个环境下都提个流程，研发的重复工作量大 研发可能会忘掉部分环境下执行某个SQL，造成各种环境和线上环境的差异越来越大  解决方式  提供一个多环境SQL上线流程，研发可以勾选每次上线要执行的环境 提供一个多环境数据库表结构对比工具 提供一个不同环境的数据库对象自动同步工具  多环境SQL上线流程 这里只演示MySQL多环境上线流程，Oracle的多环境上线流程和这个一模一样
+步骤1.选择数据库 步骤2.填写上线内容  注意1：这里可以自由勾选要执行的数据库环境，红色的是线上环境，绿色的是测试和验证环境，蓝色的是开发环境 注意2：所有环境都会执行SQL验证，所有环境通过验证，才可以进入下一步  步骤3.流程审批  如果通过了系统的SQL审核，会出现如下图的界面，进入流程审批 3.负责人审批是必选步骤 4.测试审批是用户可选步骤 5.DBA审批会根据用户提供的SQL内容，系统判定是否有dba介入（建表/改表/大范围修改数据DBA会审批，否则会自动跳过这一步）  步骤4.用户执行  审批完成以后，由发起人自由选择在合适的时间，点击上线按扭   步骤5.执行结果  执行完成后，会显示每个环境的执行结果。   后台配置 这个流程也是在dboop平台上用xml配置的，后台界面如下</description>
+    </item>
+    
+  </channel>
+</rss>

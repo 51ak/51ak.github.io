@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>资源 on Classic</title>
+    <link>/tags/%E8%B5%84%E6%BA%90/</link>
+    <description>Recent content in 资源 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 13 Jul 2022 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E8%B5%84%E6%BA%90/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>google和twitter的镜像</title>
+      <link>/book/google%E5%92%8Ctwitter%E7%9A%84%E9%95%9C%E5%83%8F/</link>
+      <pubDate>Wed, 13 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/book/google%E5%92%8Ctwitter%E7%9A%84%E9%95%9C%E5%83%8F/</guid>
+      <description>今天在大学的群里，F同学发了一个截图说王思聪在说
+我说这是假消息，因为王思聪的推特账号不是这个sicongwang001名字，然后抓了张图
+对***上网这件事也是有很多人不太擅长，于是做了两个镜像，提供给大家一个随时随地可以访问外网的跳转。
+镜像站如下：
+ Google（用来查资料): 地址就不公开了，有风险，有需要的单独找我吧 Twitter (用来看新闻): 地址就不公开了，有风险，有需要的单独找我吧  enjoy it</description>
+    </item>
+    
+  </channel>
+</rss>

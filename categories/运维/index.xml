@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>运维 on Classic</title>
+    <link>/categories/%E8%BF%90%E7%BB%B4/</link>
+    <description>Recent content in 运维 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 26 Sep 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E8%BF%90%E7%BB%B4/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Python入门之书上没有的东西</title>
+      <link>/ops/python%E5%85%A5%E9%97%A8%E4%B9%8B%E4%B9%A6%E4%B8%8A%E6%B2%A1%E6%9C%89%E7%9A%84%E4%B8%9C%E8%A5%BF/</link>
+      <pubDate>Mon, 26 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/python%E5%85%A5%E9%97%A8%E4%B9%8B%E4%B9%A6%E4%B8%8A%E6%B2%A1%E6%9C%89%E7%9A%84%E4%B8%9C%E8%A5%BF/</guid>
+      <description>分享分  为Python零基础同学做了一场入门分享 准备了1个小时的ppt 现场因为有很多演示，共花了90分钟 还好今天没人过来抢会议室。  ppt 说重点：  三天打鱼两天晒网的学习Python是不现实的，每天抽小半个小时敲代码，坚持下去，一两个星期就能入门。 最先要学的不是基础知识，而是环境配置和工具的选择 基础知识不用啃得太死，差不多理解了有印象就行，后面随着练习会不断强化，自然就学会了 练习为王，千万不要死看书，不动手。 多写，多练习，遇到报错顺着问题解决，一开始有卡住的找朋友同事帮忙，后面要学着自己搜索 多利用搜索引擎，随着技能的提升，会不断的有新问题出现。 要针对一个具体的目标和小型项目来进行练习。  </description>
+    </item>
+    
+    <item>
+      <title>Sysbench做压力测试</title>
+      <link>/ops/sysbench%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/</link>
+      <pubDate>Sat, 12 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/sysbench%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/</guid>
+      <description>0.环境 1.安装sysbench  curl -s https://packagecloud.io/install/repositories/akopytov/sysbench/script.rpm.sh | sudo bash yum -y install sysbench 2.执行压测 10.10.0.1 上执行 sysbench /usr/share/sysbench/oltp_read_write.lua --tables=5 --table_size=2000000 --mysql-user=dba --mysql-password******* --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest prepare sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest --tables=5 --table_size=2000000 --threads=300 --time=120 --report-interval=60 run &amp;gt;&amp;gt; /root/sb/proxy300.log sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest --tables=5 --table_size=2000000 --threads=20 --time=120 --report-interval=10 run sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest --tables=5 --table_size=2000000 --threads=20 --time=120 --report-interval=10 run sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.</description>
+    </item>
+    
+    <item>
+      <title>服务器过保日期批量查询python</title>
+      <link>/ops/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E4%BF%9D%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2python%E8%84%9A%E6%9C%AC/</link>
+      <pubDate>Sat, 09 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E4%BF%9D%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2python%E8%84%9A%E6%9C%AC/</guid>
+      <description>浪潮服务器过保查询  import json import urllib import requests # def chenck_hardware_info(sn): url = &#39;https://www.inspur.com/eportal/ui&#39; sn_file = &amp;quot;/tm/sn.text&amp;quot; def request_datatime(sn): params = { &amp;quot;struts.portlet.action&amp;quot;: &amp;quot;/portlet/download-front!serverConfig.action&amp;quot;, &amp;quot;sn&amp;quot;: sn, &amp;quot;src&amp;quot;: &amp;quot;inspur&amp;quot;, &amp;quot;language&amp;quot;: &amp;quot;CN&amp;quot;, &amp;quot;pageId&amp;quot;: &amp;quot;2317460&amp;quot;, &amp;quot;moduleId&amp;quot;: &amp;quot;82efecfc33da48b4a66567cb3dcbe5f3&amp;quot; } headers = { &amp;quot;Referer&amp;quot;: &amp;quot;https://www.inspur.com/eportal/ui?pageId=2317460&amp;quot;, &amp;quot;Cookie&amp;quot;: &amp;quot;JSESSIONID=****; ........(这里写cookie地址)&amp;quot; } r = requests.post(url, headers=headers, params=urllib.parse.urlencode(params)) resp = r.text[1:len(r.text)-1] resp = json.loads(resp) #print(resp[&#39;Date&#39;]) return resp[&#39;warranty1&#39;] def post_info(sn): r1 = request_datatime(sn) url = &amp;quot;http://cmdbbackend.dev.tujia.com/api/inventoryitem/sn/update/life&amp;quot; headers = { &amp;quot;OPS-Token&amp;quot;:&amp;quot;IHmioqYhb0XgBAsEiHeK_guibinw&amp;quot;, &amp;quot;Content-Type&amp;quot;:&amp;quot;application/json&amp;quot; } data = [{ &amp;quot;serialNo&amp;quot;: sn, &amp;quot;contractPeriod&amp;quot;: r1 }] r = requests.</description>
+    </item>
+    
+    <item>
+      <title>孤岛备份机和勒索病毒</title>
+      <link>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E7%AE%A1%E7%90%86%E5%88%B6%E5%BA%A6/</link>
+      <pubDate>Thu, 23 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E7%AE%A1%E7%90%86%E5%88%B6%E5%BA%A6/</guid>
+      <description>备份策略  数据库备库节点上启用定时任务，每天0:10～6:10 全备（或增备)文件 至本地sas盘，每个实例压缩成一个备份文件。 生成的备份文件调用接口上传状态并断点续传止主备份备机 数据库备份在本地sas盘上保留1-3天的备份文件 辅备份机在0点-22点保持当天的备份文件夹和主备份机的同步 主备份机每天22:00 将当天的接收到的备份文件移至 yyyyMMdd 目录下 所有备份机每天23:00删除30天以上的过期备份文件  每个月的第一次数据库全备，永不过期删除（例如：如果db每天一次全备，则每月的1号备份永久保留）    备份周期  MySQL：每天1次全备，15分钟同步一次binlog日志，全备和日志保留30天 Oracle:每周1次全备,其余天数增备，实时保存日志，备份和日志保留30天 MongoDB:每天1次全备，全备保留30天  备份脚本（源机） 传输脚本（辅备份机） </description>
+    </item>
+    
+    <item>
+      <title>孤岛备份机和勒索病毒</title>
+      <link>/dba/%E5%AD%A4%E5%B2%9B%E5%A4%87%E4%BB%BD%E6%9C%BA%E5%92%8C%E5%8B%92%E7%B4%A2%E7%97%85%E6%AF%92/</link>
+      <pubDate>Wed, 22 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E5%AD%A4%E5%B2%9B%E5%A4%87%E4%BB%BD%E6%9C%BA%E5%92%8C%E5%8B%92%E7%B4%A2%E7%97%85%E6%AF%92/</guid>
+      <description>勒索病毒 什么是勒索病毒？  勒索病毒就是那种中毒后 加密你的文件（通常是aes加密算法) 提示你去支付一些电子货币才能解开文件的一种病毒 通常是要求支付一定数量的比特币 像下面这种  怎么写一个勒索病毒？  如果让我写一个简单的勒索病毒 我可能会这样写 0.像指定的服务器（控制机）请求一个aes公钥 1.用这个公钥挨个给本地文件加密  1.1 遍历本地所有文件 1.2 给每个文件头加上一个特殊标记（不用多，10来个字节就行） 1.3 挨个用公钥加密所有文件   2.提示用户文件加密了，要求给钱 3.如果收到钱了就给他一个解密的代码 4.解密代码这样写  4.1 遍历本地所有文件 4.2 判断是否有特殊标记 4.3 如果有，则是加密文件 4.4 用私钥去解开这个文件   当然真实的勒索病毒会更加严谨，我只是描述一下思路 我也从来没写过  中了勒索病毒怎么办？  不差钱方案：给钱，然后寄希望于对方的人品。 运气好方案：这是个常见的普通勒索病毒，网上有很多的工具可以尝试解一下 报警：造成重大损失的可以公开报警，交给安全部门处理，当然这个破案的难度有点大，数据可能还是找不回来 补救方案：用备份来救命。  如果有备份，可以恢复文件，那这时候就基本上可以依靠本身的备份体系来恢复大部分损失（还是会有不可挽回的损失）    勒索病毒和备份体系的攻防  聪明的勒索病毒会攻击备份体系 1.本机备份：中了勒索病毒以后，本机备份几乎是99%也会中毒，几乎没啥用了 2.异机备份：如果是个人电脑中毒，很难会感染到备份机，但是如果是机房里的服务器中毒了，那么病毒极有可能会感染备份机。 3.异机房备份：同异机备份，主要还是一个服务器内网环境。 如何防止勒索病毒攻击备份体系呢？ 这就是我们接下来下说的孤岛备份机方案  孤岛备份机 什么是孤岛备份机？  它是一个特殊的备份机 1.它不和普通的服务器连网 2.本地不开任何端口，任何其他服务器不能请求它的任何服务 3.只和指定的一台机器直连（通常这台机器是个普通的备份机） 4.它只以视为“这台普通备份机”的备份机 5.它会定时拉取普通备份机上的指定目录 6.</description>
+    </item>
+    
+    <item>
+      <title>MacOS里的grep,sed,awk等命令不好用怎么办</title>
+      <link>/ops/macos%E9%87%8C%E7%9A%84grepawksed%E7%AD%89%E5%91%BD%E4%BB%A4%E4%B8%8D%E5%A5%BD%E7%94%A8%E6%80%8E%E4%B9%88%E5%8A%9E/</link>
+      <pubDate>Tue, 27 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/macos%E9%87%8C%E7%9A%84grepawksed%E7%AD%89%E5%91%BD%E4%BB%A4%E4%B8%8D%E5%A5%BD%E7%94%A8%E6%80%8E%E4%B9%88%E5%8A%9E/</guid>
+      <description>问题  工作用的电脑是mac 经常发现linux上常用的sed,grep命令用不起来，各种报错 后来查了一下发现mac里的sed和linux的不是一个版本的软件   Mac OS X uses BSD sed and not GNU sed. When you use a GNU sed extension with Mac OS X sed, you get different results, or failures. Classically, sed does not support numeric offsets, forwards or backwards. You&amp;rsquo;ll need to revise your script to work on Mac OS X.
+ 解决 使用以下命令安装GNU命令套件： brew install coreutils 使用以下命令安装gnu-sed： brew install gnu-sed --with-default-names 以上命令安装的gnu套件的命令都是带有g前缀的  gcat &amp;ndash;&amp;gt; linux里的cat gsed &amp;ndash;&amp;gt; linux里的sed ggrep &amp;ndash;&amp;gt; linux里的grep gawk &amp;ndash;&amp;gt; linux里的awk &amp;hellip;  如果想直接代替，不输入g前缀则 vim .</description>
+    </item>
+    
+    <item>
+      <title>git常用命令整理</title>
+      <link>/ops/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</link>
+      <pubDate>Thu, 25 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</guid>
+      <description>重新初始化，删掉历史版本记录  1、创建并切换到lastest_branch分支 git checkout --orphan latest_branch 2、添加所有文件 git add -A 3、提交更改 git commit -am &amp;quot;删除历史版本记录，初始化仓库&amp;quot; 4、删除分支 git branch -D master 5、将当前分支重命名 git branch -m master 6、强制更新存储库 git push -f origin master 新建 Git 仓库 # 把当前目录变更成一个 Git 仓库 $ git init # 新建一个目录，将其初始化为 Git 仓库 $ git init [project-name] # 克隆远程仓库 $ git clone [url] Git 配置信息 # 显示当前的 Git 配置 $ git config --list # 编辑 Git 配置文件 $ git config -e [--global] # 设置提交代码时的用户信息 $ git config [--global] user.</description>
+    </item>
+    
+    <item>
+      <title>Linux服务器共享目录Centos7</title>
+      <link>/ops/linux%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/</link>
+      <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/linux%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/</guid>
+      <description>0.环境 服务器：
+ 10.10.0.1 源机器 10.10.0.2 目标机器1 10.10.0.3 目标机器2 目标： 将10.10.0.1机器上的 /public/downloadnew 文件夹共享给10.10.0.2/3两台机器  三台机器共享写入 /data/www/dboop/static/download目录
+1.安装nfs yum -y install nfs-utils rpcbind # 开机启动 systemctl enable rpcbind.service systemctl enable nfs-server.service # 重启服务 systemctl restart rpcbind.service systemctl restart nfs-server.service 2.共享设置 10.10.0.1 上执行 mkdir /public/downloadnew ln -s /public/downloadnew /data/www/dboop/static/download -f vim /etc/exports #输入 /public 10.10.0.2(insecure,rw,sync,no_root_squash) 10.10.0.3(insecure,rw,sync,no_root_squash) exportfs -rv 10.10.0.2/3 上执行 vim /etc/fstab #输入 10.10.0.1:/public /mnt/public nfs defaults 0 0 mkdir /mnt/public mount -a df -h ln -s /mnt/public/downloadnew /data/www/dboop/static/download -f 到此 10.</description>
+    </item>
+    
+  </channel>
+</rss>

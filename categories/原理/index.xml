@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>原理 on Classic</title>
+    <link>/categories/%E5%8E%9F%E7%90%86/</link>
+    <description>Recent content in 原理 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 18 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E5%8E%9F%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL的行格式(Compact、Redundant、Dynamic和Compressed)</title>
+      <link>/mysql/mysql%E7%9A%84%E8%A1%8C%E6%A0%BC%E5%BC%8Fcompact_redundant_dynamic_compressed/</link>
+      <pubDate>Thu, 18 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84%E8%A1%8C%E6%A0%BC%E5%BC%8Fcompact_redundant_dynamic_compressed/</guid>
+      <description>前言  MySQL的默认存储引擎innodb是按16k大小的page来组织存储数据的 MySQL的*.ibd 数据文件，大小一定是能被16kB整除的 在逻辑上innodb是按btree来组织数据存储的 针对每一行具体的数据，共有4种存储方式可供选择：Compact、Redundant、Dynamic和Compressed 其中：Redundant 已经被淘汰了，不建议使用 Compact/Dynamic/Compressed 用的是同一个原理，只在细节上有点变化，不影响其实现逻辑 所以我们说行格式的时候，就可以从compact格式来分析，后两种是compact格式的变种   以下原理部分，都只说compact行格式。(?因为compact是基础，后两种都是基于它衍生出来的)
+ 行格式在哪里看，怎么修改行格式 查看 mysql&amp;gt; show table status like &#39;%dbooptest%&#39; \G *************************** 1. row *************************** Name: dbooptest Engine: InnoDB Version: 10 Row_format: Dynamic Rows: 9 Avg_row_length: 1820 Data_length: 16384 Max_data_length: 0 Index_length: 0 Data_free: 0 Auto_increment: NULL Create_time: 2020-06-10 20:22:49 Update_time: 2020-06-10 20:22:49 Check_time: NULL Collation: utf8mb4_unicode_ci Checksum: NULL Create_options: Comment: 测试 1 row in set (0.</description>
+    </item>
+    
+  </channel>
+</rss>

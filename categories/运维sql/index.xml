@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>运维SQL on Classic</title>
+    <link>/categories/%E8%BF%90%E7%BB%B4sql/</link>
+    <description>Recent content in 运维SQL on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 04 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E8%BF%90%E7%BB%B4sql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>定时收集存储过程函数视图信息入库(Oracle,MySQL)</title>
+      <link>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%87%BD%E6%95%B0%E8%A7%86%E5%9B%BE%E4%BF%A1%E6%81%AForaclemysql/</link>
+      <pubDate>Thu, 04 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%87%BD%E6%95%B0%E8%A7%86%E5%9B%BE%E4%BF%A1%E6%81%AForaclemysql/</guid>
+      <description>需求 下午接到运维转来的一个权限申请流程：大数据部门研发要求开通保垒机权限。以方便在保垒机上安装SQL客户端去查看存储过程和视图的内容
+保垒机直连数据库查询，这种不可控的方式，早在去年我就把这个历史问题给禁止掉了，没想到现在还有人要求开通
+经过沟通得知，对方想查看Oracle数据库里的一些老的存储过程的代码。而DBA平台上只有表结构相关的数据字典，没有存储过程和视图的数据字典
+所以，别慌，不就这点需求吗，马上就可以加上。
+ 为什么DBA平台上的数据字典不包括存储过程和视图？ 因为存储过程/函数/视图 也是被我禁掉的，研发人员上线不可以写存储过程和视图。 所以就没想过要在DBA运维平台上做这块功能
+ 但是因为
+ 历史原因，以前的Oracle数据库上已经存在很多的视图和存储过程 第三方原因，公司采购的一些第三方服务和软件，带了存储过程和视图 这些被禁止使用的数据库对象，也需要做统一维护  拆解  这些数据库对象的信息用定时任务收集线上的表结构到本地，存为两份 一份入库，做为快照信息，展示给用户。 一份落本地文件，上传到git，用git做版本管理   为什么不在用户请求查看某个数据库对象的信息时，实时查询给用户？
+ 1.因为历史原因，我们有的库有几万个数据库对象，当用户选择一个库时，list列表加载很慢，所以一开始设计的时候，我们做了快照 2.一份快照，还可以用作数据库对象的git版本管理   建表 在dboop库中建表
+ CREATE TABLE `info_objects` ( `objectid` int NOT NULL AUTO_INCREMENT, `dbid` int NOT NULL DEFAULT &#39;0&#39;, `TABLE_SCHEMA` varchar(64) NOT NULL DEFAULT &#39;&#39;, `object_name` varchar(255) NOT NULL DEFAULT &#39;&#39;, `object_type` varchar(64) NOT NULL DEFAULT &#39;&#39;, `object_text` longtext, `cstatus` smallint NOT NULL DEFAULT &#39;1&#39;, `dba_freshtime` datetime NOT NULL DEFAULT &#39;1990-01-01 00:00:00&#39;, PRIMARY KEY (`objectid`), UNIQUE KEY `idx_infoobjects_id` (`dbid`,`object_name`,`object_type`), KEY `idx_info_objects_time` (`dba_freshtime`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 实现数据字典收集入库 建Oracle采集任务  &amp;lt;!</description>
+    </item>
+    
+    <item>
+      <title>Oracle运维DBA常用命令集合</title>
+      <link>/oracle/oracle%E8%BF%90%E7%BB%B4dba%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Wed, 30 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E8%BF%90%E7%BB%B4dba%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</guid>
+      <description>-- 写在开始 linesize/pagesize set linesize 9999 set pagesize 9999 查看ORACLE SID
+select * from v$instance select instance_name,host_name from v$instance; 查看数据库的运行天数
+select INSTANCE_NAME,round(sysdate-STARTUP_TIME) run_day from gv$instance; 查看alert log
+show parameter dump; 查看当前DB的scn
+select dbms_flashback.get_system_change_number from dual; select current_scn from v$database; scn转时间戳
+select scn_to_timestamp(991159) scn from dual; 时间转换为scn
+select timestamp_to_scn(to_timestamp(&#39;2019-01-27 18:19:20.123456789&#39;,&#39;YYYY-MM-DD HH24:MI:SS.FF&#39;)) scn from dual; scn和时间的对应关系
+select scn,to_char(time_dp,&#39;yyyy-mm-dd hh24:mi:ss&#39;) time from sys.smon_scn_time where rownum&amp;lt;10 order by 1,2; 查看数据库所有用户及用户状态
+-- SYSADM用户是线上应用用户 select USERNAME,ACCOUNT_STATUS from dba_users; select current_scn from v$database; 查看存储过程数量</description>
+    </item>
+    
+  </channel>
+</rss>

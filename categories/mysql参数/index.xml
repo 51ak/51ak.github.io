@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mysql参数 on dboop.com</title>
+    <link>/categories/mysql%E5%8F%82%E6%95%B0/</link>
+    <description>Recent content in mysql参数 on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 16 Sep 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/mysql%E5%8F%82%E6%95%B0/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Innodb_row_lock_waits和Innodb_row_lock_current_waits报警处理</title>
+      <link>/post/2019/09/16/innodb_row_lock_waits%E5%92%8Cinnodb_row_lock_current_waits%E6%8A%A5%E8%AD%A6%E5%A4%84%E7%90%86/</link>
+      <pubDate>Mon, 16 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/09/16/innodb_row_lock_waits%E5%92%8Cinnodb_row_lock_current_waits%E6%8A%A5%E8%AD%A6%E5%A4%84%E7%90%86/</guid>
+      <description>刚才有RD部门负责人在企业微信上问我他们的一个MYSQL实例Innodb_row_lock_waits在报警，这个是什么情况？
+得益于我们把数据库的报警，发送给了RD负责人，每个负责人会对自己业务线的数据库性能比较关心，比DBA还要关心。 通常DBA收到这种row_lock报警只要不是连续的长时间报，一般会忽略。 这也是我们努力做数据库负责人制度的原因。
+回归正题，处理Innodb_row_lock_waits或者Innodb_row_lock_current_waits报警。
+报警判断 首先第一步这不是个严重的报警，如果没有其他并发报警. 但这个报警一般会对业务来说，行数增多，意味着更多的锁等待时长
+行锁的报警规则设置如下： &amp;lt;counter_node&amp;gt;&amp;lt;counter&amp;gt;Innodb_row_lock_waits&amp;lt;/counter&amp;gt;&amp;lt;checkpoint&amp;gt;0,10,30,80,5000&amp;lt;/checkpoint&amp;gt;&amp;lt;weight&amp;gt;1&amp;lt;/weight&amp;gt;&amp;lt;/counter_node&amp;gt;
+报警排查 show engine innodb status \G
+观察结果TRANSACTIONS 这一段：
+TRANSACTIONS
+Trx id counter 581112825 Purge done for trx&amp;rsquo;s n:o &amp;lt; 581112824 undo n:o &amp;lt; 0 state: running but idle History list length 34 LIST OF TRANSACTIONS FOR EACH SESSION: &amp;mdash;TRANSACTION 421991409852768, not started 0 lock struct(s), heap size 1136, 0 row lock(s) &amp;mdash;TRANSACTION 421991409917520, not started 0 lock struct(s), heap size 1136, 0 row lock(s) &amp;mdash;TRANSACTION 421991409914784, not started 0 lock struct(s), heap size 1136, 0 row lock(s) &amp;mdash;TRANSACTION 421991409911136, not started 0 lock struct(s), heap size 1136, 0 row lock(s)</description>
+    </item>
+    
+    <item>
+      <title>mysql5.7复制建议</title>
+      <link>/post/2019/05/07/mysql5.7%E5%A4%8D%E5%88%B6%E5%BB%BA%E8%AE%AE/</link>
+      <pubDate>Tue, 07 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/05/07/mysql5.7%E5%A4%8D%E5%88%B6%E5%BB%BA%E8%AE%AE/</guid>
+      <description>关于复制选型  MGR:有条件上MGR的，上MGR,对网络要求较高。 半同步复制：用默认的AFTER_SYNC模式，一般实例都建议使用(重点推荐) 异步复制：对从实例要求延时不高的，日志类的等等可以用  半同步复制 设置：主库执行 install plugin rpl_semi_sync_master soname &#39;semisync_master.so&#39;; SET GLOBAL rpl_semi_sync_master_enabled=1;  设置：备库执行 1：安装slave插件 install plugin rpl_semi_sync_slave soname &#39;semisync_slave.so&#39;; set global slave_parallel_workers=8;  2：启用slave半同步复制 set global rpl_semi_sync_slave_enabled=1; ##启用slave半同步复制，可以写到配置文件中  3：重启slave上的IO线程 如果没有重启，则默认还是异步复制，重启后，slave会在master上注册为半同步复制的slave角色。
+stop slave io_thread; start slave io_thread;  或者：
+stop slave; set global slave_parallel_type=&#39;LOGICAL_CLOCK&#39;; start slave;  状态 show global variables like &amp;lsquo;rpl_semi%&amp;lsquo;; 主上：  rpl_semi_sync_master_enabled：表示主上是否开启半同步复制功能，可以动态修改。可选值：ON\OFF rpl_semi_sync_master_timeout：为了防止半同步复制中主在没有收到S发出的确认发生堵塞，用来设置超时，超过这个时间值没有收到信息，则切换到异步复制，执行操作。默认为10000毫秒，等于10秒，这个参数动态可调，表示主库在某次事务中，如果等待时间超过10秒，那么则降级为异步复制模式，不再等待SLAVE从库。如果主库再次探测到，SLAVE从库恢复了，则会自动再次回到半同步复制模式。可以设置成1000，即1秒。 rpl_semi_sync_master_wait_for_slave_count：控制slave应答的数量，默认是1，表示master接收到几个slave应答后才commit。 rpl_semi_sync_master_wait_no_slave ：当一个事务被提交，但是Master没有Slave连接，这时M不可能收到任何确认信息，但M会在时间限制范围内继续等待。如果没有Slave链接，会切换到异步复制。是否允许master每个事务提交后都要等待slave的接收确认信号。默认为on，每一个事务都会等待。如果为off，则slave追赶上后，也不会开启半同步复制模式，需要手工开启。 rpl_semi_sync_master_wait_point：该参数表示半同步复制的主在哪个点等待从的响应，默认AFTER_SYNC，在得到slave的应答后再commit，可选值AFTER_COMMIT。  从上：  rpl_semi_sync_slave_enabled：表示从上是否开启半同步复制功能，可以动态修改。可选值：ON\OFF  show global status like &amp;lsquo;rpl_semi%&amp;lsquo;;  Rpl_semi_sync_master_clients ：说明支持和注册半同步复制的已连Slave数。 Rpl_semi_sync_master_net_avg_wait_time ：master等待slave回复的平均等待时间，单位毫秒。 Rpl_semi_sync_master_net_wait_time ：master总的等待时间。 Rpl_semi_sync_master_net_waits ：master等待slave回复的的总的等待次数，即半同步复制的总次数，不管失败还是成功，不算半同步失败后的异步复制。 Rpl_semi_sync_master_no_times ：master关闭半同步复制的次数。 Rpl_semi_sync_master_no_tx ：master没有收到slave的回复而提交的次数，可以理解为master等待超时的次数，即半同步模式不成功提交数量。 Rpl_semi_sync_master_status ：ON是活动状态（半同步），OFF是非活动状态（异步），用于表示主服务器使用的是异步复制模式，还是半同步复制模式。 Rpl_semi_sync_slave_status ：Slave上的半同步复制状态，ON表示已经被启用，OFF表示非活动状态。 Rpl_semi_sync_master_tx_avg_wait_time ：master花在每个事务上的平均等待时间。 Rpl_semi_sync_master_tx_wait_time ：master总的等待时间。 Rpl_semi_sync_master_tx_waits ：master等待成功的次数，即master没有等待超时的次数，也就是成功提交的次数 Rpl_semi_sync_master_wait_pos_backtraverse ：master提交后来的先到了，而先来的还没有到的次数。 Rpl_semi_sync_master_wait_sessions ：前有多少个session因为slave的回复而造成等待。 Rpl_semi_sync_master_yes_tx ：master成功接收到slave的回复的次数，即半同步模式成功提交数量。</description>
+    </item>
+    
+    <item>
+      <title>mysql:innodb_flush_log_at_trx_commit参数</title>
+      <link>/post/2019/04/01/mysqlinnodb_flush_log_at_trx_commit%E5%8F%82%E6%95%B0/</link>
+      <pubDate>Mon, 01 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/04/01/mysqlinnodb_flush_log_at_trx_commit%E5%8F%82%E6%95%B0/</guid>
+      <description>Mysql：
+innodb_flush_log_at_trx_commit参数 innodb_flush_log_at_trx_commit：是 InnoDB 引擎特有的，ib_logfile的刷新方式（ ib_logfile：记录的是redo log和undo log的信息）
+取值:0/1/2
+innodb_flush_log_at_trx_commit=0 表示每隔一秒把log buffer刷到文件系统中(os buffer)去，并且调用文件系统的“flush”操作将缓存刷新到磁盘上去。也就是说一秒之前的日志都保存在日志缓冲区，也就是内存上，如果机器宕掉，可能丢失1秒的事务数据。
+innodb_flush_log_at_trx_commit=1 表示在每次事务提交的时候，都把log buffer刷到文件系统中(os buffer)去，并且调用文件系统的“flush”操作将缓存刷新到磁盘上去。这样的话，数据库对IO的要求就非常高了，如果底层的硬件提供的IOPS比较差，那么MySQL数据库的并发很快就会由于硬件IO的问题而无法提升。
+innodb_flush_log_at_trx_commit=2 表示在每次事务提交的时候会把log buffer刷到文件系统中去，但并不会立即刷写到磁盘。如果只是MySQL数据库挂掉了，由于文件系统没有问题，那么对应的事务数据并没有丢失。只有在数据库所在的主机操作系统损坏或者突然掉电的情况下，数据库的事务数据可能丢失1秒之类的事务数据。这样的好处，减少了事务数据丢失的概率，而对底层硬件的IO要求也没有那么高(log buffer写到文件系统中，一般只是从log buffer的内存转移的文件系统的内存缓存中，对底层IO没有压力)。
+影响对象 这里共有4个对象,依次是 buffer-pool ,log-buffer, os-cache,binlog-file 只有最后一个binlog-file是磁盘文件 每个事务都会更新buffer-pool里的对象 然后行为: - innodb_flush_log_at_trx_commit=0 每次事务只更新buffer-pool,其他三个对象都需要等每秒种(不能保证完全是1秒) 把buffer-pool的内容写入log-buffer,同时写入os-cache,binlog-file - innodb_flush_log_at_trx_commit=1 每次事务更新buffer-pool ,log-buffer, os-cache,binlog-file 4个对象,且直接FLUSH磁盘数据,所以最慢也最安全 - innodb_flush_log_at_trx_commit=2 每次事务更新buffer-pool,log-buffer,os-cache,比上面少了个flush 文件这一步,FLUSH的进程是每秒钟刷一次.所以比1快比0慢
+性能差异 一般我们简单的估算 innodb_flush_log_at_trx_commit=1能写10000条数据时,innodb_flush_log_at_trx_commit=2能写12000条,innodb_flush_log_at_trx_commit=0 能写16000条 .差不多是1/1.2&amp;frasl;1.6倍性能差异 当然这个数据非常不严谨,只是参考,需要考虑环境差异和sync_binlog参数.
+数据安全  innodb_flush_log_at_trx_commit=0 如果MYSQL进程崩溃,丢失1秒钟事务 innodb_flush_log_at_trx_commit=1 如果同时sync_binlog=1,最多丢失一个事务数据 innodb_flush_log_at_trx_commit=2 如果mysql进程崩溃,系统没挂机器存活,则参考=1,如果是机器挂了或操作系统崩溃,则参考=0  建议 线上建议强制采有innodb_flush_log_at_trx_commit=1</description>
+    </item>
+    
+  </channel>
+</rss>
