@@ -159,39 +159,93 @@
 		}]
 	}]
 }]
-</code></pre><h2 id="ppt">ppt</h2>
-<p><img src="/img/2022/python/python01.png" alt="python入门ppt01"></p>
-<p><img src="/img/2022/python/python02.png" alt="python入门ppt02"></p>
-<p><img src="/img/2022/python/python03.png" alt="python入门ppt03"></p>
-<p><img src="/img/2022/python/python04.png" alt="python入门ppt04"></p>
-<p><img src="/img/2022/python/python05.png" alt="python入门ppt05"></p>
-<p><img src="/img/2022/python/python06.png" alt="python入门ppt06"></p>
-<p><img src="/img/2022/python/python07.png" alt="python入门ppt07"></p>
-<p><img src="/img/2022/python/python08.png" alt="python入门ppt08"></p>
-<p><img src="/img/2022/python/python09.png" alt="python入门ppt09"></p>
-<p><img src="/img/2022/python/python10.png" alt="python入门ppt10"></p>
-<p><img src="/img/2022/python/python11.png" alt="python入门ppt11"></p>
-<p><img src="/img/2022/python/python12.png" alt="python入门ppt12"></p>
-<p><img src="/img/2022/python/python13.png" alt="python入门ppt13"></p>
-<p><img src="/img/2022/python/python14.png" alt="python入门ppt14"></p>
-<p><img src="/img/2022/python/python15.png" alt="python入门ppt15"></p>
-<p><img src="/img/2022/python/python16.png" alt="python入门ppt16"></p>
-<p><img src="/img/2022/python/python17.png" alt="python入门ppt17"></p>
-<p><img src="/img/2022/python/python18.png" alt="python入门ppt18"></p>
-<p><img src="/img/2022/python/python19.png" alt="python入门ppt19"></p>
-<p><img src="/img/2022/python/python20.png" alt="python入门ppt20"></p>
-<p><img src="/img/2022/python/python21.png" alt="python入门ppt21"></p>
-<h2 id="说重点">说重点：</h2>
-<ul>
-<li>三天打鱼两天晒网的学习Python是不现实的，每天抽小半个小时敲代码，坚持下去，一两个星期就能入门。</li>
-<li>最先要学的不是基础知识，而是环境配置和工具的选择</li>
-<li>基础知识不用啃得太死，差不多理解了有印象就行，后面随着练习会不断强化，自然就学会了</li>
-<li>练习为王，千万不要死看书，不动手。</li>
-<li>多写，多练习，遇到报错顺着问题解决，一开始有卡住的找朋友同事帮忙，后面要学着自己搜索</li>
-<li>多利用搜索引擎，随着技能的提升，会不断的有新问题出现。</li>
-<li>要针对一个具体的目标和小型项目来进行练习。</li>
+</code></pre><ul>
+<li>本来以为很好写的一小段,写起来发现还挺麻烦的</li>
 </ul>
+<h2 id="难点">难点</h2>
+<ul>
+<li>二维表转json tree 还是比较常见的写法,但是这个二维表里没有parentid,所以上下级关系需要用country,province 两列来对齐生成</li>
+</ul>
+<h2 id="代码">代码</h2>
+<ul>
+<li>我写了一个python版的实现</li>
+</ul>
+<pre><code>
+class jsontree_str_():
+    def __init__(self) -&gt; None:
+        pass
+    def get_jsonstr_parentid(self,rows,columns):  
+        sb_rows=[]    
+        columnsi=len(columns)
+        if len(rows)==0 or columnsi&lt;3:
+            return sb_rows 
+        dict_ids={}
+        for row in rows:
+            for i in range(1,columnsi):
+                idstr=&quot;|&quot;.join('%s' %id for id in row[1:i+1]) if i &lt;columnsi-1  else row[0]
+                if idstr  in dict_ids:
+                    continue
+                else:
+                    dict_ids[idstr]=True
+                    sb_rows.append({
+                        &quot;id&quot;:idstr,
+                        &quot;parent_id&quot;:&quot;|&quot;.join('%s' %id for id in row[1:i]) if i &gt; 1 else &quot;&quot;,
+                        &quot;text&quot;:str(row[i]),
+                        &quot;leaf&quot;:i == columnsi - 1})        
+        return  sb_rows
+    
 
+    def get_jsonstr_tree(self,data: list) -&gt; list:
+        mapping: dict = dict(zip([i['id'] for i in data], data))    
+        resultlist: list = [] 
+        for d in data:
+            # 如果找不到父级项，则是根节点
+            parent: dict = mapping.get(d['parent_id'])
+            if parent is None:
+                resultlist.append(d)
+            else:
+                children: list = parent.get('children')
+                if not children:
+                    children = []
+                children.append(d)
+                parent.update({'children': children})
+        return resultlist
+
+    def remove_dict_node(self,listobj,remotekeys=[]):
+        if len(remotekeys)==0:
+            return 
+        for dict_list in listobj:
+            for delkey in remotekeys:
+                if delkey in dict_list:
+                    dict_list.pop(delkey)
+            if &quot;children&quot; in dict_list:
+                self.remove_dict_node(dict_list[&quot;children&quot;])
+
+    def make_treejson(self,rows,columns,remotekeys=[]):
+        sb_rows=self.get_jsonstr_parentid(rows,columns)
+        listobj=self.get_jsonstr_tree(sb_rows)
+        if len(remotekeys)&gt;0:
+            self.remove_dict_node(listobj)
+        return  json.dumps(listobj)
+
+    def test(self,):
+        rows=[
+        (1,&quot;a&quot;,&quot;aa&quot;,&quot;aa1&quot;),
+        (&quot;2&quot;,&quot;a&quot;,&quot;aa&quot;,&quot;aa2&quot;),
+        (&quot;3&quot;,&quot;b&quot;,&quot;bb&quot;,&quot;bb1&quot;),
+        (&quot;4&quot;,&quot;b&quot;,&quot;bb&quot;,&quot;bb2&quot;),
+        (&quot;5&quot;,&quot;b&quot;,&quot;bb&quot;,&quot;bb3&quot;),
+        (&quot;6&quot;,&quot;c&quot;,&quot;cc&quot;,&quot;cc1&quot;),
+        ]
+        columns=(&quot;id&quot;,&quot;text&quot;,&quot;text1&quot;,&quot;text2&quot;)
+        jsonstr=self.make_treejson(rows,columns)
+        return jsonstr
+
+if __name__ == &quot;__main__&quot;:
+    oostr=jsontree_str_()
+    print(oostr.test())
+
+</code></pre>
     <a href="/"> >> Home</a>
   </main>
 
