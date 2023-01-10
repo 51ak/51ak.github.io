@@ -6,13 +6,31 @@
     <description>Recent content in Categories on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 06 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 10 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>DBA</title>
       <link>/categories/dba/</link>
-      <pubDate>Fri, 06 Jan 2023 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/dba/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>硬件</title>
+      <link>/categories/%E7%A1%AC%E4%BB%B6/</link>
+      <pubDate>Tue, 10 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E7%A1%AC%E4%BB%B6/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>运维</title>
+      <link>/categories/%E8%BF%90%E7%BB%B4/</link>
+      <pubDate>Tue, 10 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E8%BF%90%E7%BB%B4/</guid>
       <description></description>
     </item>
     
@@ -26,29 +44,11 @@
     </item>
     
     <item>
-      <title>硬件</title>
-      <link>/categories/%E7%A1%AC%E4%BB%B6/</link>
-      <pubDate>Fri, 06 Jan 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/%E7%A1%AC%E4%BB%B6/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>自动化</title>
       <link>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/</link>
       <pubDate>Fri, 06 Jan 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>运维</title>
-      <link>/categories/%E8%BF%90%E7%BB%B4/</link>
-      <pubDate>Fri, 06 Jan 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/%E8%BF%90%E7%BB%B4/</guid>
       <description></description>
     </item>
     
