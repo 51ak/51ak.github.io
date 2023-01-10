@@ -8,11 +8,29 @@
     <language>zh-cn</language>
     <lastBuildDate>Fri, 06 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>DBA</title>
+      <link>/categories/dba/</link>
+      <pubDate>Fri, 06 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/dba/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>python</title>
       <link>/categories/python/</link>
       <pubDate>Fri, 06 Jan 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>硬件</title>
+      <link>/categories/%E7%A1%AC%E4%BB%B6/</link>
+      <pubDate>Fri, 06 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E7%A1%AC%E4%BB%B6/</guid>
       <description></description>
     </item>
     
@@ -157,15 +175,6 @@
       <pubDate>Tue, 20 Sep 2022 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E5%B7%A5%E4%BD%9C%E6%8A%80%E8%83%BD/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>DBA</title>
-      <link>/categories/dba/</link>
-      <pubDate>Thu, 25 Aug 2022 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/dba/</guid>
       <description></description>
     </item>
     
