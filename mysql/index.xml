@@ -190,6 +190,15 @@ MySQL也重度依靠数据库日志来完成一系统的功能。
     </item>
     
     <item>
+      <title>MySQL常用脚本_AlterTable</title>
+      <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_altertable/</link>
+      <pubDate>Mon, 12 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_altertable/</guid>
+      <description>速记  当修改表结构的时候有三种选项: ALTER TABLE t1 ALTER COLUMN ... ALTER TABLE t1 CHANGE COLUMN ... ALTER TABLE t1 MODIFY COLUMN ... 容易记混 一般我们这样记 Change column 无所不能 Modify column 不能给列改名,其他都行 Alter Column 最弱,改点默认值什么的(但是他也有好处,非常快和安全)  增  增加列(单列)  ALTER TABLE t1 ADD col-name col-type comment &#39;xxx&#39;;  增加列(多列)  ALTER TABLE t1 ADD col-name col-type comment &#39;xxx&#39;, ADD col-name col-type(col-length) comment &#39;xxx&#39;;  增加表字段并指明字段放置为第一列  ALTER TABLE t1 add col-name col-type COMMENT &#39;sss&#39; FIRST;  增加表字段并指明字段放置为特定列后面  ALTER TABLE t1 add col-name col-type after col-name-1; 删  删除列  ALTER TABLE t1 DROP col-name; 改  修改字段类型  - 使用MODIFY修改字段类型 ALTER TABLE t1 modify column col-name col-type; - 使用CHANGE修改字段类型 ALTER TABLE t1 change col-name col-name col-type;  修改列名  使用CHANGE修改字段名称 ALTER TABLE t1 change old-col-name new-col-name col-type;  修改表名  rename table old-table-name to new-table-name;  修改默认值  - 为字段设置NULL和DEFAULT ALTER TABLE t1 modify col-name col-type not null default 100; - 修改字段的默认值 ALTER TABLE t1 alter col-name set default 10000; -字段删除默认值 ALTER TABLE t1 alter col-name drop default; </description>
+    </item>
+    
+    <item>
       <title>MySQL常用脚本_binlog解析和回滚</title>
       <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_binlog/</link>
       <pubDate>Sat, 10 Apr 2021 00:00:00 +0000</pubDate>
