@@ -123,6 +123,10 @@
 <li>删除列</li>
 </ul>
 <pre><code>ALTER TABLE t1  DROP col-name;
+</code></pre><ul>
+<li>删除表中主键</li>
+</ul>
+<pre><code>Alter TABLE t1】 drop primary key
 </code></pre><h2 id="改">改</h2>
 <ul>
 <li>修改字段类型</li>
@@ -139,7 +143,10 @@ ALTER TABLE t1 change old-col-name new-col-name col-type;
 </code></pre><ul>
 <li>修改表名</li>
 </ul>
-<pre><code>rename table old-table-name to new-table-name;
+<pre><code>- 重命名表1
+ALTER TABLE t1 RENAME 【表新名字】
+- 重命名表2
+RENAME TABLE t1 to new-table-name;
 </code></pre><ul>
 <li>修改默认值</li>
 </ul>
