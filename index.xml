@@ -6,7 +6,33 @@
     <description>Recent content on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 10 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 18 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>年终总结:又是一年岁末时</title>
+      <link>/book/2022%E5%B9%B4%E6%80%BB%E7%BB%93%E5%8F%88%E6%98%AF%E4%B8%80%E5%B9%B4%E5%B2%81%E6%9C%AB%E6%97%B6/</link>
+      <pubDate>Wed, 18 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/book/2022%E5%B9%B4%E6%80%BB%E7%BB%93%E5%8F%88%E6%98%AF%E4%B8%80%E5%B9%B4%E5%B2%81%E6%9C%AB%E6%97%B6/</guid>
+      <description>又是一年岁末时  农历腊月二十七 晚上18:30 明天这个时候就放春节假了 过节的氛围已经有了 本想着今天来摸会鱼 写个年度总结 结果白天被审计追着要材料 还帮同事调了个bug 鱼没摸成(可惜了&amp;hellip;) 趁着晚高峰堵车这会 就随便絮叨两句 聊聊这一年生活和工作上的事  生活   这一年过得很好(指生活上)
+  比起去年的郁郁葱葱
+  今年有阳光有彩虹
+  回忆里翻起来也满是乐呵呵的味道
+  当然也会有不爽的时刻
+  也有很落寞的时候
+  但是很快就翻篇了
+  翻过去就又是阳光灿烂的一天
+  去了很多地方
+  看到了很多风景
+  遇到一些非常敞亮的人
+  会让人眼前一亮
+  会让人发自内心的开心
+  会让我觉得自己捡到了宝一样的感觉
+  会感叹为啥没早点遇上
+  人和人之间的差异真的大得吓人
+  因为我的性格里多少带着点盲目的自信
+  其实更喜欢和比我聪明的人相处</description>
+    </item>
+    
     <item>
       <title>HDD、SSD、SAS、SATA、PCIE、NVME</title>
       <link>/dba/hddssdsassatapcienvme/</link>
@@ -667,32 +693,6 @@ MySQL也重度依靠数据库日志来完成一系统的功能。
 为了提升Proxy性能，降低中间层的性能影响，我们加了个配置参数
 cat /data/proxy/conf/proxy3308.cnf [basic] logfile = /data/proxy/log/3308.log daemon = true [proxy] proxytype = mysql bind = 0.0.0.0:3308 server = 127.0.0.2:3308 isssl = false iscatchquery = false #增加是否“拆包” false时，Proxy进入高性能模式 iscatchlogin = false maxsquerylsize = 16384 当 iscatchquery=false时，Proxy进入高性能模式
 if Iscatchquery { #只有iscatchquery为true时才解析包。 switch ProxyType { case &amp;quot;mysql&amp;quot;: log.Printf(&amp;quot;mysql:sqlPipeMySQL\n&amp;quot;) sqlPipeMySQL(srcCon, dstCon) case &amp;quot;oracle&amp;quot;: log.</description>
-    </item>
-    
-    <item>
-      <title>年终总结:又是一年岁末时</title>
-      <link>/book/2022%E5%B9%B4%E6%80%BB%E7%BB%93%E5%8F%88%E6%98%AF%E4%B8%80%E5%B9%B4%E5%B2%81%E6%9C%AB%E6%97%B6/</link>
-      <pubDate>Tue, 18 Jan 2022 00:00:00 +0000</pubDate>
-      
-      <guid>/book/2022%E5%B9%B4%E6%80%BB%E7%BB%93%E5%8F%88%E6%98%AF%E4%B8%80%E5%B9%B4%E5%B2%81%E6%9C%AB%E6%97%B6/</guid>
-      <description>又是一年岁末时  农历腊月二十七 晚上18:30 明天这个时候就放春节假了 过节的氛围已经有了 本想着今天来摸会鱼 写个年度总结 结果白天被审计追着要材料 还帮同事调了个bug 鱼没摸成(可惜了&amp;hellip;) 趁着晚高峰堵车这会 就随便絮叨两句 聊聊这一年生活和工作上的事  生活   这一年过得很好(指生活上)
-  比起去年的郁郁葱葱
-  今年有阳光有彩虹
-  回忆里翻起来也满是乐呵呵的味道
-  当然也会有不爽的时刻
-  也有很落寞的时候
-  但是很快就翻篇了
-  翻过去就又是阳光灿烂的一天
-  去了很多地方
-  看到了很多风景
-  遇到一些非常敞亮的人
-  会让人眼前一亮
-  会让人发自内心的开心
-  会让我觉得自己捡到了宝一样的感觉
-  会感叹为啥没早点遇上
-  人和人之间的差异真的大得吓人
-  因为我的性格里多少带着点盲目的自信
-  其实更喜欢和比我聪明的人相处</description>
     </item>
     
     <item>
