@@ -363,7 +363,8 @@ dict_graph={ &amp;#34;num_active_queries.sum.60&amp;#34;:(&amp;#34;num_active_qu
       
       <guid>/mysql/mysql%E7%9A%84undo%E6%97%A5%E5%BF%97/</guid>
       <description>0.前言 续：
- MySQL的7种日志(一):概况 MySQL的7种日志(二):RedoLog
+ MySQL的7种日志(一):概况
+  MySQL的7种日志(二):RedoLog
  1.什么是undolog  undo：撤销或取消，以撤销/回滚操作为目的，返回指定某个状态的操作。 undolog：数据库事务开始之前，会将要修改的记录存放到 Undo 日志里，当事务回滚时或者数据库崩溃时，可以利用Undo日志，撤销未提交事务对数据库产生的影响。 undolog在事务开始前产生；事务在提交时，并不会立刻删除undolog，innodb会将该事务对应的 undo log 放入到删除列表中，后面会通过后台线程purge thread进行回收处理。 undolog属于逻辑日志，记录一个变化过程。例如执行一个delete，undo log会记录一个insert；执行一个update，undo log会记录一个相反的update。  2.undolog的作用  实现事务的原子性 当事务回滚时或者数据库崩溃时，利用Undo日志，撤销未提交事务对数据库产生的影响。事务处理过程中，如果出现了错误或者用户执行了 ROLLBACK 语句，MySQL 可以利用 Undo Log 中的备份将数据恢复到事务开始之前的状态。 实现多版本并发控制（MVCC） Undo Log 在 MySQL InnoDB 存储引擎中用来实现多版本并发控制。事务未提交之前，Undo Log 保存了未提交之前的版本数据，Undo Log 中的数据可作为数据旧版本快照 供其他并发事务进行快照读。（构建read view视图）  3.undolog的存储 3.1 物理存储位置 找到具体存放的位置 MySQL5.6.3 之前的版本undolog存储在系统共享表空间里，后续的版本推荐存话在单独的文件中
 mysql&amp;gt; show global variables like &#39;%undo%&#39;; +--------------------------+-------------------------+ | Variable_name | Value | +--------------------------+-------------------------+ | innodb_max_undo_log_size | 1073741824 | | innodb_undo_directory | /data/mysql3306/innolog | | innodb_undo_log_encrypt | OFF | | innodb_undo_log_truncate | ON | | innodb_undo_tablespaces | 2 | +--------------------------+-------------------------+ 5 rows in set (0.</description>
     </item>
