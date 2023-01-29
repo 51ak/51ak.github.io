@@ -79,8 +79,8 @@ pre {
 }
 code { background: #f9f9f9; }
 pre code { background: none; }
-
-img, iframe, video { max-width: 100%; text-align: left; float:left;}
+p{text-align: left;}
+img, iframe, video { text-align: left; align-self: left; }
 main { hyphens: auto; }
 blockquote {
   background: #f9f9f9;
