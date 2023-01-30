@@ -6,7 +6,25 @@
     <description>Recent content in Categories on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 18 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 30 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SQL上线</title>
+      <link>/categories/sql%E4%B8%8A%E7%BA%BF/</link>
+      <pubDate>Mon, 30 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/sql%E4%B8%8A%E7%BA%BF/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>自动化流程</title>
+      <link>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/</link>
+      <pubDate>Mon, 30 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>日记</title>
       <link>/categories/%E6%97%A5%E8%AE%B0/</link>
@@ -197,15 +215,6 @@
     </item>
     
     <item>
-      <title>自动化流程</title>
-      <link>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/</link>
-      <pubDate>Thu, 04 Aug 2022 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>运维SQL</title>
       <link>/categories/%E8%BF%90%E7%BB%B4sql/</link>
       <pubDate>Thu, 04 Aug 2022 00:00:00 +0000</pubDate>
@@ -283,15 +292,6 @@
       <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E6%93%8D%E4%BD%9C%E8%A7%84%E8%8C%83/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>SQL上线</title>
-      <link>/categories/sql%E4%B8%8A%E7%BA%BF/</link>
-      <pubDate>Fri, 08 Apr 2022 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/sql%E4%B8%8A%E7%BA%BF/</guid>
       <description></description>
     </item>
     

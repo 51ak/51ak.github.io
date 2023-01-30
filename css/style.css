@@ -81,7 +81,7 @@ code { background: #f9f9f9; }
 pre code { background: none; }
 p{text-align: left;}
 img, iframe, video { text-align: left; align-self: left; }
-main { hyphens: auto; }
+
 blockquote {
   background: #f9f9f9;
   border-left: 5px solid #ccc;
