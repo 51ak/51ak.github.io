@@ -139,7 +139,17 @@
 </nav>
 
   <main>
-    <h2 id="常用命令">常用命令</h2>
+    <blockquote>
+<p>如果用loginpath的可以用</p>
+</blockquote>
+<pre><code> mysqldump  --login-path=dba 
+
+ 代替
+
+
+mysqldump -uroot -p123456
+
+</code></pre><h2 id="常用命令">常用命令</h2>
 <h3 id="备份整个实例dump全实例">备份整个实例(dump全实例)</h3>
 <pre><code>mysqldump -uroot -p123456 -h127.0.0.1 -P3306 --single-transaction  --column-statistics=0   --skip_add_locks --skip-lock-tables --master-data=2  -A | gzip &gt; /data/mysqlbackup/dboop_dump`date '+%m-%d-%Y'`.sql.gz
 
@@ -162,8 +172,12 @@ https://www.dboop.com/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E7%94%A8%
 </code></pre><h3 id="只导出表结构不导出数据--no-data">只导出表结构不导出数据，&ndash;no-data</h3>
 <pre><code>mysqldump -uroot -p123456 --set-gtid-purged=OFF  --skip_add_locks --skip-lock-tables --no-data  --databases db1 &gt; /data/mysqlbackup/dboop_dump0401.sql
 </code></pre><h3 id="导出指定表数据不要表结构">导出指定表数据（不要表结构）</h3>
-<p>mysqldump  -uroot -p123456 &ndash;set-gtid-purged=OFF  &ndash;skip_add_locks &ndash;skip-lock-tables  &ndash;databases db1 &ndash;tables a1 &gt;/data/mysqlbackup/dboop_dump0401.sql</p>
-<h2 id="常见报错">常见报错</h2>
+<pre><code>-- 不要表结构
+ mysqldump  -uroot -p123456 --set-gtid-purged=OFF  --skip_add_locks --skip-lock-tables  –no-create-info --databases db1 --tables a1 &gt;/data/mysqlbackup/dboop_dump0401.sql
+-- 要表结构
+ mysqldump  -uroot -p123456 --set-gtid-purged=OFF  --skip_add_locks --skip-lock-tables  --databases db1 --tables a1 &gt;/data/mysqlbackup/dboop_dump0401.sql
+
+</code></pre><h2 id="常见报错">常见报错</h2>
 <h3 id="a-partial-dump-from-a-server-that-has-gtids-will-by-default-include-the-gtids-of-all-transactions">A partial dump from a server that has GTIDs will by default include the GTIDs of all transactions</h3>
 <ul>
 <li>
