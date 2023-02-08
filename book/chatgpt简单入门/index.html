@@ -118,7 +118,7 @@
 <li>请记得要尝试去体验一下: <a href="https://chat.openai.com/chat">https://chat.openai.com/chat</a></li>
 <li><img src="/img/2022auto/2023-02-07-17-42-00.png" alt="chat.openai.com_chat"></li>
 <li>如果你不会科学上网</li>
-<li>可以用这个地址体验: <a href="http://www.580top.com/dboop">http://www.580top.com/dboop</a></li>
+<li>可以用这个地址体验: <a href="http://www.580top.com/dboop">http://www.580top.com/dboop</a> (访问人数太多,已经被封了.)</li>
 <li>​这是我业余时间为不懂技术的朋友做的一个页面</li>
 <li>无需vpn,无需账号,直接就可以提问</li>
 <li><img src="/img/2022auto/2023-02-07-20-13-29.png" alt="580top.com"></li>
@@ -218,6 +218,17 @@ print(response[&quot;choices&quot;][0][&quot;text&quot;])
 <li>不同于页面上的免费使用,调用api是收费的(前3个月可以免费使用)</li>
 <li>使用api可以让chatgpt集成到现有项目中</li>
 <li>api上的人工智能落后chatGPT一个版本</li>
+<li>API参数说明:
+<ul>
+<li>model：模型名称，目前最新版的是:text-davinci-003</li>
+<li>prompt：问题或待补全内容，</li>
+<li>temperature：控制结果随机性，0.0表示结果固定，对话聊天类可以设置为0.9。</li>
+<li>max_tokens：最大返回字数（包括问题和答案），对话聊天类可以设置成2048.</li>
+<li>top_p：对话聊天类设置为1。</li>
+<li>frequency_penalty：介于-2.0到2.0之间的数字。 高频惩罚,以增加型谈论新主题的可能性,我设置为0。</li>
+<li>presence_penalty： 介于-2.0到2.0之间的数字。 存在惩罚,以增加型谈论新主题的可能性,设置是0.6。</li>
+</ul>
+</li>
 </ul>
 
     <a href="/"> >> Home</a>
