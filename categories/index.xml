@@ -6,11 +6,20 @@
     <description>Recent content in Categories on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 20 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 21 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>chatgpt</title>
+      <link>/categories/chatgpt/</link>
+      <pubDate>Tue, 21 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/chatgpt/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>数据</title>
       <link>/categories/%E6%95%B0%E6%8D%AE/</link>
-      <pubDate>Mon, 20 Feb 2023 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 21 Feb 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E6%95%B0%E6%8D%AE/</guid>
       <description></description>
@@ -19,27 +28,9 @@
     <item>
       <title>有趣的</title>
       <link>/categories/%E6%9C%89%E8%B6%A3%E7%9A%84/</link>
-      <pubDate>Mon, 20 Feb 2023 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 21 Feb 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E6%9C%89%E8%B6%A3%E7%9A%84/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>生活</title>
-      <link>/categories/%E7%94%9F%E6%B4%BB/</link>
-      <pubDate>Mon, 20 Feb 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/%E7%94%9F%E6%B4%BB/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>chatgpt</title>
-      <link>/categories/chatgpt/</link>
-      <pubDate>Fri, 17 Feb 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/chatgpt/</guid>
       <description></description>
     </item>
     
@@ -103,6 +94,15 @@
       <pubDate>Wed, 18 Jan 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E6%97%A5%E8%AE%B0/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>生活</title>
+      <link>/categories/%E7%94%9F%E6%B4%BB/</link>
+      <pubDate>Wed, 18 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E7%94%9F%E6%B4%BB/</guid>
       <description></description>
     </item>
     
