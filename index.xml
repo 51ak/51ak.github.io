@@ -6,7 +6,16 @@
     <description>Recent content on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 27 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 09 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>用AI帮你回答【时间都去哪儿了】的问题</title>
+      <link>/dba/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0/</guid>
+      <description>问题  如果你不知道工作时间都去哪了 或写工作周报/OKR时不知从何下手 这时候可以每天花5分钟写个工作记录 用现在最流行的AI技术帮你分类一下 或许可以帮助到你  效果  你可以看到最近一段时间的工作时间分配 也可以看到汇总的工作安排 还可以结合考勤表/OKR表进行对比  需要做的工作  每天花5分钟，写几行工作记录 每个工作记录写一行，可以加个时间 0.5h(0.5小时) 起步 可以自己写工作分类项和okr类别，也可以让AI帮你归类（我用的是chatGPT做分类）   AI分类原理  这里用的是chatGPT 将最近的50条已经分好类的工作项，当作Prompt塞给chatGPT 然后要求AI返回这个工作项的分类 prompt如下：  work_prompt=f&amp;quot;&amp;quot;&amp;quot;&amp;quot;工作内容&amp;quot;和[工作分类]的对应关系如下:{contentstr}请在以下分类中:{typestr}为 &amp;quot; %s &amp;quot; 选择一个分类&amp;quot;&amp;quot;&amp;quot;得到的报表  我们说每天的，每个人的工作内容，是无规律的：信息 当我们人为的把它按一定的格式录入下来以后，这些信息收集起来就成了：数据 有了数据，可以用各种维度的展开，对比，这时候可以做：报表 可以有很多种维度，这个月的和上个月的表 可以用A的工作和B的比 最重要的是，它会让你的工作内容变得可回溯  </description>
+    </item>
+    
     <item>
       <title>带着chatGPT的NewBing</title>
       <link>/book/%E5%B8%A6%E7%9D%80chatgpt%E7%9A%84newbing/</link>
