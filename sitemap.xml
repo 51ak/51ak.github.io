@@ -3,13 +3,43 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/book/</loc>
+    <lastmod>2023-03-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/categories/</loc>
-    <lastmod>2023-03-09T00:00:00+00:00</lastmod>
+    <lastmod>2023-03-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/</loc>
-    <lastmod>2023-03-09T00:00:00+00:00</lastmod>
+    <lastmod>2023-03-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2023-03-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/book/%E5%85%B3%E4%BA%8E%E6%83%85%E6%84%9F%E6%8E%A7%E5%88%B6%E5%92%8Cpua/</loc>
+    <lastmod>2023-03-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/%E5%8E%9F%E5%88%9B/</loc>
+    <lastmod>2023-03-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/%E6%97%A5%E8%AE%B0/</loc>
+    <lastmod>2023-03-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/%E7%94%9F%E6%B4%BB/</loc>
+    <lastmod>2023-03-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -23,17 +53,7 @@
   </url>
   
   <url>
-    <loc>/tags/</loc>
-    <lastmod>2023-03-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/dba/%E7%94%A8ai%E5%B8%AE%E4%BD%A0%E5%9B%9E%E7%AD%94%E6%97%B6%E9%97%B4%E9%83%BD%E5%8E%BB%E5%93%AA%E5%84%BF%E4%BA%86%E7%9A%84%E9%97%AE%E9%A2%98/</loc>
-    <lastmod>2023-03-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/%E5%8E%9F%E5%88%9B/</loc>
     <lastmod>2023-03-09T00:00:00+00:00</lastmod>
   </url>
   
@@ -45,11 +65,6 @@
   <url>
     <loc>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/</loc>
     <lastmod>2023-03-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/book/</loc>
-    <lastmod>2023-02-27T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -73,22 +88,7 @@
   </url>
   
   <url>
-    <loc>/book/%E5%85%B3%E4%BA%8E%E6%83%85%E6%84%9F%E6%8E%A7%E5%88%B6%E5%92%8Cpua/</loc>
-    <lastmod>2023-02-23T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/book/20230223%E5%8E%BB%E5%B9%B4%E7%9A%84%E4%BB%8A%E5%A4%A9/</loc>
-    <lastmod>2023-02-23T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/%E6%97%A5%E8%AE%B0/</loc>
-    <lastmod>2023-02-23T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/%E7%94%9F%E6%B4%BB/</loc>
     <lastmod>2023-02-23T00:00:00+00:00</lastmod>
   </url>
   
