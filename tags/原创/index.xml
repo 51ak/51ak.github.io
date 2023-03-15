@@ -6,11 +6,20 @@
     <description>Recent content in 原创 on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 10 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%8E%9F%E5%88%9B/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 15 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%8E%9F%E5%88%9B/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>关于情感控制和PUA的讨论</title>
+      <title>GPT-4的新功能以及我基于GPT-4做的微信机器人</title>
+      <link>/book/gpt-4%E7%9A%84%E6%96%B0%E5%8A%9F%E8%83%BD%E4%BB%A5%E5%8F%8A%E6%88%91%E5%9F%BA%E4%BA%8Egpt-4%E5%81%9A%E7%9A%84%E5%BE%AE%E4%BF%A1%E6%9C%BA%E5%99%A8%E4%BA%BA/</link>
+      <pubDate>Wed, 15 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/book/gpt-4%E7%9A%84%E6%96%B0%E5%8A%9F%E8%83%BD%E4%BB%A5%E5%8F%8A%E6%88%91%E5%9F%BA%E4%BA%8Egpt-4%E5%81%9A%E7%9A%84%E5%BE%AE%E4%BF%A1%E6%9C%BA%E5%99%A8%E4%BA%BA/</guid>
+      <description>GPT-4的发布  在震惊科技行业的AI聊天机器人ChatGPT发布近四个月后 OpenAI公司又发布了为ChatGPT提供支持的更为强大的下一代技术版本GPT-4 今天(3月15日)凌晨1点，ChatGPT创始人Sam Altman发布了一篇推特：   正式的发布了GPT-4 Sam用五个形容词评价它：capable（adj.能力强的）、aligned（adj.符合预期的）、flawed（adj.有缺陷的）、limited（adj.能力有限的）、impressive（adj.令人印象深刻的）  GPT-4 的升级  相对于GPT3.5，训练参数量上的差别如下：  它可以生成、编辑和与用户迭代创意和技术写作任务，例如创作歌曲、编写剧本或学习用户的写作风格。 它支持生成和处理多达32,768个token（约25,000个单词）的文本，这使得它能够比以前的模型创建或分析更长的内容。 它在各种专业和学术基准测试中表现出“人类水平”的性能，例如通过模拟律师资格考试、法学院入学考试（LSAT）、研究生入学考试（GRE）量化部分和各种AP科目测试。  据 OpenAI 透露，GPT-4 通过了所有基础考试而且是高分通过。例如，GPT-4 在模拟律师资格考试的成绩在考生中排名前 10% 左右，在 SAT 阅读考试中排名前 7% 左右，在 SAT 数学考试中排名前 11% 左右。相比之下，曾经令人震撼的 GPT-3.5 ，真实得分在倒数 10% 左右，GPT-4 的强大已经可想而知。 下面这张图是GPT-4在各项考试中的表现，碾压GPT-3    它可以处理图像输入，并对场景进行识别和描述。  可以看懂图片，并找到这张图片为什么搞笑：巨大的过时VGA接口给小巧的现代智能手机充电    它可以处理表格、图形和图表等数据，并进行分析和解释。     支持更多的数据类型输入      如何用上GPT-4.  现在ChatGPT plus会员有试用，但暂时还没有开放识图功能，且有条数限制 开发者在此页面申请：https://openai.com/waitlist/gpt-4-api 加入等待列表。收到邮件后就能用      大聪明微信群 </description>
+    </item>
+    
+    <item>
+      <title>GPT-4的新功能以及我基于GPT-4做的微信机器人</title>
       <link>/book/%E5%85%B3%E4%BA%8E%E6%83%85%E6%84%9F%E6%8E%A7%E5%88%B6%E5%92%8Cpua/</link>
-      <pubDate>Fri, 10 Mar 2023 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 15 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>/book/%E5%85%B3%E4%BA%8E%E6%83%85%E6%84%9F%E6%8E%A7%E5%88%B6%E5%92%8Cpua/</guid>
       <description>约了个心理咨询师，探讨了情感控制方面的内容。以下是我们的对话记录
