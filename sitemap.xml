@@ -28,11 +28,6 @@
   </url>
   
   <url>
-    <loc>/book/%E5%85%B3%E4%BA%8E%E6%83%85%E6%84%9F%E6%8E%A7%E5%88%B6%E5%92%8Cpua/</loc>
-    <lastmod>2023-03-15T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/</loc>
     <lastmod>2023-03-15T00:00:00+00:00</lastmod>
   </url>
@@ -48,13 +43,18 @@
   </url>
   
   <url>
+    <loc>/book/%E5%85%B3%E4%BA%8E%E6%83%85%E6%84%9F%E6%8E%A7%E5%88%B6%E5%92%8Cpua/</loc>
+    <lastmod>2023-03-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/categories/%E6%97%A5%E8%AE%B0/</loc>
-    <lastmod>2023-03-15T00:00:00+00:00</lastmod>
+    <lastmod>2023-03-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/categories/%E7%94%9F%E6%B4%BB/</loc>
-    <lastmod>2023-03-15T00:00:00+00:00</lastmod>
+    <lastmod>2023-03-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
