@@ -6,11 +6,11 @@
     <description>Recent content in Categories on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 15 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 16 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>chatgpt</title>
       <link>/categories/chatgpt/</link>
-      <pubDate>Wed, 15 Mar 2023 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/chatgpt/</guid>
       <description></description>
@@ -19,9 +19,18 @@
     <item>
       <title>人工智能</title>
       <link>/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</link>
-      <pubDate>Wed, 15 Mar 2023 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>文心一言</title>
+      <link>/categories/%E6%96%87%E5%BF%83%E4%B8%80%E8%A8%80/</link>
+      <pubDate>Thu, 16 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E6%96%87%E5%BF%83%E4%B8%80%E8%A8%80/</guid>
       <description></description>
     </item>
     
