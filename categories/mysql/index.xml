@@ -6,7 +6,19 @@
     <description>Recent content in mysql on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 27 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/mysql/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 06 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/mysql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL Group Replication(MGR集群)增加节点和迁移节点</title>
+      <link>/mysql/mysqlgroupreplicationmgr%E9%9B%86%E7%BE%A4%E5%A2%9E%E5%8A%A0%E8%8A%82%E7%82%B9%E5%92%8C%E8%BF%81%E7%A7%BB%E8%8A%82%E7%82%B9/</link>
+      <pubDate>Thu, 06 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysqlgroupreplicationmgr%E9%9B%86%E7%BE%A4%E5%A2%9E%E5%8A%A0%E8%8A%82%E7%82%B9%E5%92%8C%E8%BF%81%E7%A7%BB%E8%8A%82%E7%82%B9/</guid>
+      <description>MySQL Group Replication 多主结构的3节点需要切到另外三个节点上，任务需要先加3个节点到集群中，再删掉原来的3个节点。
+ 环境   原实例：
+ 172.0.2.30:3309 172.0.2.31:3309 172.0.2.32:3309    新实例：
+ 172.0.2.83:3309 172.0.2.84:3309 172.0.2.85:3309    修改host - 修改6台主机的/etc/hosts 172.0.2.30 dba-mysql3309-230 dba-mysql3309-230.dboop.com 172.0.2.31 dba-mysql3309-231 dba-mysql3309-231.dboop.com 172.0.2.32 dba-mysql3309-232 dba-mysql3309-232.dboop.com 172.0.2.83 dba-mysql3309-83 dba-mysql3309-83.dboop.com 172.0.2.84 dba-mysql3309-84 dba-mysql3309-84.dboop.com 172.0.2.85 dba-mysql3309-85 dba-mysql3309-85.dboop.com 旧实例上增加seed  检查状态  mysqlw -h 172.0.2.30 -P 3309 -e &amp;quot;show global variables like &#39;group_replication_group_seeds&#39;&amp;quot;; mysqlw -h 172.0.2.31 -P 3309 -e &amp;quot;show global variables like &#39;group_replication_group_seeds&#39;&amp;quot;; mysqlw -h 172.</description>
+    </item>
+    
     <item>
       <title>MySQL的7种日志(四):BinLog</title>
       <link>/mysql/mysql%E7%9A%84binlog%E6%97%A5%E5%BF%97/</link>
