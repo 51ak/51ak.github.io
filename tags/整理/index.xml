@@ -6,7 +6,16 @@
     <description>Recent content in 整理 on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 10 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E6%95%B4%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 18 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E6%95%B4%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>安装MiniGPT-4</title>
+      <link>/ops/%E5%AE%89%E8%A3%85minigpt-4/</link>
+      <pubDate>Tue, 18 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%AE%89%E8%A3%85minigpt-4/</guid>
+      <description>克隆项目 git clone https://github.com/Vision-CAIR/MiniGPT-4.git git clone https://huggingface.co/lmsys/vicuna-13b-delta-v0 mv vicuna-13b-delta-v0 /data/MiniGPT-4/vicuna_weights 安装补丁 cd /data/MiniGPT-4/ cd ckp/ #https://drive.google.com/file/d/1a4zLvaiDBr-36pasffmgpvH5P7CKmpze/view #https://drive.google.com/u/0/uc?id=1a4zLvaiDBr-36pasffmgpvH5P7CKmpze&amp;amp;export=download wget https://doc-0s-08-docs.googleusercontent.com/docs/securesc/dbq4d7c2ha9354fqj5612le3gl157ov5/pcnbepjp7icjk54rrfgio602v738i398/1681803150000/09448752369347632296/09178445193473466964/1a4zLvaiDBr-36pasffmgpvH5P7CKmpze?e=download&amp;amp;ax=ALy03A4aDltm3f1TddEAJesIj7YsB_KKlm56C61-M72rzjuPpluLCR3UOUv28FXMkNc3q5s ## 修改配置 vim /data/MiniGPT-4/eval_configs/minigpt4_eval.yaml ckpt: &#39;/data/MiniGPT-4/ckp/&#39; vim /data/MiniGPT-4/minigpt4/configs/models/minigpt4.yaml llama_model: &amp;quot;/data/MiniGPT-4/vicuna_weights/&amp;quot; 安装依赖 pip3.9 install omegaconf #1681803684 yum install xz-devel -y yum install python-backports-lzma -y pip3.9 install backports.lzma yum install python-backports-lzma -y yum install -y xz-devel mesa-libGL python-backports-lzma vim /usr/local/python3.9/lib/python3.9/lzma.py pip3.9 install iopath pip3.9 install timm pip3.9 install cv2 pip3.9 install opencv-python -i https://pypi.</description>
+    </item>
+    
     <item>
       <title>HDD、SSD、SAS、SATA、PCIE、NVME</title>
       <link>/dba/hddssdsassatapcienvme/</link>
