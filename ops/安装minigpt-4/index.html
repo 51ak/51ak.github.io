@@ -156,6 +156,71 @@ mkdir gcc-temp
 cd gcc-temp
 ../configure --enable-checking=release --enable-languages=c,c++ --disable-multilib
 make &amp;&amp; make install
+mv /usr/bin/gcc /usr/bin/gcc.bak
+ /usr/sbin/update-alternatives --install  /usr/bin/gcc gcc /usr/local/bin/x86_64-unknown-linux-gnu-gcc-5.2.0 52
+ 
+gcc -v
+
+Using built-in specs.
+COLLECT_GCC=gcc
+COLLECT_LTO_WRAPPER=/usr/local/libexec/gcc/x86_64-unknown-linux-gnu/5.2.0/lto-wrapper
+Target: x86_64-unknown-linux-gnu
+Configured with: ../configure --enable-checking=release --enable-languages=c,c++ --disable-multilib
+Thread model: posix
+gcc version 5.2.0 (GCC) 
+
+
+
+ g++ -v
+Using built-in specs.
+COLLECT_GCC=g++
+COLLECT_LTO_WRAPPER=/usr/local/libexec/gcc/x86_64-unknown-linux-gnu/5.2.0/lto-wrapper
+Target: x86_64-unknown-linux-gnu
+Configured with: ../configure --enable-checking=release --enable-languages=c,c++ --disable-multilib
+Thread model: posix
+gcc version 5.2.0 (GCC) 
+
+
+
+strings /usr/local/lib64/libstdc++.so.6|grep GLIBCXX
+2. 复制链接
+
+cp /usr/local/lib64/libstdc++.so.6.0.21  /usr/lib64
+
+cd /usr/lib64
+
+rm -f libstdc++.so.6
+
+ln -s libstdc++.so.6.0.21 libstdc++.so.6
+
+ll libstdc*
+
+</code></pre><h2 id="补充">补充</h2>
+<pre><code>pip3.9 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+
+vim  /data/MiniGPT-4/minigpt4/models/mini_gpt4.py:92                                     │
+│                                                                                                  │
+│    86 │   │   self.llama_tokenizer.pad_token = self.llama_tokenizer.eos_token                    │
+│    87 │   │                                                                                      │
+│    88 │   │   if self.low_resource:                                                              │
+│ ❱  89 │   │   │   self.llama_model = LlamaForCausalLM.from_pretrained(                           │
+│    90 │   │   │   │   llama_model,                                                               │
+│    91 │   │   │   │   torch_dtype=torch.float16,                                                 │
+│    92 │   │   │   │   #load_in_8bit=True, 
+
+
+
+mkdir -p /export/home/.cache/minigpt4
+
+wget https://repo.anaconda.com/archive/Anaconda3-5.3.0-Linux-x86_64.sh
+chmod +x Anaconda3-5.3.0-Linux-x86_64.sh
+./Anaconda3-5.3.0-Linux-x86_64.sh
+vim /root/.bashrc
+export PATH=/root/anaconda3/bin:$PATH
+
+conda env create -f environment.yml
+conda activate minigpt4
+python demo.py --cfg-path eval_configs/minigpt4_eval.yaml
 </code></pre>
     <a href="/"> >> Home</a>
   </main>
