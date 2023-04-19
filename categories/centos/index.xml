@@ -6,7 +6,17 @@
     <description>Recent content in centos on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 18 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/centos/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 19 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/centos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux服务器如何科学的访问国外的google,git,pypi等站点</title>
+      <link>/ops/linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A6%82%E4%BD%95%E7%A7%91%E5%AD%A6%E7%9A%84%E8%AE%BF%E9%97%AE%E5%9B%BD%E5%A4%96%E7%9A%84googlegitpypi%E7%AD%89%E7%AB%99%E7%82%B9/</link>
+      <pubDate>Wed, 19 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A6%82%E4%BD%95%E7%A7%91%E5%AD%A6%E7%9A%84%E8%AE%BF%E9%97%AE%E5%9B%BD%E5%A4%96%E7%9A%84googlegitpypi%E7%AD%89%E7%AB%99%E7%82%B9/</guid>
+      <description>目的  当我们在Linux服务器上配置环境时（需要pip yum git wget go get ）经常会遇到外网资源受限 各种依赖关系非常乱，版本对不上，资源下不了。 国内的镜像站版本不全等等 非常影响工作效率和成果。 此时需要用科学的方式将这些开发资源快速配置好 以下是步骤 安装配置本地v2ray 需要使用时启v2ray,source代理 用完停v2ray,恢复正常环境  下载运行脚本 bash &amp;lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+#!/usr/bin/env bash # shellcheck disable=SC2268 # The files installed by the script conform to the Filesystem Hierarchy Standard: # https://wiki.linuxfoundation.org/lsb/fhs # The URL of the script project is: # https://github.com/v2fly/fhs-install-v2ray # The URL of the script is: # https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh # If the script executes incorrectly, go to: # https://github.</description>
+    </item>
+    
     <item>
       <title>安装MiniGPT-4</title>
       <link>/ops/%E5%AE%89%E8%A3%85minigpt-4/</link>

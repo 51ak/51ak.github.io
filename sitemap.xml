@@ -4,36 +4,41 @@
   
   <url>
     <loc>/categories/</loc>
-    <lastmod>2023-04-18T00:00:00+00:00</lastmod>
+    <lastmod>2023-04-19T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/categories/centos/</loc>
-    <lastmod>2023-04-18T00:00:00+00:00</lastmod>
+    <lastmod>2023-04-19T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/</loc>
-    <lastmod>2023-04-18T00:00:00+00:00</lastmod>
+    <lastmod>2023-04-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/ops/linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A6%82%E4%BD%95%E7%A7%91%E5%AD%A6%E7%9A%84%E8%AE%BF%E9%97%AE%E5%9B%BD%E5%A4%96%E7%9A%84googlegitpypi%E7%AD%89%E7%AB%99%E7%82%B9/</loc>
+    <lastmod>2023-04-19T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/ops/</loc>
-    <lastmod>2023-04-18T00:00:00+00:00</lastmod>
+    <lastmod>2023-04-19T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/</loc>
-    <lastmod>2023-04-18T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/ops/%E5%AE%89%E8%A3%85minigpt-4/</loc>
-    <lastmod>2023-04-18T00:00:00+00:00</lastmod>
+    <lastmod>2023-04-19T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/%E6%95%B4%E7%90%86/</loc>
+    <lastmod>2023-04-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/ops/%E5%AE%89%E8%A3%85minigpt-4/</loc>
     <lastmod>2023-04-18T00:00:00+00:00</lastmod>
   </url>
   
