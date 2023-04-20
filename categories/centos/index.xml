@@ -6,19 +6,7 @@
     <description>Recent content in centos on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 20 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/centos/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Centos7安装nvidia显卡驱动</title>
-      <link>/ops/centos7%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</link>
-      <pubDate>Thu, 20 Apr 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/ops/centos7%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</guid>
-      <description>1.安装依赖
-yum -y install epel-release yum -y install gcc binutils wget yum -y install kernel-devel 2.禁用Nouveau
-检查是否开启Nouveau lsmod | grep nouveau 注意：无信息输出表示已被禁用无需在操作以下步骤； echo -e &amp;quot;blacklist nouveau\noptions nouveau modeset=0&amp;quot; &amp;gt; /etc/modprobe.d/blacklist.conf mv /boot/initramfs-$(uname -r).img /boot/initramfs-$(uname -r).img.bak dracut /boot/initramfs-$(uname -r).img $(uname -r) reboot lsmod | grep nouveau 注意：无任何信息输出表示禁用成功； 3.检查驱动
-rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm yum -y install https://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm yum -y install nvidia-detect nvidia-detect -v # 本来应该显示 This device requires the current.... # 结果显卡太老，显示 Probing for supported NVIDIA devices.</description>
-    </item>
-    
+    <lastBuildDate>Wed, 19 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/centos/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux服务器如何科学的访问国外的google,git,pypi等站点</title>
       <link>/ops/linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A6%82%E4%BD%95%E7%A7%91%E5%AD%A6%E7%9A%84%E8%AE%BF%E9%97%AE%E5%9B%BD%E5%A4%96%E7%9A%84googlegitpypi%E7%AD%89%E7%AB%99%E7%82%B9/</link>
@@ -36,6 +24,18 @@ rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org rpm -Uvh http://www.e
       
       <guid>/ops/%E5%AE%89%E8%A3%85minigpt-4/</guid>
       <description>克隆项目 # 安装 git-lfs curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | sudo bash yum install git-lfs git clone https://github.com/Vision-CAIR/MiniGPT-4.git git clone https://huggingface.co/lmsys/vicuna-13b-delta-v0 mv vicuna-13b-delta-v0 /data/MiniGPT-4/vicuna_weights 安装补丁 cd /data/MiniGPT-4/ cd ckp/ #https://drive.google.com/file/d/1a4zLvaiDBr-36pasffmgpvH5P7CKmpze/view #https://drive.google.com/u/0/uc?id=1a4zLvaiDBr-36pasffmgpvH5P7CKmpze&amp;amp;export=download wget https://doc-0s-08-docs.googleusercontent.com/docs/securesc/dbq4d7c2ha9354fqj5612le3gl157ov5/pcnbepjp7icjk54rrfgio602v738i398/1681803150000/09448752369347632296/09178445193473466964/1a4zLvaiDBr-36pasffmgpvH5P7CKmpze?e=download&amp;amp;ax=ALy03A4aDltm3f1TddEAJesIj7YsB_KKlm56C61-M72rzjuPpluLCR3UOUv28FXMkNc3q5s ## 修改配置 vim /data/MiniGPT-4/eval_configs/minigpt4_eval.yaml ckpt: &#39;/data/MiniGPT-4/ckp/&#39; vim /data/MiniGPT-4/minigpt4/configs/models/minigpt4.yaml llama_model: &amp;quot;/data/MiniGPT-4/vicuna_weights/&amp;quot; 安装依赖 pip3.9 install omegaconf #1681803684 yum install xz-devel -y yum install python-backports-lzma -y pip3.9 install backports.lzma yum install python-backports-lzma -y yum install -y xz-devel mesa-libGL python-backports-lzma vim /usr/local/python3.9/lib/python3.9/lzma.py pip3.9 install iopath pip3.</description>
+    </item>
+    
+    <item>
+      <title>Centos7安装nvidia显卡驱动</title>
+      <link>/ops/centos7%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</link>
+      <pubDate>Mon, 17 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/centos7%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</guid>
+      <description>1.安装依赖
+yum -y install epel-release yum -y install gcc binutils wget yum -y install kernel-devel 2.禁用Nouveau
+检查是否开启Nouveau lsmod | grep nouveau 注意：无信息输出表示已被禁用无需在操作以下步骤； echo -e &amp;quot;blacklist nouveau\noptions nouveau modeset=0&amp;quot; &amp;gt; /etc/modprobe.d/blacklist.conf mv /boot/initramfs-$(uname -r).img /boot/initramfs-$(uname -r).img.bak dracut /boot/initramfs-$(uname -r).img $(uname -r) reboot lsmod | grep nouveau 注意：无任何信息输出表示禁用成功； 3.检查驱动
+rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm yum -y install https://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm yum -y install nvidia-detect nvidia-detect -v # 本来应该显示 This device requires the current.... # 结果显卡太老，显示 Probing for supported NVIDIA devices.</description>
     </item>
     
     <item>

@@ -8,16 +8,6 @@
   </url>
   
   <url>
-    <loc>/categories/centos/</loc>
-    <lastmod>2023-04-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/ops/centos7%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</loc>
-    <lastmod>2023-04-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/</loc>
     <lastmod>2023-04-20T00:00:00+00:00</lastmod>
   </url>
@@ -48,11 +38,6 @@
   </url>
   
   <url>
-    <loc>/ops/</loc>
-    <lastmod>2023-04-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/</loc>
     <lastmod>2023-04-20T00:00:00+00:00</lastmod>
   </url>
@@ -63,8 +48,8 @@
   </url>
   
   <url>
-    <loc>/tags/%E6%95%B4%E7%90%86/</loc>
-    <lastmod>2023-04-20T00:00:00+00:00</lastmod>
+    <loc>/categories/centos/</loc>
+    <lastmod>2023-04-19T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -73,8 +58,23 @@
   </url>
   
   <url>
+    <loc>/ops/</loc>
+    <lastmod>2023-04-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/%E6%95%B4%E7%90%86/</loc>
+    <lastmod>2023-04-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/ops/%E5%AE%89%E8%A3%85minigpt-4/</loc>
     <lastmod>2023-04-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/ops/centos7%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</loc>
+    <lastmod>2023-04-17T00:00:00+00:00</lastmod>
   </url>
   
   <url>

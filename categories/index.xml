@@ -8,15 +8,6 @@
     <language>zh-cn</language>
     <lastBuildDate>Thu, 20 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>centos</title>
-      <link>/categories/centos/</link>
-      <pubDate>Thu, 20 Apr 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/centos/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>mysql</title>
       <link>/categories/mysql/</link>
       <pubDate>Thu, 20 Apr 2023 00:00:00 +0000</pubDate>
@@ -40,6 +31,15 @@
       <pubDate>Thu, 20 Apr 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/mysql%E5%8D%87%E7%BA%A7/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>centos</title>
+      <link>/categories/centos/</link>
+      <pubDate>Wed, 19 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/centos/</guid>
       <description></description>
     </item>
     
