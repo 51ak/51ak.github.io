@@ -71,7 +71,13 @@
 
   <main>
     <h2 id="克隆项目">克隆项目</h2>
-<pre><code>git clone https://github.com/Vision-CAIR/MiniGPT-4.git
+<pre><code># 安装 git-lfs
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | sudo bash
+yum install git-lfs
+
+
+
+git clone https://github.com/Vision-CAIR/MiniGPT-4.git
 git clone https://huggingface.co/lmsys/vicuna-13b-delta-v0
 mv vicuna-13b-delta-v0 /data/MiniGPT-4/vicuna_weights
 </code></pre><h2 id="安装补丁">安装补丁</h2>
