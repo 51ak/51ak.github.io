@@ -826,6 +826,7 @@ main &quot;$@&quot;
 </code></pre><h2 id="测试连通性">测试连通性</h2>
 <pre><code>systemctl start v2ray
 curl --socks5 127.0.0.1:1080 https://www.google.com
+
 systemctl stop v2ray
 </code></pre><h2 id="vim-v2rayrc">vim v2ray.rc</h2>
 <pre><code>export http_proxy=http://127.0.0.1:1087
