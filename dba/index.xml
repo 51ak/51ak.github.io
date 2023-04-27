@@ -6,7 +6,16 @@
     <description>Recent content in Dbas on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 09 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="/dba/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 26 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/dba/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>postgreSQL的安装和初始化(centos7)</title>
+      <link>/dba/postgresql%E7%9A%84%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3centos7/</link>
+      <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/postgresql%E7%9A%84%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3centos7/</guid>
+      <description>安装 # Install the repository RPM:sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm# Install PostgreSQL:sudo yum install -y postgresql15-server# Optionally initialize the database and enable automatic start:sudo /usr/pgsql-15/bin/postgresql-15-setup initdbsudo systemctl enable postgresql-15sudo systemctl start postgresql-15配置 修改监听 修改监听地址为任意地址  vi /var/lib/pgsql/15/data/postgresql.conf 在第60行处增加   54 #------------------------------------------------------------------------------55 # CONNECTIONS AND AUTHENTICATION56 #------------------------------------------------------------------------------57 58 # - Connection Settings -59 60 listen_addresses = &#39;*&#39;61 #listen_addresses = &#39;localhost&#39; # what IP address(es) to listen on;62 # comma-separated list of addresses;63 # defaults to &#39;localhost&#39;; use &#39;*&#39; for all允许所有IP访问  vi /var/lib/pgsql/15/data/pg_hba.</description>
+    </item>
+    
     <item>
       <title>不要再让时间溜走了，让AI来管理你的时间！</title>
       <link>/dba/%E7%94%A8ai%E5%B8%AE%E4%BD%A0%E5%9B%9E%E7%AD%94%E6%97%B6%E9%97%B4%E9%83%BD%E5%8E%BB%E5%93%AA%E5%84%BF%E4%BA%86%E7%9A%84%E9%97%AE%E9%A2%98/</link>

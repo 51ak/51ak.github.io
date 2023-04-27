@@ -6,7 +6,16 @@
     <description>Recent content on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 21 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 26 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>postgreSQL的安装和初始化(centos7)</title>
+      <link>/dba/postgresql%E7%9A%84%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3centos7/</link>
+      <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/postgresql%E7%9A%84%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3centos7/</guid>
+      <description>安装 # Install the repository RPM:sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm# Install PostgreSQL:sudo yum install -y postgresql15-server# Optionally initialize the database and enable automatic start:sudo /usr/pgsql-15/bin/postgresql-15-setup initdbsudo systemctl enable postgresql-15sudo systemctl start postgresql-15配置 修改监听 修改监听地址为任意地址  vi /var/lib/pgsql/15/data/postgresql.conf 在第60行处增加   54 #------------------------------------------------------------------------------55 # CONNECTIONS AND AUTHENTICATION56 #------------------------------------------------------------------------------57 58 # - Connection Settings -59 60 listen_addresses = &#39;*&#39;61 #listen_addresses = &#39;localhost&#39; # what IP address(es) to listen on;62 # comma-separated list of addresses;63 # defaults to &#39;localhost&#39;; use &#39;*&#39; for all允许所有IP访问  vi /var/lib/pgsql/15/data/pg_hba.</description>
+    </item>
+    
     <item>
       <title>微信上的ChatGPT机器人新功能语音的使用说明</title>
       <link>/book/%E5%BE%AE%E4%BF%A1%E4%B8%8A%E7%9A%84chatgpt%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%BC%80%E5%A7%8B%E6%94%AF%E6%8C%81%E8%AF%AD%E9%9F%B3%E4%BA%86/</link>

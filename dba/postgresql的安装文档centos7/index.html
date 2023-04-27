@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    <script  src="/js/auto-render.min.js" ></script>
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">postgreSQL的安装和初始化(centos7)</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装">安装</a></li>
+    <li><a href="#配置">配置</a>
+      <ul>
+        <li><a href="#修改监听">修改监听</a></li>
+        <li><a href="#修改默认密码">修改默认密码</a></li>
+      </ul>
+    </li>
+    <li><a href="#测试安装结果">测试安装结果</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="安装">安装</h2>
+<pre><code># Install the repository RPM:
+sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+
+# Install PostgreSQL:
+sudo yum install -y postgresql15-server
+
+# Optionally initialize the database and enable automatic start:
+sudo /usr/pgsql-15/bin/postgresql-15-setup initdb
+sudo systemctl enable postgresql-15
+sudo systemctl start postgresql-15
+</code></pre><h2 id="配置">配置</h2>
+<h3 id="修改监听">修改监听</h3>
+<h4 id="修改监听地址为任意地址">修改监听地址为任意地址</h4>
+<ul>
+<li><code>vi /var/lib/pgsql/15/data/postgresql.conf</code> 在第60行处增加</li>
+</ul>
+<pre><code> 54 #------------------------------------------------------------------------------
+ 55 # CONNECTIONS AND AUTHENTICATION
+ 56 #------------------------------------------------------------------------------
+ 57 
+ 58 # - Connection Settings -
+ 59 
+ 60 listen_addresses = '*'
+ 61 #listen_addresses = 'localhost'         # what IP address(es) to listen on;
+ 62                                         # comma-separated list of addresses;
+ 63                                         # defaults to 'localhost'; use '*' for all
+</code></pre><h4 id="允许所有ip访问">允许所有IP访问</h4>
+<ul>
+<li><code>vi /var/lib/pgsql/15/data/pg_hba.conf</code> 在第90行处增加一行</li>
+</ul>
+<pre><code> 84 # &quot;local&quot; is for Unix domain socket connections only
+ 85 local   all             all                                     peer
+ 86 # IPv4 local connections:
+ 87 host    all             all             127.0.0.1/32            scram-sha-256
+ 88 # IPv6 local connections:
+ 89 host    all             all             ::1/128                 scram-sha-256
+ 90 # add by dba 
+ 91 host    all             all             0.0.0.0/0               scram-sha-256
+</code></pre><h4 id="保存重启服务">保存，重启服务</h4>
+<pre><code>systemctl restart postgresql-15
+</code></pre><h3 id="修改默认密码">修改默认密码</h3>
+<pre><code>su - postgres
+psql
+// 修改密码
+alter user postgres with password 'dboop.com';
+</code></pre><h2 id="测试安装结果">测试安装结果</h2>
+<pre><code>-bash-4.2$ psql
+psql (15.2)
+Type &quot;help&quot; for help.
+
+postgres=# \l
+                                                 List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    | ICU Locale | Locale Provider |   Access privileges   
+-----------+----------+----------+-------------+-------------+------------+-----------------+-----------------------
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | 
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+           |          |          |             |             |            |                 | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+           |          |          |             |             |            |                 | postgres=CTc/postgres
+(3 rows)
+
+postgres=# 
+postgres=# create database dbtest;
+CREATE DATABASE
+postgres=# \l
+                                                 List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    | ICU Locale | Locale Provider |   Access privileges   
+-----------+----------+----------+-------------+-------------+------------+-----------------+-----------------------
+ dbtest    | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | 
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | 
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+           |          |          |             |             |            |                 | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+           |          |          |             |             |            |                 | postgres=CTc/postgres
+(4 rows)
+
+postgres=# create user test_1 with password 'dboop.com';
+CREATE ROLE
+postgres=# grant all privileges on database dbtest to test_1;
+GRANT
+postgres=# \c dbtest
+You are now connected to database &quot;dbtest&quot; as user &quot;postgres&quot;.
+dbtest=# create table orderuser(id int not null primary key ,username varchar(50));
+CREATE TABLE
+dbtest=# select * from orderuser;
+ id | username 
+----+----------
+(0 rows)
+
+dbtest=# insert  into orderuser (id,username) values (1,'张三');
+INSERT 0 1
+dbtest=# select * from orderuser;
+ id | username 
+----+----------
+  1 | 张三
+(1 row)
+
+dbtest=# \dt
+           List of relations
+ Schema |   Name    | Type  |  Owner   
+--------+-----------+-------+----------
+ public | orderuser | table | postgres
+(1 row)
+
+dbtest=# \d orderuser
+                     Table &quot;public.orderuser&quot;
+  Column  |         Type          | Collation | Nullable | Default 
+----------+-----------------------+-----------+----------+---------
+ id       | integer               |           | not null | 
+ username | character varying(50) |           |          | 
+Indexes:
+    &quot;orderuser_pkey&quot; PRIMARY KEY, btree (id)
+
+dbtest=# drop database dbtest;
+ERROR:  cannot drop the currently open database
+
+dbtest-# \c postgres
+You are now connected to database &quot;postgres&quot; as user &quot;postgres&quot;.
+postgres-# drop database dbtest
+postgres-# \l 
+                                                 List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    | ICU Locale | Locale Provider |   Access privileges   
+-----------+----------+----------+-------------+-------------+------------+-----------------+-----------------------
+ dbtest    | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =Tc/postgres         +
+           |          |          |             |             |            |                 | postgres=CTc/postgres+
+           |          |          |             |             |            |                 | test_1=CTc/postgres
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | 
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+           |          |          |             |             |            |                 | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |            | libc            | =c/postgres          +
+           |          |          |             |             |            |                 | postgres=CTc/postgres
+(4 rows)
+</code></pre><p>以上是centos7上安装postgreSQL的步骤</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/04/26</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/postgresql">postgreSQL</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
