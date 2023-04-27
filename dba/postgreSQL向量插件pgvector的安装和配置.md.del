@@ -1,0 +1,26 @@
+---
+title: postgreSQL向量插件pgvector的安装和配置
+author: 51ak
+date: '2023-04-26'
+toc: true
+categories:
+  - postgreSQL
+tags:
+  - 整理
+---
+
+## 安装
+
+```
+安装exten
+yum install pgvector_15
+
+```
+
+## 配置
+
+```
+
+
+
+```
