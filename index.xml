@@ -6,14 +6,32 @@
     <description>Recent content on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 26 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 27 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>20230427我为什么这么着急</title>
+      <link>/book/20230427%E6%88%91%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B9%88%E7%9D%80%E6%80%A5/</link>
+      <pubDate>Thu, 27 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/book/20230427%E6%88%91%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B9%88%E7%9D%80%E6%80%A5/</guid>
+      <description>我很急  我有病 病得还不轻 主要就是急 非常的急 工作中，生活中 无时无刻的不在着急 很小的一件事 会急迫地想要完成一件事 或达到一个目标 在完成之前情绪会急躁 我走路很快 哪怕是饭后逛公园 我吃饭很急 一个人的时候 会不抬头的吞完一碗饭 我开车很快 会经常s档变道 红绿灯口的时候 前车一犹豫 就想嘀嘀它 特别怕堵车 就算不赶时间 只要路况一变红 就会很烦噪 哪怕不赶时间 依然会急着开到目的地 相比与开车 我更爱挤地铁 因为地铁不堵车 地铁扶梯我基本不会站着 我会关注地铁上哪个车门 下车更快 我会算计地铁到达的间隔 当刚过去一辆 而我没赶上时会很急燥 哪怕下一辆是5分钟后就到 而我并不赶时间 我也会急躁 工作中如果有没处理完的事 我会很着急 想着快点处理了 所以经常会加班 有时候会忙到半夜也要把事情做完 然后第二天上班又突然没事做 我想周围的同事配合我的节奏做事 如果有人在我已经下了“结论”的事上面 和我争辩 会有概率让我吵吵起来 怕堵车 怕排队 怕去人多的景点 怕去人多的商场 怕去吃排队的店 怕前面有慢行的人 怕错过每一个时间点 我很急 我急着每一步都能早点完成  为什么这么急  1.控制欲 想控制事情发展的进展 想控制其他人和我一样去思考 2.没有安全感 担心事实没有确认 担心事情不会完成 担心意外会发生 下意识的患失惯性 3.</description>
+    </item>
+    
+    <item>
+      <title>postgreSQL向量插件pgvector的安装和配置</title>
+      <link>/dba/postgresql%E5%90%91%E9%87%8F%E6%8F%92%E4%BB%B6pgvector%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE/</link>
+      <pubDate>Thu, 27 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/postgresql%E5%90%91%E9%87%8F%E6%8F%92%E4%BB%B6pgvector%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE/</guid>
+      <description>安装 # Install the repository RPM:sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm# Install PostgreSQL:sudo yum install -y postgresql15-server##如果需要安装postgresql15-develwget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/llvm5.0-devel-5.0.1-7.el7.x86_64.rpmwget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/llvm5.0-5.0.1-7.el7.x86_64.rpmwget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/llvm5.0-libs-5.0.1-7.el7.x86_64.rpm yum install -y centos-release-scl-rh llvm5*yum install -y postgresql15-devel# Optionally initialize the database and enable automatic start:sudo /usr/pgsql-15/bin/postgresql-15-setup initdbsudo systemctl enable postgresql-15sudo systemctl start postgresql-15安装extenyum install pgvector_15配置 修改监听 修改监听地址为任意地址  vi /var/lib/pgsql/15/data/postgresql.conf 在第60行处增加   54 #------------------------------------------------------------------------------55 # CONNECTIONS AND AUTHENTICATION56 #------------------------------------------------------------------------------57 58 # - Connection Settings -59 60 listen_addresses = &#39;*&#39;61 #listen_addresses = &#39;localhost&#39; # what IP address(es) to listen on;62 # comma-separated list of addresses;63 # defaults to &#39;localhost&#39;; use &#39;*&#39; for all允许所有IP访问  vi /var/lib/pgsql/15/data/pg_hba.</description>
+    </item>
+    
     <item>
       <title>postgreSQL的安装和初始化(centos7)</title>
       <link>/dba/postgresql%E7%9A%84%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3centos7/</link>
       <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
       
       <guid>/dba/postgresql%E7%9A%84%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3centos7/</guid>
-      <description>安装 # Install the repository RPM:sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm# Install PostgreSQL:sudo yum install -y postgresql15-server# Optionally initialize the database and enable automatic start:sudo /usr/pgsql-15/bin/postgresql-15-setup initdbsudo systemctl enable postgresql-15sudo systemctl start postgresql-15配置 修改监听 修改监听地址为任意地址  vi /var/lib/pgsql/15/data/postgresql.conf 在第60行处增加   54 #------------------------------------------------------------------------------55 # CONNECTIONS AND AUTHENTICATION56 #------------------------------------------------------------------------------57 58 # - Connection Settings -59 60 listen_addresses = &#39;*&#39;61 #listen_addresses = &#39;localhost&#39; # what IP address(es) to listen on;62 # comma-separated list of addresses;63 # defaults to &#39;localhost&#39;; use &#39;*&#39; for all允许所有IP访问  vi /var/lib/pgsql/15/data/pg_hba.</description>
+      <description>安装 # Install the repository RPM:sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm# Install PostgreSQL:sudo yum install -y postgresql15-server##如果需要安装postgresql15-develwget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/llvm5.0-devel-5.0.1-7.el7.x86_64.rpmwget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/llvm5.0-5.0.1-7.el7.x86_64.rpmwget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/llvm5.0-libs-5.0.1-7.el7.x86_64.rpm yum install -y centos-release-scl-rh llvm5*yum install -y postgresql15-devel# Optionally initialize the database and enable automatic start:sudo /usr/pgsql-15/bin/postgresql-15-setup initdbsudo systemctl enable postgresql-15sudo systemctl start postgresql-15安装extenyum install pgvector_15配置 修改监听 修改监听地址为任意地址  vi /var/lib/pgsql/15/data/postgresql.conf 在第60行处增加   54 #------------------------------------------------------------------------------55 # CONNECTIONS AND AUTHENTICATION56 #------------------------------------------------------------------------------57 58 # - Connection Settings -59 60 listen_addresses = &#39;*&#39;61 #listen_addresses = &#39;localhost&#39; # what IP address(es) to listen on;62 # comma-separated list of addresses;63 # defaults to &#39;localhost&#39;; use &#39;*&#39; for all允许所有IP访问  vi /var/lib/pgsql/15/data/pg_hba.</description>
     </item>
     
     <item>
