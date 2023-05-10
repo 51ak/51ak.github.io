@@ -6,7 +6,25 @@
     <description>Recent content in Categories on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 08 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 10 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>oracle</title>
+      <link>/categories/oracle/</link>
+      <pubDate>Wed, 10 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/oracle/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>运维SQL</title>
+      <link>/categories/%E8%BF%90%E7%BB%B4sql/</link>
+      <pubDate>Wed, 10 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E8%BF%90%E7%BB%B4sql/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>日记</title>
       <link>/categories/%E6%97%A5%E8%AE%B0/</link>
@@ -188,15 +206,6 @@
     </item>
     
     <item>
-      <title>oracle</title>
-      <link>/categories/oracle/</link>
-      <pubDate>Fri, 03 Feb 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/oracle/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>SQL上线</title>
       <link>/categories/sql%E4%B8%8A%E7%BA%BF/</link>
       <pubDate>Fri, 03 Feb 2023 00:00:00 +0000</pubDate>
@@ -310,15 +319,6 @@
       <pubDate>Thu, 25 Aug 2022 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E5%88%86%E5%B8%83%E5%BC%8F/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>运维SQL</title>
-      <link>/categories/%E8%BF%90%E7%BB%B4sql/</link>
-      <pubDate>Thu, 04 Aug 2022 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/%E8%BF%90%E7%BB%B4sql/</guid>
       <description></description>
     </item>
     

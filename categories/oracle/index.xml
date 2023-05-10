@@ -6,7 +6,16 @@
     <description>Recent content in oracle on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 03 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/oracle/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 10 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/oracle/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Oracle增加表审计</title>
+      <link>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1/</link>
+      <pubDate>Wed, 10 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1/</guid>
+      <description>增加表审计 # 查看现在有哪些审计对象 select * from dba_obj_audit_opts; # 开启审计 audit select,update,insert,delete on 用户.表名 by access # 关闭审计 noaudit select,update,insert,delete on 用户.表名 # 查看审计结果 select * from dba_audit_trail 清空审计 sqlplus / as sysdba truncate table sys.aud$; ``</description>
+    </item>
+    
     <item>
       <title>自动化流程:数据找回(二:Oracle部分)</title>
       <link>/dba/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B_%E6%95%B0%E6%8D%AE%E6%89%BE%E5%9B%9E%E9%97%AA%E5%9B%9E_2/</link>

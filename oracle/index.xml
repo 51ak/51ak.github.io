@@ -6,7 +6,16 @@
     <description>Recent content in Oracles on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 04 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="/oracle/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 10 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="/oracle/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Oracle增加表审计</title>
+      <link>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1/</link>
+      <pubDate>Wed, 10 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1/</guid>
+      <description>增加表审计 # 查看现在有哪些审计对象 select * from dba_obj_audit_opts; # 开启审计 audit select,update,insert,delete on 用户.表名 by access # 关闭审计 noaudit select,update,insert,delete on 用户.表名 # 查看审计结果 select * from dba_audit_trail 清空审计 sqlplus / as sysdba truncate table sys.aud$; ``</description>
+    </item>
+    
     <item>
       <title>定时收集存储过程函数视图信息入库(Oracle,MySQL)</title>
       <link>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%87%BD%E6%95%B0%E8%A7%86%E5%9B%BE%E4%BF%A1%E6%81%AForaclemysql/</link>
