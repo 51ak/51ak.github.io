@@ -6,7 +6,16 @@
     <description>Recent content in Books on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 08 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="/book/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 12 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="/book/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>要做一个人工智能平台</title>
+      <link>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0/</link>
+      <pubDate>Fri, 12 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0/</guid>
+      <description>功能  在做一个AI智能平台 可以对接多个ai平台 不仅仅是ChatGPT 还支持私有化数据训练 用户可以流畅的在国内访问 用户可以提交自己的私用数据做训练 用户训练的私有数据可以选择是否公开给其他人用 会有模块化的已定义好的ai可以直接用 支持图片,音频,视频,图表的生成 支持针对行业的定制化ai功能  成本  前期完全免费 接受用户反馈 不断迭代改进 等产品成熟了以后 估计在6月份以后 会收取一定的费用 以覆盖服务器的运行成本 理论上应该会非常偏宜 现在估计的运行成本 大约是500元/月 如果有100个用户的话 每个人收5元/月 应该问题不大 实在收不上来 自已负担也没问题  </description>
+    </item>
+    
     <item>
       <title>20230508慢下来然后呢？</title>
       <link>/book/20230508%E6%85%A2%E4%B8%8B%E6%9D%A5%E7%84%B6%E5%90%8E%E5%91%A2/</link>
