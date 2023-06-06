@@ -6,7 +6,38 @@
     <description>Recent content on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 30 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 06 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>20230606夏天的乐队</title>
+      <link>/book/20230606%E5%A4%8F%E5%A4%A9%E7%9A%84%E4%B9%90%E9%98%9F/</link>
+      <pubDate>Tue, 06 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/book/20230606%E5%A4%8F%E5%A4%A9%E7%9A%84%E4%B9%90%E9%98%9F/</guid>
+      <description>前两周新冠阳了后
+  躺在家里把能看的电视电影都看没了
+  实在是没事做
+  在bilibili上找综艺看
+  偶然间翻到《乐队的夏天》
+  拖着滚动条看了几场演出
+  有个比较搞笑的说法说是
+  捞五条人的夏天
+  这倒霉的乐队
+  被反复淘汰再复活再淘汰
+  “阿珍遇上了阿强&amp;hellip;”
+  仁科这二货竟然有个乐队
+  而且有模有样的
+  看着就挺喜庆的
+  如果不是先前看披荆斩棘认识这个人
+  估计也不会有印象吧
+  然后乐队的现场
+  感觉氛围很好
+  自带狂燥感
+  跟演唱会现场不一样
+  演唱会是筛选过的对特定歌手喜欢的那群人
+  大型粉丝现场的参与感很强
+  我阳的那段时间</description>
+    </item>
+    
     <item>
       <title>要做一个人工智能平台_进度更新4</title>
       <link>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_4/</link>
@@ -627,37 +658,6 @@ dict_graph={ &amp;#34;num_active_queries.sum.60&amp;#34;:(&amp;#34;num_active_qu
 参考上一次做oracle慢日志收集展示的方法， https://www.dboop.com/oracle/oracle%E6%80%8E%E6%A0%B7%E5%AE%9E%E6%97%B6%E6%94%B6%E9%9B%86%E5%B1%95%E7%A4%BA%E6%85%A2%E6%9F%A5%E8%AF%A2/
 变化的是：
  因为nebula的集群就一个，不需要做oracle慢日志的大表套小表，数担据量不大就建了一张monitor_nebula_slow表存放数据. nebula抓到的慢查询里的NQL是没有去参数化的，需要自己做去参数化，把相同类型的NQL，标识为同一个md5id   1.建一张表，每隔1分钟（时间可调，但我们的场景1分钟足够了） CREATE TABLE `monitor_nebula_slow` (`logid` int unsigned NOT NULL AUTO_INCREMENT,`SessionID` varchar(50) NOT NULL DEFAULT &#39;&#39;,`ExecutionPlanID` varchar(50) NOT NULL DEFAULT &#39;&#39;,`User` varchar(50) NOT NULL DEFAULT &#39;&#39;,`Host` varchar(50) NOT NULL DEFAULT &#39;&#39;,`StartTime` datetime DEFAULT NULL,`DurationInUSec` int unsigned NOT NULL DEFAULT &#39;0&#39;,`Status` varchar(50) NOT NULL DEFAULT &#39;&#39;,`Query` varchar(5000) NOT NULL DEFAULT &#39;&#39;,`_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,`md5id` varchar(64) NOT NULL DEFAULT &#39;&#39;,PRIMARY KEY (`logid`),KEY `ix_monitor_nebula_slow` (`_timestamp`)) ENGINE=InnoDB AUTO_INCREMENT=13231 DEFAULT CHARSET=utf8mb32.</description>
-    </item>
-    
-    <item>
-      <title>20230606夏天的乐队</title>
-      <link>/book/20230606%E5%A4%8F%E5%A4%A9%E7%9A%84%E4%B9%90%E9%98%9F/</link>
-      <pubDate>Mon, 06 Jun 2022 00:00:00 +0000</pubDate>
-      
-      <guid>/book/20230606%E5%A4%8F%E5%A4%A9%E7%9A%84%E4%B9%90%E9%98%9F/</guid>
-      <description>前两周新冠阳了后
-  躺在家里把能看的电视电影都看没了
-  实在是没事做
-  在bilibili上找综艺看
-  偶然间翻到《乐队的夏天》
-  拖着滚动条看了几场演出
-  有个比较搞笑的说法说是
-  捞五条人的夏天
-  这倒霉的乐队
-  被反复淘汰再复活再淘汰
-  “阿珍遇上了阿强&amp;hellip;”
-  仁科这二货竟然有个乐队
-  而且有模有样的
-  看着就挺喜庆的
-  如果不是先前看披荆斩棘认识这个人
-  估计也不会有印象吧
-  然后乐队的现场
-  感觉氛围很好
-  自带狂燥感
-  跟演唱会现场不一样
-  演唱会是筛选过的对特定歌手喜欢的那群人
-  大型粉丝现场的参与感很强
-  我阳的那段时间</description>
     </item>
     
     <item>
