@@ -6,7 +6,17 @@
     <description>Recent content in chatgpt on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 30 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/chatgpt/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 07 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/chatgpt/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>要做一个人工智能平台_进度更新5</title>
+      <link>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_5/</link>
+      <pubDate>Wed, 07 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_5/</guid>
+      <description>新的ChatGPT平台试用  ChatGPT的新界面开始对外试用， 试用入口
+ 20230607进度更新  最近比较忙，更新的内容比较少 修复ai不能连续对话的bug。ai可以记住历史聊天内容了 修复加载卡住的问题（首页加载时间依旧会过长，还需要做个加载动画） 修复注册页面直接跳到首页的bug ai生成视频功能开始做了，进度30%.争取这周搞定 平时上班事太多，只能下班后找时间做一点，确实拖进度  连续对话 ai生成视频界面 </description>
+    </item>
+    
     <item>
       <title>要做一个人工智能平台_进度更新4</title>
       <link>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_4/</link>
