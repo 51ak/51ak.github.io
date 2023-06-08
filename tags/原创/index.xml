@@ -6,53 +6,60 @@
     <description>Recent content in 原创 on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 07 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%8E%9F%E5%88%9B/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 22 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%8E%9F%E5%88%9B/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>要做一个人工智能平台_进度更新5</title>
+      <title>智能AI平台网页版使用说明_生成图片</title>
+      <link>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_6/</link>
+      <pubDate>Mon, 22 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_6/</guid>
+      <description>准备工作 1.打开www.top580.com  界面如下图所示   2.登入系统  这一步参见文档:注册和登录的详细说明  生成图片 功能介绍  提供一些关键词，让AI依据这些关键词生成指定的图片 支持卡通画,简笔画,素描画,中国画,水彩画&amp;hellip;  使用说明 </description>
+    </item>
+    
+    <item>
+      <title>智能AI平台网页版使用说明_AI对话</title>
       <link>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_5/</link>
-      <pubDate>Wed, 07 Jun 2023 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 21 May 2023 00:00:00 +0000</pubDate>
       
       <guid>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_5/</guid>
-      <description>新的ChatGPT平台试用  ChatGPT的新界面开始对外试用， 试用入口
- 20230607进度更新  最近比较忙，更新的内容比较少 修复ai不能连续对话的bug。ai可以记住历史聊天内容了 修复加载卡住的问题（首页加载时间依旧会过长，还需要做个加载动画） 修复注册页面直接跳到首页的bug ai生成视频功能开始做了，进度30%.争取这周搞定 平时上班事太多，只能下班后找时间做一点，确实拖进度  连续对话 ai生成视频界面 </description>
+      <description>准备工作 1.打开www.top580.com  界面如下图所示   2.登入系统  这一步参见文档:注册和登录的详细说明  AI对话 功能介绍  和ChatGPT进行对话，在对话中解决问题或生成各式各样的文章 支持：闲聊，散文，诗歌，小说，故事，笑话&amp;hellip;.  使用说明 </description>
     </item>
     
     <item>
-      <title>要做一个人工智能平台_进度更新4</title>
+      <title>智能AI平台网页版使用说明_生成流程图</title>
+      <link>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_7/</link>
+      <pubDate>Sat, 20 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_7/</guid>
+      <description>准备工作 1.打开www.top580.com  界面如下图所示   2.登入系统  这一步参见文档:注册和登录的详细说明  生成流程图 功能介绍  提供一些关键词，让AI依据这些关键词生成指定的流程图 支持流程图,状态图,时序图,甘特图,类图,饼图,关系图  使用说明 </description>
+    </item>
+    
+    <item>
+      <title>智能AI平台网页版使用说明_用户注册和登录</title>
       <link>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_4/</link>
-      <pubDate>Tue, 30 May 2023 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 20 May 2023 00:00:00 +0000</pubDate>
       
       <guid>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_4/</guid>
-      <description>新的ChatGPT平台试用  ChatGPT的新界面开始对外试用， 试用入口
- 20230530进度更新  大病一场（新冠）停了10天没更新代码 今天查了这些天的试用运行日志 做了以下改动： 1.用户密码不再由用户输入，改成系统生成发送到手机  顺便验证下手机号是有用的   2.网页响应速度太慢了，找到问题了（阿里云） ,明天切换 3.后台增加报表统计（列表/详细） 4.www.top580.com域名备案已完成（在我生病过程中&amp;hellip;) 和朋友聊天，他想试着用ai代替数据分析师的工作，给他提供了内网接口（不是用chatgpt，而是一个私有的机器人）怂恿他试试  </description>
+      <description>第一步，打开www.top580.com  界面如下图所示   第二步：点击按钮进入 用户登录页  首次加载时，需要大约10秒钟的准备时间 加载成功后，会进入登录页  如果已经注册过的用户，直接用手机号和密码登录 新用户点下方的点击进入试用申请  第三步：新用户注册（可选）  老用户无需此步 认真填写资料后点提交 密码会用【短信的方式】发送到你的手机上 这个密码很重要，记住它 暂时还没做忘记密码功能，如果密码忘了，就没了。切记 -  第四步：登入系统  已经注册过的用户，直接用手机号和密码登录  当你看到这个页面的时候，就表示你登入成功了   第五步：开始使用  进入系统后，就可以正常使用AI功能了 每个AI的使用方式和技巧，会单独出文章 -  </description>
     </item>
     
     <item>
-      <title>要做一个人工智能平台_进度更新3</title>
+      <title>智能AI平台网页版_使用说明(汇总)</title>
       <link>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_3/</link>
       <pubDate>Fri, 19 May 2023 00:00:00 +0000</pubDate>
       
       <guid>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_3/</guid>
-      <description>新的ChatGPT平台试用  ChatGPT的新界面开始对外试用， 试用入口
-  小范围试用，边试用边补充和修复  使用方式： 1.点试用入口：  试用入口  2.填写完成后，会进入登录页 3.进入对话 4.开始对话 5.一个生成流程图的演示 目前只有限的试用这一两个功能  等稳定了，再增加其他功能  20230519进度更新 系统功能  azure的api申请 未开始 域名备案 进行中&amp;hellip; 用户注册 已完成待改进  密码生成下发 进行中&amp;hellip;(取消了)   用户登录 已完成 用户权限 已完成 发布测试版 进行中  通用AI  文本问答 进行中  连续对话 已完成&amp;hellip;    </description>
+      <description> 我做了一个智能AI平台 免费使用.让更多的人接触ChatGPT类似的AI智能产品 为防资源滥用,每个用户每天可以和AI对话/生成/次数有限制 未认证用户:【20次/天】 实名验证用户:【50次/天】 用完次数后，需要等第二天再继续。 功能包括： ChatGPT的AI对话 ChatGPT生成图片 ChatGPT生成各种文档，创意文案，诗词&amp;hellip; ChatGPT生成流程图,时序图,类图,甘特图&amp;hellip; ChatGPT生成视频（调试中,暂时未开放） 网址是：www.top580.com 文档1:注册和登录的详细说明 文档2:ChatGPT对话的详细说明 文档3:AI生成图片的使用说明 文档4:AI生成流程图的示例 更多功能和使用方式，正在准备中&amp;hellip;  如果你想了解目前该项目的进度:进度更新    </description>
     </item>
     
     <item>
-      <title>要做一个人工智能平台_进度更新2</title>
-      <link>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_2/</link>
-      <pubDate>Tue, 16 May 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_2/</guid>
-      <description>20230516进度更新 系统功能  域名转到cloudflare 已完成 阿里云主机注册 已完成 openai的api申请 已完成 azure的api申请 未开始 域名备案 进行中&amp;hellip; 用户注册 已完成待修改  手机验证码平台 已完成 密码生成下发 进行中&amp;hellip;   用户登录 已完成 用户权限 已完成 发布测试版 进行中  通用AI  文本问答 进行中  结果记录代码 已完成 结果展示优化 已完成 展示结果防止html 已完成 连续对话 进行中&amp;hellip; 翻译助手 未开始 超长文本 未开始   流程图 已完成 生成图片 进行中&amp;hellip; 生成音频 未开始 生成视频 未开始 图片识别 未开始  定制AI  私有数据上传 未开始 私有数据训练 未开始 私有ai问答 未开始 专用ai 进行中  医疗助手 未开始  症状助手 未开始 药品辅助 未开始 心理辅导 未开始   法律助手 进行中  文律文书生成 已完成 国内法规向量训练 未开始 案件线索 未开始 法规图谱 未开始   代码助手 未开始  代码生成 代码解释      其他  多平台ai接入 未开始 隐私离线ai 未开始 绑定微信 未开始  </description>
-    </item>
-    
-    <item>
-      <title>要做一个人工智能平台_进度更新1</title>
+      <title>要做一个人工智能平台_进度更新</title>
       <link>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_1/</link>
       <pubDate>Sun, 14 May 2023 00:00:00 +0000</pubDate>
       
       <guid>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_1/</guid>
-      <description>20230514进度更新 系统功能  域名转到cloudflare 已完成 阿里云主机注册 已完成 openai的api申请 已完成 azure的api申请 未开始 域名备案 进行中&amp;hellip; 用户注册 已完成待修改  手机验证码平台 已完成 密码生成下发 未开始   用户登录 已完成 用户权限 已完成  通用AI  文本问答 进行中  结果记录代码 进行中 结果展示优化 进行中 翻译助手 未开始 超长文本 未开始   流程图 已完成 生成图片 未开始 生成音频 未开始 生成视频 未开始 图片识别 未开始  定制AI  私有数据上传 未开始 私有数据训练 未开始 私有ai问答 未开始 专用ai 进行中  医疗助手 未开始  症状助手 未开始 药品辅助 未开始 心理辅导 未开始   法律助手 进行中  文律文书生成 已完成 国内法规向量训练 未开始 案件线索 未开始 法规图谱 未开始   代码助手 未开始  代码生成 代码解释      其他  多平台ai接入 未开始 隐私离线ai 未开始  </description>
+      <description>试用入口
+ 20230514进度更新 系统功能  域名转到cloudflare 已完成 阿里云主机注册 已完成 openai的api申请 已完成 azure的api申请 未开始 域名备案 进行中&amp;hellip; 用户注册 已完成待修改  手机验证码平台 已完成 密码生成下发 未开始   用户登录 已完成 用户权限 已完成  通用AI  文本问答 进行中  结果记录代码 进行中 结果展示优化 进行中 翻译助手 未开始 超长文本 未开始   流程图 已完成 生成图片 未开始 生成音频 未开始 生成视频 未开始 图片识别 未开始  定制AI  私有数据上传 未开始 私有数据训练 未开始 私有ai问答 未开始 专用ai 进行中  医疗助手 未开始  症状助手 未开始 药品辅助 未开始 心理辅导 未开始   法律助手 进行中  文律文书生成 已完成 国内法规向量训练 未开始 案件线索 未开始 法规图谱 未开始   代码助手 未开始  代码生成 代码解释      其他  多平台ai接入 未开始 隐私离线ai 未开始  20230516进度更新 系统功能  域名转到cloudflare 已完成 阿里云主机注册 已完成 openai的api申请 已完成 azure的api申请 未开始 域名备案 进行中&amp;hellip; 用户注册 已完成待修改  手机验证码平台 已完成 密码生成下发 进行中&amp;hellip;   用户登录 已完成 用户权限 已完成 发布测试版 进行中  通用AI  文本问答 进行中  结果记录代码 已完成 结果展示优化 已完成 展示结果防止html 已完成 连续对话 进行中&amp;hellip; 翻译助手 未开始 超长文本 未开始   流程图 已完成 生成图片 进行中&amp;hellip; 生成音频 未开始 生成视频 未开始 图片识别 未开始  定制AI  私有数据上传 未开始 私有数据训练 未开始 私有ai问答 未开始 专用ai 进行中  医疗助手 未开始  症状助手 未开始 药品辅助 未开始 心理辅导 未开始   法律助手 进行中  文律文书生成 已完成 国内法规向量训练 未开始 案件线索 未开始 法规图谱 未开始   代码助手 未开始  代码生成 代码解释      其他  多平台ai接入 未开始 隐私离线ai 未开始 绑定微信 未开始  20230519进度更新 系统功能  azure的api申请 未开始 域名备案 进行中&amp;hellip; 用户注册 已完成待改进  密码生成下发 进行中&amp;hellip;(取消了)   用户登录 已完成 用户权限 已完成 发布测试版 进行中  通用AI  文本问答 进行中  连续对话 已完成&amp;hellip;    20230530进度更新  大病一场（新冠）停了10天没更新代码 今天查了这些天的试用运行日志 做了以下改动： 1.</description>
     </item>
     
     <item>
