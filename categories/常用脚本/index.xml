@@ -121,5 +121,17 @@ rsync  time=$(date &#39;+%Y-%m-%d-%H-test1_binlog.0001&#39;) time1=$(date &#39;+
       <description>生成随机密码 select substring(md5(rand()), 1, 15); select left(replace(uuid(), &#39;-&#39;, &#39;.&#39;),15); 创建用户及赋权 MySQL5.6及以前 grant select on 库名.* to `用户名`@`主机名` identified by &#39;密码&#39;; MySQL5.7+ create user `用户名`@`主机名` identified by &#39;密码&#39;; grant select on 库名.* to `用户名`@`主机名`; MySQL8.0 create user `用户名`@`主机名`identified with mysql_native_password by &#39;密码&#39;; GRANT select on 库名.* TO `用户名`@`主机名`; 常用语句 -- 创建一个管理员帐号 create user &#39;dba&#39;@&#39;%&#39; IDENTIFIED BY &#39;********&#39;; GRANT ALL PRIVILEGES ON *.* TO &#39;dba&#39;@&#39;%&#39; WITH GRANT OPTION; -- 创建一个复制帐号 create user repl@&#39;%&#39; identified with mysql_native_password by &#39;********&#39;; GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.</description>
     </item>
     
+    <item>
+      <title>MySQL常用脚本_免密登录login-path设置</title>
+      <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E7%94%A8%E6%88%B7%E7%9B%B8%E5%85%B3-copy/</link>
+      <pubDate>Thu, 01 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E7%94%A8%E6%88%B7%E7%9B%B8%E5%85%B3-copy/</guid>
+      <description>保存账号信息 mysql_config_editor set --login-path=dba --user=root --host=127.0.0.1 --password 其中可配置项
+-h,–host=name 添加host到登陆文件中 -G,–login-path=name 在登录文件中为login path添加名字（默认为client） -p,–password 在登陆文件中添加密码（该密码会被mysql_config_editor自动加密） -u,–user 添加用户名到登陆文件中 -S,–socket=name 添加sock文件路径到登陆文件中 -P,–port=name 添加登陆端口到登陆文件中 查看配置 mysql_config_editor print -all 删除配置
+mysql_config_editor remove --login-path=dba 登陆数据库
+mysql --login-path=dba </description>
+    </item>
+    
   </channel>
 </rss>
