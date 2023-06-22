@@ -6,7 +6,16 @@
     <description>Recent content in 原创 on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 19 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%8E%9F%E5%88%9B/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 22 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%8E%9F%E5%88%9B/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>用AI生成视频</title>
+      <link>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_8/</link>
+      <pubDate>Thu, 22 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_8/</guid>
+      <description> 端午节放假 憋在家里把AI生成视频的功能可算是做了出来 因为生成视频非常费资源 这次用了离线任务 离线这块还有点bug要调试。 这几天放假还可以继续优化一下。  第一步：用户输入视频要求。 第二步：AI根据要求，生成一篇视频脚本。 第3步：自动生成视频。 生成的视频   </description>
+    </item>
+    
     <item>
       <title>20230619成长</title>
       <link>/book/20230619%E6%88%90%E9%95%BF/</link>
