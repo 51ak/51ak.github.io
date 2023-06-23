@@ -6,20 +6,11 @@
     <description>Recent content in Categories on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 22 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>chatgpt</title>
-      <link>/categories/chatgpt/</link>
-      <pubDate>Thu, 22 Jun 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/chatgpt/</guid>
-      <description></description>
-    </item>
-    
+    <lastBuildDate>Fri, 23 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>日记</title>
       <link>/categories/%E6%97%A5%E8%AE%B0/</link>
-      <pubDate>Mon, 19 Jun 2023 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 23 Jun 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E6%97%A5%E8%AE%B0/</guid>
       <description></description>
@@ -28,9 +19,18 @@
     <item>
       <title>生活</title>
       <link>/categories/%E7%94%9F%E6%B4%BB/</link>
-      <pubDate>Mon, 19 Jun 2023 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 23 Jun 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E7%94%9F%E6%B4%BB/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>chatgpt</title>
+      <link>/categories/chatgpt/</link>
+      <pubDate>Thu, 22 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/chatgpt/</guid>
       <description></description>
     </item>
     
