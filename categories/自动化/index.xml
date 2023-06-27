@@ -6,7 +6,17 @@
     <description>Recent content in 自动化 on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 09 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 26 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>定时收集Oracle索引信息</title>
+      <link>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86oracle%E7%B4%A2%E5%BC%95%E4%BF%A1%E6%81%AF/</link>
+      <pubDate>Mon, 26 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86oracle%E7%B4%A2%E5%BC%95%E4%BF%A1%E6%81%AF/</guid>
+      <description>需求  把Oracle各实例的索引信息，统一收集存储到一张表里  建表 在dboop库中建表
+ CREATE TABLE `info_indexs` ( `dbid` int NOT NULL DEFAULT &#39;0&#39;, `table_name` varchar(255) NOT NULL DEFAULT &#39;&#39;, `index_name` varchar(255) NOT NULL DEFAULT &#39;&#39;, `index_type` varchar(64) NOT NULL DEFAULT &#39;&#39;, `uniq_type` varchar(64) NOT NULL DEFAULT &#39;&#39;, `num_rows` int NOT NULL DEFAULT 0, `sample_size` int NOT NULL DEFAULT 0, `last_analyzed` datetime null, `column_name` varchar(2000) NOT NULL DEFAULT &#39;&#39;, `cstatus` smallint NOT NULL DEFAULT &#39;1&#39;, `dba_freshtime` datetime NOT NULL DEFAULT &#39;1990-01-01 00:00:00&#39;, PRIMARY KEY (`dbid`,`table_name`,`index_name`), KEY `idx_info_indexs_time` (`dba_freshtime`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ; 实现数据字典收集入库 建Oracle采集任务  &amp;lt;!</description>
+    </item>
+    
     <item>
       <title>不要再让时间溜走了，让AI来管理你的时间！</title>
       <link>/dba/%E7%94%A8ai%E5%B8%AE%E4%BD%A0%E5%9B%9E%E7%AD%94%E6%97%B6%E9%97%B4%E9%83%BD%E5%8E%BB%E5%93%AA%E5%84%BF%E4%BA%86%E7%9A%84%E9%97%AE%E9%A2%98/</link>
