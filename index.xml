@@ -1178,6 +1178,16 @@ rsync  time=$(date &#39;+%Y-%m-%d-%H-test1_binlog.0001&#39;) time1=$(date &#39;+
     </item>
     
     <item>
+      <title>MySQL5.7实例无限重启故障定位及解决</title>
+      <link>/mysql/mysql5.7%E5%AE%9E%E4%BE%8B%E6%97%A0%E9%99%90%E9%87%8D%E5%90%AF%E6%95%85%E9%9A%9C%E5%AE%9A%E4%BD%8D%E5%8F%8A%E8%A7%A3%E5%86%B3/</link>
+      <pubDate>Mon, 05 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql5.7%E5%AE%9E%E4%BE%8B%E6%97%A0%E9%99%90%E9%87%8D%E5%90%AF%E6%95%85%E9%9A%9C%E5%AE%9A%E4%BD%8D%E5%8F%8A%E8%A7%A3%E5%86%B3/</guid>
+      <description>故障开始时间：2023-06-30 09:18 故障实例：BI大数据业务
+ 环境  系统：CentOS Linux release 7.8.2003 (Core) MySQL: 5.7.28-log MySQL Community Server (GPL) 部署：多实例部署，当前实例bufferPool:8G 集群：3台主机  主：51 备：52 (和51做双主) 从：53 （同步自52）    故障现象  收到报警，该实例频繁报连接异常和恢复 检查发现该MySQL实例频繁重启 1.该实例访问量很小，不是资源不足引起 2.和研发确认该实例相关的业务最近未发生变更 3.DBA内部确认最近该实例没有做配置变更 4.报错时系统日志无异常报错 5.MySQL正常运行时可以提供服务，但1分钟左右就会自动shutdown 6.慢日志里没有异常SQL 7.MySQL错误日志里只有实例启动后自检的warinning 以及  2023-06-30T10:15:35.534553+08:00 0 [Warning] CA certificate ca.pem is self signed. 2023-06-30T10:15:35.546909+08:00 0 [Warning] Recovery from master pos 59075485 and file mysql-bin.***** for channel &#39;&#39;. Previous relay log pos and relay log file had been set to 416, /data/mysql******/relaylognew/relay-bin.</description>
+    </item>
+    
+    <item>
       <title>MySQL常用脚本_故障定位</title>
       <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E6%95%85%E9%9A%9C%E5%AE%9A%E4%BD%8D/</link>
       <pubDate>Mon, 05 Apr 2021 00:00:00 +0000</pubDate>
