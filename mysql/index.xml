@@ -6,7 +6,17 @@
     <description>Recent content in Mysqls on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 20 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/mysql/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 30 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="/mysql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL5.7实例无限重启故障定位及解决</title>
+      <link>/mysql/mysql5.7%E5%AE%9E%E4%BE%8B%E6%97%A0%E9%99%90%E9%87%8D%E5%90%AF%E6%95%85%E9%9A%9C%E5%AE%9A%E4%BD%8D%E5%8F%8A%E8%A7%A3%E5%86%B3/</link>
+      <pubDate>Fri, 30 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql5.7%E5%AE%9E%E4%BE%8B%E6%97%A0%E9%99%90%E9%87%8D%E5%90%AF%E6%95%85%E9%9A%9C%E5%AE%9A%E4%BD%8D%E5%8F%8A%E8%A7%A3%E5%86%B3/</guid>
+      <description>故障开始时间：2023-06-30 09:18 故障实例：BI大数据业务
+ 环境  系统：CentOS Linux release 7.8.2003 (Core) MySQL: 5.7.28-log MySQL Community Server (GPL) 部署：多实例部署，当前实例bufferPool:8G 集群：3台主机  主：51 备：52 (和51做双主) 从：53 （同步自52）    故障现象  收到报警，该实例频繁报连接异常和恢复 检查发现该MySQL实例频繁重启 1.该实例访问量很小，不是资源不足引起 2.和研发确认该实例相关的业务最近未发生变更 3.DBA内部确认最近该实例没有做配置变更 4.报错时系统日志无异常报错 5.MySQL正常运行时可以提供服务，但1分钟左右就会自动shutdown 6.慢日志里没有异常SQL 7.MySQL错误日志里只有实例启动后自检的warinning 以及  2023-06-30T10:15:35.534553+08:00 0 [Warning] CA certificate ca.pem is self signed. 2023-06-30T10:15:35.546909+08:00 0 [Warning] Recovery from master pos 59075485 and file mysql-bin.***** for channel &#39;&#39;. Previous relay log pos and relay log file had been set to 416, /data/mysql******/relaylognew/relay-bin.</description>
+    </item>
+    
     <item>
       <title>MySQL5.7升级到8.0(二):配置和参数</title>
       <link>/mysql/mysql5.7%E5%8D%87%E7%BA%A7%E5%88%B08.0%E7%9A%84%E5%8F%98%E6%9B%B42%E9%85%8D%E7%BD%AE%E5%92%8C%E5%8F%98%E5%8C%96/</link>
@@ -228,16 +238,6 @@ MySQL也重度依靠数据库日志来完成一系统的功能。
       <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_binlog/</guid>
       <description>解析binlog 方法1:mysqlbinlog mysqlbinlog --no-defaults --base64-output=decode-rows -vv --database=dboop --start-datetime=&#39;2020-10-11 00:00:00&#39; --stop-datetime=&#39;2020-10-11 15:00:00&#39; mysql-bin.000075 &amp;gt;75.sql 常用参数 database：只列出该数据库下的binlog数据，但无法过滤由触发器执行的SQL。 base64-output=decode-rows -vv：显示具体 SQL 语句。 skip-gtids=true：忽略 GTID 显示。  输出结果  # at 20001 #201011 12:04:09 server id 1 end_log_pos 20094 CRC32 0x2b305ac Query thread_id=53 exec_time=0 error_code=0 SET TIMESTAMP=1651011012/*!*/; BEGIN /*!*/; 上面输出包括信息：
  position: 位于文件中的位置，即第一行的（# at 20001）,说明该事件记录从文件第20001个字节开始 timestamp: 事件发生的时间戳，即第二行的（#201011 12:04:09） server id: 服务器标识（1） end_log_pos 表示下一个事件开始的位置（即当前事件的结束位置+1） thread_id: 执行该事件的线程id （thread_id=53） exec_time: 事件执行的花费时间 error_code: 错误码，0意味着没有发生错误 type:事件类型Query  方法2:my2sql wget https://www.</description>
-    </item>
-    
-    <item>
-      <title>MySQL5.7实例无限重启故障定位及解决</title>
-      <link>/mysql/mysql5.7%E5%AE%9E%E4%BE%8B%E6%97%A0%E9%99%90%E9%87%8D%E5%90%AF%E6%95%85%E9%9A%9C%E5%AE%9A%E4%BD%8D%E5%8F%8A%E8%A7%A3%E5%86%B3/</link>
-      <pubDate>Mon, 05 Apr 2021 00:00:00 +0000</pubDate>
-      
-      <guid>/mysql/mysql5.7%E5%AE%9E%E4%BE%8B%E6%97%A0%E9%99%90%E9%87%8D%E5%90%AF%E6%95%85%E9%9A%9C%E5%AE%9A%E4%BD%8D%E5%8F%8A%E8%A7%A3%E5%86%B3/</guid>
-      <description>故障开始时间：2023-06-30 09:18 故障实例：BI大数据业务
- 环境  系统：CentOS Linux release 7.8.2003 (Core) MySQL: 5.7.28-log MySQL Community Server (GPL) 部署：多实例部署，当前实例bufferPool:8G 集群：3台主机  主：51 备：52 (和51做双主) 从：53 （同步自52）    故障现象  收到报警，该实例频繁报连接异常和恢复 检查发现该MySQL实例频繁重启 1.该实例访问量很小，不是资源不足引起 2.和研发确认该实例相关的业务最近未发生变更 3.DBA内部确认最近该实例没有做配置变更 4.报错时系统日志无异常报错 5.MySQL正常运行时可以提供服务，但1分钟左右就会自动shutdown 6.慢日志里没有异常SQL 7.MySQL错误日志里只有实例启动后自检的warinning 以及  2023-06-30T10:15:35.534553+08:00 0 [Warning] CA certificate ca.pem is self signed. 2023-06-30T10:15:35.546909+08:00 0 [Warning] Recovery from master pos 59075485 and file mysql-bin.***** for channel &#39;&#39;. Previous relay log pos and relay log file had been set to 416, /data/mysql******/relaylognew/relay-bin.</description>
     </item>
     
     <item>
