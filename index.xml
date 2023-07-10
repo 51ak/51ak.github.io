@@ -8,12 +8,12 @@
     <language>zh-cn</language>
     <lastBuildDate>Mon, 10 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>20230710思念是一种煎熬</title>
-      <link>/book/20230710%E6%80%9D%E5%BF%B5%E6%98%AF%E4%B8%80%E7%A7%8D%E7%85%8E%E7%86%AC/</link>
+      <title>MySQL压力测试之MySQLslap</title>
+      <link>/mysql/mysql%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E4%B9%8Bmysqlslap/</link>
       <pubDate>Mon, 10 Jul 2023 00:00:00 +0000</pubDate>
       
-      <guid>/book/20230710%E6%80%9D%E5%BF%B5%E6%98%AF%E4%B8%80%E7%A7%8D%E7%85%8E%E7%86%AC/</guid>
-      <description> 周末和前同事在怀柔玩漂流 回来时已经晚上10点了 洗漱完躺着等头发干 结果睡着了 1点多醒了 看着屋里的灯光 投影仪在那切着祖国大好河山的屏保 推开窗一股热浪扑面而来 空调的外机翁翁响 这是我最喜欢的夏天啊 想她了 喧嚣之后的宁静 最是落寞 深夜的思念 都带着淡淡的甜 这世上的喜欢有很多种 有一见钟情的浪漫 也有点滴积累的悠长 思念是一种什么感觉 思念是甜的 当你在一段漫长的行程里 知道终点有人在守候 思念是苦的 当你准备做一件事时 发现曾经有人和你一起计划 思念是酸的 也没走多远 已模糊了她的印象 等我离开这个世界的时候 是否还能想起 曾经想和这个人共度余生的 这世上的感情 爱而不得是为遗憾 爱而不可得也是遗憾 那爱而不想得呢 可以抓住 却不想抓住 也是一种煎熬 终究 还是怀念一起走过的时光 一起打打闹闹的那个人 她不完美 可是离开了 还是会想念 甚是想念  </description>
+      <guid>/mysql/mysql%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E4%B9%8Bmysqlslap/</guid>
+      <description>使用语法如下： mysqlslap [options] 参数 [options]  &amp;ndash;auto-generate-sql, -a 自动生成测试表和数据，表示用mysqlslap工具自己生成的SQL脚本来测试并发压力。 &amp;ndash;auto-generate-sql-load-type=type 测试语句的类型。代表要测试的环境是读操作还是写操作还是两者混合的。取值包括：read，key，write，update和mixed(默- 认)。 &amp;ndash;auto-generate-sql-add-auto-increment 代表对生成的表自动添加auto_increment列，从5.1.18版本开始支持。 &amp;ndash;number-char-cols=N, -x N 自动生成的测试表中包含多少个字符类型的列，默认1 &amp;ndash;number-int-cols=N, -y N 自动生成的测试表中包含多少个数字类型的列，默认1 &amp;ndash;number-of-queries=N 总的测试查询次数(并发客户数×每客户查询次数) &amp;ndash;query=name,-q 使用自定义脚本执行测试，例如可以调用自定义的一个存储过程或者sql语句来执行测试。 &amp;ndash;create-schema 代表自定义的测试库名称，测试的schema，MySQL中schema也就是database。 &amp;ndash;commint=N 多少条DML后提交一次。 &amp;ndash;compress, -C 如果服务器和客户端支持都压缩，则压缩信息传递。 &amp;ndash;concurrency=N, -c N 表示并发量，也就是模拟多少个客户端同时执行select。可指定多个值，以逗号或者&amp;ndash;delimiter参数指定的值做为分隔符。例如：- &amp;ndash;concurrency=100,200,500。 &amp;ndash;engine=engine_name, -e engine_name 代表要测试的引擎，可以有多个，用分隔符隔开。例如：&amp;ndash;engines=myisam,innodb。 &amp;ndash;iterations=N, -i N 测试执行的迭代次数，代表要在不同并发环境下，各自运行测试多少次。 &amp;ndash;only-print 只打印测试语句而不实际执行。 &amp;ndash;detach=N 执行N条语句后断开重连。 &amp;ndash;debug-info, -T 打印内存和CPU的相关信息。  优点：  可以针对某些特定类型的语句进行测试， 例如：  mysqlslap --no-defaults -h 127.0.0.1 -P 3307 --query=敏感列无索引where查询.sql --create-schema=db_test --concurrency=10,20 mysqlslap --no-defaults -h 127.</description>
     </item>
     
     <item>

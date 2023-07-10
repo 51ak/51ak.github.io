@@ -3,16 +3,6 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/book/20230710%E6%80%9D%E5%BF%B5%E6%98%AF%E4%B8%80%E7%A7%8D%E7%85%8E%E7%86%AC/</loc>
-    <lastmod>2023-07-10T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/book/</loc>
-    <lastmod>2023-07-10T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/categories/</loc>
     <lastmod>2023-07-10T00:00:00+00:00</lastmod>
   </url>
@@ -23,28 +13,38 @@
   </url>
   
   <url>
+    <loc>/categories/mysql/</loc>
+    <lastmod>2023-07-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/mysql/</loc>
+    <lastmod>2023-07-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/mysql/mysql%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E4%B9%8Bmysqlslap/</loc>
+    <lastmod>2023-07-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/</loc>
     <lastmod>2023-07-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/%E5%8E%9F%E5%88%9B/</loc>
+    <loc>/tags/%E5%9F%BA%E7%A1%80/</loc>
     <lastmod>2023-07-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/%E6%97%A5%E8%AE%B0/</loc>
+    <loc>/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/</loc>
     <lastmod>2023-07-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/%E7%94%9F%E6%B4%BB/</loc>
-    <lastmod>2023-07-10T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/%E7%94%9F%E6%B4%BB/</loc>
-    <lastmod>2023-07-10T00:00:00+00:00</lastmod>
+    <loc>/book/</loc>
+    <lastmod>2023-07-07T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -58,22 +58,12 @@
   </url>
   
   <url>
-    <loc>/categories/mysql/</loc>
-    <lastmod>2023-06-30T00:00:00+00:00</lastmod>
+    <loc>/tags/%E5%8E%9F%E5%88%9B/</loc>
+    <lastmod>2023-07-07T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/mysql/mysql5.7%E5%AE%9E%E4%BE%8B%E6%97%A0%E9%99%90%E9%87%8D%E5%90%AF%E6%95%85%E9%9A%9C%E5%AE%9A%E4%BD%8D%E5%8F%8A%E8%A7%A3%E5%86%B3/</loc>
-    <lastmod>2023-06-30T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/mysql/</loc>
-    <lastmod>2023-06-30T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/%E5%9F%BA%E7%A1%80/</loc>
     <lastmod>2023-06-30T00:00:00+00:00</lastmod>
   </url>
   
@@ -398,6 +388,16 @@
   </url>
   
   <url>
+    <loc>/categories/%E6%97%A5%E8%AE%B0/</loc>
+    <lastmod>2023-01-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/%E7%94%9F%E6%B4%BB/</loc>
+    <lastmod>2023-01-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/dba/hddssdsassatapcienvme/</loc>
     <lastmod>2023-01-10T00:00:00+00:00</lastmod>
   </url>
@@ -520,6 +520,11 @@
   <url>
     <loc>/categories/%E5%88%86%E5%B8%83%E5%BC%8F/</loc>
     <lastmod>2022-08-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/%E7%94%9F%E6%B4%BB/</loc>
+    <lastmod>2022-08-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -794,11 +799,6 @@
   
   <url>
     <loc>/categories/linux/</loc>
-    <lastmod>2021-07-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/</loc>
     <lastmod>2021-07-07T00:00:00+00:00</lastmod>
   </url>
   
