@@ -6,7 +6,17 @@
     <description>Recent content in Books on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 07 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="/book/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 17 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="/book/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Google医疗大模型Med-PaLM突然进化到接近临床医生水平</title>
+      <link>/book/google%E7%9A%84%E5%8C%BB%E7%96%97%E5%A4%A7%E6%A8%A1%E5%9E%8Bmed-palm%E5%B7%B2%E6%8E%A5%E8%BF%91%E4%B8%B4%E5%BA%8A%E5%8C%BB%E7%94%9F%E6%B0%B4%E5%B9%B3/</link>
+      <pubDate>Mon, 17 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/book/google%E7%9A%84%E5%8C%BB%E7%96%97%E5%A4%A7%E6%A8%A1%E5%9E%8Bmed-palm%E5%B7%B2%E6%8E%A5%E8%BF%91%E4%B8%B4%E5%BA%8A%E5%8C%BB%E7%94%9F%E6%B0%B4%E5%B9%B3/</guid>
+      <description>Med-PaLM的进化  7月12日《Nature》发表文章，详解了医疗大模型Med-PaLM的进化过程 研究人员表示，当回答医学问题时，微调后的医疗大模型Med-PaLM表现良好，一组临床医生对其回答的评分为92.6%，与现实中临床医生的水平（92.9%）
+  论文原地址：https://www.nature.com/articles/s41586-023-06291-2 有兴趣的同学可以看一下原文   记住这组数字：  在MultiMedQA评估基准下 临床医生对ai的正确率评估是：92.6% 而现实中临床医生正确率水平是：92.9% Google的Med-PaLM大模型还没有专式开放 从他们发表的论文上看 医疗领域的正确率这次提升非常明显 在AI+医疗领域目前Med-PaLM是最先进的AI 比通用大模型:GPT4的正确率要高很多  92.6%是什么水平  临床医生正确率：92.9% Med-PaLM进化版正确率：92.6% GPT4正确率：85.1% 初代版的Med-PaLM正确率：67.2% ChatGPT(GPT3.5)正确率:60.2% 这是个了不起的数据   AI的正确率有哪些影响  ai正确率的影响参考我3个月前的一篇文章: 《职业选择的新思考：ChatGPT是否会取代你的职位？》  AI+医疗领域  在AI+医疗领域，谷歌走在前列。 其最新的医疗大模型Med-PaLM 2为首个在美国医疗执照考试中达到专家水平的大模型。 据华尔街日报报道，自4月份以来，该模型一直在美国梅奥诊所等顶尖私立医院进行测试。 我和几个同学先前讨论过几次 一致认为：教育，律师，会计，医疗 这几个领域是AI最好落地的场景 而这4个领域一定会有专门训练且优化过的专业AI出现 专业的大模型在特定场景下比现在的chatgpt等通用大模型要好用 而伴随着谷歌这次抽风式的进化 AI医疗方面的应用落地 AI检测心电图、X光片会更快的一些医院中投入应用 而AI问诊,AI用药咨询也将快速落地  怎么使用Med-PaLM进化版  目前只有Google的测试结果 没有开放试用 而且这些专业领域的大模型一般会和指定的公司和商家合作 不会对大众开放 我在个人网站上增加了两个医疗ai机器人 基于ChatGPT 正确率一般，跟google此次的进化版有点弱 有想体验的同学也可以试用一下  体验地址：www.top580.com  </description>
+    </item>
+    
     <item>
       <title>北大法律大模型ChatLaw发布:中国法律界的智能助手</title>
       <link>/book/%E5%8C%97%E5%A4%A7%E6%B3%95%E5%BE%8B%E5%A4%A7%E6%A8%A1%E5%9E%8Bchatlaw/</link>
