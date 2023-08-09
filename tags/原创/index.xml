@@ -6,17 +6,7 @@
     <description>Recent content in 原创 on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 08 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%8E%9F%E5%88%9B/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>20230808训练一个自己的AI机器人</title>
-      <link>/book/%E8%AE%AD%E7%BB%83%E4%B8%80%E4%B8%AA%E8%87%AA%E5%B7%B1%E7%9A%84ai%E6%9C%BA%E5%99%A8%E4%BA%BA/</link>
-      <pubDate>Tue, 08 Aug 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/book/%E8%AE%AD%E7%BB%83%E4%B8%80%E4%B8%AA%E8%87%AA%E5%B7%B1%E7%9A%84ai%E6%9C%BA%E5%99%A8%E4%BA%BA/</guid>
-      <description> 试用入口
- AI私有化训练的好处  已知ChatGPT之类的大语言模型的数据是在训练时的数据集基础上产生的人工智能 这些AI训练完成后，就不再更新，所以ChatGPT的数据和认知停留在2021年9月份 私有化训练的好处是 可以让AI学习你想要的知识，更新AI的能力 可以训练公司或个人的数据，满足特定的业务需求   训练公司的产品操作手册，用于客服AI    训练一些行业信息，提供信息咨询    用最新的数据，更新AI的知识库    用个人的聊天记录，训练出AI模仿这个人的对话语气    &amp;hellip;    训练需要哪些条件  训练AI一方面需要提供有价值的数据（这个就看积累了） 这些数据最好是文字格式的电子文件:word,excel,pdf,txt&amp;hellip;其中txt格式最佳 以及训练用到的工具  一台或几台高性能带显卡的电脑或服务器（硬件越好，训练得越快） 一个现成的AI(可以是国外的ChatGPT，也可以是自己部署的私有化AI) 如果训练的数据很重要，为了数据隐私可以选用私有化部署AI   如果你没有以上的工具，或不知道如何做私有化训练 请参考以下内容，我们做了一个免费的工具帮你训练一个属于你的私人定制AI  如何训练一个自己的AI机器人 第1步：填写AI名称 填写AI名称 第2步：上传数据  支持pdf,txt等格式 上传的数据越多，训练后的AI对相关的回答越智能 默认上传的数据是真实可信的，ai训练时不会去判断数据是否正确  上传数据 第3步：等待AI训练完成  到这一步后就只需要等着就行 而且需要等很久，建议隔一天再过来看进度。 这里为了演示，我上传的文件很少，也用了 AI训练非常费资源,文件件越多越大，训练用时越长。  ####等待AI训练完成 </description>
-    </item>
-    
+    <lastBuildDate>Thu, 03 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%8E%9F%E5%88%9B/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>怎么通俗的理解向量和数字化</title>
       <link>/book/%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3%E5%90%91%E9%87%8F/</link>
