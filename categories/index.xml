@@ -6,7 +6,25 @@
     <description>Recent content in Categories on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 24 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 27 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>centos</title>
+      <link>/categories/centos/</link>
+      <pubDate>Sun, 27 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/centos/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>运维</title>
+      <link>/categories/%E8%BF%90%E7%BB%B4/</link>
+      <pubDate>Sun, 27 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E8%BF%90%E7%BB%B4/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>日记</title>
       <link>/categories/%E6%97%A5%E8%AE%B0/</link>
@@ -134,15 +152,6 @@
     </item>
     
     <item>
-      <title>运维</title>
-      <link>/categories/%E8%BF%90%E7%BB%B4/</link>
-      <pubDate>Thu, 15 Jun 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/%E8%BF%90%E7%BB%B4/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>运维SQL</title>
       <link>/categories/%E8%BF%90%E7%BB%B4sql/</link>
       <pubDate>Wed, 10 May 2023 00:00:00 +0000</pubDate>
@@ -184,15 +193,6 @@
       <pubDate>Thu, 20 Apr 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/mysql%E5%8D%87%E7%BA%A7/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>centos</title>
-      <link>/categories/centos/</link>
-      <pubDate>Wed, 19 Apr 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/centos/</guid>
       <description></description>
     </item>
     

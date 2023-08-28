@@ -6,7 +6,16 @@
     <description>Recent content in 整理 on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 10 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E6%95%B4%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 27 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E6%95%B4%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>docker安装和常用命令</title>
+      <link>/ops/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</link>
+      <pubDate>Sun, 27 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</guid>
+      <description>安装  centos7 安装  安装需要的软件包  yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的  yum install -y yum-utils device-mapper-persistent-data lvm2 设置yum源 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo 可以查看所有仓库中所有docker版本，并选择特定版本安装  yum list docker-ce --showduplicates | sort -r Loading mirror speeds from cached hostfile Loaded plugins: fastestmirror docker-ce.x86_64 3:24.0.5-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.4-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.3-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.2-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.1-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.0-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.6-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.5-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.4-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.3-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.2-1.el7 docker-ce-stable docker-ce.</description>
+    </item>
+    
     <item>
       <title>Oracle增加表审计</title>
       <link>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1/</link>
