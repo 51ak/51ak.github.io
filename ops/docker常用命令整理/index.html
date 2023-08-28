@@ -298,14 +298,14 @@ dboop.com  centos:latest &quot;/bin/bash&quot;  9 minutes ago   Exited (0) 3 min
 
 [root@xxx ~]# docker images
 REPOSITORY       TAG    IMAGE ID         CREATED             SIZE
-51ak/centos      git    52166e4475ed     5 seconds ago       358.1 MB
-centos           latest 0584b3d2cf6d     9 days ago          196.5 MB
+51ak/centos      git    ********     ********       ********
+centos           latest ********       ********         ********
 其中，-m指定说明信息；-a指定用户信息；dboop.com代表容器的id；xianhu/centos:git指定目标镜像的用户名、仓库名和 tag 信息。
 [root@test2 /]# git --version
 git version 1.8.3.1
 利用exit退出容器。注意此时Docker引擎中就有了两个容器，可使用docker ps -a查看。
 </code></pre><h3 id="创建镜像">创建镜像</h3>
-<pre><code>docker build -f ./Dockerfile -t xiaotongdemo:v0.1 .
+<pre><code>docker build -f ./Dockerfile -t dboopdemo:v0.1 .
 
 参数说明
 
@@ -330,33 +330,33 @@ git version 1.8.3.1
 </code></pre><h3 id="查看所有容器">查看所有容器</h3>
 <pre><code>docker ps -a
 </code></pre><h3 id="进入容器内部">进入容器内部</h3>
-<pre><code>docker exec -it 363f7c85379c /bin/bash
+<pre><code>docker exec -it 421d73849794 /bin/bash
 
 参数说明
 
 -it：开启交互模式终端
 
-363f7c85379c：容器ID
+421d73849794：容器ID
 </code></pre><h3 id="重新启动容器">重新启动容器</h3>
-<pre><code>docker restart 363f7c85379c
+<pre><code>docker restart 421d73849794
 
-363f7c85379c：容器ID
+421d73849794：容器ID
 
 </code></pre><h3 id="停止容器">停止容器</h3>
-<pre><code>docker stop 363f7c85379c
+<pre><code>docker stop 421d73849794
 
 </code></pre><h3 id="启动容器">启动容器</h3>
-<pre><code>docker start 363f7c85379c
+<pre><code>docker start 421d73849794
 
 </code></pre><h3 id="删除容器">删除容器</h3>
-<pre><code>docker rm -f 363f7c85379c
+<pre><code>docker rm -f 421d73849794
 
 参数说明
 
 -f：强制删除
 
 </code></pre><h3 id="删除本地镜像">删除本地镜像</h3>
-<pre><code>docker rmi -f xiaotongdemo:v0.1
+<pre><code>docker rmi -f dboopdemo:v0.1
 
 参数说明
 
