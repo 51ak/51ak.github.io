@@ -6,7 +6,34 @@
     <description>Recent content in Categories on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 04 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 08 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>chatgpt</title>
+      <link>/categories/chatgpt/</link>
+      <pubDate>Fri, 08 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/chatgpt/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>人工智能</title>
+      <link>/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</link>
+      <pubDate>Fri, 08 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>大聪明</title>
+      <link>/categories/%E5%A4%A7%E8%81%AA%E6%98%8E/</link>
+      <pubDate>Fri, 08 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E5%A4%A7%E8%81%AA%E6%98%8E/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>日记</title>
       <link>/categories/%E6%97%A5%E8%AE%B0/</link>
@@ -58,24 +85,6 @@
       <pubDate>Wed, 16 Aug 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/dba/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>chatgpt</title>
-      <link>/categories/chatgpt/</link>
-      <pubDate>Tue, 08 Aug 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/chatgpt/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>人工智能</title>
-      <link>/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</link>
-      <pubDate>Thu, 03 Aug 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</guid>
       <description></description>
     </item>
     
@@ -166,15 +175,6 @@
       <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/postgresql/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>大聪明</title>
-      <link>/categories/%E5%A4%A7%E8%81%AA%E6%98%8E/</link>
-      <pubDate>Fri, 21 Apr 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/%E5%A4%A7%E8%81%AA%E6%98%8E/</guid>
       <description></description>
     </item>
     
