@@ -161,13 +161,23 @@ INNODB_LOCK_WAITS =&gt; data_lock_waits
 </code></pre><h2 id="4权限与密码">4.权限与密码</h2>
 <h4 id="权限">权限</h4>
 <ul>
-<li>新版可能会废弃 SUPER 权限, 更多见 <a href="https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/privileges-provided.html#dynamic-privileges-migration-from-super">dynamic-privileges-migration-from-super</a>, 如果需要管理 slave, 可以赋予  REPLICATION_SLAVE_ADMIN 权限;</li>
-<li>增加角色设置, 不同用户可以分配不同的角色连接数据库, 更多见 <a href="https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-role.html">create-role</a>;</li>
-<li>默认加密插件变更为 caching_sha2_password;</li>
-</ul>
+<li>
+<p>新版可能会废弃 SUPER 权限, 更多见 <a href="https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/privileges-provided.html#dynamic-privileges-migration-from-super">dynamic-privileges-migration-from-super</a>, 如果需要管理 slave, 可以赋予  REPLICATION_SLAVE_ADMIN 权限;</p>
+</li>
+<li>
+<p>增加角色设置, 不同用户可以分配不同的角色连接数据库, 更多见 <a href="https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-role.html">create-role</a>;</p>
+</li>
+<li>
+<p>默认加密插件变更为 caching_sha2_password;</p>
+</li>
+<li>
 <p>更多权限见 <a href="https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/privileges-provided.html">8.0-privileges-provided</a>.</p>
+</li>
+</ul>
 <h4 id="密码">密码</h4>
-<p>8.0 中默认的密码以 caching_sha2_password 插件加密, 不兼容 8.0 以下的版本. 各编程语言的驱动需要查看官方信息确定. 可以对单个用户指定以前的 <code>mysql_native_password</code> 认证插件.</p>
+<ul>
+<li>8.0 中默认的密码以 caching_sha2_password 插件加密, 不兼容 8.0 以下的版本. 各编程语言的驱动需要查看官方信息确定. 可以对单个用户指定以前的 <code>mysql_native_password</code> 认证插件.</li>
+</ul>
 <pre><code>mysql &gt; show global variables like '%auth%plugin%';                            
 +-------------------------------+-----------------------+
 | Variable_name                 | Value                 |
@@ -176,22 +186,36 @@ INNODB_LOCK_WAITS =&gt; data_lock_waits
 +-------------------------------+-----------------------+
 
 mysql &gt; alter user 'user'@'xxx' identified with mysql_native_password by 'pass';
-</code></pre><p>如下所示, 默认低版本连接出现的错误:</p>
+</code></pre><ul>
+<li>如下所示, 默认低版本连接出现的错误:</li>
+</ul>
 <pre><code># mysql -h infodb6 -P 3397 -u root -p
 Enter password: 
 ERROR 2059 (HY000): Authentication plugin 'caching_sha2_password' cannot be loaded: /usr/local/mysql/lib/mysql/plugin/caching_sha2_password.so: cannot open shared object file: No such file or directory
-</code></pre><p>低版本的驱动, 可以通过修改默认的加密插件来连接 DB:</p>
+</code></pre><ul>
+<li>低版本的驱动, 可以通过修改默认的加密插件来连接 DB:</li>
+</ul>
 <pre><code>[mysqld]
 default_authentication_plugin = mysql_native_password
-</code></pre><p><strong>说明:</strong> 如果编程语言的驱动还不支持 <code>caching_sha2_password</code> 方式, 建议修改默认的验证为 <code>mysql_native_password</code>;</p>
+</code></pre><ul>
+<li><strong>说明:</strong> 如果编程语言的驱动还不支持 <code>caching_sha2_password</code> 方式, 建议修改默认的验证为 <code>mysql_native_password</code>;</li>
+</ul>
 <h2 id="5表变更">5.表变更</h2>
 <h4 id="没有-frm-文件">没有 frm 文件</h4>
+<ul>
+<li>
 <p>8.0 开始去掉了 frm 文件, 表结构定义默认内置到 innodb 的 ibd 文件中, 可以通过 <code>ibd2sdi  ..table.ibd</code> 获取详细的字段信息.</p>
+</li>
+<li>
 <p>更多见:</p>
 <p><a href="https://dev.mysql.com/doc/refman/8.0/en/ibd2sdi.html">8.0-ibd2sdi</a><br>
 <a href="https://www.percona.com/blog/2018/12/07/mysql-8-frm-drop-how-to-recover-table-ddl/">mysql-8-frm-drop-how-to-recover-table-ddl</a></p>
+</li>
+</ul>
 <h4 id="没有整形宽度">没有整形宽度</h4>
-<p>表结构中去掉了整数类型宽度的声明, 只能看到类型:</p>
+<ul>
+<li>表结构中去掉了整数类型宽度的声明, 只能看到类型:</li>
+</ul>
 <pre><code>mysql root@[localhost:s3397 percona] &gt; show warnings\G
 *************************** 1. row ***************************
   Level: Warning
@@ -211,9 +235,13 @@ Create Table: CREATE TABLE `tests` (
   UNIQUE KEY `unq_hostmark` (`host`,`port`,`tag`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
 </code></pre><h4 id="datetime和时区">DATETIME和时区</h4>
-<p>从 8.0.19 版本开始, <code>TIMESTAMP</code> 和 <code>DATETIME</code> 两个时间类型都支持时区相关的设置. 以前仅有 <code>TIMESTAMP</code> 支持, <code>DATETIME</code> 支持后时间转换方便不少.</p>
+<ul>
+<li>从 8.0.19 版本开始, <code>TIMESTAMP</code> 和 <code>DATETIME</code> 两个时间类型都支持时区相关的设置. 以前仅有 <code>TIMESTAMP</code> 支持, <code>DATETIME</code> 支持后时间转换方便不少.</li>
+</ul>
 <h4 id="大小写敏感">大小写敏感</h4>
-<p>8.0 版本中, 初始化和启动的时候, 选项 <code>lower_case_table_names</code> 的值必须相同. 更多见 <a href="https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_lower_case_table_names">sysvar_lower_case_table_names</a>.</p>
+<ul>
+<li>8.0 版本中, 初始化和启动的时候, 选项 <code>lower_case_table_names</code> 的值必须相同. 更多见 <a href="https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_lower_case_table_names">sysvar_lower_case_table_names</a>.</li>
+</ul>
 <h4 id="innodb-变更">innodb 变更</h4>
 <ul>
 <li>一个库中的表可以共用一个 ibd 表空间文件, 也可以一个表一个 idb 文件;</li>
