@@ -149,10 +149,14 @@ max_tmp_tables
 INNODB_LOCK_WAITS =&gt; data_lock_waits
 </code></pre><h2 id="3binlog变化">3.binlog变化</h2>
 <h4 id="binlog命令">binlog命令</h4>
-<p>通过 mysqlbinlog 工具查看, 额外指定 <code>--base64-output</code> 参数避免解析乱码:</p>
+<ul>
+<li>通过 mysqlbinlog 工具查看, 额外指定 <code>--base64-output</code> 参数避免解析乱码:</li>
+</ul>
 <pre><code>mysqlbinlog --verbose --base64-output=decode-rows mysql-bin.0000xx
 </code></pre><h4 id="binlog格式">binlog格式</h4>
-<p>binlog 头信息中增加了一些时间及版本信息:</p>
+<ul>
+<li>binlog 头信息中增加了一些时间及版本信息:</li>
+</ul>
 <pre><code># original_commit_timestamp=1587435300248124 (2020-04-21 10:15:00.248124 CST)
 # immediate_commit_timestamp=1587435300248124 (2020-04-21 10:15:00.248124 CST)
 /*!80001 SET @@session.original_commit_timestamp=1587435300248124*//*!*/;
