@@ -69,8 +69,52 @@
 </div>
 
 
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1配置文件cnf变化">1.配置文件.cnf变化</a>
+      <ul>
+        <li><a href="#以下参数变化">以下参数变化</a></li>
+        <li><a href="#以下参数不再支持">以下参数不再支持</a></li>
+      </ul>
+    </li>
+    <li><a href="#2系统表变化">2.系统表变化</a></li>
+    <li><a href="#3binlog变化">3.binlog变化</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#4权限与密码">4.权限与密码</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#5表变更">5.表变更</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#6索引变更">6.索引变更</a></li>
+    <li><a href="#7默认编码变成utf8mb4">7.默认编码变成UTF8MB4</a></li>
+    <li><a href="#8mysqldump-备份">8.mysqldump 备份</a></li>
+    <li><a href="#9主从复制">9.主从复制</a></li>
+    <li><a href="#升级步骤">升级步骤</a>
+      <ul>
+        <li><a href="#1执行升级程序">1.执行升级程序</a></li>
+        <li><a href="#2问题总结">2.问题总结</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
   <main>
-    <h2 id="1配置文件cnf变化">1.配置文件.cnf变化</h2>
+    <p>续：</p>
+<ul>
+<li><a href="https://www.dboop.com/mysql/mysql5.7%E5%8D%87%E7%BA%A7%E5%88%B08.0%E7%9A%84%E5%8F%98%E6%9B%B41sql%E8%AF%AD%E6%B3%95/">MySQL5.7升级到8.0(一):SQL语法变化</a></li>
+</ul>
+<blockquote>
+<p>Note：这里面是升级到8.0,需要DBA参与修改部分或注意部分</p>
+</blockquote>
+<h2 id="1配置文件cnf变化">1.配置文件.cnf变化</h2>
 <h3 id="以下参数变化">以下参数变化</h3>
 <pre><code>expire-logs-days  =&gt;  binlog_expire_logs_seconds # 替换 expire-logs-days
 tx_isolation      =&gt;  transaction_isolation
@@ -189,12 +233,56 @@ Create Table: CREATE TABLE `tests` (
 <li>从5.7到8.0的复制中避免使用  <code>caching_sha2_password</code></li>
 <li>从5.7到8.0的复制中避免使用不同的sqlmode</li>
 </ul>
-<h2 id="总结">总结</h2>
+<h2 id="升级步骤">升级步骤</h2>
+<blockquote>
+<p>mysql版本:低版本5.7.26 高版本8.0.20</p>
+</blockquote>
+<h3 id="1执行升级程序">1.执行升级程序</h3>
 <ul>
-<li>默认加密变成了caching_sha2_password这个最容易出理问题，建议升级时改成默认：mysql_native_password</li>
-<li>其他的只在dba操作和配置时有影响</li>
+<li>1.1 登陆5.7.26数据库执行如下sql。确保数据刷到硬盘</li>
 </ul>
+<pre><code>/data/mysql5.7/bin/mysql -h {} -P {} -u {} -p
 
+show variables like 'innodb_fast_shutdown';
+
+set global innodb_fast_shutdown=0;
+
+shutdown;
+
+exit;
+</code></pre><ul>
+<li>1.2退出至终端 用mysql8.0.20客户端直接启动</li>
+</ul>
+<p>/usr/local/mysql3307/bin/mysqld_safe &ndash;defaults-file=/data/mysql3308/conf/my.cnf &ndash;user=mysql &ndash;lc-messages-dir=/usr/local/mysql3307/share &ndash;lc-messages=en_US &amp;</p>
+<h3 id="2问题总结">2.问题总结</h3>
+<ul>
+<li>2.1配置文件信息(重要)</li>
+<li>主要注意sql_mode、basedir、密码认证插件及字符集设置，标注为#的表示8.0取消的参数。配置会有报错。</li>
+</ul>
+<pre><code>basedir = /data/mysql3308
+skip_ssl
+default_authentication_plugin=mysql_native_password
+#query_cache_limit = 1M
+#sql_mode = NO_AUTO_CREATE_USER
+#default-time_zone = '+8:00'
+#innodb_support_xa = 1
+#query_cache_min_res_unit = 4096
+#query_cache_size = 0 #query_cache_type = 0
+#innodb_undo_logs=128
+mysqlx_port = 33080
+mysqlx_socket = /data/mysql3308/mysqlx.sock
+
+#innodb_undo_tablespaces=4
+</code></pre><ul>
+<li>2.2 &ndash;lc-messages报错</li>
+</ul>
+<p>更改完配置以后。mysql启动正常，但是检查日志。有 &ndash;lc-messages报错。</p>
+<pre><code>[ERROR] [MY-010338] [Server] Can't find error-message file '/data/mysql3308/share/errmsg.sys'. Check error-message file location and 'lc-messages-dir' configuration directive.
+</code></pre><ul>
+<li>启动脚本指定定&ndash;lc-messages-dir=/usr/local/mysql3307/share &ndash;lc-messages=en_US后正常</li>
+</ul>
+<pre><code>/usr/local/mysql3307/bin/mysqld_safe --defaults-file=/data/mysql3308/conf/my.cnf --user=mysql --lc-messages-dir=/usr/local/mysql3307/share --lc-messages=en_US &amp;
+</code></pre>
     <a href="/"> >> Home</a>
   </main>
 
