@@ -6,7 +6,25 @@
     <description>Recent content in Categories on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 08 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 21 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>python</title>
+      <link>/categories/python/</link>
+      <pubDate>Thu, 21 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>自动化</title>
+      <link>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/</link>
+      <pubDate>Thu, 21 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>chatgpt</title>
       <link>/categories/chatgpt/</link>
@@ -130,15 +148,6 @@
       <pubDate>Mon, 26 Jun 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/oracle/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>自动化</title>
-      <link>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/</link>
-      <pubDate>Mon, 26 Jun 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/</guid>
       <description></description>
     </item>
     
@@ -274,15 +283,6 @@
       <pubDate>Tue, 10 Jan 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E7%A1%AC%E4%BB%B6/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>python</title>
-      <link>/categories/python/</link>
-      <pubDate>Fri, 06 Jan 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/python/</guid>
       <description></description>
     </item>
     

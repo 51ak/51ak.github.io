@@ -6,7 +6,16 @@
     <description>Recent content in 自动化 on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 26 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 21 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>一个简单有趣的程序</title>
+      <link>/ops/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E6%9C%89%E8%B6%A3%E7%9A%84%E7%A8%8B%E5%BA%8F/</link>
+      <pubDate>Thu, 21 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E6%9C%89%E8%B6%A3%E7%9A%84%E7%A8%8B%E5%BA%8F/</guid>
+      <description>会编程实在是一件很好玩的事 比如去年双十一买了一个99元洗400张照片的服务 想起来得用了 于是在手机里选了300张照片 想着单纯的洗照片有点无聊 得在每张照片上加点东西 虽然有很多软件可以给照片加水印 但我想要的是在每张照片上加个单词 而且是每张照片上印的单词不一样 这时候 我就可以通过写一段python 简单而高效的完成了  代码如下： from PIL import Image, ImageDraw, ImageFont import os # def writeWord(fontname=&#39;沐瑶软笔手写体.ttf&#39;,words=&amp;quot;Python&amp;quot;): # img = Image.new(&#39;RGB&#39;, (800, 400), color = &#39;white&#39;) # draw = ImageDraw.Draw(img) # font = ImageFont.truetype(f&#39;fonts/{fontname}&#39;, 100) # draw.text((100, 150), words, font = font, fill = &#39;black&#39;) # img.save(&#39;PythonArt.png&#39;) def watermark_Image(img_path,output_path, text): img = Image.open(img_path) drawing = ImageDraw.Draw(img) black = (254, 223, 225, 179) font = ImageFont.</description>
+    </item>
+    
     <item>
       <title>定时收集Oracle索引信息</title>
       <link>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86oracle%E7%B4%A2%E5%BC%95%E4%BF%A1%E6%81%AF/</link>
