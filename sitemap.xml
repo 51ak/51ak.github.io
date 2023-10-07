@@ -43,27 +43,32 @@
   </url>
   
   <url>
-    <loc>/book/20230928%E9%80%80%E7%A7%9F2%E5%8D%95%E5%85%83202/</loc>
-    <lastmod>2023-09-28T00:00:00+00:00</lastmod>
+    <loc>/book/</loc>
+    <lastmod>2023-10-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/book/</loc>
-    <lastmod>2023-09-28T00:00:00+00:00</lastmod>
+    <loc>/book/%E6%97%85%E8%A1%8C%E7%9A%84%E6%84%8F%E4%B9%89%E6%98%AF%E4%BB%80%E4%B9%88/</loc>
+    <lastmod>2023-10-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/categories/%E6%97%A5%E8%AE%B0/</loc>
-    <lastmod>2023-09-28T00:00:00+00:00</lastmod>
+    <lastmod>2023-10-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/%E7%94%9F%E6%B4%BB/</loc>
-    <lastmod>2023-09-28T00:00:00+00:00</lastmod>
+    <lastmod>2023-10-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/categories/%E7%94%9F%E6%B4%BB/</loc>
+    <lastmod>2023-10-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/book/20230928%E9%80%80%E7%A7%9F2%E5%8D%95%E5%85%83202/</loc>
     <lastmod>2023-09-28T00:00:00+00:00</lastmod>
   </url>
   
