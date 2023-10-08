@@ -93,9 +93,9 @@
   <main>
     <h2 id="加密环境">加密环境</h2>
 <ul>
-<li>MySQL主从实例&ndash;&gt; 主:10.26.2.30:3401,从:10.26.2.30:3402</li>
-<li>MySQL空白实例：10.26.2.27:3405</li>
-<li>启用10.26.2.30:3401 主实例的闪电加密</li>
+<li>MySQL主从实例&ndash;&gt; 主:127.0.2.30:3401,从:127.0.2.30:3402</li>
+<li>MySQL空白实例：127.0.2.27:3405</li>
+<li>启用127.0.2.30:3401 主实例的闪电加密</li>
 </ul>
 <h3 id="加密工具">加密工具</h3>
 <ul>
@@ -110,7 +110,7 @@
 <ul>
 <li>访问数据库得到的数据如下</li>
 </ul>
-<pre><code> mysqlw -h 10.26.2.30 -P 3401 dbsec -e &quot;select pumpid,tablename from ogg_pump  order by pumpid limit 10&quot;
+<pre><code> mysqlw -h 127.0.2.30 -P 3401 dbsec -e &quot;select pumpid,tablename from ogg_pump  order by pumpid limit 10&quot;
 +--------+-------------------+
 | pumpid | tablename         |
 +--------+-------------------+
@@ -126,7 +126,7 @@
 |     10 | HSJ_FR_POSITION   |
 +--------+-------------------+
 
-mysqlw -h 10.26.2.30 -P 3401 dbsec -e &quot;select addtime,cpu,network_in from wc_host_arch  order by addtime limit 10&quot;
+mysqlw -h 127.0.2.30 -P 3401 dbsec -e &quot;select addtime,cpu,network_in from wc_host_arch  order by addtime limit 10&quot;
 +---------------------+------+------------+
 | addtime             | cpu  | network_in |
 +---------------------+------+------------+
@@ -154,7 +154,7 @@ total 2.1G
 <li>通过原连接串访问得到的和加密前是一样的</li>
 <li>通过proxy访问得到的数据如下</li>
 </ul>
-<pre><code>mysqlw -h 10.26.2.31 -P 5566 dbsec -e &quot;select pumpid,tablename from ogg_pump  order by pumpid limit 10&quot;
+<pre><code>mysqlw -h 127.0.2.31 -P 5566 dbsec -e &quot;select pumpid,tablename from ogg_pump  order by pumpid limit 10&quot;
 +--------+-------------------+
 | pumpid | tablename         |
 +--------+-------------------+
@@ -171,7 +171,7 @@ total 2.1G
 +--------+-------------------+
 
 
-mysqlw -h 10.26.2.31 -P 5566 dbsec -e &quot;select addtime,cpu,network_in from wc_host_arch  order by addtime limit 10&quot;
+mysqlw -h 127.0.2.31 -P 5566 dbsec -e &quot;select addtime,cpu,network_in from wc_host_arch  order by addtime limit 10&quot;
 +---------------------+--------+------------+
 | addtime             | cpu    | network_in |
 +---------------------+--------+------------+
@@ -197,9 +197,9 @@ total 2.1G
 <h2 id="测试一表删除后重新创建同样的表加密规则是否可用">测试一：表删除后，重新创建同样的表，加密规则是否可用</h2>
 <pre><code>drop table ogg_pump;
 
-mysqlw -h 10.26.2.30 -P 3401 dbsec &lt;ogg_pump.sql 
+mysqlw -h 127.0.2.30 -P 3401 dbsec &lt;ogg_pump.sql 
 
-mysqlw -h 10.26.2.31 -P 5566 dbsec -e &quot;select pumpid,tablename from ogg_pump  order by pumpid limit 10&quot;
+mysqlw -h 127.0.2.31 -P 5566 dbsec -e &quot;select pumpid,tablename from ogg_pump  order by pumpid limit 10&quot;
 +--------+-------------------+
 | pumpid | tablename         |
 +--------+-------------------+
@@ -218,9 +218,9 @@ mysqlw -h 10.26.2.31 -P 5566 dbsec -e &quot;select pumpid,tablename from ogg_pum
 <li>结论：删除重建后，加密规则还在（这是合理的，符合预期）</li>
 </ul>
 <h2 id="测试二列重命名后加密规则是否可用">测试二：列重命名后。加密规则是否可用</h2>
-<pre><code>mysqlw -h 10.26.2.31 -P 5566 dbsec -e &quot;alter table ogg_pump rename  column  tablename to tablename_new&quot;
+<pre><code>mysqlw -h 127.0.2.31 -P 5566 dbsec -e &quot;alter table ogg_pump rename  column  tablename to tablename_new&quot;
 
-mysqlw -h 10.26.2.31 -P 5566 dbsec -e &quot;select pumpid,tablename_new from ogg_pump  order by pumpid limit 10&quot;
+mysqlw -h 127.0.2.31 -P 5566 dbsec -e &quot;select pumpid,tablename_new from ogg_pump  order by pumpid limit 10&quot;
 +--------+-------------------+
 | pumpid | tablename_new     |
 +--------+-------------------+
@@ -236,10 +236,10 @@ mysqlw -h 10.26.2.31 -P 5566 dbsec -e &quot;select pumpid,tablename_new from ogg
 |    110 | HSJ_FR_POSITION   |
 +--------+-------------------+
 
-mysqlw -h 10.26.2.31 -P 5566 dbsec -e &quot;alter table ogg_pump rename column tablename_new  to tablename&quot;
+mysqlw -h 127.0.2.31 -P 5566 dbsec -e &quot;alter table ogg_pump rename column tablename_new  to tablename&quot;
 
 
-mysqlw -h 10.26.2.31 -P 5566 dbsec -e &quot;select pumpid,tablename from ogg_pump  order by pumpid limit 10&quot;
+mysqlw -h 127.0.2.31 -P 5566 dbsec -e &quot;select pumpid,tablename from ogg_pump  order by pumpid limit 10&quot;
 +--------+-------------------+
 | pumpid | tablename         |
 +--------+-------------------+
@@ -261,7 +261,7 @@ mysqlw -h 10.26.2.31 -P 5566 dbsec -e &quot;select pumpid,tablename from ogg_pum
 <ul>
 <li>新建一个新实例：</li>
 </ul>
-<pre><code> mysqlw -h 10.26.2.27 -P 3405
+<pre><code> mysqlw -h 127.0.2.27 -P 3405
 -- 建库
 create database dbsec_re ;
 -- 建表
@@ -282,7 +282,7 @@ ALTER TABLE ogg_pump DISCARD TABLESPACE;
 -- 将备份的ibd文件拷贝到MySQL数据目录中
 cd /data/mysql3405/data/dbsec_re/
 cp ogg_pump.ibd ogg_pump.ibd.bak
-scp 10.26.2.30::/data/mysql3401/data/dbsec/ogg_pump.ibd .
+scp 127.0.2.30::/data/mysql3401/data/dbsec/ogg_pump.ibd .
 chown mysql:mysql ogg_pump.ibd
 ll 
 -rw------- 1 mysql mysql 114688 Oct  8 16:42 ogg_pump.ibd
@@ -298,7 +298,7 @@ ALTER TABLE ogg_pump IMPORT TABLESPACE;
 
 -- 从3403从库上拷贝ogg_pump.ibd 
 mv ogg_pump.ibd ogg_pump.ibd.3401
-scp 10.26.2.30::/data/mysql3403/data/dbsec/ogg_pump.ibd .
+scp 127.0.2.30::/data/mysql3403/data/dbsec/ogg_pump.ibd .
 chown mysql:mysql ogg_pump.ibd
 -- 将ibd文件与新表关联
 ALTER TABLE ogg_pump IMPORT TABLESPACE;
@@ -334,10 +334,10 @@ mysql&gt; show plugins;
 INSTALL PLUGIN clone SONAME 'mysql_clone.so';
 Query OK, 0 rows affected (0.03 sec)
 
-mysql&gt; set global clone_valid_donor_list='10.26.2.30:3401';
+mysql&gt; set global clone_valid_donor_list='127.0.2.30:3401';
 Query OK, 0 rows affected (0.00 sec)
 
-mysql&gt;  CLONE INSTANCE FROM dba@'10.26.2.30':3401 identified by '************';
+mysql&gt;  CLONE INSTANCE FROM dba@'127.0.2.30':3401 identified by '************';
 
 克隆完成后，实例和数据验证无问题
 
