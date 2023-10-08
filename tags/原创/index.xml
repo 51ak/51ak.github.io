@@ -6,7 +6,16 @@
     <description>Recent content in 原创 on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 07 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%8E%9F%E5%88%9B/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 08 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%8E%9F%E5%88%9B/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>透明数据加密测试</title>
+      <link>/dba/%E6%95%B0%E6%8D%AE%E5%8A%A0%E5%AF%86%E6%B5%8B%E8%AF%95/</link>
+      <pubDate>Sun, 08 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%95%B0%E6%8D%AE%E5%8A%A0%E5%AF%86%E6%B5%8B%E8%AF%95/</guid>
+      <description>加密环境  MySQL主从实例&amp;ndash;&amp;gt; 主:10.26.2.30:3401,从:10.26.2.30:3402 MySQL空白实例：10.26.2.27:3405 启用10.26.2.30:3401 主实例的闪电加密  加密工具  **透明数据库透明加密  加密规则  ogg_pump 表：pumpid,tablename 两列做列加密 wc_host_arch 表：cpu,network_in 两列做列加密  加密前后对比  访问数据库得到的数据如下   mysqlw -h 10.26.2.30 -P 3401 dbsec -e &amp;quot;select pumpid,tablename from ogg_pump order by pumpid limit 10&amp;quot; +--------+-------------------+ | pumpid | tablename | +--------+-------------------+ | 1 | SYS_DICTIONARY | | 2 | SYS_USR | | 3 | OWN_HI_TASK_FINAL | | 4 | OWN_HI_PROCESS | | 5 | RC_CST_CAR_INFO | | 6 | RC_CST_BSC_INFO | | 7 | RC_XJNP_APPLY | | 8 | HSJ_BASIC | | 9 | HSJ_ENTINV_ITEM | | 10 | HSJ_FR_POSITION | +--------+-------------------+ mysqlw -h 10.</description>
+    </item>
+    
     <item>
       <title>DBA操作规范-2023</title>
       <link>/dba/dba%E6%93%8D%E4%BD%9C%E8%A7%84%E8%8C%83-2023/</link>
