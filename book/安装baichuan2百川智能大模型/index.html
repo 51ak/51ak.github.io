@@ -134,8 +134,6 @@ urllib3.util.ssl_match_hostname.CertificateError: hostname 'huggingface.co' does
 urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /baichuan-inc/Baichuan2-7B-Chat/resolve/main/config.json (Caused by SSLError(CertificateError(&quot;hostname 'huggingface.co' doesn't match 'api.twitter.com'&quot;)))
 </code></pre><h4 id="排查-1">排查：</h4>
 <pre><code> wget &quot;https://huggingface.co/&quot;
---2023-09-26 11:02:57--  https://huggingface.co/
-Resolving huggingface.co (huggingface.co)... 75.126.124.162, 2a03:2880:f12c:83:face:b00c:0:25de
 Connecting to huggingface.co (huggingface.co)|75.126.124.162|:443... ^C
 </code></pre><h4 id="处理">处理：</h4>
 <ul>
