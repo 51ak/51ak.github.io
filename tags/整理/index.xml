@@ -6,7 +6,17 @@
     <description>Recent content in 整理 on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 27 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E6%95%B4%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 25 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E6%95%B4%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>安装Baichuan2百川智能大模型</title>
+      <link>/book/%E5%AE%89%E8%A3%85baichuan2%E7%99%BE%E5%B7%9D%E6%99%BA%E8%83%BD%E5%A4%A7%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Mon, 25 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/book/%E5%AE%89%E8%A3%85baichuan2%E7%99%BE%E5%B7%9D%E6%99%BA%E8%83%BD%E5%A4%A7%E6%A8%A1%E5%9E%8B/</guid>
+      <description>下载模型和预安装 git clone https://github.com/baichuan-inc/Baichuan2 python3.9 -V /usr/local/python3.9/bin/python3.9 -m pip install --upgrade pip python3.9 -m venv baichuan2 source baichuan2/bin/activate python -V python3.9 -m pip install --upgrade pip pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/ vim cli_demo.py 运行和报错处理  执行python3.9 cli_demo.py 
+ 报错:urllib3 v2.0 only supports OpenSSL 1.1.1+ ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+, currently the &#39;ssl&#39; module is compiled with &#39;OpenSSL 1.0.2k-fips 26 Jan 2017&#39;. See: https://github.com/urllib3/urllib3/issues/2168 排查：  进python环境  python3.</description>
+    </item>
+    
     <item>
       <title>docker安装和常用命令</title>
       <link>/ops/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</link>

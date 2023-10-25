@@ -65,35 +65,13 @@ We’re facing an inflection point in history. One of those moments where the de
     </item>
     
     <item>
-      <title>分别总是在9月</title>
-      <link>/book/%E5%88%86%E5%88%AB%E6%80%BB%E6%98%AF%E5%9C%A89%E6%9C%88/</link>
-      <pubDate>Sun, 24 Sep 2023 00:00:00 +0000</pubDate>
+      <title>安装Baichuan2百川智能大模型</title>
+      <link>/book/%E5%AE%89%E8%A3%85baichuan2%E7%99%BE%E5%B7%9D%E6%99%BA%E8%83%BD%E5%A4%A7%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Mon, 25 Sep 2023 00:00:00 +0000</pubDate>
       
-      <guid>/book/%E5%88%86%E5%88%AB%E6%80%BB%E6%98%AF%E5%9C%A89%E6%9C%88/</guid>
-      <description>分别总是在9月
-  回忆是思念的愁
-  今天是特别的一天
-  约了房东
-  退租了石门苑的房子
-  节后去交接
-  两年合约还没到期
-  2单元202
-  发生了很多的事
-  幸运还是不幸
-  时间会解答
-  剪掉了蓄了10个月的头发
-  去年11月开始养的头发
-  留过第二长的头发
-  离扎小辫只差一根红头绳
-  没坚持到一年
-  夏天过去了
-  找一些仪式感
-  这两件事情
-  本应该发生在11月
-  提前了一点点
-  9月的周末很忙
-  去了山西大同
-  山东泰安</description>
+      <guid>/book/%E5%AE%89%E8%A3%85baichuan2%E7%99%BE%E5%B7%9D%E6%99%BA%E8%83%BD%E5%A4%A7%E6%A8%A1%E5%9E%8B/</guid>
+      <description>下载模型和预安装 git clone https://github.com/baichuan-inc/Baichuan2 python3.9 -V /usr/local/python3.9/bin/python3.9 -m pip install --upgrade pip python3.9 -m venv baichuan2 source baichuan2/bin/activate python -V python3.9 -m pip install --upgrade pip pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/ vim cli_demo.py 运行和报错处理  执行python3.9 cli_demo.py 
+ 报错:urllib3 v2.0 only supports OpenSSL 1.1.1+ ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+, currently the &#39;ssl&#39; module is compiled with &#39;OpenSSL 1.0.2k-fips 26 Jan 2017&#39;. See: https://github.com/urllib3/urllib3/issues/2168 排查：  进python环境  python3.</description>
     </item>
     
     <item>
