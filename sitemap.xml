@@ -3,27 +3,42 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/book/</loc>
-    <lastmod>2023-11-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/categories/</loc>
-    <lastmod>2023-11-09T00:00:00+00:00</lastmod>
+    <lastmod>2023-11-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/</loc>
-    <lastmod>2023-11-09T00:00:00+00:00</lastmod>
+    <lastmod>2023-11-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/dba/</loc>
+    <lastmod>2023-11-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/</loc>
-    <lastmod>2023-11-09T00:00:00+00:00</lastmod>
+    <lastmod>2023-11-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/dba/%E4%BF%A1%E5%88%9B%E5%92%8C%E5%9B%BD%E4%BA%A7%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
+    <lastmod>2023-11-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/%E5%88%86%E5%B8%83%E5%BC%8F/</loc>
+    <lastmod>2023-11-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/%E5%8E%9F%E5%88%9B/</loc>
+    <lastmod>2023-11-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/book/</loc>
     <lastmod>2023-11-09T00:00:00+00:00</lastmod>
   </url>
   
@@ -64,11 +79,6 @@
   
   <url>
     <loc>/categories/dba/</loc>
-    <lastmod>2023-11-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/dba/</loc>
     <lastmod>2023-11-01T00:00:00+00:00</lastmod>
   </url>
   
@@ -664,11 +674,6 @@
   
   <url>
     <loc>/dba/%E4%B8%87%E7%89%A9%E7%9A%86%E5%8F%AFsql/</loc>
-    <lastmod>2022-08-25T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/%E5%88%86%E5%B8%83%E5%BC%8F/</loc>
     <lastmod>2022-08-25T00:00:00+00:00</lastmod>
   </url>
   
