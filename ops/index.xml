@@ -6,7 +6,16 @@
     <description>Recent content in Ops on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 21 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="/ops/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 16 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="/ops/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Centos7安装php8.1和composer</title>
+      <link>/ops/centos7%E5%AE%89%E8%A3%85php8.1%E5%92%8Ccomposer/</link>
+      <pubDate>Thu, 16 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/centos7%E5%AE%89%E8%A3%85php8.1%E5%92%8Ccomposer/</guid>
+      <description>设置yum源  yum -y install https://mirrors.tuna.tsinghua.edu.cn/remi/enterprise/remi-release-7.rpm yum -y install yum-utils 安装php8.1  yum -y install php81-php-cli php81-php-common php81-php-devel php81-php-embedded php81-php-fpm php81-php-gd php81-php-mbstring php81-php-mysqlnd php81-php-pdo php81-php-opcache php81-php-xml php81-php-soap php81-php-posix 查看是否安装成功及php配置文件以及对应目录 rpm -qa |grep php81 pm -ql php81-php-fpm 系统配置  ln -sf /opt/remi/php81/root/usr/bin/php* /usr/bin 查看PHP版本 php -v 安装：composer php -r &amp;quot;copy(&#39;https://install.phpcomposer.com/installer&#39;, &#39;composer-setup.php&#39;);&amp;quot; php composer-setup.php cp composer.phar /usr/bin/composer cd /www/wwwroot/www.top580.com/php composer install composer update </description>
+    </item>
+    
     <item>
       <title>一个简单有趣的程序</title>
       <link>/ops/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E6%9C%89%E8%B6%A3%E7%9A%84%E7%A8%8B%E5%BA%8F/</link>
