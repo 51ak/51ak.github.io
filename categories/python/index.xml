@@ -6,7 +6,17 @@
     <description>Recent content in python on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 21 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/python/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 25 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/python/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>安装Baichuan2百川智能大模型</title>
+      <link>/ops/%E5%AE%89%E8%A3%85baichuan2%E7%99%BE%E5%B7%9D%E6%99%BA%E8%83%BD%E5%A4%A7%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Mon, 25 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%AE%89%E8%A3%85baichuan2%E7%99%BE%E5%B7%9D%E6%99%BA%E8%83%BD%E5%A4%A7%E6%A8%A1%E5%9E%8B/</guid>
+      <description>下载模型和预安装 git clone https://github.com/baichuan-inc/Baichuan2 python3.9 -V /usr/local/python3.9/bin/python3.9 -m pip install --upgrade pip python3.9 -m venv baichuan2 source baichuan2/bin/activate python -V python3.9 -m pip install --upgrade pip pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/ vim cli_demo.py 运行和报错处理  执行python3.9 cli_demo.py 
+ 报错:urllib3 v2.0 only supports OpenSSL 1.1.1+ ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+, currently the &#39;ssl&#39; module is compiled with &#39;OpenSSL 1.0.2k-fips 26 Jan 2017&#39;. See: https://github.com/urllib3/urllib3/issues/2168 排查：  进python环境  python3.</description>
+    </item>
+    
     <item>
       <title>一个简单有趣的程序</title>
       <link>/ops/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E6%9C%89%E8%B6%A3%E7%9A%84%E7%A8%8B%E5%BA%8F/</link>
@@ -14,6 +24,15 @@
       
       <guid>/ops/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E6%9C%89%E8%B6%A3%E7%9A%84%E7%A8%8B%E5%BA%8F/</guid>
       <description>会编程实在是一件很好玩的事 手机里选了300张照片 想着单纯的洗照片有点无聊 得在每张照片上加个单词 这时候 写一段python 简单而高效  代码如下： from PIL import Image, ImageDraw, ImageFont import os # def writeWord(fontname=&#39;沐瑶软笔手写体.ttf&#39;,words=&amp;quot;Python&amp;quot;): # img = Image.new(&#39;RGB&#39;, (800, 400), color = &#39;white&#39;) # draw = ImageDraw.Draw(img) # font = ImageFont.truetype(f&#39;fonts/{fontname}&#39;, 100) # draw.text((100, 150), words, font = font, fill = &#39;black&#39;) # img.save(&#39;PythonArt.png&#39;) def watermark_Image(img_path,output_path, text): img = Image.open(img_path) drawing = ImageDraw.Draw(img) black = (254, 223, 225, 179) font = ImageFont.truetype(&#39;fonts/opposansb.ttf&#39;, 350) drawing.</description>
+    </item>
+    
+    <item>
+      <title>安装MiniGPT-4</title>
+      <link>/ops/%E5%AE%89%E8%A3%85minigpt-4/</link>
+      <pubDate>Tue, 18 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%AE%89%E8%A3%85minigpt-4/</guid>
+      <description>克隆项目 # 安装 git-lfs curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | sudo bash yum install git-lfs git clone https://github.com/Vision-CAIR/MiniGPT-4.git git clone https://huggingface.co/lmsys/vicuna-13b-delta-v0 mv vicuna-13b-delta-v0 /data/MiniGPT-4/vicuna_weights 安装补丁 cd /data/MiniGPT-4/ cd ckp/ #https://drive.google.com/file/d/1a4zLvaiDBr-36pasffmgpvH5P7CKmpze/view #https://drive.google.com/u/0/uc?id=1a4zLvaiDBr-36pasffmgpvH5P7CKmpze&amp;amp;export=download wget https://doc-0s-08-docs.googleusercontent.com/docs/securesc/dbq4d7c2ha9354fqj5612le3gl157ov5/pcnbepjp7icjk54rrfgio602v738i398/1681803150000/09448752369347632296/09178445193473466964/1a4zLvaiDBr-36pasffmgpvH5P7CKmpze?e=download&amp;amp;ax=ALy03A4aDltm3f1TddEAJesIj7YsB_KKlm56C61-M72rzjuPpluLCR3UOUv28FXMkNc3q5s ## 修改配置 vim /data/MiniGPT-4/eval_configs/minigpt4_eval.yaml ckpt: &#39;/data/MiniGPT-4/ckp/&#39; vim /data/MiniGPT-4/minigpt4/configs/models/minigpt4.yaml llama_model: &amp;quot;/data/MiniGPT-4/vicuna_weights/&amp;quot; 安装依赖 pip3.9 install omegaconf #1681803684 yum install xz-devel -y yum install python-backports-lzma -y pip3.9 install backports.lzma yum install python-backports-lzma -y yum install -y xz-devel mesa-libGL python-backports-lzma vim /usr/local/python3.9/lib/python3.9/lzma.py pip3.9 install iopath pip3.</description>
     </item>
     
     <item>
