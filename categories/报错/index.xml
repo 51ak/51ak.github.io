@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>报错 on Classic</title>
+    <link>/categories/%E6%8A%A5%E9%94%99/</link>
+    <description>Recent content in 报错 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 23 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E6%8A%A5%E9%94%99/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>python报错ModuleNotFoundError_No_module_named_lzma</title>
+      <link>/ops/python%E6%8A%A5%E9%94%99modulenotfound_no_module_named_lzma/</link>
+      <pubDate>Thu, 23 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/python%E6%8A%A5%E9%94%99modulenotfound_no_module_named_lzma/</guid>
+      <description>执行Python脚本时报错  File &amp;quot;/usr/local/python3.9/lib/python3.9/site-packages/pooch/processors.py&amp;quot;, line 14, in &amp;lt;module&amp;gt; import lzma File &amp;quot;/usr/local/python3.9/lib/python3.9/lzma.py&amp;quot;, line 27, in &amp;lt;module&amp;gt; from _lzma import * ModuleNotFoundError: No module named &#39;_lzma&#39; 修复方法一：backports  安装 backports.lzma  yum install xz-devel -y yum install python-backports-lzma -y pip3.9 install backports.lzma  修改 lzma.py vim /usr/local/python3.9/lib/python3.9/lzma.py  #修改前 from _lzma import * from _lzma import _encode_filter_properties, _decode_filter_properties #修改后 try: from _lzma import * from _lzma import _encode_filter_properties, _decode_filter_properties except ImportError: from backports.</description>
+    </item>
+    
+  </channel>
+</rss>
