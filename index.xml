@@ -6,7 +6,16 @@
     <description>Recent content on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 23 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 27 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL8.0尝试用json索引替换全文索引</title>
+      <link>/mysql/mysql8.0%E5%B0%9D%E8%AF%95%E7%94%A8json%E7%B4%A2%E5%BC%95%E6%9B%BF%E6%8D%A2%E5%85%A8%E6%96%87%E7%B4%A2%E5%BC%95/</link>
+      <pubDate>Mon, 27 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql8.0%E5%B0%9D%E8%AF%95%E7%94%A8json%E7%B4%A2%E5%BC%95%E6%9B%BF%E6%8D%A2%E5%85%A8%E6%96%87%E7%B4%A2%E5%BC%95/</guid>
+      <description>原因  MySQL8.0.22版本 线上有一张task表的users字段因历史原因 存放了以逗号分隔的用户id列表 程序中会匹配用户id进行查询 用到的SQL如下：  select * from task where MATCH(users) AGAINST(&#39;19323422341234&#39; );	 表的数据量不多40多万条记录 但是频繁的出现慢查询(超过500毫秒)  优化思路  定位到全文索引慢的时候 第一反应是拆了这个全文索引查询 业务方将逗号字段拆表的改动量大暂时不考虑 折中办法是将这个字段换成json类型 然后用json的索引来替换全文索引 我在想这个方案的时候 给忠哥的预估是性能会提升3-10倍 当时没做测试 靠的是经验和信口开河 一通怂恿 于是我们开始拉群开整  验证和测试 # 加json字段 alter table task add users_list json ; # 填值 update task set users_list = concat(&#39;[&#39; ,TRIM(BOTH &#39;,&#39; FROM users),&#39;]&#39;) where users is not null and users != &#39;&#39;;	# 加索引1 ALTER Table task ADD INDEX idx_task_dba ( ( CAST( users_list -&amp;gt; &#39;$[*]&#39; as unsigned ARRAY) ); - 对应 where 19323422341234 MEMBER OF(users_list-&amp;gt;&#39;$[*]&#39;) # 加索引2 #ALTER Table abc ADD INDEX idx_abc(( CAST(`users_list` as bigint(20) unsigned ARRAY) )); - 对应：where 19323422341234 MEMBER OF (users_list) # 这里用的加索引是用了方法1，方法2经验证，会经常跳过索引走全表扫描  测试和验证结果是：和全文索引比效果差不多 没有显著提升 每次查询耗时的稳定性提升了一些，但是总的来说效果有限 最终经过多次验证和反复讨论决定： 不优化了，先这样。  </description>
+    </item>
+    
     <item>
       <title>python报错ModuleNotFoundError_No_module_named_lzma</title>
       <link>/ops/python%E6%8A%A5%E9%94%99modulenotfound_no_module_named_lzma/</link>
