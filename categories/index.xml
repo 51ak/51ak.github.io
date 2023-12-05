@@ -6,7 +6,25 @@
     <description>Recent content in Categories on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 28 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 05 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DBA</title>
+      <link>/categories/dba/</link>
+      <pubDate>Tue, 05 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/dba/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>自动化流程</title>
+      <link>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/</link>
+      <pubDate>Tue, 05 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>mysql</title>
       <link>/categories/mysql/</link>
@@ -53,15 +71,6 @@
     </item>
     
     <item>
-      <title>DBA</title>
-      <link>/categories/dba/</link>
-      <pubDate>Fri, 10 Nov 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/dba/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>安全</title>
       <link>/categories/%E5%AE%89%E5%85%A8/</link>
       <pubDate>Fri, 10 Nov 2023 00:00:00 +0000</pubDate>
@@ -94,15 +103,6 @@
       <pubDate>Thu, 09 Nov 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E8%A7%82%E7%82%B9/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>自动化流程</title>
-      <link>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/</link>
-      <pubDate>Wed, 01 Nov 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/</guid>
       <description></description>
     </item>
     

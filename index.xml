@@ -6,7 +6,16 @@
     <description>Recent content on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 28 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 05 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>快速完成一个异构数据同步异常检查功能</title>
+      <link>/dba/%E5%BF%AB%E9%80%9F%E5%AE%8C%E6%88%90%E4%B8%80%E4%B8%AA%E5%BC%82%E6%9E%84%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5%E5%BC%82%E5%B8%B8%E6%A3%80%E6%9F%A5%E5%8A%9F%E8%83%BD/</link>
+      <pubDate>Tue, 05 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E5%BF%AB%E9%80%9F%E5%AE%8C%E6%88%90%E4%B8%80%E4%B8%AA%E5%BC%82%E6%9E%84%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5%E5%BC%82%E5%B8%B8%E6%A3%80%E6%9F%A5%E5%8A%9F%E8%83%BD/</guid>
+      <description>起因  上周我们做的一次Oracle到MySQL迁移，在迁移完成后需要将MySQL数据反向同步到Oracle中，以便于没有迁移干净的原Oracle业务还能提供只读访问 反向同步用的是OGG，我们在OGG同步层面加了异常报警（但是被DBA给人为禁用了 除掉同步软件层面的报警外，我们需要一个偏业务层面的，针对表数据的报警和监控  需求  支持各种数据源的同步对比 支持表的行数对比，最大id对比，表最后更新时间对比 扩展性好，方便配置 异常报警 监控同步状态的页面  解决 拆解思路  需要一个建两张表：表1:存放任务配置信息，表2:存放采集到的数据 需要一个任务：定时（5分钟）去源库和目标库，运行一个SQL,取当前状态并存入到刚才建的history表中 需要一个页面：展示采集结果，可以方便的查看同步状态和延时 需要一个报警任务：异常数据时，发送报警  任务1:建表  CREATE TABLE `msync_config` (`sync_name` varchar(50) NOT NULL,`source_linkconnstr` varchar(100) NOT NULL,`target_linkconnstr` varchar(100) NOT NULL,`source_sqlstr` varchar(2000) NOT NULL,`target_sqlstr` varchar(2000) NOT NULL,`alert_count` int NOT NULL DEFAULT &#39;5&#39;,`alert_maxid` int NOT NULL DEFAULT &#39;5&#39;,`alert_delaysecond` int NOT NULL DEFAULT &#39;60&#39;,`alert_userlist` varchar(100) NOT NULL DEFAULT &#39;&#39;,`add_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,`update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,`alert_type` varchar(50) NOT NULL DEFAULT &#39;count+time&#39; COMMENT &#39;count,id,time三种组合,+代表and,-代表or&#39;) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 CREATE TABLE `msync_history` (`addtime` datetime NOT NULL,`sync_name` varchar(50) NOT NULL,`source_count` bigint NOT NULL DEFAULT &#39;0&#39;,`target_count` bigint NOT NULL DEFAULT &#39;0&#39;,`source_maxid` bigint NOT NULL DEFAULT &#39;0&#39;,`target_maxid` bigint NOT NULL DEFAULT &#39;0&#39;,`source_maxtime` datetime NOT NULL DEFAULT &#39;0000-00-00 00:00:00&#39;,`target_maxtime` datetime NOT NULL DEFAULT &#39;0000-00-00 00:00:00&#39;,PRIMARY KEY (`addtime`,`sync_name`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3任务2:配置采集任务 &amp;lt;action result=&amp;quot;allcount,okcount,errcount&amp;quot; type=&amp;quot;sql_loop&amp;quot; &amp;gt;&amp;lt;connstr&amp;gt;link:dboop_db&amp;lt;/connstr&amp;gt;&amp;lt;sqlstr&amp;gt;select sync_name,source_linkconnstr,target_linkconnstr,source_sqlstr,target_sqlstr from msync_config&amp;lt;/sqlstr&amp;gt;&amp;lt;action result=&amp;quot;sync_name,source_linkconnstr,target_linkconnstr,source_sqlstr,target_sqlstr&amp;quot; type=&amp;quot;sql_select&amp;quot; &amp;gt;&amp;lt;connstr&amp;gt;link:dboop_db&amp;lt;/connstr&amp;gt;&amp;lt;sqlstr&amp;gt;select sync_name,source_linkconnstr,target_linkconnstr,source_sqlstr,target_sqlstr from msync_config where sync_name=%s&amp;lt;/sqlstr&amp;gt;&amp;lt;sqlpara&amp;gt;{__0}&amp;lt;/sqlpara&amp;gt;&amp;lt;/action&amp;gt;&amp;lt;!</description>
+    </item>
+    
     <item>
       <title>MySQL内置函数</title>
       <link>/mysql/mysql%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0/</link>
