@@ -6,7 +6,17 @@
     <description>Recent content in Books on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 09 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="/book/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 07 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="/book/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AIGC在哔哩哔哩内部的使用场景探索</title>
+      <link>/book/%E4%B8%80%E4%B8%AA%E5%BE%88%E4%BC%9A%E9%AA%82%E4%BA%BA%E7%9A%84ai-copy/</link>
+      <pubDate>Thu, 07 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/book/%E4%B8%80%E4%B8%AA%E5%BE%88%E4%BC%9A%E9%AA%82%E4%BA%BA%E7%9A%84ai-copy/</guid>
+      <description> 2023年11月24日 系统架构师大会在上海举行 其中有一场b站OTT&amp;amp;漫画技术部邬晶的分享 《大模型与AIGC 在B站OTT、漫画业务中的应用探索》 分享中提到AIGC在哔哩哔哩内部的使用场景探索 包括以下几个场景的尝试  客服助手  编码助手 漫画辅助创作 辅助内容处理 合同格式化 辅助本地化      我感兴趣的有：客服助手，合同格式化  AI客服助手 背景：  客服侧同学需要同时处理多个业务线，每条业务线也一直处 于高速迭代状态，业务细节多，用户问题杂，为了帮助客服 同学提高问题处理效率，我们基于ChatGPT3.5输出了智能客服系统  解决方案 挑战 收益 拦截率:88.5% -&amp;gt; 92% 节省人力:13%
+AI合同格式化 背景： 解决方案 挑战 收益  目前还在开发进行中 目标: 将合同电子化、平台化。各种权利项平滑入库，提升可维护性。降低商务成本。  小结  已完成的AI客服助手方案 是比较现实的可以落地的解决方案 也就是利用向量数据库来做关联匹配 实际运行中遇到的挑战 也是做此类产口需要关注的 这个分享说得非常具体了 合同格式化的是件收益不错的事B站也在开发中  </description>
+    </item>
+    
     <item>
       <title>当程序出现了个bug</title>
       <link>/book/%E5%BD%93%E4%BD%A0%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%87%BA%E7%8E%B0%E4%BA%86%E4%B8%AAbug/</link>
