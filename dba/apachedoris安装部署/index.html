@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ApacheDoris在Centos7环境下的安装部署| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    <script  src="/js/auto-render.min.js" ></script>
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">ApacheDoris在Centos7环境下的安装部署</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#环境准备">环境准备</a>
+      <ul>
+        <li><a href="#linux版本-centos7">linux版本 Centos7:</a></li>
+        <li><a href="#系统最大打开文件句柄数">系统最大打开文件句柄数​</a></li>
+        <li><a href="#关闭交换分区swap">关闭交换分区（swap）​</a></li>
+        <li><a href="#检查文件系统">检查文件系统</a></li>
+        <li><a href="#gcc版本482">GCC版本(&gt;=4.8.2)</a></li>
+        <li><a href="#java版本18">JAVA版本(&gt;=1.8)</a></li>
+        <li><a href="#确认cpu是否支持avx2">确认cpu是否支持avx2</a></li>
+      </ul>
+    </li>
+    <li><a href="#安装">安装</a>
+      <ul>
+        <li><a href="#下载">下载</a></li>
+        <li><a href="#安装fe">安装fe</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="环境准备">环境准备</h2>
+<h3 id="linux版本-centos7">linux版本 Centos7:</h3>
+<ul>
+<li><code>cat /etc/redhat-release</code></li>
+</ul>
+<h3 id="系统最大打开文件句柄数">系统最大打开文件句柄数​</h3>
+<pre><code>cat  etc/security/limits.conf 
+* soft nofile 65536
+* hard nofile 65536
+</code></pre><h3 id="关闭交换分区swap">关闭交换分区（swap）​</h3>
+<pre><code>swapoff -a
+sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+</code></pre><h3 id="检查文件系统">检查文件系统</h3>
+<pre><code> df -hT |grep &quot;ext4&quot;
+</code></pre><h3 id="gcc版本482">GCC版本(&gt;=4.8.2)</h3>
+<pre><code>gcc -v
+# gcc version 4.8.5 2015062
+
+</code></pre><h3 id="java版本18">JAVA版本(&gt;=1.8)</h3>
+<pre><code>java -version 
+# java version &quot;1.8.0_202&quot;
+</code></pre><h3 id="确认cpu是否支持avx2">确认cpu是否支持avx2</h3>
+<pre><code>cat /proc/cpuinfo | grep avx2
+
+</code></pre><h2 id="安装">安装</h2>
+<h3 id="下载">下载</h3>
+<pre><code>cd /data/software/
+wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-2.0.3-bin-x64.tar.gz
+
+tar zxvf apache-doris-2.0.3-bin-x64.tar.gz
+
+cd cd apache-doris-2.0.3-bin-x64
+
+ll
+
+
+mkdir /data/doris5306
+mv * /data/doris5306/
+
+</code></pre><h3 id="安装fe">安装fe</h3>
+<h4 id="修改feconf">修改fe.conf</h4>
+<pre><code>cd /data/doris5306/fe
+vim conf/fe.conf
+#修改以下项
+http_port = 5030
+rpc_port = 5020
+query_port = 5306
+edit_log_port = 5010
+
+
+priority_networks = *.*.*.0/24
+</code></pre><h4 id="启动">启动</h4>
+<pre><code>./bin/start_fe.sh --daemon
+
+</code></pre><h4 id="验证">验证</h4>
+<pre><code>netstat -an |grep 5306
+tail -200f log/fe.log 
+
+</code></pre><h4 id="停止">停止</h4>
+<pre><code>sh bin/stop_fe.sh 
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/12/25</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/dba">DBA</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

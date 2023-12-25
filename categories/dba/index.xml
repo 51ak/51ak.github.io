@@ -6,7 +6,16 @@
     <description>Recent content in DBA on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 05 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/dba/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 25 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/dba/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ApacheDoris在Centos7环境下的安装部署</title>
+      <link>/dba/apachedoris%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</link>
+      <pubDate>Mon, 25 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/apachedoris%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</guid>
+      <description>环境准备 linux版本 Centos7:  cat /etc/redhat-release  系统最大打开文件句柄数​ cat etc/security/limits.conf * soft nofile 65536* hard nofile 65536关闭交换分区（swap）​ swapoff -ased -i &#39;/ swap / s/^\(.*\)$/#\1/g&#39; /etc/fstab检查文件系统  df -hT |grep &amp;quot;ext4&amp;quot;GCC版本(&amp;gt;=4.8.2) gcc -v# gcc version 4.8.5 2015062JAVA版本(&amp;gt;=1.8) java -version # java version &amp;quot;1.8.0_202&amp;quot;确认cpu是否支持avx2 cat /proc/cpuinfo | grep avx2安装 下载 cd /data/software/wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-2.0.3-bin-x64.tar.gztar zxvf apache-doris-2.0.3-bin-x64.tar.gzcd cd apache-doris-2.0.3-bin-x64llmkdir /data/doris5306mv * /data/doris5306/安装fe 修改fe.</description>
+    </item>
+    
     <item>
       <title>快速完成一个异构数据同步异常检查功能</title>
       <link>/dba/%E5%BF%AB%E9%80%9F%E5%AE%8C%E6%88%90%E4%B8%80%E4%B8%AA%E5%BC%82%E6%9E%84%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5%E5%BC%82%E5%B8%B8%E6%A3%80%E6%9F%A5%E5%8A%9F%E8%83%BD/</link>
