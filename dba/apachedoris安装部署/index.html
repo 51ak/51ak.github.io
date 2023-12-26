@@ -85,6 +85,7 @@
       <ul>
         <li><a href="#下载">下载</a></li>
         <li><a href="#安装fe">安装fe</a></li>
+        <li><a href="#安装be">安装be</a></li>
       </ul>
     </li>
   </ul>
@@ -149,8 +150,105 @@ priority_networks = *.*.*.0/24
 <pre><code>netstat -an |grep 5306
 tail -200f log/fe.log 
 
+ps -ef |grep doris5306
+netstat -anpt |grep {进程号}
+
+# 如果启动不了，看日志：排除java环境问题，端口被占用
+# 有些机器可能需要手动指定 $DORIS_HOME 这个变量
+ vim conf/fe.conf 
+ vim bin/start_fe.sh 
+ #DORIS_HOME=&quot;/data/doris5306/fe&quot;
 </code></pre><h4 id="停止">停止</h4>
 <pre><code>sh bin/stop_fe.sh 
+</code></pre><h3 id="安装be">安装be</h3>
+<h4 id="修改beconf">修改be.conf</h4>
+<pre><code># cd /data/doris5306/be
+# vim conf/be.conf
+priority_networks = 10.25.16.0/24;
+storage_root_path = &quot;/data/doris5306/bedata&quot;
+
+# mkdir /data/doris5306/bedata
+</code></pre><h4 id="启动-1">启动</h4>
+<pre><code>./bin/start_be.sh --daemon
+#如果有报错 max_map_count：
+sysctl -w vm.max_map_count=2000000
+vim /etc/sysctl.conf
+</code></pre><h4 id="加集群">加集群</h4>
+<pre><code>mysql -h 127.0.0.1 -P 5306  -u root
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 3
+Server version: 5.7.99 Doris version doris-2.0.3-rc06-37d31a5
+
+Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql&gt; show frontends\G;
+*************************** 1. row ***************************
+             Name: fe_2e4de06c_fde0_4ce7_8560_11da267f1fbb
+             Host: 10.*.*.*
+      EditLogPort: 5010
+         HttpPort: 5030
+        QueryPort: 5306
+          RpcPort: 5020
+             Role: FOLLOWER
+         IsMaster: true
+        ClusterId: 1757269789
+             Join: true
+            Alive: true
+ReplayedJournalId: 2729
+    LastHeartbeat: 2023-12-25 19:34:04
+         IsHelper: true
+           ErrMsg: 
+          Version: doris-2.0.3-rc06-37d31a5
+ CurrentConnected: Yes
+1 row in set (0.07 sec)
+
+ERROR: 
+No query specified
+
+mysql&gt; SHOW BACKENDS\G
+Empty set (0.01 sec)
+
+
+mysql&gt; ALTER SYSTEM ADD BACKEND &quot;10.*.*.*:9050&quot;;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql&gt; SHOW BACKENDS\G
+*************************** 1. row ***************************
+              BackendId: 13800
+                   Host: 10.*.*.*
+          HeartbeatPort: 9050
+                 BePort: -1
+               HttpPort: -1
+               BrpcPort: -1
+          LastStartTime: NULL
+          LastHeartbeat: NULL
+                  Alive: false
+   SystemDecommissioned: false
+              TabletNum: 0
+       DataUsedCapacity: 0.000 
+     TrashUsedCapcacity: 0.000 
+          AvailCapacity: 1.000 B
+          TotalCapacity: 0.000 
+                UsedPct: 0.00 %
+         MaxDiskUsedPct: 0.00 %
+     RemoteUsedCapacity: 0.000 
+                    Tag: {&quot;location&quot; : &quot;default&quot;}
+                 ErrMsg: 
+                Version: 
+                 Status: {&quot;lastSuccessReportTabletsTime&quot;:&quot;N/A&quot;,&quot;lastStreamLoadTime&quot;:-1,&quot;isQueryDisabled&quot;:false,&quot;isLoadDisabled&quot;:false}
+HeartbeatFailureCounter: 0
+               NodeRole: 
+1 row in set (0.02 sec)
+
+</code></pre><h4 id="停止-1">停止</h4>
+<pre><code>./bin/stop_be.sh
+
 </code></pre>
     <a href="/"> >> Home</a>
   </main>
