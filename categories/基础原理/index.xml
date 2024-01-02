@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>基础原理 on Classic</title>
+    <link>/categories/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/</link>
+    <description>Recent content in 基础原理 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 02 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>8种常用于数据库的数据结构</title>
+      <link>/dba/8%E7%A7%8D%E5%B8%B8%E7%94%A8%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</link>
+      <pubDate>Tue, 02 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/8%E7%A7%8D%E5%B8%B8%E7%94%A8%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</guid>
+      <description>1.跳跃表(skipList) 什么是skiplist  跳跃表（skiplist）是一种随机化的数据， 由 William Pugh 在论文《Skip lists: a probabilistic alternative to balanced trees》中提出， 跳跃表以有序的方式在层次化的链表中保存元素， 效率和平衡树媲美 —— 查找、删除、添加等操作都可以在对数期望时间下完成， 并且比起平衡树来说， 跳跃表的实现要简单直观得多。  图示    用途：  Redis  2.哈希索引（Hash Index） 什么是hash Index  基于哈希表实现，只有精确匹配索引所有列的查询才有效。对于每一行数据，存储引擎都会对所有的索引列计算一个哈希码（hash code），哈希码是一个较小的值，并且不同键值的行计算出来的哈希码也不一样。哈希索引将所有的哈希码存储在索引中，同时在哈希表中保存指向每个数据行的指针。 哈希索引可细分为静态哈希和动态哈希这两大类，  静态哈希  基于散列技术的文件组织使我们能够避免访问索引结构，同时也提供了一种构造索引的方法。在对散列的描述中，使用桶(bucket)来表示能存储一条或多条记录的一个存储单位。通常一个桶就是一个磁盘块，但也可能大于或者小于一个磁盘块。 散列索引将散列函数作用于搜索码以确定对应的桶， 然后将此搜索码以及对应的指针存入此桶(或溢出桶)中。 静态散列最大的缺点在于必须在实现系统时选择确定的散列函数。此后若被索引的文件变大或缩小，要想再改变散列函数就不容易了。因为散列函数 h 将搜索码值映射到桶地址的固定集合 B 上： 根据当前文件大小选择散列函数，这样的选择会使得性能随着数据库的增大而下降。换言之，初始时集合 B 太小，一个桶就会包含许多不同的搜索码值的记录，从而可能发生桶溢出。当文件变大时，性能就会受到影响。 根据将来某个时刻文件的预计大小选择散列函数。 尽管这样可以避免性能下降，但是初始时会造成相当大的空间浪费。  动态哈希  针对静态散列技术出现的问题，动态散列（dynamic hashing）技术允许散列函数动态改变，以适应数据库增大或缩小的需要 当数据库增大或缩小时，可扩充散列可以通过桶的分裂或合并来适应数据库大小的变化，这样可以保持空间的使用效率。此外，由于重组每次仅作用于一个桶，因此所带来的性能开销较低。  图示    3.ssTable 什么是ssTable  SSTable文件是memtable 数据到一定阈值写入文件形成的，由于内存容量总是有限的，将一定量数据写入磁盘可以存放更多数据，所以leveldb相比redis能存放更多数据。既然数据持久化到磁盘，那么还有必然涉及到从磁盘中查询数据，从磁盘中查询数据与从内存中查询数据的效率是不一样的，所以SSTable 数据组织方式必然与众不同，因为必须要提高查询效率，不能给一个key就去遍历所有SSTable。因此本文的另一个目的就是学习SSTable 文件如何组织key-value，提高查询效率。为了提高内存中数据查询效率 我们学习了各种数据结构如红黑树，散列表，那么SSTable是学习如何提高文件查询数据效率的一个很好例子。  图示    4.</description>
+    </item>
+    
+  </channel>
+</rss>
