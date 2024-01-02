@@ -6,7 +6,16 @@
     <description>Recent content on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 25 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 29 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Oracle处理归档日志archivelog空间报警</title>
+      <link>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1-copy/</link>
+      <pubDate>Fri, 29 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1-copy/</guid>
+      <description>查看归档日志空间占用率  select * from v$flash_recovery_area_usage; --查看空间占用率 select * from v$recovery_file_dest; --查看归档日志的存放地址; show parameter recovery; --查看归档空间大小 增加表空间大小（磁盘空间足够的话） alter system set db_recovery_file_dest_size=250G; --请归档空间增大到250G 删除过期文件 export ORACLE_SID=****** rman target / crosscheck archivelog all; //查看可以所有的归档文件 delete expired archivelog all; //清空过期的归档文件 delete force noprompt ARCHIVELOG ALL COMPLETED BEFORE &#39;trunc(SYSDATE)-90&#39;; //清除90天前的归档文件 quit </description>
+    </item>
+    
     <item>
       <title>ApacheDoris在Centos7环境下的安装部署</title>
       <link>/dba/apachedoris%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</link>
@@ -1452,7 +1461,7 @@ rsync  time=$(date &#39;+%Y-%m-%d-%H-test1_binlog.0001&#39;) time1=$(date &#39;+
     </item>
     
     <item>
-      <title>常用脚本_ssh无密码认证</title>
+      <title>常用脚本_ssh无密码认证(linux互信)</title>
       <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_ssh%E6%97%A0%E5%AF%86%E7%A0%81%E8%AE%A4%E8%AF%81/</link>
       <pubDate>Fri, 14 May 2021 00:00:00 +0000</pubDate>
       

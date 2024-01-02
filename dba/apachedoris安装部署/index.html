@@ -164,8 +164,12 @@ netstat -anpt |grep {进程号}
 <h4 id="修改beconf">修改be.conf</h4>
 <pre><code># cd /data/doris5306/be
 # vim conf/be.conf
-priority_networks = 10.25.16.0/24;
+priority_networks = 10.25.16.0/24
 storage_root_path = &quot;/data/doris5306/bedata&quot;
+be_port = 5160
+webserver_port = 5140
+heartbeat_service_port = 5150
+brpc_port = 5260
 
 # mkdir /data/doris5306/bedata
 </code></pre><h4 id="启动-1">启动</h4>
