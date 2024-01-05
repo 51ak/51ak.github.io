@@ -86,6 +86,7 @@
         <li><a href="#下载">下载</a></li>
         <li><a href="#安装fe">安装fe</a></li>
         <li><a href="#安装be">安装be</a></li>
+        <li><a href="#建库建表">建库，建表</a></li>
       </ul>
     </li>
   </ul>
@@ -165,13 +166,13 @@ netstat -anpt |grep {进程号}
 <pre><code># cd /data/doris5306/be
 # vim conf/be.conf
 priority_networks = 10.25.16.0/24
-storage_root_path = &quot;/data/doris5306/bedata&quot;
+
 be_port = 5160
 webserver_port = 5140
 heartbeat_service_port = 5150
 brpc_port = 5260
 
-# mkdir /data/doris5306/bedata
+
 </code></pre><h4 id="启动-1">启动</h4>
 <pre><code>./bin/start_be.sh --daemon
 #如果有报错 max_map_count：
@@ -252,6 +253,34 @@ HeartbeatFailureCounter: 0
 
 </code></pre><h4 id="停止-1">停止</h4>
 <pre><code>./bin/stop_be.sh
+
+</code></pre><h3 id="建库建表">建库，建表</h3>
+<pre><code>create database dbtest;
+
+use dbtest;
+
+CREATE TABLE csv_data (
+account VARCHAR(255) NOT NULL COMMENT '',
+name VARCHAR(255) NOT NULL default '' COMMENT '姓名',
+organization VARCHAR(500) DEFAULT '' COMMENT '部门',
+gender smallint NOT NULL default '-1' COMMENT '性别',
+practice_status varchar(10) not null default '' COMMENT '',
+political_affiliation VARCHAR(50) DEFAULT ''COMMENT '政治面貌',
+education_degree VARCHAR(255) DEFAULT '' COMMENT '学历学位',
+email VARCHAR(255) DEFAULT '' COMMENT '邮箱',
+origin VARCHAR(255) DEFAULT '' COMMENT '来源'
+)
+ENGINE=OLAP
+UNIQUE KEY(account) 
+DISTRIBUTED BY HASH(account) BUCKETS 16
+;
+
+CREATE USER 'dba' IDENTIFIED BY 'your_passwd';
+grant all on *.* to dba;
+
+
+CREATE USER 'dbtest_w' IDENTIFIED BY 'your_passwd';
+GRANT ALL ON dbtest TO dbtest_w;
 
 </code></pre>
     <a href="/"> >> Home</a>
