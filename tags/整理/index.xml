@@ -6,7 +6,16 @@
     <description>Recent content in 整理 on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 29 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E6%95%B4%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 08 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E6%95%B4%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>OracleGoldenGate运维常用命令</title>
+      <link>/oracle/oraclegoldengate%E8%BF%90%E7%BB%B4%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4ogg/</link>
+      <pubDate>Mon, 08 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oraclegoldengate%E8%BF%90%E7%BB%B4%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4ogg/</guid>
+      <description>常用命令 1. 管理(MGR)进程命令 INFO MANAGER 返回有关管理器端口和进程id的信息。 START MANAGER 开启管理进程 STATUS MANAGER 返回管理进程状态 STOP MANAGER 停止管理进程 2. 采集(EXTRACT)进程命令 ADD EXTRACT 添加一个采集组 ALTER EXTRACT 更改采集组的属性 CLEANUP EXTRACT 删除采集组的运行历史记录 DELETE EXTRACT 删除采集组。 INFO EXTRACT 返回有关采集组的信息。 KILL EXTRACT 强制终止采集组。 LAG EXTRACT 返回有关采集延迟的信息。 REGISTER EXTRACT 向Oracle数据库注册采集组START EXTRACT 启动采集组 STATS EXTRACT 返回处理采集的统计信息。 STATUS EXTRACT 返回采集组的状态 STOP EXTRACT 停止采集组。 FORCEAPPEND 允许data pump在现有的初始加载文件上添加新的跟踪文件 UNREGISTER EXTRACT 从Oracle数据库注销采集组。 3. 回放(Replicat)进程命令 ADD REPLICAT 添加一个复制组 ALTER REPLICAT 更改复制组的属性。 CLEANUP REPLICAT 删除复制组的运行历史。 DELETE REPLICAT 删除一个复制组。 INFO REPLICAT 返回关于复制组的信息。 KILL REPLICAT 强制终止一个复制组。 LAG REPLICAT 返回关于复制延迟的信息。 REGISTER REPLICAT 向Oracle数据库注册一个复制组。 START REPLICAT 启动一个复制组。 STATS REPLICAT 返回处理一个复制组的统计信息。 STATUS REPLICAT 返回一个复制组的状态。 STOP REPLICAT 停止复制组。 4.</description>
+    </item>
+    
     <item>
       <title>Oracle处理归档日志archivelog空间报警</title>
       <link>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1-copy/</link>
