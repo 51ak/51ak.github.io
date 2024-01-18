@@ -18,10 +18,10 @@
     
     <item>
       <title>Oracle处理归档日志archivelog空间报警</title>
-      <link>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1-copy/</link>
+      <link>/oracle/oracle%E5%A4%84%E7%90%86%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97archivelog%E7%A9%BA%E9%97%B4%E6%8A%A5%E8%AD%A6/</link>
       <pubDate>Fri, 29 Dec 2023 00:00:00 +0000</pubDate>
       
-      <guid>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1-copy/</guid>
+      <guid>/oracle/oracle%E5%A4%84%E7%90%86%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97archivelog%E7%A9%BA%E9%97%B4%E6%8A%A5%E8%AD%A6/</guid>
       <description>查看归档日志空间占用率  select * from v$flash_recovery_area_usage; --查看空间占用率 select * from v$recovery_file_dest; --查看归档日志的存放地址; show parameter recovery; --查看归档空间大小 增加表空间大小（磁盘空间足够的话） alter system set db_recovery_file_dest_size=250G; --请归档空间增大到250G 删除过期文件 export ORACLE_SID=****** rman target / crosscheck archivelog all; //查看可以所有的归档文件 delete expired archivelog all; //清空过期的归档文件 delete force noprompt ARCHIVELOG ALL COMPLETED BEFORE &#39;trunc(SYSDATE)-90&#39;; //清除90天前的归档文件 quit </description>
     </item>
     
@@ -166,6 +166,15 @@ rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org rpm -Uvh http://www.e
       <description>数据库团队的OKR（目标关键结果）可能包括：  数据存储容量优化：通过数据库管理和数据存储优化技术，提高数据存储的效率和容量。 数据安全性提升：通过数据库安全技术和安全控制，保护数据的安全性。 数据恢复能力提高：通过数据备份和恢复技术，提高数据恢复的效率和能力。 数据库性能优化：通过数据库性能调优和技术优化，提高数据库的性能。 数据查询效率提高：通过数据查询优化技术，提高数据查询的效率。 数据可视化开发：通过数据可视化技术，提高数据的可读性和可视性。 数据分析能力提高：通过数据分析技术，提高数据分析的效率和能力。 数据处理效率提高：通过数据处理优化技术，提高数据处理的效率。 数据交换效率提高：通过数据交换优化技术，提高数据交换的效率。 数据管理流程改进：通过对数据管理流程的优化和改进，提高数据管理的效率和质量。 团队技能培训：通过为团队提供技能培训，提高团队的专业水平和能力。 协同工作效率提高：通过改进团队间的协同工作，提高团队的协同工作效率。  这些OKR可能根据公司的具体情况进行调整和定制，以适应公司的特殊需求。
 数据库团队有哪些可量化的KPI指标 数据库团队可以使用以下可量化的指标来评估其进展和成果：
  数据库响应时间：测量数据库对请求的响应时间，以评估数据库的性能。 数据库可用性：通过计算数据库在一段时间内的可用率，评估数据库的可用性。 数据库容量：通过监控数据库的容量使用情况，评估数据库的容量需求。 数据完整性：通过测量数据的完整性，评估数据的质量。 数据备份和恢复：通过测量数据备份和恢复的时间和准确性，评估数据的安全性。 团队效率：通过测量团队完成任务的效率，评估团队的工作效率。 研发团队满意度：通过调查研发对数据库团队的满意程度，评估团队的服务质量。  这些指标可以帮助数据库团队评估其OKR的实现情况，并对团队的工作进行评估和改进。</description>
+    </item>
+    
+    <item>
+      <title>Oracle新建A用户默认访问B用户的表和视图</title>
+      <link>/oracle/oracle%E6%96%B0%E5%BB%BAa%E7%94%A8%E6%88%B7%E9%BB%98%E8%AE%A4%E8%AE%BF%E9%97%AEb%E7%94%A8%E6%88%B7%E7%9A%84%E8%A1%A8%E5%92%8C%E8%A7%86%E5%9B%BE/</link>
+      <pubDate>Mon, 03 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E6%96%B0%E5%BB%BAa%E7%94%A8%E6%88%B7%E9%BB%98%E8%AE%A4%E8%AE%BF%E9%97%AEb%E7%94%A8%E6%88%B7%E7%9A%84%E8%A1%A8%E5%92%8C%E8%A7%86%E5%9B%BE/</guid>
+      <description>原因  在oracle 中schema与用户是一一对应的关系 A用户默认访问的是Aschema下的表 业务需求建立用户A可以查询B用户建立的表；会报错：表和视图不存在 以下是解决方法  方案一：改写SQL  A用户查询时带上B用户的schema  select * from A.table 方案二：手动指定current_schema  临时修改A用户的schema，执行下面SQL事件  alter session set current_schema=B; select * from table; 方案三：触发器  增加A用户的登录trigger  create or replace trigger {triggername} after logon on A.schema begin execute immediate &#39;alter session set current_schema=B&#39;; 方案四：增加同义词  增加A用户的同义词  # 用管理账号执行 grant create synonym to A # 用A账号执行 CREATE SYNONYM TEST FOR B.TEST; .... #把所有的表和视图都加上 总结  方法1.</description>
     </item>
     
   </channel>

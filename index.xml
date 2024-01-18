@@ -37,10 +37,10 @@
     
     <item>
       <title>Oracle处理归档日志archivelog空间报警</title>
-      <link>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1-copy/</link>
+      <link>/oracle/oracle%E5%A4%84%E7%90%86%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97archivelog%E7%A9%BA%E9%97%B4%E6%8A%A5%E8%AD%A6/</link>
       <pubDate>Fri, 29 Dec 2023 00:00:00 +0000</pubDate>
       
-      <guid>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1-copy/</guid>
+      <guid>/oracle/oracle%E5%A4%84%E7%90%86%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97archivelog%E7%A9%BA%E9%97%B4%E6%8A%A5%E8%AD%A6/</guid>
       <description>查看归档日志空间占用率  select * from v$flash_recovery_area_usage; --查看空间占用率 select * from v$recovery_file_dest; --查看归档日志的存放地址; show parameter recovery; --查看归档空间大小 增加表空间大小（磁盘空间足够的话） alter system set db_recovery_file_dest_size=250G; --请归档空间增大到250G 删除过期文件 export ORACLE_SID=****** rman target / crosscheck archivelog all; //查看可以所有的归档文件 delete expired archivelog all; //清空过期的归档文件 delete force noprompt ARCHIVELOG ALL COMPLETED BEFORE &#39;trunc(SYSDATE)-90&#39;; //清除90天前的归档文件 quit </description>
     </item>
     
@@ -1745,6 +1745,15 @@ varchar(10) 和varchar(100) 差别有多大？varchar(1000)呢? TEXT 呢?
 1组(space)=256区, 256*1M=256M
 每个page都有个编号，整型最大 2^32 x 16k = 64T （单表大小上限）
 下面是分析.idb文件的脚本，执行结果截图 </description>
+    </item>
+    
+    <item>
+      <title>Oracle新建A用户默认访问B用户的表和视图</title>
+      <link>/oracle/oracle%E6%96%B0%E5%BB%BAa%E7%94%A8%E6%88%B7%E9%BB%98%E8%AE%A4%E8%AE%BF%E9%97%AEb%E7%94%A8%E6%88%B7%E7%9A%84%E8%A1%A8%E5%92%8C%E8%A7%86%E5%9B%BE/</link>
+      <pubDate>Mon, 03 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E6%96%B0%E5%BB%BAa%E7%94%A8%E6%88%B7%E9%BB%98%E8%AE%A4%E8%AE%BF%E9%97%AEb%E7%94%A8%E6%88%B7%E7%9A%84%E8%A1%A8%E5%92%8C%E8%A7%86%E5%9B%BE/</guid>
+      <description>原因  在oracle 中schema与用户是一一对应的关系 A用户默认访问的是Aschema下的表 业务需求建立用户A可以查询B用户建立的表；会报错：表和视图不存在 以下是解决方法  方案一：改写SQL  A用户查询时带上B用户的schema  select * from A.table 方案二：手动指定current_schema  临时修改A用户的schema，执行下面SQL事件  alter session set current_schema=B; select * from table; 方案三：触发器  增加A用户的登录trigger  create or replace trigger {triggername} after logon on A.schema begin execute immediate &#39;alter session set current_schema=B&#39;; 方案四：增加同义词  增加A用户的同义词  # 用管理账号执行 grant create synonym to A # 用A账号执行 CREATE SYNONYM TEST FOR B.TEST; .... #把所有的表和视图都加上 总结  方法1.</description>
     </item>
     
     <item>
