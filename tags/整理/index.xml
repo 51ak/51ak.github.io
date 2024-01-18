@@ -169,6 +169,20 @@ rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org rpm -Uvh http://www.e
     </item>
     
     <item>
+      <title>SQLServer索引相关的DMV</title>
+      <link>/sqlserver/sqlserver%E7%B4%A2%E5%BC%95%E7%9B%B8%E5%85%B3%E7%9A%84dmv/</link>
+      <pubDate>Tue, 04 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/sqlserver/sqlserver%E7%B4%A2%E5%BC%95%E7%9B%B8%E5%85%B3%E7%9A%84dmv/</guid>
+      <description>动态管理视图：   sys.dm_db_missing_index_details –返回关于缺失索引的详细信息。
+  sys.dm_db_missing_index_group_stats - 返回缺失索引组的摘要信息
+  sys.dm_db_missing_index_groups – 返回一个具体组的缺失索引的信息。
+  sys.dm_db_missing_index_columns(index_handle) – 返回在一个索引中缺失的数据库表列的信息。这是一个函数，它要求传递index_handle。
+  和大多数动态管理视图的跟踪统计数据一样，当SQL Server实例重启，这些数据被完全清除时，
+  　1.被大量更新，却很少被使用的索引 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED SELECT DB_NAME() AS DatabaseName , SCHEMA_NAME(o.Schema_ID) AS SchemaName , OBJECT_NAME(s.[object_id]) AS TableName , i.name AS IndexName , s.user_updates , s.system_seeks + s.system_scans + s.system_lookups AS [System usage] INTO #TempUnusedIndexes FROM sys.dm_db_index_usage_stats s INNER JOIN sys.indexes i ON s.</description>
+    </item>
+    
+    <item>
       <title>Oracle新建A用户默认访问B用户的表和视图</title>
       <link>/oracle/oracle%E6%96%B0%E5%BB%BAa%E7%94%A8%E6%88%B7%E9%BB%98%E8%AE%A4%E8%AE%BF%E9%97%AEb%E7%94%A8%E6%88%B7%E7%9A%84%E8%A1%A8%E5%92%8C%E8%A7%86%E5%9B%BE/</link>
       <pubDate>Mon, 03 Feb 2020 00:00:00 +0000</pubDate>

@@ -1173,6 +1173,31 @@
   </url>
   
   <url>
+    <loc>/categories/sqlserver/</loc>
+    <lastmod>2020-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/sqlserver/</loc>
+    <lastmod>2020-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/windowscluter/</loc>
+    <lastmod>2020-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/sqlserver/sqlserver%E8%81%94%E6%9C%BA%E9%87%8D%E5%BB%BA%E6%88%96%E7%BB%84%E7%BB%87%E7%B4%A2%E5%BC%95/</loc>
+    <lastmod>2020-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/sqlserver/sqlserver%E7%B4%A2%E5%BC%95%E7%9B%B8%E5%85%B3%E7%9A%84dmv/</loc>
+    <lastmod>2020-02-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/oracle/oracle%E6%96%B0%E5%BB%BAa%E7%94%A8%E6%88%B7%E9%BB%98%E8%AE%A4%E8%AE%BF%E9%97%AEb%E7%94%A8%E6%88%B7%E7%9A%84%E8%A1%A8%E5%92%8C%E8%A7%86%E5%9B%BE/</loc>
     <lastmod>2020-02-03T00:00:00+00:00</lastmod>
   </url>
@@ -1183,22 +1208,7 @@
   </url>
   
   <url>
-    <loc>/categories/sqlserver/</loc>
-    <lastmod>2020-01-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/sqlserver/</loc>
-    <lastmod>2020-01-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/sqlserver/windowscluster%E9%9B%86%E7%BE%A4%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/</loc>
-    <lastmod>2020-01-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/windowscluter/</loc>
     <lastmod>2020-01-12T00:00:00+00:00</lastmod>
   </url>
   
