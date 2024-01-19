@@ -169,6 +169,15 @@ rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org rpm -Uvh http://www.e
     </item>
     
     <item>
+      <title>SQLServer清除执行计划缓存</title>
+      <link>/sqlserver/sqlserver%E6%B8%85%E9%99%A4%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E7%BC%93%E5%AD%98/</link>
+      <pubDate>Wed, 05 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/sqlserver/sqlserver%E6%B8%85%E9%99%A4%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E7%BC%93%E5%AD%98/</guid>
+      <description>清除执行计划缓存  DBCC FREEPROCCACHE --清除执行计划缓存 查看执行缓存 	select * from sys.dm_exec_cached_plans 如何利用好执行计划缓存    使用存储过程，或者 sp_executesql 的方式调用会被重复使用的语句，而不要直接用 ad-hoc 语句或者 dynamic SQL 。    在语句里引用对象（表、视图、存储过程等），到带上它的 schema 名字，而不光是对象自己的名字。    将 数据库 Parameterization 属性设置成 Forced   这个属性是开启数据库强制参数化。也就是说，对于在这个数据库下运行的大部分语句，SQL Server 都会先参数化，再运行。如果应用经常用 adhoc 的方式调用一样的语句，强制参数化可能会有所帮助    统计信息更新   统计信息手工或者自动更新后，对和它有关的执行计划都不再能重用，而会产生重编译。    Create Procedure &amp;hellip; with Recompile 选项 和 Exce &amp;hellip; with Recomplie 选项 在重建或者调用存储过程的时候使用 &amp;ldquo;with Recomplie&amp;rdquo;，会强制 Sql Server 在调用这个存储过程的时候，永远都要先编译，再运行。    用户使用了 sp_recomplie    用户在调用语句的时候，使用了 &amp;ldquo;Keep Plan&amp;rdquo; 或者 &amp;ldquo;KeepFixed Plan&amp;rdquo; 这样的查询提示    定时任务  注意对一些复杂的存储过程，定时清理一下（凌晨）  </description>
+    </item>
+    
+    <item>
       <title>SQLServer索引相关的DMV</title>
       <link>/sqlserver/sqlserver%E7%B4%A2%E5%BC%95%E7%9B%B8%E5%85%B3%E7%9A%84dmv/</link>
       <pubDate>Tue, 04 Feb 2020 00:00:00 +0000</pubDate>
@@ -189,6 +198,24 @@ rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org rpm -Uvh http://www.e
       
       <guid>/oracle/oracle%E6%96%B0%E5%BB%BAa%E7%94%A8%E6%88%B7%E9%BB%98%E8%AE%A4%E8%AE%BF%E9%97%AEb%E7%94%A8%E6%88%B7%E7%9A%84%E8%A1%A8%E5%92%8C%E8%A7%86%E5%9B%BE/</guid>
       <description>原因  在oracle 中schema与用户是一一对应的关系 A用户默认访问的是Aschema下的表 业务需求建立用户A可以查询B用户建立的表；会报错：表和视图不存在 以下是解决方法  方案一：改写SQL  A用户查询时带上B用户的schema  select * from A.table 方案二：手动指定current_schema  临时修改A用户的schema，执行下面SQL事件  alter session set current_schema=B; select * from table; 方案三：触发器  增加A用户的登录trigger  create or replace trigger {triggername} after logon on A.schema begin execute immediate &#39;alter session set current_schema=B&#39;; 方案四：增加同义词  增加A用户的同义词  # 用管理账号执行 grant create synonym to A # 用A账号执行 CREATE SYNONYM TEST FOR B.TEST; .... #把所有的表和视图都加上 总结  方法1.</description>
+    </item>
+    
+    <item>
+      <title>SQLServer的资源等待</title>
+      <link>/sqlserver/sqlserver%E7%9A%84%E8%B5%84%E6%BA%90%E7%AD%89%E5%BE%85/</link>
+      <pubDate>Mon, 03 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/sqlserver/sqlserver%E7%9A%84%E8%B5%84%E6%BA%90%E7%AD%89%E5%BE%85/</guid>
+      <description>清除执行计划缓存 DBCC SQLPERF (&#39;sys.dm_os_wait_stats&#39;, CLEAR);  开始重新统计  统计SQL  select a.[RowNum] ,a.[WaitType] ,a.[Wait_S]-b.[Wait_S] as [Wait_S] ,a.[Resource_S]-b.[Resource_S] as [Resource_S] ,a.[Signal_S]-b.[Signal_S] as [Signal_S] ,a.[WaitCount]-b.[WaitCount] as [WaitCount] ,a.[Percentage]-b.[Percentage] as [Percentage] ,a.[AvgWait_S]-b.[AvgWait_S] as [AvgWait_S] ,a.[AvgRes_S]-b.[AvgRes_S] as [AvgRes_S] ,a.[AvgSig_S]-b.[AvgSig_S] as [AvgSig_S] from ( SELECT [RowNum] ,[WaitType] ,[Wait_S] ,[Resource_S] ,[Signal_S] ,[WaitCount] ,[Percentage] ,[AvgWait_S] ,[AvgRes_S] ,[AvgSig_S] FROM [system].[dbo].[dba_WaitType_log] where addtime=&#39;2015-03-26 17:04:04.683&#39; ) a left join ( SELECT [RowNum] ,[WaitType] ,[Wait_S] ,[Resource_S] ,[Signal_S] ,[WaitCount] ,[Percentage] ,[AvgWait_S] ,[AvgRes_S] ,[AvgSig_S] FROM [system].</description>
+    </item>
+    
+    <item>
+      <title>SQLServer移动ALWASYON副本文件的方法和脚本</title>
+      <link>/sqlserver/sqlserver%E7%A7%BB%E5%8A%A8alwasyon%E5%89%AF%E6%9C%AC%E6%96%87%E4%BB%B6%E7%9A%84%E6%96%B9%E6%B3%95%E5%92%8C%E8%84%9A%E6%9C%AC/</link>
+      <pubDate>Sun, 02 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/sqlserver/sqlserver%E7%A7%BB%E5%8A%A8alwasyon%E5%89%AF%E6%9C%AC%E6%96%87%E4%BB%B6%E7%9A%84%E6%96%B9%E6%B3%95%E5%92%8C%E8%84%9A%E6%9C%AC/</guid>
+      <description>1.暂停ALWAYSON数据传送 ALTER DATABASE [db1] SET HADR SUSPEND; ALTER DATABASE [db2] SET HADR SUSPEND; ALTER DATABASE [db3] SET HADR SUSPEND; 2.生成脚本：  SELECT database_id, (sum(size)*8/1024/1024) as usedGb FROM sys.master_files WHERE database_id in ( select database_id from sys.databases where NAME NOT IN (&#39;....&#39;) ) AND physical_name LIKE &#39;E:\%&#39; group by database_id order by 2 desc 3.生成脚本2 SELECT name , physical_name AS CurrentLocation , state_desc,(size*8/1024/1024) as usedGb ,&#39;ALTER DATABASE [&#39;+DB_NAME(database_id)+&#39;] MODIFY FILE ( NAME = &#39;+name+&#39; , FILENAME = &#39;&#39;&#39;+REPLACE(physical_name,&#39;D:\&#39;,&#39;F:\&#39;)+&#39;&#39;&#39; )&#39; FROM sys.</description>
     </item>
     
   </channel>
