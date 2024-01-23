@@ -6,7 +6,17 @@
     <description>Recent content in 原创 on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 18 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%8E%9F%E5%88%9B/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 23 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%8E%9F%E5%88%9B/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>redis的内存报警OOM command not allowed when used memory&gt;maxmemory</title>
+      <link>/dba/redis%E7%9A%84%E5%86%85%E5%AD%98%E6%8A%A5%E8%AD%A6oomcommandnotallowedwhenusedmemorymaxmemory/</link>
+      <pubDate>Tue, 23 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/redis%E7%9A%84%E5%86%85%E5%AD%98%E6%8A%A5%E8%AD%A6oomcommandnotallowedwhenusedmemorymaxmemory/</guid>
+      <description> 非核心业务的一次小故障，未造成用户感知到的业务影响，记录如下
+ 参与者  DEV1,DEV2 DBA1,DBA2 3主3从的RedisCluster集群：1.10,1.11,1.12,1.20,1.21,1.22  故障起因  DEV1想排查线上Redis是否有对指定的key有访问 11:45 DEV1找到DBA1协助排查 11:50 DBA1在1.11实例上开启monitor进程，监控Redis写入 11:55 monitor进程启动5分钟后，1.11实例的内存占用从2G涨到10G 触发该节点的内存占满，引发故障(该节点的新写入报错，其他节点正常读写) 12:05 DBA1在1.11实例上停止monitor进程，1.11实例的内存占用从10G回退到2G 12:05 Redis集群自动恢复正常   故障发现和处理  12:20 DEV2收到报警 12:23 DEV2找到DBA2反馈程序报错Caused by: io.lettuce.core.RedisCommandExecutionException: OOM command not allowed when used memory &amp;gt; &#39;maxmemory&#39; 12:25 DBA2上线检查问题，在节点1.10上查看内存使用率是2G/10G 正常 12:28 DBA2检查该集群的1.10，1.11,1.12三个节点内存都是2G/10G 没发现异常。 12:30 查不到问题，修改该集群的所有节点最大内存从10G 改到12G 12:30 DEV2重启应用，发现恢复。 12:40 DBA2检查Redis应用，发现set,get的命令从每秒的6000次/秒降到500次/秒，认为业务没有恢复，建议继续排查 12:45 DBA1，DEV1参与排查，DEV2发现有个status任务没有重启成功 12:46 DEV2重启status任务，1分钟后，Redis监控指标恢复正常，故障完成处理 13:12 回溯整个过程，确认是11:50的Monitor进程引起的内存占用异常，原因定位 13:25 沟通确认Monitor进和不可以长期开启的规范。故障完成处理和总结  总结  DBA协助研发排查问题时，开启Monitor进程时间过长，引起一个节点的内存占满，继而引起研发的进程挂掉 非核心业务，没有影响到用户和交易，处理过程中现象比较明显，处理难度低，监控还是不够周全 补充：考虑换LRU策略  </description>
+    </item>
+    
     <item>
       <title>利用OracleGoldenGate(ogg) 从Oracle同步数据到MySQL</title>
       <link>/oracle/%E5%88%A9%E7%94%A8oraclegoldengateogg-%E4%BB%8Eoracle%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE%E5%88%B0mysql/</link>
@@ -1292,16 +1302,6 @@ varchar(10) 和varchar(100) 差别有多大？varchar(1000)呢? TEXT 呢?
 1组(space)=256区, 256*1M=256M
 每个page都有个编号，整型最大 2^32 x 16k = 64T （单表大小上限）
 下面是分析.idb文件的脚本，执行结果截图 </description>
-    </item>
-    
-    <item>
-      <title>联机重建或组织索引</title>
-      <link>/sqlserver/sqlserver%E8%81%94%E6%9C%BA%E9%87%8D%E5%BB%BA%E6%88%96%E7%BB%84%E7%BB%87%E7%B4%A2%E5%BC%95/</link>
-      <pubDate>Fri, 21 Feb 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/sqlserver/sqlserver%E8%81%94%E6%9C%BA%E9%87%8D%E5%BB%BA%E6%88%96%E7%BB%84%E7%BB%87%E7%B4%A2%E5%BC%95/</guid>
-      <description>故障描述  WinSvr2008R2/Windows 故障转移集群 意外中断1分钟左右后自行恢复 导致SQLServer alwayson集群 中断访问，连接卡住无法提供访问  错误日志 从日志上来看，当时应该在这个时段节点dboopawo91和dboopawo92两台服务器发生了网络错误，我们看到在日志中显示，两台服务器互相联不通对方了，所以在他们的日志中显示，由于这些机器都无法联通，所以他们都被从群集中踢出。
------------------------------------------------------------------------------- 节点dboopawo91报由于网络问题联系上不dboopawo92。 --------------------- 11/06/2015 12:13:02 AM Critical dboopawo91.server.dboop.com 1135 Microsoft-Windows-FailoverClustering Node Mgr NT AUTHORITY\SYSTEM Cluster node &#39;dboopawo92&#39; was removed from the active failover cluster membership. The Cluster service on this node may have stopped. This could also be due to the node having lost communication with other active nodes in the failover cluster. Run the Validate a Configuration wizard to check your network configuration.</description>
     </item>
     
     <item>

@@ -6,7 +6,25 @@
     <description>Recent content in Categories on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 18 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 23 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>redis</title>
+      <link>/categories/redis/</link>
+      <pubDate>Tue, 23 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/redis/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>故障处理</title>
+      <link>/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/</link>
+      <pubDate>Tue, 23 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>ogg</title>
       <link>/categories/ogg/</link>
@@ -40,15 +58,6 @@
       <pubDate>Tue, 02 Jan 2024 00:00:00 +0000</pubDate>
       
       <guid>/categories/mysql/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>redis</title>
-      <link>/categories/redis/</link>
-      <pubDate>Tue, 02 Jan 2024 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/redis/</guid>
       <description></description>
     </item>
     
@@ -112,15 +121,6 @@
       <pubDate>Tue, 05 Dec 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>故障处理</title>
-      <link>/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/</link>
-      <pubDate>Mon, 27 Nov 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/</guid>
       <description></description>
     </item>
     
@@ -577,7 +577,7 @@
     <item>
       <title>windowscluter</title>
       <link>/categories/windowscluter/</link>
-      <pubDate>Fri, 21 Feb 2020 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 12 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/categories/windowscluter/</guid>
       <description></description>

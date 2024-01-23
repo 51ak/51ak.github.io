@@ -169,6 +169,15 @@ rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org rpm -Uvh http://www.e
     </item>
     
     <item>
+      <title>SQLServer联机重建或组织索引</title>
+      <link>/sqlserver/sqlserver%E8%81%94%E6%9C%BA%E9%87%8D%E5%BB%BA%E6%88%96%E7%BB%84%E7%BB%87%E7%B4%A2%E5%BC%95/</link>
+      <pubDate>Fri, 21 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/sqlserver/sqlserver%E8%81%94%E6%9C%BA%E9%87%8D%E5%BB%BA%E6%88%96%E7%BB%84%E7%BB%87%E7%B4%A2%E5%BC%95/</guid>
+      <description>索引维护 联机重建或组织索引 CREATE procedure [pr_auto_indexdefrag_online] as begin set nocount on declare @Db_name nvarchar(256) ,@SchemaName nvarchar(256) ,@TableName Nvarchar(256) ,@IndexName Nvarchar(512) ,@PctFrag decimal ,@Defrag nvarchar(max) if exists(select 1 from sys.objects where object_id =object_id(N&#39;#tmp&#39;)) Drop table #tmp; if exists(select 1 from sys.objects where object_id =object_id(N&#39;#tmp_sub&#39;)) Drop table #tmp_sub; create table #tmp_sub(database_id int,dbname nvarchar(32),tablename nvarchar(128),index_type_desc nvarchar(128)) create table #tmp(database_id int,dbname nvarchar(256),tablename nvarchar(256),indexname nvarchar(256),type_desc nvarchar(128),schemaname nvarchar(256),avgfragment decimal) ------找出 text、ntext、image、varchar(max)、nvarchar(max)、varbinary(max)、xml 或大型 CLR 类型的列 exec sp_MSforeachdb &#39;insert into #tmp_sub(database_id,dbname,tablename,index_type_desc) select distinct c.</description>
+    </item>
+    
+    <item>
       <title>SQLServer清除执行计划缓存</title>
       <link>/sqlserver/sqlserver%E6%B8%85%E9%99%A4%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E7%BC%93%E5%AD%98/</link>
       <pubDate>Wed, 05 Feb 2020 00:00:00 +0000</pubDate>

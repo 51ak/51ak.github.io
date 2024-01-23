@@ -6,7 +6,17 @@
     <description>Recent content in redis on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 02 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/redis/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 23 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/redis/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>redis的内存报警OOM command not allowed when used memory&gt;maxmemory</title>
+      <link>/dba/redis%E7%9A%84%E5%86%85%E5%AD%98%E6%8A%A5%E8%AD%A6oomcommandnotallowedwhenusedmemorymaxmemory/</link>
+      <pubDate>Tue, 23 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/redis%E7%9A%84%E5%86%85%E5%AD%98%E6%8A%A5%E8%AD%A6oomcommandnotallowedwhenusedmemorymaxmemory/</guid>
+      <description> 非核心业务的一次小故障，未造成用户感知到的业务影响，记录如下
+ 参与者  DEV1,DEV2 DBA1,DBA2 3主3从的RedisCluster集群：1.10,1.11,1.12,1.20,1.21,1.22  故障起因  DEV1想排查线上Redis是否有对指定的key有访问 11:45 DEV1找到DBA1协助排查 11:50 DBA1在1.11实例上开启monitor进程，监控Redis写入 11:55 monitor进程启动5分钟后，1.11实例的内存占用从2G涨到10G 触发该节点的内存占满，引发故障(该节点的新写入报错，其他节点正常读写) 12:05 DBA1在1.11实例上停止monitor进程，1.11实例的内存占用从10G回退到2G 12:05 Redis集群自动恢复正常   故障发现和处理  12:20 DEV2收到报警 12:23 DEV2找到DBA2反馈程序报错Caused by: io.lettuce.core.RedisCommandExecutionException: OOM command not allowed when used memory &amp;gt; &#39;maxmemory&#39; 12:25 DBA2上线检查问题，在节点1.10上查看内存使用率是2G/10G 正常 12:28 DBA2检查该集群的1.10，1.11,1.12三个节点内存都是2G/10G 没发现异常。 12:30 查不到问题，修改该集群的所有节点最大内存从10G 改到12G 12:30 DEV2重启应用，发现恢复。 12:40 DBA2检查Redis应用，发现set,get的命令从每秒的6000次/秒降到500次/秒，认为业务没有恢复，建议继续排查 12:45 DBA1，DEV1参与排查，DEV2发现有个status任务没有重启成功 12:46 DEV2重启status任务，1分钟后，Redis监控指标恢复正常，故障完成处理 13:12 回溯整个过程，确认是11:50的Monitor进程引起的内存占用异常，原因定位 13:25 沟通确认Monitor进和不可以长期开启的规范。故障完成处理和总结  总结  DBA协助研发排查问题时，开启Monitor进程时间过长，引起一个节点的内存占满，继而引起研发的进程挂掉 非核心业务，没有影响到用户和交易，处理过程中现象比较明显，处理难度低，监控还是不够周全 补充：考虑换LRU策略  </description>
+    </item>
+    
     <item>
       <title>8种常用于数据库的数据结构</title>
       <link>/dba/8%E7%A7%8D%E5%B8%B8%E7%94%A8%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</link>
