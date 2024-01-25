@@ -6,7 +6,25 @@
     <description>Recent content in Categories on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 23 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 25 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>mysql</title>
+      <link>/categories/mysql/</link>
+      <pubDate>Thu, 25 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/mysql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mysql8.0</title>
+      <link>/categories/mysql8.0/</link>
+      <pubDate>Thu, 25 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/mysql8.0/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>redis</title>
       <link>/categories/redis/</link>
@@ -49,15 +67,6 @@
       <pubDate>Fri, 05 Jan 2024 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E8%A7%82%E7%82%B9/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>mysql</title>
-      <link>/categories/mysql/</link>
-      <pubDate>Tue, 02 Jan 2024 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/mysql/</guid>
       <description></description>
     </item>
     
@@ -238,15 +247,6 @@
       <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
       
       <guid>/categories/postgresql/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>mysql8.0</title>
-      <link>/categories/mysql8.0/</link>
-      <pubDate>Thu, 20 Apr 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/mysql8.0/</guid>
       <description></description>
     </item>
     
