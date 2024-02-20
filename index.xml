@@ -6,7 +6,16 @@
     <description>Recent content on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 09 Feb 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 20 Feb 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Sora来袭：OpenAI公司是否又开启文本生成视频新篇章？</title>
+      <link>/book/sora%E6%9D%A5%E8%A2%ADopenai%E5%85%AC%E5%8F%B8%E6%98%AF%E5%90%A6%E5%8F%88%E5%BC%80%E5%90%AF%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90%E8%A7%86%E9%A2%91%E6%96%B0%E7%AF%87%E7%AB%A0/</link>
+      <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/book/sora%E6%9D%A5%E8%A2%ADopenai%E5%85%AC%E5%8F%B8%E6%98%AF%E5%90%A6%E5%8F%88%E5%BC%80%E5%90%AF%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90%E8%A7%86%E9%A2%91%E6%96%B0%E7%AF%87%E7%AB%A0/</guid>
+      <description>关于Sora  2024年2月15日OpenAI公司在推上连续发了几个Sora文生图视频，引起轰动 OpenAI并未单纯将其视为视频模型，而是作为“世界模拟器” Sora继承了DALL-E 3的画质和遵循指令能力 可以根据用户的文本提示创建逼真的视频 可以深度模拟真实物理世界，能生成具有多个角色、包含特定运动的复杂场景 能理解用户在提示中提出的要求，还了解这些物体在物理世界中的存在方式。  Sora的团队  Sora核心团队有15人 Sora团队的Leader是Aditya Ramesh：他也是DALLE、DALLE2、DALLE3的主要作者 Sora的核心作者是Bill Peebles和Tim brooks Bill Peebles 在伯克利人工智能研究所完成了博士学位，导师是Alyosha Efros。在此之前，他在麻省理工学院攻读本科，指导老师是Antonio Torralba。他曾在FAIR、Adobe研究院和NVIDIA实习。 Tim brooks 在伯克利人工智能研究所获得了博士学位，导师是Alyosha Efros，他是InstructPix2Pix的作者。在此之前他曾在谷歌工作，参与Pixel手机相机的研发，在NVIDIA从事视频生成模型的研究。   Bill Peebles的说法是“每天基本不睡觉，高强度工作了一年。  如何试用Sora  答案是：现在还不行 到目前为止(北京时间 2023-02-20 18:20) Sora并没有对外开放 目前只有OpenAI内部员工,一批受邀请的视觉艺术家、设计师和电影制作人获得了Sora访问权限，他们也已开始在社交平台不断晒出使用Sora生成的新作品 未来开放时间不确定，但是首批可使用的用户数量不会太多，且肯定不会对中国大陆开放使用 国内用户要新手体验sora的功能，可能还是很还远  Sora的竞争对手    AI 公司 AI视频产品 发布日期      英伟达 PYoCo 2023.05    Runway Gen-2 2023.06    Pika Labs Pika 1.</description>
+    </item>
+    
     <item>
       <title>2023年终总结:岁末年终又一年</title>
       <link>/book/2023%E5%B9%B4%E6%80%BB%E7%BB%93%E5%B2%81%E6%9C%AB%E5%B9%B4%E7%BB%88%E5%8F%88%E4%B8%80%E5%B9%B4/</link>
