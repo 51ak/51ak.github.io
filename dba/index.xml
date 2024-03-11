@@ -6,7 +6,16 @@
     <description>Recent content in Dbas on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 23 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="/dba/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 11 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="/dba/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL和Oracle数据库的一些审计要求</title>
+      <link>/dba/mysql%E5%92%8Coracle%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%B8%80%E4%BA%9B%E5%AE%A1%E8%AE%A1%E8%A6%81%E6%B1%82/</link>
+      <pubDate>Mon, 11 Mar 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/mysql%E5%92%8Coracle%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%B8%80%E4%BA%9B%E5%AE%A1%E8%AE%A1%E8%A6%81%E6%B1%82/</guid>
+      <description>MySQL的审计要求  密码是否符合复杂度要求，需要包含大小写字母、数字、字符，密码长度是否达到8位以上  show variables like &#39;%validate%&#39;; INSTALL PLUGIN validate_password SONAME &#39;validate_password.so&#39;; set global validate_password_length=12 set global ... show global variables like &#39;%validate%&#39;;  密码是否定期更换，如，密码有效期设置为90天。  set global default_password_lifetime=360;  是否具有登陆失败锁定策略，例如，登陆失败5次锁定10分钟。   INSTALL PLUGIN CONNECTION_CONTROL SONAME &#39;connection_control.so&#39;; INSTALL PLUGIN CONNECTION_CONTROL_FAILED_LOGIN_ATTEMPTS SONAME &#39;connection_control.so&#39;; show global variables like &#39;connection_%&#39; ;  是否设置超时登出功能，例如，30分钟未操作自动登出  show variables like &#39;wait%timeout%&#39; ; Oracle的审计要求 </description>
+    </item>
+    
     <item>
       <title>redis的内存报警OOM command not allowed when used memory&gt;maxmemory</title>
       <link>/dba/redis%E7%9A%84%E5%86%85%E5%AD%98%E6%8A%A5%E8%AD%A6oomcommandnotallowedwhenusedmemorymaxmemory/</link>
