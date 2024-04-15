@@ -6,7 +6,18 @@
     <description>Recent content in 人工智能 on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 20 Feb 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 15 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Ollama的安装和配置</title>
+      <link>/book/ollama%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE/</link>
+      <pubDate>Mon, 15 Apr 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/book/ollama%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE/</guid>
+      <description>为什么要用Ollama  几乎是最方便的本地部署Ai大模型的方式 支持在 Mac、Windows、Linux 上运行 支持CPU,GPU 不用考虑复杂的本地环境 简直是大模型里的docker   Ollam官网的介绍是：Get up and running with large language models, locally.
+ 安装Ollla Mac  一行命令brew install ollama  Linux  一行命令  curl -fsSL https://ollama.com/install.sh | sh  Windows  下载ollama的安装包，下载地址 https://ollama.com/download/OllamaSetup.exe 安装上就即可  启动  ollama serve 启动服务 ollama list 查看本地的模型 ollama run 启动模型  配置Ollama   配置Ollama需要先安装模型，目前支持的模型有：   可以在这个页面查找所有模型：https://ollama.ai/library
+  运行模型 方式1: 命令行  ollama run llama2-chinese 此时会出现一个窗口，输入内容，然后就可以看到模型生成的内容了  方式2: 接口  访问http://localhost:11434/api/v1/models 输入模型名称，例如llama2-chinese  curl http://localhost:11434/api/chat -d &#39;{ &amp;quot;model&amp;quot;: &amp;quot;mistral&amp;quot;, &amp;quot;messages&amp;quot;: [ { &amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: &amp;quot;天空为什么是蓝色？&amp;quot; } ] }&#39;  访问http://localhost:11434/api/v1/generate 输入模型名称，例如llama2-chinese  curl http://localhost:11434/api/generate -d &#39;{ &amp;quot;model&amp;quot;: &amp;quot;llama2&amp;quot;, &amp;quot;prompt&amp;quot;:&amp;quot;天空为什么是蓝色？&amp;quot; }&#39; </description>
+    </item>
+    
     <item>
       <title>Sora来袭：OpenAI公司是否又开启文本生成视频新篇章？</title>
       <link>/book/sora%E6%9D%A5%E8%A2%ADopenai%E5%85%AC%E5%8F%B8%E6%98%AF%E5%90%A6%E5%8F%88%E5%BC%80%E5%90%AF%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90%E8%A7%86%E9%A2%91%E6%96%B0%E7%AF%87%E7%AB%A0/</link>
