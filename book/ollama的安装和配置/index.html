@@ -103,20 +103,54 @@
 <li>ollama run <!-- raw HTML omitted --> 启动模型</li>
 </ul>
 <h2 id="配置ollama">配置Ollama</h2>
+<h3 id="设置服务">设置服务</h3>
 <ul>
-<li>
-<p>配置Ollama需要先安装模型，目前支持的模型有：
-<img src="/img/2022auto/2024-04-15-17-26-05.png" alt="配置Ollama"></p>
-</li>
-<li>
-<p>可以在这个页面查找所有模型：https://ollama.ai/library</p>
-</li>
+<li>vim /etc/systemd/system/ollama.service</li>
+</ul>
+<pre><code>[Unit]
+Description=Ollama Service
+After=network-online.target
+
+[Service]
+Environment=&quot;OLLAMA_HOST=0.0.0.0:11434&quot;
+ExecStart=/usr/local/bin/ollama serve
+
+#User=ollama
+#Group=ollama
+User=root
+Group=root
+Restart=always
+RestartSec=3
+Environment=&quot;PATH=/root/anaconda3/bin:....{这里是你的环境变量}&quot;
+
+[Install]
+WantedBy=default.target
+</code></pre><ul>
+<li>保存后执行</li>
+</ul>
+<pre><code>sudo systemctl daemon-reload
+sudo systemctl enable ollama
+
+systemctl start ollama
+</code></pre><ul>
+<li>可以通过以下命令来查看日志<code>journalctl -u ollama</code></li>
+<li>查看状态 <code>systemctl status ollama</code></li>
+</ul>
+<h3 id="下载模型">下载模型</h3>
+<ul>
+<li>配置Ollama需要先安装模型，目前支持的模型有：
+<img src="/img/2022auto/2024-04-15-17-26-05.png" alt="配置Ollama"></li>
+<li>可以在这个页面查找所有模型：https://ollama.ai/library</li>
 </ul>
 <h2 id="运行模型">运行模型</h2>
 <h3 id="方式1-命令行">方式1: 命令行</h3>
-<ul>
-<li>ollama run llama2-chinese</li>
+<pre><code>ollama run llama2-chinese #meta开源的模型
+ollama run gemma:2b  #google 开源模型；
+ollama run qwen      #阿里开源模型
+</code></pre><ul>
 <li>此时会出现一个窗口，输入内容，然后就可以看到模型生成的内容了</li>
+<li>下载的模型会保存在 ~/.ollama/models/</li>
+<li>模型会自动下载，下载完成后，就可以直接使用</li>
 </ul>
 <h3 id="方式2-接口">方式2: 接口</h3>
 <ul>
