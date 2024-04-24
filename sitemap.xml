@@ -3,12 +3,47 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/book/</loc>
-    <lastmod>2024-04-23T00:00:00+00:00</lastmod>
+    <loc>/categories/</loc>
+    <lastmod>2024-04-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/</loc>
+    <loc>/</loc>
+    <lastmod>2024-04-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/dba/</loc>
+    <lastmod>2024-04-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/dba/</loc>
+    <lastmod>2024-04-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2024-04-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/%E5%8E%9F%E5%88%9B/</loc>
+    <lastmod>2024-04-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/dba/%E5%A6%82%E4%BD%95%E6%8A%8Amysql%E5%92%8Coracle%E9%87%8C%E7%9A%84%E8%A1%A8%E5%90%8C%E6%AD%A5%E5%88%B0%E4%B8%80%E4%B8%AA%E5%8A%A0%E5%AF%86%E5%BA%93%E4%B8%AD/</loc>
+    <lastmod>2024-04-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/</loc>
+    <lastmod>2024-04-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/book/</loc>
     <lastmod>2024-04-23T00:00:00+00:00</lastmod>
   </url>
   
@@ -18,22 +53,7 @@
   </url>
   
   <url>
-    <loc>/</loc>
-    <lastmod>2024-04-23T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2024-04-23T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</loc>
-    <lastmod>2024-04-23T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/%E5%8E%9F%E5%88%9B/</loc>
     <lastmod>2024-04-23T00:00:00+00:00</lastmod>
   </url>
   
@@ -50,16 +70,6 @@
   <url>
     <loc>/book/ollama%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE/</loc>
     <lastmod>2024-04-15T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/dba/</loc>
-    <lastmod>2024-03-11T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/dba/</loc>
-    <lastmod>2024-03-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -214,11 +224,6 @@
   
   <url>
     <loc>/dba/%E5%BF%AB%E9%80%9F%E5%AE%8C%E6%88%90%E4%B8%80%E4%B8%AA%E5%BC%82%E6%9E%84%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5%E5%BC%82%E5%B8%B8%E6%A3%80%E6%9F%A5%E5%8A%9F%E8%83%BD/</loc>
-    <lastmod>2023-12-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/</loc>
     <lastmod>2023-12-05T00:00:00+00:00</lastmod>
   </url>
   
