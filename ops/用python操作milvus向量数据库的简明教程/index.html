@@ -73,7 +73,25 @@
 <p>本文介绍如何使用 Python 操作 Milvus 向量数据库，包括创建集合、插入数据、创建索引和执行搜索。Milvus 是一款专为向量查询与检索设计的开源向量数据库，特别适用于 AI 和机器学习场景。</p>
 </blockquote>
 <h2 id="环境准备">环境准备</h2>
-<h3 id="安装-milvus-客户端">安装 Milvus 客户端</h3>
+<h3 id="安装-milvus服务端">安装 Milvus服务端</h3>
+<ul>
+<li>1.docker 安装</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">wget https://github.com/milvus-io/milvus/releases/download/v2.2.3/milvus-standalone-docker-compose.yml -O docker-compose.yml
+
+docker-compose up -d
+
+</code></pre></div><ul>
+<li>
+<ol start="2">
+<li>脚本 安装</li>
+</ol>
+</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">wget https://raw.githubusercontent.com/milvus-io/milvus/master/scripts/standalone_embed.sh
+bash standalone_embed.sh start
+
+</code></pre></div><h3 id="安装-milvus-客户端">安装 Milvus 客户端</h3>
 <p>在开始之前，请确保已经在环境中安装了 Milvus 客户端库 <code>pymilvus</code>。你可以使用以下命令进行安装：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">pip install pymilvus
 </code></pre></div><h2 id="连接-milvus">连接 Milvus</h2>
