@@ -6,7 +6,20 @@
     <description>Recent content in Ops on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 23 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="/ops/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 24 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="/ops/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>用Python操作Milvus向量数据库的简明教程</title>
+      <link>/ops/%E7%94%A8python%E6%93%8D%E4%BD%9Cmilvus%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/</link>
+      <pubDate>Fri, 24 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E7%94%A8python%E6%93%8D%E4%BD%9Cmilvus%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/</guid>
+      <description>本文介绍如何使用 Python 操作 Milvus 向量数据库，包括创建集合、插入数据、创建索引和执行搜索。Milvus 是一款专为向量查询与检索设计的开源向量数据库，特别适用于 AI 和机器学习场景。
+ 环境准备 安装 Milvus 客户端 在开始之前，请确保已经在环境中安装了 Milvus 客户端库 pymilvus。你可以使用以下命令进行安装：
+pip install pymilvus 连接 Milvus 首先，我们需要连接到本地的 Milvus 服务。假设 Milvus 服务运行在 127.0.0.1，端口为 19530。
+from pymilvus import connections # 连接到 Milvus 服务 connections.connect(alias=&amp;#34;default&amp;#34;, host=&amp;#39;127.0.0.1&amp;#39;, port=&amp;#39;19530&amp;#39;) 定义集合 Schema 接下来，我们需要定义 Milvus 集合的 schema。假设我们要存储的集合包含一个 ID 字段和一个向量字段，向量维度为 128。
+from pymilvus import FieldSchema, CollectionSchema, DataType # 定义字段 fields = [ FieldSchema(name=&amp;#34;id&amp;#34;, dtype=DataType.INT64, is_primary=True, auto_id=True), FieldSchema(name=&amp;#34;vector&amp;#34;, dtype=DataType.FLOAT_VECTOR, dim=128) ] # 定义集合 Schema schema = CollectionSchema(fields, &amp;#34;example collection&amp;#34;) 创建集合 使用定义好的 schema 创建一个名为 example_collection 的集合。</description>
+    </item>
+    
     <item>
       <title>python报错ModuleNotFoundError_No_module_named_lzma</title>
       <link>/ops/python%E6%8A%A5%E9%94%99modulenotfound_no_module_named_lzma/</link>
