@@ -96,24 +96,24 @@
 <ul>
 <li>1.docker 安装</li>
 </ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">wget https://github.com/milvus-io/milvus/releases/download/v2.2.3/milvus-standalone-docker-compose.yml -O docker-compose.yml
+<pre><code>wget https://github.com/milvus-io/milvus/releases/download/v2.2.3/milvus-standalone-docker-compose.yml -O docker-compose.yml
 
 docker-compose up -d
 
-</code></pre></div><ul>
+</code></pre><ul>
 <li>
 <ol start="2">
 <li>脚本 安装</li>
 </ol>
 </li>
 </ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">wget https://raw.githubusercontent.com/milvus-io/milvus/master/scripts/standalone_embed.sh
+<pre><code>wget https://raw.githubusercontent.com/milvus-io/milvus/master/scripts/standalone_embed.sh
 bash standalone_embed.sh start
 
-</code></pre></div><h3 id="安装-milvus-客户端">安装 Milvus 客户端</h3>
+</code></pre><h3 id="安装-milvus-客户端">安装 Milvus 客户端</h3>
 <p>在开始之前，请确保已经在环境中安装了 Milvus 客户端库 <code>pymilvus</code>。你可以使用以下命令进行安装：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">pip install pymilvus
-</code></pre></div><h2 id="连接-milvus">连接 Milvus</h2>
+<pre><code>pip install pymilvus
+</code></pre><h2 id="连接-milvus">连接 Milvus</h2>
 <p>首先，我们需要连接到本地的 Milvus 服务。假设 Milvus 服务运行在 <code>127.0.0.1</code>，端口为 <code>19530</code>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pymilvus <span style="color:#f92672">import</span> connections
 
