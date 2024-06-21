@@ -6,7 +6,25 @@
     <description>Recent content in Categories on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 24 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 21 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>日记</title>
+      <link>/categories/%E6%97%A5%E8%AE%B0/</link>
+      <pubDate>Fri, 21 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E6%97%A5%E8%AE%B0/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>生活</title>
+      <link>/categories/%E7%94%9F%E6%B4%BB/</link>
+      <pubDate>Fri, 21 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E7%94%9F%E6%B4%BB/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>python</title>
       <link>/categories/python/</link>
@@ -58,24 +76,6 @@
       <pubDate>Mon, 11 Mar 2024 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E6%93%8D%E4%BD%9C%E8%A7%84%E8%8C%83/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>日记</title>
-      <link>/categories/%E6%97%A5%E8%AE%B0/</link>
-      <pubDate>Fri, 09 Feb 2024 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/%E6%97%A5%E8%AE%B0/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>生活</title>
-      <link>/categories/%E7%94%9F%E6%B4%BB/</link>
-      <pubDate>Fri, 09 Feb 2024 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/%E7%94%9F%E6%B4%BB/</guid>
       <description></description>
     </item>
     
