@@ -6,7 +6,16 @@
     <description>Recent content in 日记 on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 21 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E6%97%A5%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 03 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E6%97%A5%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AI的电力需求以及国内的电力能源情况</title>
+      <link>/book/%E8%83%BD%E6%BA%90%E4%B8%8Eai/</link>
+      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/book/%E8%83%BD%E6%BA%90%E4%B8%8Eai/</guid>
+      <description>AI的惊人耗电量  当我们说大模型AI的使用成本很贵的时候 一方面其训练和推理的硬件GPU本身很贵，另一方面其消耗的电力也很夸张 这里我们只说AI的耗电量  AI训练阶段耗电量  OpenAI的GPT-3模型一次训练的耗电量高达1287兆瓦时 谷歌于2022年发布的大语言模型PaLM一次训练需要消耗3436兆瓦时的电量 模型越大，训练所需要消耗的电量越多。现在gpt-4o,文心一言4,通义千问这些新的大模型训练用电量会更夸张  AI推理阶段的耗电量  GPT每生成1000个英文单词大约消耗0.125千瓦时的电量 OpenAI需要3,617台英伟达公司的HGX A100服务器（共有28,936个图形处理单元 (GPU)）来支持 ChatGPT，这意味着每天的能源需求为 564 兆瓦时 谷歌搜索中应用生成式AI技术，谷歌每年的耗电量将高达290亿千瓦时，也就是每天约7900万度电  AI耗电的原因及改进方向 AI耗电的原因：GPU运算  以H800 GPU PCIE 服务器整机为例：  CPU耗电约 300W*2， 内存16根耗电约 250W 硬盘6块盘约200W 风扇耗电约150W H800GPU卡耗电约700W*8   合计：最大耗电量约为6800W（90%以上的耗电都是GPU引起的） 这些还不包括机房空调制冷的电力消耗  这样的一台服务器，对OpenAI这样的公司来说，一个机房里需要放几万台  AI耗电的改进方向  随着英伟达的GPU工艺不停的迭代发展 每次英伟达的新品发布会，都会发现新一代的显卡比上一代的能耗是几倍的减少 性能越来越高，单位算力的能耗成倍的减少，这是实大实的在减少能耗 可惜AI的算力要求越来越高，减少的能耗目前赶不上需求的增长 未来很长一段时间AI消耗的能源会越来越多。  国内电力能源现状  来自国家能源局发布的《2023年全国电力工业统计数据》 太阳能和风能装机量正在快速增长    类别 装机容量(万千瓦时) 占比 同比增长     火电 139032 47.</description>
+    </item>
+    
     <item>
       <title>2024年立夏</title>
       <link>/book/2024%E5%B9%B4%E7%AB%8B%E5%A4%8F/</link>
