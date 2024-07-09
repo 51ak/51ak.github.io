@@ -1,0 +1,487 @@
+<HTML><HEAD><TITLE>知识测评_会计学基础</TITLE>
+<SCRIPT 
+language=JavaScript>function closewin() {    window.close(); return;} </SCRIPT>
+
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<STYLE type=text/css>.zi9pt {
+	FONT-SIZE: 9pt
+}
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<SCRIPT language=JavaScript>
+<!--
+      var ftype="知识测评";
+      var cptype="工商管理知识";
+      var cpname="会计学知识";
+//
+function processForm(form) {
+var xf = 0
+if (form.Q01[0].checked) { xf += 0 }
+if (form.Q01[1].checked) { xf += 0 }
+if (form.Q01[2].checked) { xf += 1 }
+if (form.Q01[3].checked) { xf += 0 }
+
+if (form.Q02[0].checked) { xf += 0 }
+if (form.Q02[1].checked) { xf += 0 }
+if (form.Q02[2].checked) { xf += 0 }
+if (form.Q02[3].checked) { xf += 1 }
+
+if (form.Q03[0].checked) { xf += 0 }
+if (form.Q03[1].checked) { xf += 0 }
+if (form.Q03[2].checked) { xf += 0 }
+if (form.Q03[3].checked) { xf += 1 }
+
+if (form.Q04[0].checked) { xf += 0 }
+if (form.Q04[1].checked) { xf += 0 }
+if (form.Q04[2].checked) { xf += 0 }
+if (form.Q04[3].checked) { xf += 1 }
+
+
+if (form.Q05[0].checked) { xf += 0 }
+if (form.Q05[1].checked) { xf += 0 }
+if (form.Q05[2].checked) { xf += 1 }
+if (form.Q05[3].checked) { xf += 0 }
+
+
+if (form.Q06[0].checked) { xf += 0 }
+if (form.Q06[1].checked) { xf += 0 }
+if (form.Q06[2].checked) { xf += 0 }
+if (form.Q06[3].checked) { xf += 1 }
+
+
+if (form.Q07[0].checked) { xf += 0 }
+if (form.Q07[1].checked) { xf += 1 }
+if (form.Q07[2].checked) { xf += 0 }
+if (form.Q07[3].checked) { xf += 0 }
+
+
+if (form.Q08[0].checked) { xf += 0 }
+if (form.Q08[1].checked) { xf += 0 }
+if (form.Q08[2].checked) { xf += 0 }
+if (form.Q08[3].checked) { xf += 1 }
+
+
+if (form.Q09[0].checked) { xf += 0 }
+if (form.Q09[1].checked) { xf += 1 }
+if (form.Q09[2].checked) { xf += 0 }
+if (form.Q09[3].checked) { xf += 0 }
+
+
+if (form.Q10[0].checked) { xf += 0 }
+if (form.Q10[1].checked) { xf += 1 }
+if (form.Q10[2].checked) { xf += 0 }
+if (form.Q10[3].checked) { xf += 0 }
+
+if (form.Q11[0].checked) { xf += 1 }
+if (form.Q11[1].checked) { xf += 0 }
+if (form.Q11[2].checked) { xf += 0 }
+if (form.Q11[3].checked) { xf += 0 }
+
+if (form.Q12[0].checked) { xf += 0 }
+if (form.Q12[1].checked) { xf += 0 }
+if (form.Q12[2].checked) { xf += 0 }
+if (form.Q12[3].checked) { xf += 1 }
+
+if (form.Q13[0].checked) { xf += 0 }
+if (form.Q13[1].checked) { xf += 0 }
+if (form.Q13[2].checked) { xf += 0 }
+if (form.Q13[3].checked) { xf += 1 }
+
+if (form.Q14[0].checked) { xf += 0 }
+if (form.Q14[1].checked) { xf += 0 }
+if (form.Q14[2].checked) { xf += 1 }
+if (form.Q14[3].checked) { xf += 0 }
+
+if (form.Q15[0].checked) { xf += 0 }
+if (form.Q15[1].checked) { xf += 1 }
+if (form.Q15[2].checked) { xf += 0 }
+if (form.Q15[3].checked) { xf += 0 }
+
+if (form.Q16[0].checked) { xf += 0 }
+if (form.Q16[1].checked) { xf += 0 }
+if (form.Q16[2].checked) { xf += 0 }
+if (form.Q16[3].checked) { xf += 1 }
+
+if (form.Q17[0].checked) { xf += 1 }
+if (form.Q17[1].checked) { xf += 0 }
+if (form.Q17[2].checked) { xf += 0 }
+if (form.Q17[3].checked) { xf += 0 }
+
+if (form.Q18[0].checked) { xf += 0 }
+if (form.Q18[1].checked) { xf += 0 }
+if (form.Q18[2].checked) { xf += 1 }
+if (form.Q18[3].checked) { xf += 0 }
+
+if (form.Q19[0].checked) { xf += 0 }
+if (form.Q19[1].checked) { xf += 0 }
+if (form.Q19[2].checked) { xf += 1 }
+if (form.Q19[3].checked) { xf += 0 }
+
+if (form.Q20[0].checked) { xf += 1 }
+if (form.Q20[1].checked) { xf += 0 }
+if (form.Q20[2].checked) { xf += 0 }
+if (form.Q20[3].checked) { xf += 0 }
+
+
+
+result=xf;
+form.score.value=result;
+form.ftype.value=ftype;
+form.cptype.value=cptype;
+form.cpname.value=cpname;
+if (xf>=18)  form.answer.value="你的分数为"+xf+"分（总分20分）,你的会计学知识很扎实。";
+else
+if (xf>=14) form.answer.value="你的分数为"+xf+"分（总分20分）,你的会计学知识较好。";
+else 
+if (xf>=10) form.answer.value="你的分数为"+xf+"分（总分20分）,你的会计学知识为及格水平.";
+else 
+form.answer.value="你的分数为"+xf+"分（总分20分）,很遗憾，你的会计学不及格。";
+return result;}
+function collection(form)
+{
+//if (processForm(form)==0) 
+// alert ("您没有做任何选择!请重新选择!");
+//else { 
+ form.action="/cpxt/collection.asp";
+ form.method="post";
+//form.score.value=processForm(form);
+form.submit();}
+
+// -->
+
+</SCRIPT>
+<TABLE width="770" border=1 
+            align=center cellPadding=0 cellSpacing=0 bordercolor="#000066" class=zi9pt>
+  <TBODY>
+    <TR vAlign=top> 
+      <TD> <P>　 </P>
+        <P align=center><FONT color=#ffffff size=2><B><FONT 
+                  color=#000099 size=3>会计学基础</FONT></B></FONT> </P>
+        <FORM name=hhr>
+          <P>&nbsp;1、下列哪一项不是会计的六要素之一：<BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q01>
+            资本<BR>
+            　 
+            <INPUT type=radio value=2 name=Q01>
+            费用 <BR>
+            　 
+            <INPUT type=radio value=3 name=Q01>
+            现金<BR>
+            　 
+            <INPUT type=radio 
+                  value=4 name=Q01>
+            所有者权益</P>
+          <P>2、权责发生制原则主要强调的是: <BR>
+            　 
+            <INPUT type=radio value=1 name=Q02>
+            财务状况的切实性<BR>
+            　 
+            <INPUT type=radio value=2 name=Q02>
+            经营成果的计算<BR>
+            　 
+            <INPUT type=radio value=3 name=Q02>
+            资产的合理计价<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q02>
+            收入和费用的合理计价 </P>
+          <P>3、现金流量表的现金是指 　<BR>
+            　 
+            <INPUT type=radio value=1 name=Q03>
+            库存现金<BR>
+            　 
+            <INPUT type=radio value=2 name=Q03>
+            库存现金和银行存款<BR>
+            　 
+            <INPUT type=radio value=3 name=Q03>
+            库存现金和有价证券<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q03>
+            库存现金、银行存款和有价证券<BR>
+          </P>
+          <P>4、存货的归属以____为划分标准。　　　 <BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q04>
+            交货地点<BR>
+            　 
+            <INPUT type=radio value=2 name=Q04>
+            交货时间 <BR>
+            　 
+            <INPUT type=radio value=3 name=Q04>
+            存放地点<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q04>
+            所有权</P>
+          <P>5、物价上涨时，能使企业计算出来的净利最大的存货计价方法是: <BR>
+            　 
+            <INPUT type=radio 
+                  value=1 name=Q05>
+            个别计价法<BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q05>
+            加权平均法 <BR>
+            　 
+            <INPUT type=radio value=3 name=Q05>
+            先进先出法<BR>
+            　 
+            <INPUT type=radio value=4 name=Q05>
+            后进先出法<BR>
+          </P>
+          <P>6、应收账款的入账价值，是其　　<BR>
+            　 
+            <INPUT type=radio value=1 name=Q06>
+            市场价值<BR>
+            　 
+            <INPUT type=radio value=2 name=Q06>
+            未来现金流入金额 <BR>
+            　 
+            <INPUT type=radio value=3 name=Q06>
+            本利之和<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q06>
+            票面金额</P>
+          <P>7、3月8日签发的票据，120天到期，则到期日为　<BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q07>
+            7月4日<BR>
+            　 
+            <INPUT type=radio value=2 name=Q07>
+            7月5日<BR>
+            　 
+            <INPUT type=radio value=3 name=Q07>
+            7月6日<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q07>
+            7月7日<BR>
+          </P>
+          <P>8、无论是股票投资还是债券投资，取得时的入账成本应是其<BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q08>
+            估计成本<BR>
+            　 
+            <INPUT type=radio value=2 name=Q08>
+            溢价成本<BR>
+            　 
+            <INPUT type=radio value=3 name=Q08>
+            折价成本<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q08>
+            实际成本<BR>
+          </P>
+          <P>9、企业溢价购入长期债券，原因在于债券的利率（ ）当时的市场利率。<BR>
+            　 
+            <INPUT type=radio 
+                  value=1 name=Q09>
+            高于<BR>
+            　 
+            <INPUT type=radio value=2 name=Q09>
+            低于<BR>
+            　 
+            <INPUT type=radio value=3 name=Q09>
+            等于<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q09>
+            不一定等于</P>
+          <P>10、累计折旧在性质上属于 　<BR>
+            　 
+            <INPUT type=radio value=1 name=Q10>
+            费用<BR>
+            　 
+            <INPUT type=radio value=2 name=Q10>
+            资产的减项<BR>
+            　 
+            <INPUT 
+                  type=radio value=3 name=Q10>
+            负债<BR>
+            　 
+            <INPUT type=radio value=4 
+                  name=Q10>
+            资本<BR>
+            <BR>
+            11、下列各项无形资产中，除企业合并外不得作价入账的是 <BR>
+            　 
+            <INPUT 
+                  type=radio value=1 name=Q11>
+            商誉<BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q11>
+            非专利技术<BR>
+            　 
+            <INPUT type=radio value=3 name=Q11>
+            土地使用权 <BR>
+            　 
+            <INPUT type=radio value=4 name=Q11>
+            著作权</P>
+          <P>12、下列哪一项不是流动负债？<BR>
+            　 
+            <INPUT type=radio value=1 name=Q12>
+            短期借款<BR>
+            　 
+            <INPUT type=radio value=2 name=Q12>
+            应付账款<BR>
+            　 
+            <INPUT 
+                  type=radio value=3 name=Q12>
+            应付票据<BR>
+            　 
+            <INPUT type=radio 
+                  value=4 name=Q12>
+            应付债券<BR>
+            <BR>
+            13、在我国，下列哪一项是应收票据中的票据： <BR>
+            　 
+            <INPUT type=radio value=1 name=Q13>
+            银行本票<BR>
+            　 
+            <INPUT 
+                  type=radio value=2 name=Q13>
+            银行汇票<BR>
+            　 
+            <INPUT type=radio 
+                  value=3 name=Q13>
+            股票<BR>
+            　 
+            <INPUT type=radio value=4 name=Q13>
+            银行承兑汇票<BR>
+            <BR>
+            14、当公司的债券的票面利率与发行时的市场利率相同时，则债券的现值（ ）面值 <BR>
+            　 
+            <INPUT type=radio value=2 name=Q14>
+            大于<BR>
+            　 
+            <INPUT type=radio 
+                  value=3 name=Q14>
+            小于<BR>
+            　 
+            <INPUT type=radio value=4 name=Q14>
+            等于<BR>
+            　 
+            <INPUT type=radio value=4 name=Q14>
+            不可比<BR>
+            <BR>
+            15、下列哪一项不是长期负债？<BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q15>
+            应付债券<BR>
+            　 
+            <INPUT type=radio value=2 name=Q15>
+            应付票据<BR>
+            　 
+            <INPUT type=radio value=3 name=Q15>
+            长期借款<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q15>
+            长期应付款<BR>
+            <BR>
+            16、企业盈余公积不应用于：<BR>
+            　 
+            <INPUT type=radio value=1 name=Q16>
+            增加资本（或股本）<BR>
+            　 
+            <INPUT 
+                  type=radio value=2 name=Q16>
+            弥补亏损<BR>
+            　 
+            <INPUT type=radio 
+                  value=3 name=Q16>
+            用于集体福利设施<BR>
+            　 
+            <INPUT type=radio value=4 
+                  name=Q16>
+            支付罚款</P>
+          <P>17、用于生产产品、构成产品实体的原材料费用，应计入（ ）账户。<BR>
+            　 
+            <INPUT type=radio 
+                  value=1 name=Q17>
+            生产成本<BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q17>
+            制造费用<BR>
+            　 
+            <INPUT type=radio value=3 name=Q17>
+            废品损失<BR>
+            　 
+            <INPUT type=radio value=4 name=Q17>
+            产品销售费用</P>
+          <P>18、产品销售利润＋其他业务利润－管理费用－财务费用＝（　） <BR>
+            　 
+            <INPUT type=radio 
+                  value=1 name=Q18>
+            经营业务利润<BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q18>
+            利润总额<BR>
+            　 
+            <INPUT type=radio value=3 name=Q18>
+            营业利润<BR>
+            　 
+            <INPUT type=radio value=4 name=Q18>
+            净利润 </P>
+          <P>19、下列哪一个会计报表企业无须向外报送：<BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q19>
+            资产负债表<BR>
+            　 
+            <INPUT type=radio value=2 name=Q19>
+            损益表<BR>
+            　 
+            <INPUT type=radio value=3 name=Q19>
+            利润分配表<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q19>
+            现金流量表</P>
+          <P>20、下列哪一项比率是反映企业资本结构的财务比率：<BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q20>
+            资产负债率<BR>
+            　 
+            <INPUT type=radio value=2 name=Q20>
+            销售净利率<BR>
+            　 
+            <INPUT type=radio value=3 name=Q20>
+            流动比率 <BR>
+            　 
+            <INPUT type=radio value=4 name=Q20>
+            存货周转率</P>
+          <P align=center><SPAN 
+                  style="FONT-SIZE: 9pt; LINE-HEIGHT: 140%">
+            <INPUT type=hidden 
+                  name=ftype>
+            <INPUT type=hidden name=cptype>
+            <INPUT type=hidden 
+                  name=cpname>
+            <INPUT type=hidden name=score>
+            <INPUT style="FONT-SIZE: 9pt; FONT-FAMILY: 宋体" onclick=processForm(this.form) type=button value="提交答卷>>测评结果" name=button>
+            <INPUT type=reset value=重新选择 name=B2>
+            <BR>
+            <TEXTAREA style="FONT-SIZE: 9pt; COLOR: blue; FONT-FAMILY: 宋体" name=answer rows=6 cols=70></TEXTAREA>
+            </SPAN></P>
+          <P align=center><A class=mainz 
+                  href="javascript:closewin();"><FONT 
+                  color=#000000>关闭窗口</FONT></A> </P>
+        </FORM></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</BODY></HTML>

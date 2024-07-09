@@ -1,0 +1,240 @@
+<HTML><HEAD><TITLE>素质测评_自我实现需要测评</TITLE>
+<SCRIPT 
+language=JavaScript>function closewin() {    window.close(); return;} </SCRIPT>
+
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<STYLE type=text/css>.zi9pt {
+	FONT-SIZE: 9pt
+}
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<SCRIPT language=JavaScript>
+      var ftype="素质测评";
+      var cptype="职业素质";
+      var cpname="自我实现需要";
+//
+function processForm(form){
+var xf=0;
+if (form.c1[0].checked==1) xf+=1;
+if (form.c1[1].checked==1) xf+=2;
+if (form.c1[2].checked==1) xf+=3;
+if (form.c1[3].checked==1) xf+=4;
+if (form.c1[4].checked==1) xf+=5;
+if (form.c1[5].checked==1) xf+=6;
+if (form.c1[6].checked==1) xf+=7;
+
+if (form.c2[0].checked==1) xf+=1;
+if (form.c2[1].checked==1) xf+=2;
+if (form.c2[2].checked==1) xf+=3;
+if (form.c2[3].checked==1) xf+=4;
+if (form.c2[4].checked==1) xf+=5;
+if (form.c2[5].checked==1) xf+=6;
+if (form.c2[6].checked==1) xf+=7;
+
+if (form.c3[0].checked==1) xf+=1;
+if (form.c3[1].checked==1) xf+=2;
+if (form.c3[2].checked==1) xf+=3;
+if (form.c3[3].checked==1) xf+=4;
+if (form.c3[4].checked==1) xf+=5;
+if (form.c3[5].checked==1) xf+=6;
+if (form.c3[6].checked==1) xf+=7;
+
+if (form.c4[0].checked==1) xf+=1;
+if (form.c4[1].checked==1) xf+=2;
+if (form.c4[2].checked==1) xf+=3;
+if (form.c4[3].checked==1) xf+=4;
+if (form.c4[4].checked==1) xf+=5;
+if (form.c4[5].checked==1) xf+=6;
+if (form.c4[6].checked==1) xf+=7;
+
+if (form.c5[0].checked==1) xf+=1;
+if (form.c5[1].checked==1) xf+=2;
+if (form.c5[2].checked==1) xf+=3;
+if (form.c5[3].checked==1) xf+=4;
+if (form.c5[4].checked==1) xf+=5;
+if (form.c5[5].checked==1) xf+=6;
+if (form.c5[6].checked==1) xf+=7;
+
+if (form.c6[0].checked==1) xf+=1;
+if (form.c6[1].checked==1) xf+=2;
+if (form.c6[2].checked==1) xf+=3;
+if (form.c6[3].checked==1) xf+=4;
+if (form.c6[4].checked==1) xf+=5;
+if (form.c6[5].checked==1) xf+=6;
+if (form.c6[6].checked==1) xf+=7;
+
+result=xf;
+form.score.value=result;
+form.ftype.value=ftype;
+form.cptype.value=cptype;
+form.cpname.value=cpname;
+
+if (xf<6)
+form.answer.value="你没有选择任何项或没有做完，请重新选择！"
+else
+if (xf>=27)
+form.answer.value="你的分数为"+xf+"分,您的自我实现需要较高。一个人的需求层次越高，他就越重视选择职业是否能符合个人的发展，对职业期望往往也越高。建议选择那些最能使你发挥潜能的工作，以实现你的自我价值。";
+else
+if (xf>=23)
+form.answer.value="你的分数为"+xf+"分,您的自我实现需要中等。一个人的需求层次越高，他就越重视选择职业是否能符合个人的发展，对职业期望往往也越高。建议选择那些最能使你发挥潜能的工作，以实现你的自我价值。";
+else
+form.answer.value="你的分数为"+xf+"分,您的自我实现需要较低。一个人的需求层次越高，他就越重视选择职业是否能符合个人的发展，对职业期望往往也越高。建议选择那些最能使你发挥潜能的工作，以实现你的自我价值。";
+return result;}
+function collection(form)
+{
+if (processForm(form)==0) 
+ alert ("您没有做任何选择!请重新选择!");
+else
+{ 
+ form.action="/cpxt/collection.asp";
+ form.method="post";
+//form.score.value=processForm(form);
+form.submit();}
+}
+// -->
+
+</SCRIPT>
+<TABLE width="770" border=1 
+            align=center cellPadding=0 cellSpacing=0 bordercolor="#000066" class=zi9pt>
+  <TBODY>
+    <TR vAlign=top> 
+      <TD> <P>　 </P>
+        <P align=center><FONT color=#ffffff size=2><B><FONT 
+                  color=#000099 size=3>自我实现需要测评</FONT></B></FONT></P>
+        <FORM name=hhr>
+          <P>�� 
+          <P><FONT 
+                  color=#0000ff>&nbsp;&nbsp;&nbsp;&nbsp;</FONT>著名心理学家马斯洛的需求层次理论指出，一个人由低到高有五个方面的需要：基本生存需要，安全需要，归属和爱的需要，自尊的需要和自我实现的需要。这5种需要在层次上先后顺序，只有当较低层次的需要得到一定程度的满足后，更高一层次的需要才会成为个体关注的焦点。<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp;本测评主要测试你的自我实现需要。只有胸怀大志的人，才特别追求自我价值的实现。自我实现的需要是指个体充分发挥自己的潜能，实现自己的人生价值，并造福于人类社会。<FONT 
+                  color=#0000ff> </FONT></P>
+          <P>1、我总是不断提高奋斗目标。<BR>
+            <INPUT type=radio value=1 name=c1>
+            完全不同意。 
+            <INPUT type=radio value=3 name=c1>
+            非常不同意。 
+            <INPUT type=radio 
+                  value=5 name=c1>
+            稍有不同意。<BR>
+            <INPUT type=radio value=V1 name=c1>
+            无所谓。 
+            <INPUT type=radio value=V2 name=c1>
+            稍有同意。 
+            <INPUT 
+                  type=radio value=V3 name=c1>
+            非常同意。 
+            <INPUT type=radio value=V4 
+                  name=c1>
+            完全同意。 </P>
+          <P>2、我并不苛求自己。<BR>
+            <INPUT type=radio value=11 name=c2>
+            完全不同意。 
+            <INPUT type=radio value=31 name=c2>
+            非常不同意。 
+            <INPUT type=radio 
+                  value=51 name=c2>
+            稍有不同意。<BR>
+            <INPUT type=radio value=V5 
+                  name=c2>
+            无所谓。 
+            <INPUT type=radio value=V6 name=c2>
+            稍有同意。 
+            <INPUT 
+                  type=radio value=V7 name=c2>
+            非常同意。 
+            <INPUT type=radio value=V8 
+                  name=c2>
+            完全同意。 </P>
+          <P>3、我择业时很看重在工作中能否不断提高能力。<BR>
+            <INPUT type=radio value=12 
+                  name=c3>
+            完全不同意。 
+            <INPUT type=radio value=32 name=c3>
+            非常不同意。 
+            <INPUT type=radio value=52 name=c3>
+            稍有不同意。<BR>
+            <INPUT 
+                  type=radio value=V9 name=c3>
+            无所谓。 
+            <INPUT type=radio value=V10 
+                  name=c3>
+            稍有同意。 
+            <INPUT type=radio value=V11 name=c3>
+            非常同意。 
+            <INPUT type=radio value=V12 name=c3>
+            完全同意。 </P>
+          <P>4、我喜欢既省力又收入高的工作。<BR>
+            <INPUT type=radio value=13 name=c4>
+            完全不同意。 
+            <INPUT type=radio value=33 name=c4>
+            非常不同意。 
+            <INPUT 
+                  type=radio value=53 name=c4>
+            稍有不同意。<BR>
+            <INPUT type=radio 
+                  value=V13 name=c4>
+            无所谓。 
+            <INPUT type=radio value=V14 name=c4>
+            稍有同意。 
+            <INPUT type=radio value=V15 name=c4>
+            非常同意。 
+            <INPUT 
+                  type=radio value=V16 name=c4>
+            完全同意。 </P>
+          <P>5、我总是乐于尝试没做过的事。<BR>
+            <INPUT type=radio value=14 name=c5>
+            完全不同意。 
+            <INPUT type=radio value=34 name=c5>
+            非常不同意。 
+            <INPUT 
+                  type=radio value=54 name=c5>
+            稍有不同意。<BR>
+            <INPUT type=radio 
+                  value=V17 name=c5>
+            无所谓。 
+            <INPUT type=radio value=V18 name=c5>
+            稍有同意。 
+            <INPUT type=radio value=V19 name=c5>
+            非常同意。 
+            <INPUT 
+                  type=radio value=V20 name=c5>
+            完全同意。 </P>
+          <P>6、我的天赋如果不被别人看重，我宁可放弃。 <BR>
+            <INPUT type=radio value=15 
+                  name=c6>
+            完全不同意。 
+            <INPUT type=radio value=35 name=c6>
+            非常不同意。 
+            <INPUT type=radio value=55 name=c6>
+            稍有不同意。<BR>
+            <INPUT 
+                  type=radio value=V21 name=c6>
+            无所谓。 
+            <INPUT type=radio value=V22 
+                  name=c6>
+            稍有同意。 
+            <INPUT type=radio value=V23 name=c6>
+            非常同意。 
+            <INPUT type=radio value=V24 name=c6>
+            完全同意。</P>
+          <P align=center><SPAN 
+                  style="FONT-SIZE: 9pt; LINE-HEIGHT: 140%">
+            <INPUT type=hidden 
+                  name=ftype>
+            <INPUT type=hidden name=cptype>
+            <INPUT type=hidden 
+                  name=cpname>
+            <INPUT type=hidden name=score>
+            <INPUT style="FONT-SIZE: 9pt; FONT-FAMILY: 宋体" onclick=processForm(this.form) type=button value="提交答卷>>测评结果" name=button>
+            <INPUT type=reset value=重新选择 name=B2>
+            <BR>
+            <TEXTAREA style="FONT-SIZE: 9pt; COLOR: blue; FONT-FAMILY: 宋体" name=answer rows=6 cols=70></TEXTAREA>
+            </SPAN></P>
+          <DIV align=center><A class=mainz 
+                  href="javascript:closewin();"><FONT 
+                  color=#000000>关闭窗口</FONT></A> </DIV>
+        </FORM></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</BODY></HTML>

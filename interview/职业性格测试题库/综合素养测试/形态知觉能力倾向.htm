@@ -1,0 +1,186 @@
+<HTML><HEAD><TITLE>素质测评_形态知觉能力倾向</TITLE>
+<SCRIPT 
+language=JavaScript>function closewin() {    window.close(); return;} </SCRIPT>
+
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<STYLE type=text/css>.zi9pt {
+	FONT-SIZE: 9pt
+}
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<SCRIPT language=JavaScript>
+      var ftype="素质测评";
+      var cptype="职业能力倾向";
+      var cpname="形态知觉能力";
+//
+function processForm(form) {
+var xf = 0
+if (form.c0[0].checked) { xf += 5 }  
+if (form.c0[1].checked) { xf += 4 } 
+if (form.c0[2].checked) { xf += 3 } 
+if (form.c0[3].checked) { xf += 2 }
+if (form.c0[4].checked) { xf += 1 }
+
+if (form.c1[0].checked) { xf += 5 }  
+if (form.c1[1].checked) { xf += 4 } 
+if (form.c1[2].checked) { xf += 3 } 
+if (form.c1[3].checked) { xf += 2 }
+if (form.c1[4].checked) { xf += 1 }
+
+if (form.c2[0].checked) { xf += 5 }  
+if (form.c2[1].checked) { xf += 4 } 
+if (form.c2[2].checked) { xf += 3 } 
+if (form.c2[3].checked) { xf += 2 }
+if (form.c2[4].checked) { xf += 1 }
+
+if (form.c3[0].checked) { xf += 5 }  
+if (form.c3[1].checked) { xf += 4 } 
+if (form.c3[2].checked) { xf += 3 } 
+if (form.c3[3].checked) { xf += 2 }
+if (form.c3[4].checked) { xf += 1 }
+
+if (form.c4[0].checked) { xf += 5 }  
+if (form.c4[1].checked) { xf += 4 } 
+if (form.c4[2].checked) { xf += 3 } 
+if (form.c4[3].checked) { xf += 2 }
+if (form.c4[4].checked) { xf += 1 }
+
+result=xf;
+form.score.value=result;
+form.ftype.value=ftype;
+form.cptype.value=cptype;
+form.cpname.value=cpname;
+if (xf==0)
+form.answer.value="你没有选择任何项，请重新选择！"
+else
+if (xf>=20)
+form.answer.value="你的分数为"+xf+"分，你形态知觉能力很强。";
+else
+if (xf>=15)
+form.answer.value="你的分数为"+xf+"分，你形态知觉能力较强。";
+else
+if (xf>=10)
+form.answer.value="你的分数为"+xf+"分，你形态知觉能力一般。";
+else
+form.answer.value="你的分数为"+xf+"分，你形态知觉能力较差。";
+return result;}
+function collection(form)
+{
+if (processForm(form)==0) 
+ alert ("您没有做任何选择!请重新选择!");
+else
+ { 
+ form.action="/cpxt/collection.asp";
+ form.method="post";
+//form.score.value=processForm(form);
+form.submit();}
+}
+// -->
+
+</SCRIPT>
+<TABLE width="770" border=1 
+            align=center cellPadding=0 cellSpacing=0 bordercolor="#000066" class=zi9pt>
+  <TBODY>
+    <TR vAlign=top> 
+      <TD> <P>　 </P>
+        <P align=center><FONT color=#000099 
+                  size=3><B>形态知觉能力倾向</B></FONT> </P>
+        <FORM name=hhr>
+          <P>形态知觉能力即对物体或图像的有关细节的知觉能力。要看出图形的明暗、线的宽度和长度，能辨别细微的差异。对于技术型人才来讲，需要有较强的形态知觉能力。 
+            <BR>
+            <FONT color=#0000ff>　</FONT>1．你能一眼指出相似图形中的细微差异。<BR>
+            &nbsp; 
+            <INPUT type=radio value=1 name=c0>
+            非常符合 
+            <INPUT type=radio 
+                  value=2 name=c0>
+            比较符合 
+            <INPUT type=radio value=3 name=c0>
+            难以回答 
+            <INPUT type=radio value=4 name=c0>
+            不太符合 
+            <INPUT type=radio 
+                  value=5 name=c0>
+            很不符合 
+          <P>&nbsp;&nbsp;2．你能容易地识别不同物体之间的形态差异。<BR>
+            &nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c1>
+            非常符合 
+            <INPUT type=radio value=2 
+                  name=c1>
+            比较符合 
+            <INPUT type=radio value=3 name=c1>
+            难以回答 
+            <INPUT 
+                  type=radio value=4 name=c1>
+            不太符合 
+            <INPUT type=radio value=5 
+                  name=c1>
+            很不符合 </P>
+          <P>　3．你往往能注意到物体的细节部分。<BR>
+            &nbsp; 
+            <INPUT type=radio value=1 
+                  name=c2>
+            非常符合 
+            <INPUT type=radio value=2 name=c2>
+            比较符合 
+            <INPUT 
+                  type=radio value=3 name=c2>
+            难以回答 
+            <INPUT type=radio value=4 
+                  name=c2>
+            不太符合 
+            <INPUT type=radio value=5 name=c2>
+            很不符合 </P>
+          <P>　4．一般来讲，你能够正确地观察一幅较为复杂的图案。<BR>
+            &nbsp; 
+            <INPUT type=radio 
+                  value=1 name=c3>
+            非常符合 
+            <INPUT type=radio value=2 name=c3>
+            比较符合 
+            <INPUT type=radio value=3 name=c3>
+            难以回答 
+            <INPUT type=radio 
+                  value=4 name=c3>
+            不太符合 
+            <INPUT type=radio value=5 name=c3>
+            很不符合 </P>
+          <P>　5．向别人介绍一套仪器时，你能够对它进行详细的形态描述。<BR>
+            &nbsp; 
+            <INPUT type=radio 
+                  value=1 name=c4>
+            非常符合 
+            <INPUT type=radio value=2 name=c4>
+            比较符合 
+            <INPUT type=radio value=3 name=c4>
+            难以回答 
+            <INPUT type=radio 
+                  value=4 name=c4>
+            不太符合 
+            <INPUT type=radio value=5 name=c4>
+            很不符合 </P>
+          <P align=center><SPAN 
+                  style="FONT-SIZE: 9pt; LINE-HEIGHT: 140%">
+            <INPUT type=hidden 
+                  name=ftype>
+            <INPUT type=hidden name=cptype>
+            <INPUT type=hidden 
+                  name=cpname>
+            <INPUT type=hidden name=score>
+            <INPUT style="FONT-SIZE: 9pt; FONT-FAMILY: 宋体" onclick=processForm(this.form) type=button value="提交答卷>>测评结果" name=button>
+            <INPUT type=reset value=重新选择 name=B2>
+            <BR>
+            <TEXTAREA style="FONT-SIZE: 9pt; COLOR: blue; FONT-FAMILY: 宋体" name=answer rows=6 cols=70></TEXTAREA>
+            </SPAN></P>
+          <P align=center><SPAN 
+                  style="FONT-SIZE: 9pt; LINE-HEIGHT: 140%"></SPAN><A 
+                  class=mainz href="javascript:closewin();"><FONT 
+                  color=#000000>关闭窗口</FONT></A> </P>
+        </FORM></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</BODY></HTML>

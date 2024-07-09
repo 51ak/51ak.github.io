@@ -1,0 +1,488 @@
+<HTML><HEAD><TITLE>知识测评_经济学基础</TITLE>
+<SCRIPT 
+language=JavaScript>function closewin() {    window.close(); return;} </SCRIPT>
+
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<STYLE type=text/css>.zi9pt {
+	FONT-SIZE: 9pt
+}
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<SCRIPT language=JavaScript>
+<!--
+      var ftype="知识测评";
+      var cptype="工商管理知识";
+      var cpname="经济学知识";
+//
+function processForm(form) {
+var xf = 0
+if (form.Q01[0].checked) { xf += 1 }
+if (form.Q01[1].checked) { xf += 0 }
+if (form.Q01[2].checked) { xf += 0 }
+if (form.Q01[3].checked) { xf += 0 }
+
+if (form.Q02[0].checked) { xf += 0 }
+if (form.Q02[1].checked) { xf += 0 }
+if (form.Q02[2].checked) { xf += 0 }
+if (form.Q02[3].checked) { xf += 1 }
+
+
+if (form.Q03[0].checked) { xf += 0 }
+if (form.Q03[1].checked) { xf += 0 }
+if (form.Q03[2].checked) { xf += 0 }
+if (form.Q03[3].checked) { xf += 1 }
+
+if (form.Q04[0].checked) { xf += 0 }
+if (form.Q04[1].checked) { xf += 0 }
+if (form.Q04[2].checked) { xf += 0 }
+if (form.Q04[3].checked) { xf += 1 }
+
+
+if (form.Q05[0].checked) { xf += 0 }
+if (form.Q05[1].checked) { xf += 0 }
+if (form.Q05[2].checked) { xf += 1 }
+if (form.Q05[3].checked) { xf += 0 }
+
+
+if (form.Q06[0].checked) { xf += 0 }
+if (form.Q06[1].checked) { xf += 0 }
+if (form.Q06[2].checked) { xf += 0 }
+if (form.Q06[3].checked) { xf += 1 }
+
+
+if (form.Q07[0].checked) { xf += 1 }
+if (form.Q07[1].checked) { xf += 0 }
+if (form.Q07[2].checked) { xf += 0 }
+if (form.Q07[3].checked) { xf += 0 }
+
+
+if (form.Q08[0].checked) { xf += 0 }
+if (form.Q08[1].checked) { xf += 0 }
+if (form.Q08[2].checked) { xf += 0 }
+if (form.Q08[3].checked) { xf += 1 }
+
+
+if (form.Q09[0].checked) { xf += 1 }
+if (form.Q09[1].checked) { xf += 0 }
+if (form.Q09[2].checked) { xf += 0 }
+if (form.Q09[3].checked) { xf += 0 }
+
+
+if (form.Q10[0].checked) { xf += 0 }
+if (form.Q10[1].checked) { xf += 1 }
+if (form.Q10[2].checked) { xf += 0 }
+if (form.Q10[3].checked) { xf += 0 }
+
+if (form.Q11[0].checked) { xf += 1 }
+if (form.Q11[1].checked) { xf += 0 }
+if (form.Q11[2].checked) { xf += 0 }
+if (form.Q11[3].checked) { xf += 0 }
+
+if (form.Q12[0].checked) { xf += 1 }
+if (form.Q12[1].checked) { xf += 0 }
+if (form.Q12[2].checked) { xf += 0 }
+if (form.Q12[3].checked) { xf += 0 }
+
+if (form.Q13[0].checked) { xf += 0 }
+if (form.Q13[1].checked) { xf += 0 }
+if (form.Q13[2].checked) { xf += 0 }
+if (form.Q13[3].checked) { xf += 1 }
+
+if (form.Q14[0].checked) { xf += 0 }
+if (form.Q14[1].checked) { xf += 0 }
+if (form.Q14[2].checked) { xf += 0 }
+if (form.Q14[3].checked) { xf += 1 }
+
+if (form.Q15[0].checked) { xf += 1 }
+if (form.Q15[1].checked) { xf += 0 }
+if (form.Q15[2].checked) { xf += 0 }
+if (form.Q15[3].checked) { xf += 0 }
+
+if (form.Q16[0].checked) { xf += 0 }
+if (form.Q16[1].checked) { xf += 0 }
+if (form.Q16[2].checked) { xf += 1 }
+if (form.Q16[3].checked) { xf += 0 }
+
+if (form.Q17[0].checked) { xf += 1 }
+if (form.Q17[1].checked) { xf += 0 }
+if (form.Q17[2].checked) { xf += 0 }
+if (form.Q17[3].checked) { xf += 0 }
+
+if (form.Q18[0].checked) { xf += 0 }
+if (form.Q18[1].checked) { xf += 1 }
+if (form.Q18[2].checked) { xf += 0 }
+if (form.Q18[3].checked) { xf += 0 }
+
+if (form.Q19[0].checked) { xf += 0 }
+if (form.Q19[1].checked) { xf += 1 }
+if (form.Q19[2].checked) { xf += 0 }
+if (form.Q19[3].checked) { xf += 0 }
+
+if (form.Q20[0].checked) { xf += 0 }
+if (form.Q20[1].checked) { xf += 1 }
+if (form.Q20[2].checked) { xf += 0 }
+if (form.Q20[3].checked) { xf += 0 }
+
+
+result=xf;
+form.score.value=result;
+form.ftype.value=ftype;
+form.cptype.value=cptype;
+form.cpname.value=cpname;
+if (xf>=18)  form.answer.value="你的分数为"+xf+"分（总分20分）,你的经济学知识很扎实。";
+else
+if (xf>=14) form.answer.value="你的分数为"+xf+"分（总分20分）,你的经济学知识较好。";
+else 
+if (xf>=10) form.answer.value="你的分数为"+xf+"分（总分20分）,你的经济学知识为及格水平.";
+else 
+form.answer.value="你的分数为"+xf+"分（总分20分）,很遗憾，你的经济学不及格。";
+return result;}
+function collection(form)
+{
+//if (processForm(form)==0) 
+// alert ("您没有做任何选择!请重新选择!");
+//else { 
+ form.action="/cpxt/collection.asp";
+ form.method="post";
+//form.score.value=processForm(form);
+form.submit();}
+
+// -->
+
+</SCRIPT>
+<TABLE width="770" border=1 
+            align=center cellPadding=0 cellSpacing=0 bordercolor="#000066" class=zi9pt>
+  <TBODY>
+    <TR vAlign=top> 
+      <TD> <P>　 </P>
+        <P align=center><FONT color=#ffffff size=2><B><FONT 
+                  color=#000099 size=3>经济学基础</FONT></B></FONT> </P>
+        <FORM name=hhr>
+          <P>&nbsp;本测评是关于包括微观经济学和宏观经济学两部分内容的经济学测试,相当于初级经济学的要求。</P>
+          <P><FONT color=#3333ff></FONT> 
+          <P>1、 当出租车租金上涨后，对公共汽车的 <BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q01>
+            需求量增加<BR>
+            　 
+            <INPUT type=radio value=2 name=Q01>
+            需求量不变<BR>
+            　 
+            <INPUT type=radio value=3 name=Q01>
+            需求减少<BR>
+            　 
+            <INPUT type=radio value=4 name=Q01>
+            需求量减少</P>
+          <P>2、若某商品的消费量随着消费着收入的增加而减少，则该商品是 <BR>
+            　 
+            <INPUT type=radio 
+                  value=1 name=Q02>
+            替代品<BR>
+            　 
+            <INPUT type=radio value=2 name=Q02>
+            互补品<BR>
+            　 
+            <INPUT type=radio value=3 name=Q02>
+            正常品<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q02>
+            低档品</P>
+          <P>3、当只有消费者的收入变化时，连接消费者各均衡点的曲线称作 <BR>
+            　 
+            <INPUT type=radio 
+                  value=1 name=Q03>
+            需求曲线<BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q03>
+            价格-收入曲线<BR>
+            　 
+            <INPUT type=radio value=3 name=Q03>
+            恩格尔曲线 <BR>
+            　 
+            <INPUT type=radio value=4 name=Q03>
+            收入-价格曲线<BR>
+          </P>
+          <P>4、某消费者消费更多的某种商品时 <BR>
+            　 
+            <INPUT type=radio value=1 name=Q04>
+            消费者获得的总效用递增<BR>
+            　 
+            <INPUT type=radio value=2 name=Q04>
+            消费者获得的总效用递减<BR>
+            　 
+            <INPUT type=radio value=3 name=Q04>
+            消费者获得的边际效用递增<BR>
+            　 
+            <INPUT type=radio value=4 name=Q04>
+            消费者获得的边际效用递减</P>
+          <P>5、若X的价格变化，X的替代效应小于收入效应，则X是 <BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q05>
+            正常品或低档品<BR>
+            　 
+            <INPUT type=radio value=2 name=Q05>
+            低档品 <BR>
+            　 
+            <INPUT type=radio value=3 name=Q05>
+            正常品或吉芬商品<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q05>
+            必需品<BR>
+          </P>
+          <P>6、边际收益递减的规律发生作用的前提是 <BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q06>
+            存在技术进步<BR>
+            　 
+            <INPUT type=radio value=2 name=Q06>
+            生产技术水平不变 <BR>
+            　 
+            <INPUT type=radio value=3 name=Q06>
+            具有两种以上的可变要素的生产<BR>
+            　 
+            <INPUT type=radio value=4 name=Q06>
+            只有一种可变要素的生产 </P>
+          <P>7、当边际产量大于平均产量时，则 <BR>
+            　 
+            <INPUT type=radio value=1 name=Q07>
+            平均产量增加<BR>
+            　 
+            <INPUT type=radio value=2 name=Q07>
+            平均产量减少<BR>
+            　 
+            <INPUT type=radio value=3 name=Q07>
+            平均产量不变<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q07>
+            平均产量达到最低点 <BR>
+          </P>
+          <P>8、在规模报酬不变阶段，若劳动的使用量增加10%，资本的使用量不变，则<BR>
+            　 
+            <INPUT type=radio 
+                  value=1 name=Q08>
+            产出增加10% <BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q08>
+            产出减少10%<BR>
+            　 
+            <INPUT type=radio value=3 name=Q08>
+            产出的增加大于10%<BR>
+            　 
+            <INPUT type=radio value=4 name=Q08>
+            产出的增加小于10%<BR>
+          </P>
+          <P>9、一个出于规模收益不变的完全竞争厂商 <BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q09>
+            在长期，它可以通过增加一倍的投入获得加倍的利润<BR>
+            　 
+            <INPUT type=radio 
+                  value=2 name=Q09>
+            当利润开始削减的时候，它可以提高价格<BR>
+            　 
+            <INPUT type=radio 
+                  value=3 name=Q09>
+            在长期，它增加投入可以获得相同的利润<BR>
+            　 
+            <INPUT type=radio 
+                  value=4 name=Q09>
+            当有厂商进入这一行业时，它将得不到利润</P>
+          <P>10、在成本不变的一个完全竞争行业中，长期中需求的增加会导致市场价价格： <BR>
+            　 
+            <INPUT 
+                  type=radio value=1 name=Q10>
+            提高<BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q10>
+            不变 <BR>
+            　 
+            <INPUT type=radio value=3 name=Q10>
+            降低<BR>
+            　 
+            <INPUT type=radio value=4 name=Q10>
+            先增后减<BR>
+            <BR>
+            11、《国富论》的作者也即经济学开山鼻祖是： <BR>
+            　 
+            <INPUT type=radio 
+                  value=1 name=Q11>
+            亚当·斯密<BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q11>
+            李嘉图<BR>
+            　 
+            <INPUT type=radio value=3 name=Q11>
+            马歇尔<BR>
+            　 
+            <INPUT type=radio value=4 name=Q11>
+            凯恩斯</P>
+          <P>12、马克思在政治经济学方面的主要贡献在于提出了： <BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q12>
+            剩余价值学说<BR>
+            　 
+            <INPUT type=radio value=2 name=Q12>
+            劳动二重论<BR>
+            　 
+            <INPUT type=radio value=3 name=Q12>
+            商品经济价值规律<BR>
+            　 
+            <INPUT type=radio value=4 name=Q12>
+            社会主义市场经济<BR>
+            <BR>
+            13、下面哪一个选项不是市场失灵的原因： <BR>
+            　 
+            <INPUT type=radio 
+                  value=1 name=Q13>
+            垄断的存在<BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q13>
+            非对称信息<BR>
+            　 
+            <INPUT type=radio value=3 name=Q13>
+            外部效应<BR>
+            　 
+            <INPUT type=radio value=4 name=Q13>
+            政府失灵 <BR>
+            <BR>
+            14、下面哪以为经济学家不是新制度经济学的代表人物： <BR>
+            　 
+            <INPUT type=radio 
+                  value=2 name=Q14>
+            科斯<BR>
+            　 
+            <INPUT type=radio value=3 name=Q14>
+            德姆塞茨<BR>
+            　 
+            <INPUT type=radio value=4 name=Q14>
+            诺斯 <BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q14>
+            布坎南 <BR>
+            <BR>
+            15、政府支出乘数： <BR>
+            　 
+            <INPUT type=radio value=1 name=Q15>
+            等于投资乘数<BR>
+            　 
+            <INPUT 
+                  type=radio value=2 name=Q15>
+            等于投资乘数的相反数<BR>
+            　 
+            <INPUT type=radio 
+                  value=3 name=Q15>
+            比投资乘数小1<BR>
+            　 
+            <INPUT type=radio value=4 
+                  name=Q15>
+            等于转移支付乘数 <BR>
+            <BR>
+            16、按照凯恩斯的货币理论，如果利率上升，货币需求将： <BR>
+            　 
+            <INPUT type=radio value=1 name=Q16>
+            不变<BR>
+            　 
+            <INPUT type=radio 
+                  value=2 name=Q16>
+            受到影响，但不可能确定是上升还是下降<BR>
+            　 
+            <INPUT type=radio 
+                  value=3 name=Q16>
+            下降<BR>
+            　 
+            <INPUT type=radio value=4 name=Q16>
+            上升 </P>
+          <P>17、当经济中存在失业时，应该采取的财政政策工具是： <BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q17>
+            增加政府支出<BR>
+            　 
+            <INPUT type=radio value=2 name=Q17>
+            提高个人所得税 <BR>
+            　 
+            <INPUT type=radio value=3 name=Q17>
+            提高公司所得税<BR>
+            　 
+            <INPUT type=radio value=4 name=Q17>
+            增加货币发行量</P>
+          <P>18、中央银行提高贴现率会导致货币供应量（）和利率的（）： <BR>
+            　 
+            <INPUT type=radio 
+                  value=1 name=Q18>
+            增加 提高 <BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q18>
+            减少 提高<BR>
+            　 
+            <INPUT type=radio value=3 name=Q18>
+            增加 降低<BR>
+            　 
+            <INPUT type=radio value=4 name=Q18>
+            减少 降低 </P>
+          <P>19、影响产量和就业量变动的是哪种类型的通货膨胀率： <BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q19>
+            平衡的通货膨胀率<BR>
+            　 
+            <INPUT type=radio value=2 name=Q19>
+            非平衡通货膨胀率<BR>
+            　 
+            <INPUT type=radio value=3 name=Q19>
+            预期到的通货膨胀率<BR>
+            　 
+            <INPUT type=radio value=4 name=Q19>
+            非预期到的通货膨胀率</P>
+          <P>20、按照消费函数，引起消费增加的因素是： <BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q20>
+            水平下降<BR>
+            　 
+            <INPUT type=radio value=2 name=Q20>
+            收入增加<BR>
+            　 
+            <INPUT type=radio value=3 name=Q20>
+            储蓄增加<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q20>
+            利率提高 </P>
+          <P align=center><SPAN 
+                  style="FONT-SIZE: 9pt; LINE-HEIGHT: 140%">
+            <INPUT type=hidden 
+                  name=ftype>
+            <INPUT type=hidden name=cptype>
+            <INPUT type=hidden 
+                  name=cpname>
+            <INPUT type=hidden name=score>
+            <INPUT style="FONT-SIZE: 9pt; FONT-FAMILY: 宋体" onclick=processForm(this.form) type=button value="提交答卷>>测评结果" name=button>
+            <INPUT type=reset value=重新选择 name=B2>
+            <BR>
+            <TEXTAREA style="FONT-SIZE: 9pt; COLOR: blue; FONT-FAMILY: 宋体" name=answer rows=6 cols=70></TEXTAREA>
+            </SPAN></P>
+          <P align=center><A class=mainz 
+                  href="javascript:closewin();"><FONT 
+                  color=#000000>关闭窗口</FONT></A> </P>
+        </FORM></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</BODY></HTML>

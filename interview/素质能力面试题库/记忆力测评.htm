@@ -1,0 +1,172 @@
+<HTML><HEAD><TITLE>素质测评_记忆力测评</TITLE>
+<SCRIPT 
+language=JavaScript>function closewin() {    window.close(); return;} </SCRIPT>
+
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<STYLE type=text/css>.zi9pt {
+	FONT-SIZE: 9pt
+}
+</STYLE>
+</HEAD>
+<BODY bgColor=#f2f2f2>
+<SCRIPT language=JavaScript>
+      var ftype="素质测评";
+      var cptype="基本素质";
+      var cpname="记忆能力";
+//
+function processForm(form){
+var xf=0;
+if (form.c1[0].checked==1) xf+=1;
+if (form.c2[0].checked==1) xf+=1;
+if (form.c3[0].checked==1) xf+=1;
+if (form.c4[0].checked==1) xf+=1;
+if (form.c5[0].checked==1) xf+=1;
+if (form.c6[0].checked==1) xf+=1;
+if (form.c7[0].checked==1) xf+=1;
+if (form.c8[0].checked==1) xf+=1;
+if (form.c9[0].checked==1) xf+=1;
+if (form.c10[0].checked==1) xf+=1;
+result=xf;
+form.score.value=result;
+form.ftype.value=ftype;
+form.cptype.value=cptype;
+form.cpname.value=cpname;
+
+if (xf==0)
+form.answer.value="你没有选择任何项，请重新选择！"
+else
+if (xf>=10)
+form.answer.value="你的分数为"+xf+"分，你一定是一个公认的“记性好”的人，这给你带来了许多的方便。要注意不要放弃这种习惯，因为如果缺乏锻炼的话，技巧与努力都会退化，而想要再恢复到原有的水平，就又需要一番功夫了。";
+else
+if (xf>=4)
+form.answer.value="你的分数为"+xf+"分，你的记忆力一般。你只记忆那些自己认为必要的信息。也许你认为这是一件既费时又费力的事情，但实际上只要掌握一定的技巧，记忆可以是一件轻松的事情。看一本这方面的书会对你有所帮助。";
+else
+form.answer.value="你的分数为"+xf+"分，你的记忆力不好。你可能认为这是天生的，“记性不好”确实能为你提供许多借口，并且你认为这也无损于你的智力水平。但难道你就没有过不方便的时候吗，没有想到过改善现状吗？别的人也不是在遗传上与你不同，只不过他们付出努力，并适当地应用了一些技巧而已。对你而言，最重要的是应该树立努力去记忆的动机，慢慢地，你会发现记忆并不如你所想像的那样毫无创造性可言，并且，事实上，记忆力是智力的重要组成部分";
+}
+
+function collection(form)
+{
+if (processForm(form)==0) 
+ alert ("您没有做任何选择!请重新选择!");
+else { 
+ form.action="/cpxt/collection.asp";
+ form.method="post";
+//form.score.value=processForm(form);
+form.submit();}
+}
+// -->
+
+</SCRIPT>
+<TABLE width="770" border=1 
+            align=center cellPadding=0 cellSpacing=0 bordercolor="#000066" class=zi9pt>
+  <TBODY>
+    <TR vAlign=top> 
+      <TD> <FORM name=hhr>
+          <P align=center><FONT color=#ffffff size=2><B><FONT 
+                  color=#000099 size=3><BR>
+            记忆力测评</FONT></B></FONT> 
+          <P><FONT color=#3333ff></FONT> 
+          <BLOCKQUOTE> 
+            <P><FONT 
+                    color=#3333ff>　　</FONT>下面的小测验可以来测查自己的记忆力。仔细阅读每句陈述，看看是否与你的情况符合。</P>
+          </BLOCKQUOTE>
+          <FONT 
+                  color=#3333ff></FONT> 
+          <P><FONT color=#3333ff>　　</FONT>&nbsp;1、我对人名的记忆力很少令我感到尴尬。 
+            <INPUT type=radio value=1 name=c1>
+            是　 
+            <INPUT type=radio 
+                  value=2 name=c1>
+            否 <BR>
+            <BR>
+            　　&nbsp;2、词汇量很丰富，在描述某一个事物时，总能使用大量同义词。 
+            <INPUT 
+                  type=radio value=1 name=c2>
+            是 
+            <INPUT type=radio value=2 
+                  name=c2>
+            否<BR>
+            <BR>
+            　　&nbsp;3、能记住身边同事的太太和小孩的姓名。 
+            <INPUT 
+                  type=radio value=1 name=c3>
+            是　 
+            <INPUT type=radio value=2 
+                  name=c3>
+            否 <BR>
+            <BR>
+            　　&nbsp;4、不必寻找档案资料，就能非正式地陈述某种涉及资料的事情。 
+            <INPUT type=radio value=1 name=c4>
+            是 
+            <INPUT type=radio value=2 
+                  name=c4>
+            否 <BR>
+            <BR>
+            　　&nbsp;5、我很奇怪一些人为什么会提笔忘字。 
+            <INPUT 
+                  type=radio value=1 name=c5>
+            是　 
+            <INPUT type=radio value=2 
+                  name=c5>
+            否 <BR>
+            <BR>
+            　　&nbsp;6、不必做一大堆笔记，就能选择性地记住有用的信息。 
+            <INPUT 
+                  type=radio value=1 name=c6>
+            是　 
+            <INPUT type=radio value=2 
+                  name=c6>
+            否 <BR>
+            <BR>
+            　　&nbsp;7、对于计划要做的事，我一般都会记住去做。 
+            <INPUT 
+                  type=radio value=1 name=c7>
+            是　 
+            <INPUT type=radio value=2 
+                  name=c7>
+            否 <BR>
+            <BR>
+            　　&nbsp;8、我脑中总是有很多的实例和轶事,以便增加说话的趣味和意义。 
+            <INPUT type=radio value=1 name=c8>
+            是 
+            <INPUT type=radio value=2 
+                  name=c8>
+            否<BR>
+            <BR>
+            　　&nbsp;9、我经常利用一些技巧,例如联想、谐音等方法来记忆单调的信息,如电话号码、<BR>
+            密码、地址、单词等。 
+            <INPUT type=radio value=1 name=c9>
+            是　 
+            <INPUT type=radio 
+                  value=2 name=c9>
+            否 <BR>
+            <BR>
+            　　&nbsp;10、我一般能记住（或是采用某种笨方法）一些重要日期。 
+            <INPUT type=radio value=1 name=c10>
+            是　 
+            <INPUT type=radio 
+                  value=2 name=c10>
+            否 </P>
+          <BLOCKQUOTE> </BLOCKQUOTE>
+          <P align=center><SPAN 
+                  style="FONT-SIZE: 9pt; LINE-HEIGHT: 140%">
+            <INPUT type=hidden 
+                  name=ftype>
+            <INPUT type=hidden name=cptype>
+            <INPUT type=hidden 
+                  name=cpname>
+            <INPUT type=hidden name=score>
+            <INPUT style="FONT-SIZE: 9pt; FONT-FAMILY: 宋体" onclick=processForm(this.form) type=button value="提交答卷>>测评结果" name=button>
+            <INPUT type=reset value=重新选择 name=B2>
+            <BR>
+            <TEXTAREA style="FONT-SIZE: 9pt; COLOR: blue; FONT-FAMILY: 宋体" name=answer rows=6 cols=70></TEXTAREA>
+            </SPAN></P>
+          <DIV align=center><A class=mainz 
+                  href="javascript:closewin();"><FONT 
+                  color=#000000>关闭窗口</FONT></A><BR>
+          </DIV>
+        </FORM></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</BODY></HTML>

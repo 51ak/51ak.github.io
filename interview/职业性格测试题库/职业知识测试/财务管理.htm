@@ -1,0 +1,491 @@
+<HTML><HEAD><TITLE>知识测评_财务管理</TITLE>
+<SCRIPT 
+language=JavaScript>function closewin() {    window.close(); return;} </SCRIPT>
+
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<STYLE type=text/css>.zi9pt {
+	FONT-SIZE: 9pt
+}
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<SCRIPT language=JavaScript>
+<!--
+      var ftype="知识测评";
+      var cptype="工商管理知识";
+      var cpname="财务管理基础";
+//
+function processForm(form) {
+var xf = 0
+if (form.Q01[0].checked) { xf += 0 }
+if (form.Q01[1].checked) { xf += 0 }
+if (form.Q01[2].checked) { xf += 0 }
+if (form.Q01[3].checked) { xf += 1 }
+
+if (form.Q02[0].checked) { xf += 0 }
+if (form.Q02[1].checked) { xf += 1 }
+if (form.Q02[2].checked) { xf += 0 }
+if (form.Q02[3].checked) { xf += 0 }
+
+if (form.Q03[0].checked) { xf += 0 }
+if (form.Q03[1].checked) { xf += 1 }
+if (form.Q03[2].checked) { xf += 0 }
+if (form.Q03[3].checked) { xf += 0 }
+
+if (form.Q04[0].checked) { xf += 0 }
+if (form.Q04[1].checked) { xf += 1 }
+if (form.Q04[2].checked) { xf += 0 }
+if (form.Q04[3].checked) { xf += 0 }
+
+
+if (form.Q05[0].checked) { xf += 1 }
+if (form.Q05[1].checked) { xf += 0 }
+if (form.Q05[2].checked) { xf += 0 }
+if (form.Q05[3].checked) { xf += 0 }
+
+
+if (form.Q06[0].checked) { xf += 1 }
+if (form.Q06[1].checked) { xf += 0 }
+if (form.Q06[2].checked) { xf += 0 }
+if (form.Q06[3].checked) { xf += 0 }
+
+
+if (form.Q07[0].checked) { xf += 1 }
+if (form.Q07[1].checked) { xf += 0 }
+if (form.Q07[2].checked) { xf += 0 }
+if (form.Q07[3].checked) { xf += 0 }
+
+if (form.Q08[0].checked) { xf += 0 }
+if (form.Q08[1].checked) { xf += 0 }
+if (form.Q08[2].checked) { xf += 0 }
+if (form.Q08[3].checked) { xf += 1 }
+
+
+if (form.Q09[0].checked) { xf += 0 }
+if (form.Q09[1].checked) { xf += 1 }
+if (form.Q09[2].checked) { xf += 0 }
+if (form.Q09[3].checked) { xf += 0 }
+
+
+if (form.Q10[0].checked) { xf += 0 }
+if (form.Q10[1].checked) { xf += 0 }
+if (form.Q10[2].checked) { xf += 1 }
+if (form.Q10[3].checked) { xf += 0 }
+
+if (form.Q11[0].checked) { xf += 0 }
+if (form.Q11[1].checked) { xf += 0 }
+if (form.Q11[2].checked) { xf += 1 }
+if (form.Q11[3].checked) { xf += 0 }
+
+if (form.Q12[0].checked) { xf += 1 }
+if (form.Q12[1].checked) { xf += 0 }
+if (form.Q12[2].checked) { xf += 0 }
+if (form.Q12[3].checked) { xf += 0 }
+
+if (form.Q13[0].checked) { xf += 0 }
+if (form.Q13[1].checked) { xf += 1 }
+if (form.Q13[2].checked) { xf += 0 }
+if (form.Q13[3].checked) { xf += 0 }
+
+if (form.Q14[0].checked) { xf += 0 }
+if (form.Q14[1].checked) { xf += 0 }
+if (form.Q14[2].checked) { xf += 0 }
+if (form.Q14[3].checked) { xf += 1 }
+
+if (form.Q15[0].checked) { xf += 0 }
+if (form.Q15[1].checked) { xf += 0 }
+if (form.Q15[2].checked) { xf += 1 }
+if (form.Q15[3].checked) { xf += 0 }
+
+if (form.Q16[0].checked) { xf += 0 }
+if (form.Q16[1].checked) { xf += 1 }
+if (form.Q16[2].checked) { xf += 0 }
+if (form.Q16[3].checked) { xf += 0 }
+
+if (form.Q17[0].checked) { xf += 0 }
+if (form.Q17[1].checked) { xf += 1 }
+if (form.Q17[2].checked) { xf += 0 }
+if (form.Q17[3].checked) { xf += 0 }
+
+if (form.Q18[0].checked) { xf += 0 }
+if (form.Q18[1].checked) { xf += 0 }
+if (form.Q18[2].checked) { xf += 0 }
+if (form.Q18[3].checked) { xf += 1 }
+
+if (form.Q19[0].checked) { xf += 0 }
+if (form.Q19[1].checked) { xf += 0 }
+if (form.Q19[2].checked) { xf += 0 }
+if (form.Q19[3].checked) { xf += 1 }
+
+if (form.Q20[0].checked) { xf += 1 }
+if (form.Q20[1].checked) { xf += 0 }
+if (form.Q20[2].checked) { xf += 0 }
+if (form.Q20[3].checked) { xf += 0 }
+
+
+
+result=xf;
+form.score.value=result;
+form.ftype.value=ftype;
+form.cptype.value=cptype;
+form.cpname.value=cpname;
+if (xf>=18)  form.answer.value="你的分数为"+xf+"分（总分20分）,你的财务管理基础知识很扎实。";
+else
+if (xf>=14) form.answer.value="你的分数为"+xf+"分（总分20分）,你的财务管理基础知识较好。";
+else 
+if (xf>=10) form.answer.value="你的分数为"+xf+"分（总分20分）,你的财务管理基础知识为及格水平.";
+else 
+form.answer.value="你的分数为"+xf+"分（总分20分）,很遗憾，你的财务管理基础知识不及格。";
+return result;}
+function collection(form)
+{
+//if (processForm(form)==0) 
+// alert ("您没有做任何选择!请重新选择!");
+//else  { 
+ form.action="/cpxt/collection.asp";
+ form.method="post";
+//form.score.value=processForm(form);
+form.submit();}
+
+// -->
+
+</SCRIPT>
+<TABLE width="770" border=1 
+            align=center cellPadding=0 cellSpacing=0 bordercolor="#000066" class=zi9pt>
+  <TBODY>
+    <TR vAlign=top> 
+      <TD> <P>　 </P>
+        <P align=center><FONT color=#ffffff size=2><B><FONT 
+                  color=#000099 size=3>财务管理</FONT></B></FONT> </P>
+        <FORM name=hhr>
+          <P>&nbsp;1、财管管理是人们利用价值形式对企业的(　　)进行组织和控制，并正确处理企业与各方面财务关系的一项经济管理工作。 <BR>
+            　 
+            <INPUT type=radio value=2 name=Q01>
+            劳动过程<BR>
+            　 
+            <INPUT 
+                  type=radio value=2 name=Q01>
+            使用价值运动<BR>
+            　 
+            <INPUT type=radio 
+                  value=3 name=Q01>
+            物质运物<BR>
+            　 
+            <INPUT type=radio value=4 
+                  name=Q01>
+            资金运动</P>
+          <P>2、影响企业经营决策和财务关系的主要外部财务环境是 <BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q02>
+            政治环境<BR>
+            　 
+            <INPUT type=radio value=2 name=Q02>
+            经济环境<BR>
+            　 
+            <INPUT type=radio value=3 name=Q02>
+            国际环境<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q02>
+            技术环境 </P>
+          <P>3、企业资金中资本与负债的比例关系称为 <BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q03>
+            财务结构<BR>
+            　 
+            <INPUT type=radio value=2 name=Q03>
+            资本结构<BR>
+            　 
+            <INPUT type=radio value=3 name=Q03>
+            成本结构<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q03>
+            利润结构<BR>
+          </P>
+          <P>4、 按时价或中间价格发行股票，股票的价格低于其面额，称为 <BR>
+            　 
+            <INPUT type=radio 
+                  value=1 name=Q04>
+            等价发行<BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q04>
+            折价发行<BR>
+            　 
+            <INPUT type=radio value=3 name=Q04>
+            溢价发行<BR>
+            　 
+            <INPUT type=radio value=4 name=Q04>
+            平价发行</P>
+          <P>5、债券发行时，当票面利率与市场利率一致 　<BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q05>
+            等价发行债券<BR>
+            　 
+            <INPUT type=radio value=2 name=Q05>
+            溢价发行债券<BR>
+            　 
+            <INPUT type=radio value=3 name=Q05>
+            折价发行债券<BR>
+            　 
+            <INPUT type=radio value=4 name=Q05>
+            平价发行债券 <BR>
+          </P>
+          <P>6、在商业信用中，由债权人开出的要求债务人在一定时期内把一定数额的款项支付给持票人的商业票据为<BR>
+            　 
+            <INPUT 
+                  type=radio value=1 name=Q06>
+            商业期票<BR>
+            　 
+            <INPUT type=radio 
+                  value=2 name=Q06>
+            商业本票<BR>
+            　 
+            <INPUT type=radio value=3 
+                  name=Q06>
+            商业汇票<BR>
+            　 
+            <INPUT type=radio value=4 name=Q06>
+            商业发票 </P>
+          <P>7、作为整个企业预算编制起点的是: 　<BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q07>
+            销售预算<BR>
+            　 
+            <INPUT type=radio value=2 name=Q07>
+            生产预算<BR>
+            　 
+            <INPUT type=radio value=3 name=Q07>
+            现金收入预算　<BR>
+            　 
+            <INPUT type=radio value=4 name=Q07>
+            产品成本预算　<BR>
+          </P>
+          <P>8、企业应收货款10万元，其信用条件为"3/10，n/30".本企业在第十七天内收回货款，其实际收到货款额应为 　<BR>
+            　 
+            <INPUT type=radio value=1 name=Q08>
+            9，700元<BR>
+            　 
+            <INPUT 
+                  type=radio value=2 name=Q08>
+            7，000元<BR>
+            　 
+            <INPUT type=radio 
+                  value=3 name=Q08>
+            9，300元<BR>
+            　 
+            <INPUT type=radio value=4 
+                  name=Q08>
+            1000，000元 <BR>
+          </P>
+          <P>9、由于劳动生产率提高和社会科学技术的进步而引起的固定资产的原始价值贬值，称为 　　<BR>
+            　 
+            <INPUT 
+                  type=radio value=1 name=Q09>
+            自然损耗<BR>
+            　 
+            <INPUT type=radio 
+                  value=2 name=Q09>
+            无形损耗<BR>
+            　 
+            <INPUT type=radio value=3 
+                  name=Q09>
+            有形损耗<BR>
+            　 
+            <INPUT type=radio value=4 name=Q09>
+            效能损耗</P>
+          <P>10、生产中耗费的机器设备、房屋、建筑物的价值，以(　　)计入产品成本。 <BR>
+            　 
+            <INPUT 
+                  type=radio value=1 name=Q10>
+            物料消耗<BR>
+            　 
+            <INPUT type=radio 
+                  value=2 name=Q10>
+            管理费用<BR>
+            　 
+            <INPUT type=radio value=3 
+                  name=Q10>
+            折旧费 <BR>
+            　 
+            <INPUT type=radio value=4 name=Q10>
+            直接材料<BR>
+            <BR>
+            11、企业对外销售产品时，由于产品经营和品种不符合规定要求，而适当降价，称作 　<BR>
+            　 
+            <INPUT type=radio value=1 name=Q11>
+            销售退回<BR>
+            　 
+            <INPUT 
+                  type=radio value=2 name=Q11>
+            价格折扣<BR>
+            　 
+            <INPUT type=radio 
+                  value=3 name=Q11>
+            销售折让<BR>
+            　 
+            <INPUT type=radio value=4 
+                  name=Q11>
+            销售折扣</P>
+          <P>12、一般讲，金融性资产的属性具有如下相互联系、互相制约的关系： 　<BR>
+            　 
+            <INPUT type=radio 
+                  value=1 name=Q12>
+            流动性强的，收益较差<BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q12>
+            流动性强的，收益较好<BR>
+            　 
+            <INPUT type=radio value=3 name=Q12>
+            收益大的，风险较小<BR>
+            　 
+            <INPUT type=radio value=4 name=Q12>
+            流动性弱的，风险较小<BR>
+            <BR>
+            13、某公司当初以100万元购入一块土地，目前市价80万元，如欲在这块土地上兴建厂房，应: 　<BR>
+            　 
+            <INPUT type=radio value=1 name=Q13>
+            以100万元作为投资分析的机会成本考虑<BR>
+            　 
+            <INPUT type=radio value=2 name=Q13>
+            以80万元作为投资分析的机会成本考虑 <BR>
+            　 
+            <INPUT type=radio value=3 name=Q13>
+            以20万元作为投资分析的机会成本考虑<BR>
+            　 
+            <INPUT type=radio value=4 name=Q13>
+            以100万元作为投资分析的沉没成本考虑 <BR>
+            <BR>
+            14、销售成本对平均存货的比率，称为 　<BR>
+            　 
+            <INPUT 
+                  type=radio value=2 name=Q14>
+            营业周期<BR>
+            　 
+            <INPUT type=radio 
+                  value=3 name=Q14>
+            应收帐款周转率<BR>
+            　 
+            <INPUT type=radio value=4 
+                  name=Q14>
+            资金周转率　<BR>
+            　 
+            <INPUT type=radio value=4 name=Q14>
+            存货周转率<BR>
+            <BR>
+            15、资金占用费与产品产销数量之间的依存在系，称为 　<BR>
+            　 
+            <INPUT 
+                  type=radio value=1 name=Q15>
+            资金周转率　<BR>
+            　 
+            <INPUT type=radio 
+                  value=2 name=Q15>
+            存货周转率<BR>
+            　 
+            <INPUT type=radio value=3 
+                  name=Q15>
+            资金习性<BR>
+            　 
+            <INPUT type=radio value=4 name=Q15>
+            资金趋势 <BR>
+            <BR>
+            16、利用财务杠杆，给企业带来破产风险或普通股收益发生大幅度变动的风险，称为 　<BR>
+            　 
+            <INPUT 
+                  type=radio value=1 name=Q16>
+            经营风险<BR>
+            　 
+            <INPUT type=radio 
+                  value=2 name=Q16>
+            财务风险<BR>
+            　 
+            <INPUT type=radio value=3 
+                  name=Q16>
+            投资风险<BR>
+            　 
+            <INPUT type=radio value=4 name=Q16>
+            资金风险</P>
+          <P>17、衡量一种产品本身的市场前景的最好指标是： <BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q17>
+            市场占有率<BR>
+            　 
+            <INPUT type=radio value=2 name=Q17>
+            相对市场占有率 <BR>
+            　 
+            <INPUT type=radio value=3 name=Q17>
+            销售增长率<BR>
+            　 
+            <INPUT type=radio value=4 name=Q17>
+            投资回收率</P>
+          <P>18、企业的支出所产生的效益仅与本年度相关，这种支出是 <BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q18>
+            债务性支出<BR>
+            　 
+            <INPUT type=radio value=2 name=Q18>
+            营业性支出<BR>
+            　 
+            <INPUT type=radio value=3 name=Q18>
+            资本性支出<BR>
+            　 
+            <INPUT type=radio value=4 name=Q18>
+            收益性支出</P>
+          <P>19、企业投资净收益是指 　<BR>
+            　 
+            <INPUT type=radio value=1 name=Q19>
+            股利和债券利息收入<BR>
+            　 
+            <INPUT type=radio value=2 name=Q19>
+            投资分得的利润<BR>
+            　 
+            <INPUT type=radio value=3 name=Q19>
+            长期投资的增加额 <BR>
+            　 
+            <INPUT type=radio value=4 name=Q19>
+            投资收盗减投资损失后的余额</P>
+          <P>20、若不考虑其他因素，所得税率的变化会导致相应变化的指标有<BR>
+            　 
+            <INPUT type=radio 
+                  value=1 name=Q20>
+            已获利息倍数<BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q20>
+            销售毛利率<BR>
+            　 
+            <INPUT type=radio value=3 name=Q20>
+            边际贡献率　<BR>
+            　 
+            <INPUT type=radio value=4 name=Q20>
+            股利支付率</P>
+          <P align=center><SPAN 
+                  style="FONT-SIZE: 9pt; LINE-HEIGHT: 140%">
+            <INPUT type=hidden 
+                  name=ftype>
+            <INPUT type=hidden name=cptype>
+            <INPUT type=hidden 
+                  name=cpname>
+            <INPUT type=hidden name=score>
+            <INPUT style="FONT-SIZE: 9pt; FONT-FAMILY: 宋体" onclick=processForm(this.form) type=button value="提交答卷>>测评结果" name=button>
+            <INPUT type=reset value=重新选择 name=B2>
+            <BR>
+            <TEXTAREA style="FONT-SIZE: 9pt; COLOR: blue; FONT-FAMILY: 宋体" name=answer rows=6 cols=70></TEXTAREA>
+            </SPAN></P>
+          <P align=center><A class=mainz 
+                  href="javascript:closewin();"><FONT 
+                  color=#000000>关闭窗口</FONT></A> </P>
+        </FORM></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</BODY></HTML>

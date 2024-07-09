@@ -1,0 +1,406 @@
+<HTML><HEAD><TITLE>素质测评_冲突处理能力测评</TITLE>
+<SCRIPT 
+language=JavaScript>function closewin() {    window.close(); return;} </SCRIPT>
+
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<STYLE type=text/css>.zi9pt {
+	FONT-SIZE: 9pt
+}
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<SCRIPT language=JavaScript>
+      var ftype="性格测评";
+      var cptype="职业性格";
+      var cpname="冲突处理能力";
+//
+function processForm(form){
+var xf1,xf2,hc1,hc2,hc3,hc4,hc5,hc6,hc7,hc8,hc9,hc10,hc11,hc12;
+xf1=xf2=xf3=0;
+hc1=hc2=hc3=hc4=hc5=hc6=hc7=hc8=hc9=hc10=hc11=hc12=0;
+//loops through the radio buttons finding out which one is selected
+if (form.c1[0].checked==1) hc1=7;
+if (form.c1[1].checked==1) hc1=6;
+if (form.c1[2].checked==1) hc1=5;
+if (form.c1[3].checked==1) hc1=4;
+if (form.c1[4].checked==1) hc1=3;
+if (form.c1[5].checked==1) hc1=2;
+if (form.c1[6].checked==1) hc1=1;
+if (form.c2[0].checked==1) hc2=7;
+if (form.c2[1].checked==1) hc2=6;
+if (form.c2[2].checked==1) hc2=5;
+if (form.c2[3].checked==1) hc2=4;
+if (form.c2[4].checked==1) hc2=3;
+if (form.c2[5].checked==1) hc2=2;
+if (form.c2[6].checked==1) hc2=1;
+if (form.c3[0].checked==1) hc3=7;
+if (form.c3[1].checked==1) hc3=6;
+if (form.c3[2].checked==1) hc3=5;
+if (form.c3[3].checked==1) hc3=4;
+if (form.c3[4].checked==1) hc3=3;
+if (form.c3[5].checked==1) hc3=2;
+if (form.c3[6].checked==1) hc3=1;
+if (form.c4[0].checked==1) hc4=7;
+if (form.c4[1].checked==1) hc4=6;
+if (form.c4[2].checked==1) hc4=5;
+if (form.c4[3].checked==1) hc4=4;
+if (form.c4[4].checked==1) hc4=3;
+if (form.c4[5].checked==1) hc4=2;
+if (form.c4[6].checked==1) hc4=1;
+if (form.c5[0].checked==1) hc5=7;
+if (form.c5[1].checked==1) hc5=6;
+if (form.c5[2].checked==1) hc5=5;
+if (form.c5[3].checked==1) hc5=4;
+if (form.c5[4].checked==1) hc5=3;
+if (form.c5[5].checked==1) hc5=2;
+if (form.c5[6].checked==1) hc5=1;
+if (form.c6[0].checked==1) hc6=7;
+if (form.c6[1].checked==1) hc6=6;
+if (form.c6[2].checked==1) hc6=5;
+if (form.c6[3].checked==1) hc6=4;
+if (form.c6[4].checked==1) hc6=3;
+if (form.c6[5].checked==1) hc6=2;
+if (form.c6[6].checked==1) hc6=1;
+if (form.c7[0].checked==1) hc7=7;
+if (form.c7[1].checked==1) hc7=6;
+if (form.c7[2].checked==1) hc7=5;
+if (form.c7[3].checked==1) hc7=4;
+if (form.c7[4].checked==1) hc7=3;
+if (form.c7[5].checked==1) hc7=2;
+if (form.c7[6].checked==1) hc7=1;
+if (form.c8[0].checked==1) hc8=7;
+if (form.c8[1].checked==1) hc8=6;
+if (form.c8[2].checked==1) hc8=5;
+if (form.c8[3].checked==1) hc8=4;
+if (form.c8[4].checked==1) hc8=3;
+if (form.c8[5].checked==1) hc8=2;
+if (form.c8[6].checked==1) hc8=1;
+if (form.c9[0].checked==1) hc9=7;
+if (form.c9[1].checked==1) hc9=6;
+if (form.c9[2].checked==1) hc9=5;
+if (form.c9[3].checked==1) hc9=4;
+if (form.c9[4].checked==1) hc9=3;
+if (form.c9[5].checked==1) hc9=2;
+if (form.c9[6].checked==1) hc9=1;
+if (form.c10[0].checked==1) hc10=7;
+if (form.c10[1].checked==1) hc10=6;
+if (form.c10[2].checked==1) hc10=5;
+if (form.c10[3].checked==1) hc10=4;
+if (form.c10[4].checked==1) hc10=3;
+if (form.c10[5].checked==1) hc10=2;
+if (form.c10[6].checked==1) hc10=1;
+if (form.c11[0].checked==1) hc11=7;
+if (form.c11[1].checked==1) hc11=6;
+if (form.c11[2].checked==1) hc11=5;
+if (form.c11[3].checked==1) hc11=4;
+if (form.c11[4].checked==1) hc11=3;
+if (form.c11[5].checked==1) hc11=2;
+if (form.c11[6].checked==1) hc11=1;
+if (form.c12[0].checked==1) hc12=7;
+if (form.c12[1].checked==1) hc12=6;
+if (form.c12[2].checked==1) hc12=5;
+if (form.c12[3].checked==1) hc12=4;
+if (form.c12[4].checked==1) hc12=3;
+if (form.c12[5].checked==1) hc12=2;
+if (form.c12[6].checked==1) hc12=1;
+xf1=hc1+hc4+hc7+hc10;
+xf2=hc2+hc5+hc8+hc11;
+xf3=hc3+hc6+hc9+hc12;	
+xf=xf1+xf2+xf3	
+result=xf;
+form.score.value=result;
+form.ftype.value=ftype;
+form.cptype.value=cptype;
+form.cpname.value=cpname;
+if (xf==0)
+form.answer.value="你没有选择任何项，请重新选择！"
+else
+form.answer.value="非争议性方面得分为"+xf1+"分,解决问题方面得分为"+xf2+"分,控制方面得分为"+xf3+"分。非抗争性方面、解决问题方面、控制方面，这三方面的哪个得分最多，表明你更经常地采用该方式来应付冲突（结果仅为参考）。非抗争型的个体会尽量避免和上级发生冲突。如果发生冲突，为了维持和上级的关系，会牺牲自己的观点以减少和上级的分歧，或者主观认为自己是对的，采取退缩或压抑的方式，对冲突漠不关心或希望逃避和上级的争论；解决问题型的个体面对冲突时会在澄清彼此异同的基础上提出一个能使双方都满足的办法，或者使双方都作出一定的让步，让双方的利益得到部分的满足，从而使问题能够解决；控制型的个体面对冲突时更关注自己目标的实现和获得利益，而不顾虑冲突对方的影响。";
+
+return result;}
+function collection(form)
+{
+if (processForm(form)==0) 
+ alert ("您没有做任何选择!请重新选择!");
+else
+ { 
+ form.action="/cpxt/collection.asp";
+ form.method="post";
+//form.score.value=processForm(form);
+form.submit();}
+}
+// -->
+
+</SCRIPT>
+<TABLE width="770" border=1 
+            align=center cellPadding=0 cellSpacing=0 bordercolor="#000066" class=zi9pt>
+  <TBODY>
+    <TR vAlign=top> 
+      <TD> <P>　 </P>
+        <P align=center><FONT color=#ffffff size=2><B><FONT 
+                  color=#000099 size=3>冲突处理能力测评</FONT></B></FONT></P>
+        <FORM name=hhr>
+          <P>��工作中的分歧和冲突在所难免,关键在于如何处理冲突。良好的冲突处理方式可以使化解你与上级或同事的矛盾,获得对方的理解和支持，否则可能导致关系紧张,产生隔膜或纠纷。每个人都有自己应付冲突的方式和风格,个体处理冲突的方式大体上有三种倾向：非抗争型、解决问题型和控制型。<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp;阅读下面的题目,选择你的符合程度。请根据自己的第一印象回答,不要过多考虑。 </P>
+          <P>1、我不敢和上司提出会引起争议的问题。<BR>
+            <INPUT type=radio value=1 name=c1>
+            从不如此 
+            <INPUT type=radio value=3 name=c1>
+            大多不如此 
+            <INPUT 
+                  type=radio value=5 name=c1>
+            偶尔不如此<BR>
+            <INPUT type=radio 
+                  value=V1 name=c1>
+            说不准 
+            <INPUT type=radio value=V2 name=c1>
+            偶而如此 
+            <INPUT type=radio value=V3 name=c1>
+            大多如此 
+            <INPUT type=radio 
+                  value=V4 name=c1>
+            总是如此 </P>
+          <DIV align=left> 
+            <P>2、当我和上司的意见不一致时，我会把双方的意见结合起来，设法想出另一个全新的点子来解决问题。<BR>
+              <INPUT 
+                  type=radio value=11 name=c2>
+              从不如此 
+              <INPUT type=radio value=31 
+                  name=c2>
+              大多不如此 
+              <INPUT type=radio value=51 name=c2>
+              偶尔不如此<BR>
+              <INPUT type=radio value=V5 name=c2>
+              说不准 
+              <INPUT 
+                  type=radio value=V6 name=c2>
+              偶而如此 
+              <INPUT type=radio value=V7 
+                  name=c2>
+              大多如此 
+              <INPUT type=radio value=V8 name=c2>
+              总是如此 </P>
+          </DIV>
+          <DIV align=left> 
+            <P>3、当我不同意上司的看法时，我会把自己的意见讲出来。<BR>
+              <INPUT type=radio value=12 
+                  name=c3>
+              从不如此 
+              <INPUT type=radio value=32 name=c3>
+              大多不如此 
+              <INPUT 
+                  type=radio value=52 name=c3>
+              偶尔不如此<BR>
+              <INPUT type=radio 
+                  value=V9 name=c3>
+              说不准 
+              <INPUT type=radio value=V10 name=c3>
+              偶而如此 
+              <INPUT type=radio value=V11 name=c3>
+              大多如此 
+              <INPUT 
+                  type=radio value=V12 name=c3>
+              总是如此 </P>
+          </DIV>
+          <DIV align=left> 
+            <P>4、为了避免争议，我会保持沉默。<BR>
+              <INPUT type=radio value=13 name=c4>
+              从不如此 
+              <INPUT type=radio value=33 name=c4>
+              大多不如此 
+              <INPUT 
+                  type=radio value=53 name=c4>
+              偶尔不如此<BR>
+              <INPUT type=radio 
+                  value=V13 name=c4>
+              说不准 
+              <INPUT type=radio value=V14 name=c4>
+              偶而如此 
+              <INPUT type=radio value=V15 name=c4>
+              大多如此 
+              <INPUT 
+                  type=radio value=V16 name=c4>
+              总是如此 </P>
+          </DIV>
+          <DIV align=left> 
+            <P>5、我所提出的办法，都能融合各种不同的意见。<BR>
+              <INPUT type=radio value=14 
+                  name=c5>
+              从不如此 
+              <INPUT type=radio value=34 name=c5>
+              大多不如此 
+              <INPUT 
+                  type=radio value=54 name=c5>
+              偶尔不如此<BR>
+              <INPUT type=radio 
+                  value=V17 name=c5>
+              说不准 
+              <INPUT type=radio value=V18 name=c5>
+              偶而如此 
+              <INPUT type=radio value=V19 name=c5>
+              大多如此 
+              <INPUT 
+                  type=radio value=V20 name=c5>
+              总是如此 </P>
+          </DIV>
+          <DIV align=left> 
+            <P>6、当我想让上司接受我的看法时，我会提高我的音量。<BR>
+              <INPUT type=radio value=15 
+                  name=c6>
+              从不如此 
+              <INPUT type=radio value=35 name=c6>
+              大多不如此 
+              <INPUT 
+                  type=radio value=55 name=c6>
+              偶尔不如此<BR>
+              <INPUT type=radio 
+                  value=V21 name=c6>
+              说不准 
+              <INPUT type=radio value=V22 name=c6>
+              偶而如此 
+              <INPUT type=radio value=V23 name=c6>
+              大多如此 
+              <INPUT 
+                  type=radio value=V24 name=c6>
+              总是如此 </P>
+          </DIV>
+          <DIV align=left> 
+            <P>7、我会婉转地把争议的激烈程度减弱下来。<BR>
+              <INPUT type=radio value=16 name=c7>
+              从不如此 
+              <INPUT type=radio value=17 name=c7>
+              大多不如此 
+              <INPUT 
+                  type=radio value=56 name=c7>
+              偶尔不如此<BR>
+              <INPUT type=radio 
+                  value=V25 name=c7>
+              说不准 
+              <INPUT type=radio value=V26 name=c7>
+              偶而如此 
+              <INPUT type=radio value=V27 name=c7>
+              大多如此 
+              <INPUT 
+                  type=radio value=V28 name=c7>
+              总是如此 </P>
+          </DIV>
+          <DIV align=left> 
+            <P>8、我和上司意见出现分歧时，我会以折衷的方式解决。<BR>
+              <INPUT type=radio value=17 
+                  name=c8>
+              从不如此 
+              <INPUT type=radio value=18 name=c8>
+              大多不如此 
+              <INPUT 
+                  type=radio value=57 name=c8>
+              偶尔不如此<BR>
+              <INPUT type=radio 
+                  value=V29 name=c8>
+              说不准 
+              <INPUT type=radio value=V30 name=c8>
+              偶而如此 
+              <INPUT type=radio value=V31 name=c8>
+              大多如此 
+              <INPUT 
+                  type=radio value=V32 name=c8>
+              总是如此 </P>
+          </DIV>
+          <DIV align=left> 
+            <P>9、我会据理力争，直到上司了解我的立场。<BR>
+              <INPUT type=radio value=18 name=c9>
+              从不如此 
+              <INPUT type=radio value=38 name=c9>
+              大多不如此 
+              <INPUT 
+                  type=radio value=58 name=c9>
+              偶尔不如此<BR>
+              <INPUT type=radio 
+                  value=V33 name=c9>
+              说不准 
+              <INPUT type=radio value=V34 name=c9>
+              偶而如此 
+              <INPUT type=radio value=V35 name=c9>
+              大多如此 
+              <INPUT 
+                  type=radio value=V36 name=c9>
+              总是如此 </P>
+          </DIV>
+          <DIV align=left> 
+            <P>10、我会设法使双方的分歧显得并没有那么重要。<BR>
+              <INPUT type=radio value=19 
+                  name=c10>
+              从不如此 
+              <INPUT type=radio value=39 name=c10>
+              大多不如此 
+              <INPUT type=radio value=59 name=c10>
+              偶尔不如此<BR>
+              <INPUT 
+                  type=radio value=V37 name=c10>
+              说不准 
+              <INPUT type=radio value=V38 
+                  name=c10>
+              偶而如此 
+              <INPUT type=radio value=V39 name=c10>
+              大多如此 
+              <INPUT type=radio value=V40 name=c10>
+              总是如此 </P>
+          </DIV>
+          <DIV align=left> 
+            <P>11、我认为应该坐下来好好谈谈才能解决彼此的意见。<BR>
+              <INPUT type=radio value=110 
+                  name=c11>
+              从不如此 
+              <INPUT type=radio value=310 name=c11>
+              大多不如此 
+              <INPUT type=radio value=510 name=c11>
+              偶尔不如此<BR>
+              <INPUT 
+                  type=radio value=V41 name=c11>
+              说不准 
+              <INPUT type=radio value=V42 
+                  name=c11>
+              偶而如此 
+              <INPUT type=radio value=V43 name=c11>
+              大多如此 
+              <INPUT type=radio value=V44 name=c11>
+              总是如此 </P>
+          </DIV>
+          <DIV align=left>12、当我和上司争执时，我会坚定表明我的意见。<BR>
+            <INPUT type=radio 
+                  value=111 name=c12>
+            从不如此 
+            <INPUT type=radio value=311 name=c12>
+            大多不如此 
+            <INPUT type=radio value=511 name=c12>
+            偶尔不如此<BR>
+            <INPUT 
+                  type=radio value=V45 name=c12>
+            说不准 
+            <INPUT type=radio value=V46 
+                  name=c12>
+            偶而如此 
+            <INPUT type=radio value=V47 name=c12>
+            大多如此 
+            <INPUT type=radio value=V48 name=c12>
+            总是如此</DIV>
+          <P align=center><SPAN 
+                  style="FONT-SIZE: 9pt; LINE-HEIGHT: 140%">
+            <INPUT type=hidden 
+                  name=ftype>
+            <INPUT type=hidden name=cptype>
+            <INPUT type=hidden 
+                  name=cpname>
+            <INPUT type=hidden name=score>
+            <INPUT style="FONT-SIZE: 9pt; FONT-FAMILY: 宋体" onclick=processForm(this.form) type=button value="提交答卷>>测评结果" name=button>
+            <INPUT type=reset value=重新选择 name=B2>
+            <BR>
+            <TEXTAREA style="FONT-SIZE: 9pt; COLOR: blue; FONT-FAMILY: 宋体" name=answer rows=6 cols=70></TEXTAREA>
+            </SPAN></P>
+          <DIV align=center><A class=mainz 
+                  href="javascript:closewin();"><FONT 
+                  color=#000000>关闭窗口</FONT></A> </DIV>
+        </FORM></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</BODY></HTML>

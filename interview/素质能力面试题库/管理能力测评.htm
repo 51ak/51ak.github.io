@@ -1,0 +1,209 @@
+<HTML><HEAD><TITLE>ËØÖÊ²âÆÀ_¹ÜÀíÄÜÁ¦²âÆÀ</TITLE>
+<SCRIPT 
+language=JavaScript>function closewin() {    window.close(); return;} </SCRIPT>
+
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<STYLE type=text/css>.zi9pt {
+	FONT-SIZE: 9pt
+}
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<SCRIPT language=JavaScript>
+      var ftype="ËØÖÊ²âÆÀ";
+      var cptype="Ö°ÒµËØÖÊ";
+      var cpname="¹ÜÀíÄÜÁ¦";
+//
+function processForm(form){
+var xf=0;
+hc=new Array(15);
+var roll_call=hc.length;
+for (i=roll_call;i>0;i--)
+{hc[i-1]=0};
+//loops through the radio buttons finding out which one is selected
+if (form.c0[0].checked==1) hc[0]=1;
+if (form.c1[0].checked==1) hc[1]=1;
+if (form.c2[0].checked==1) hc[2]=1;
+if (form.c3[0].checked==1) hc[3]=1;
+if (form.c4[0].checked==1) hc[4]=1;
+if (form.c5[0].checked==1) hc[5]=1;
+if (form.c6[0].checked==1) hc[6]=1;
+if (form.c7[0].checked==1) hc[7]=1;
+if (form.c8[0].checked==1) hc[8]=1; 
+if (form.c9[0].checked==1) hc[9]=1;
+if (form.c10[0].checked==1) hc[10]=1;
+if (form.c11[0].checked==1) hc[11]=1;
+if (form.c12[0].checked==1) hc[12]=1;
+if (form.c13[0].checked==1) hc[13]=1;
+if (form.c14[0].checked==1) hc[14]=1;
+for (i=roll_call;i>0;i--)
+{xf+=hc[i-1]};	
+result=xf;
+form.score.value=result;
+form.ftype.value=ftype;
+form.cptype.value=cptype;
+form.cpname.value=cpname;
+if (xf==0)                 
+form.answer.value="ÄãÃ»ÓÐÑ¡ÔñÈÎºÎÏî£¬ÇëÖØÐÂÑ¡Ôñ£¡"
+else  if (xf==15)
+form.answer.value="ÄãµÄ·ÖÊýÎª"+xf+"·Ö:¹ÜÀíÄÜÁ¦ºÜÇ¿¡£ÉÃ³¤ÓÐ¼Æ»®µØ¹¤×÷ºÍÑ§Ï°£¬ÓÈÆäÊÊºÏ¹ÜÀí´óÐÍ×éÖ¯¡£";
+else  if (xf>=13)
+form.answer.value="ÄãµÄ·ÖÊýÎª"+xf+"·Ö:¹ÜÀíÄÜÁ¦½ÏÇ¿¡£ÄÜÎÈÖØ¡¢ÔúÊµµØ×öºÃ¹¤×÷£¬ºÜÉÙ³öÏÖÒâÍâ»òÓÐËð×éÖ¯·¢Õ¹µÄÊ§Îó¡£";
+else
+if (xf>=10)
+form.answer.value="ÄãµÄ·ÖÊýÎª"+xf+"·Ö:¹ÜÀíÄÜÁ¦Ò»°ã£¬¶ÔÄãµÄ×¨Òµ·½ÃæµÄÊÂÎñÐÔ¹ÜÀíÉÐ¿É¡£¹ÜÀí·½·¨¾­³£ÊÜµ½ÇéÐ÷µÄ¸ÉÈÅÊÇ×î´óµÄÒÅº¶¡£";
+else
+if (xf>=6)
+form.answer.value="ÄãµÄ·ÖÊýÎª"+xf+"·Ö:¹ÜÀíÄÜÁ¦½Ï²î¡£Õâ¿ÉÄÜÓëÄãÑÔÐÐ×ÔÓÉ£¬²»·þÔ¼ÊøÓÐ¹Ø¡£";
+else
+form.answer.value="ÄãµÄ·ÖÊýÎª"+xf+"·Ö:¹ÜÀíÄÜÁ¦ºÜ²î¡£µ«Äã¾ßÓÐ½Ï¸ßµÄÒÕÊõ´´ÔìÁ¦£¬ÊÊºÏ´ÓÊÂÓëÒÕÊõÓÐ¹ØµÄ¾ßÌå¹¤×÷¡£";
+return result;}
+function collection(form)
+{
+if (processForm(form)==0) 
+ alert ("ÄúÃ»ÓÐ×öÈÎºÎÑ¡Ôñ!ÇëÖØÐÂÑ¡Ôñ!");
+else
+ { 
+ form.action="/cpxt/collection.asp";
+ form.method="post";
+//form.score.value=processForm(form);
+form.submit();}
+}
+// -->
+
+</SCRIPT>
+<TABLE width="770" border=1 
+            align=center cellPadding=0 cellSpacing=0 bordercolor="#000066" class=zi9pt>
+  <TBODY>
+    <TR vAlign=top> 
+      <TD> <P>¡¡ </P>
+        <P align=center><FONT color=#ffffff size=2><B><FONT 
+                  color=#000099 size=3>¹ÜÀíÄÜÁ¦²âÆÀ</FONT></B></FONT></P>
+        <FORM name=hhr>
+          <P>ÿÿ 
+          <P>¡¡¹ÜÀíÄÜÁ¦ÊÇÃ¿Ò»¸öÖ°Òµ¾­ÀíÈË±Ø±¸µÄÖØÒªÄÜÁ¦£¬ÒªÔÚ¹¤×÷ÖÐ²»¶ÏµØÅàÑø¡¢»ýÀÛ×Ô¼ºµÄ×éÖ¯¹ÜÀíÄÜÁ¦¡£ÏÂÃæµÄ²âÊÔÌâ£¬ÇëÄã¸ù¾Ý×Ô¼ºµÄÊµ¼ÊÇé¿ö»Ø´ð¡£ 
+          </P>
+          <HR align=center width=500 color=green SIZE=1>
+          <P>¡¡¡¡1£®Ï°¹ßÓÚÐÐ¶¯Ö®Ç°ÖÆ¶¨¼Æ»® <BR>
+            ¡¡ 
+            <INPUT type=radio value=1 name=c0>
+            ÊÇ&nbsp;&nbsp; 
+            <INPUT type=radio value=2 name=c0>
+            ·ñ <BR>
+            ¡¡¡¡2£®¾­³£´¦ÓÚÐ§ÂÊÉÏµÄ¿¼ÂÇ¶ø¸ü¸Ä¼Æ»®¡£<BR>
+            ¡¡ 
+            <INPUT type=radio value=1 
+                  name=c1>
+            ÊÇ&nbsp;&nbsp; 
+            <INPUT type=radio value=2 name=c1>
+            ·ñ <BR>
+            ¡¡¡¡3£®ÄÜ¾­³£ÊÕ¼¯ËûÈËµÄ¸÷ÖÖ·´Ó³¡£ <BR>
+            ¡¡ 
+            <INPUT type=radio value=1 name=c2>
+            ÊÇ&nbsp;&nbsp; 
+            <INPUT type=radio value=2 name=c2>
+            ·ñ <BR>
+            ¡¡¡¡4£®ÊµÏÖÄ¿±êÊÇ½â¾öÎÊÌâµÄ¼ÌÐø¡£<BR>
+            ¡¡ 
+            <INPUT type=radio value=1 name=c3>
+            ÊÇ&nbsp;&nbsp; 
+            <INPUT type=radio value=2 name=c3>
+            ·ñ <BR>
+            ¡¡¡¡5£®ÁÙË¯Ç°Ë¼¿¼³ï»®Ã÷ÌìÒª×öµÄÊÂÇé¡£ <BR>
+            ¡¡ 
+            <INPUT type=radio value=1 
+                  name=c4>
+            ÊÇ&nbsp;&nbsp; 
+            <INPUT type=radio value=2 name=c4>
+            ·ñ <BR>
+            ¡¡¡¡6£®ÊÂÎñÉÏµÄÁªÏµ¡¢Ö¸Ê¾³£³£ÊÇÒ»Ë¿²»¹¶¡£ <BR>
+            ¡¡ 
+            <INPUT type=radio value=1 
+                  name=c5>
+            ÊÇ&nbsp;&nbsp; 
+            <INPUT type=radio value=2 name=c5>
+            ·ñ <BR>
+            ¡¡¡¡7£®ÓÐ¾­³£¼ÇÂ¼×Ô¼ºÐÐ¶¯µÄÏ°¹ß¡£<BR>
+            ¡¡ 
+            <INPUT type=radio value=1 name=c6>
+            ÊÇ&nbsp;&nbsp; 
+            <INPUT type=radio value=2 name=c6>
+            ·ñ <BR>
+            ¡¡¡¡8£®ÄÜÑÏ¸ñÖÆÔ¼×Ô¼ºµÄÐÐ¶¯¡£ <BR>
+            ¡¡ 
+            <INPUT type=radio value=1 name=c7>
+            ÊÇ&nbsp;&nbsp; 
+            <INPUT type=radio value=2 name=c7>
+            ·ñ <BR>
+            ¡¡¡¡9£®ÎÞÂÛºÎÊ±ºÎµØ£¬¶¼ÄÜÓÐÄ¿µÄµÄÐÐ¶¯¡£ <BR>
+            ¡¡ 
+            <INPUT type=radio value=1 
+                  name=c8>
+            ÊÇ&nbsp;&nbsp; 
+            <INPUT type=radio value=2 name=c8>
+            ·ñ <BR>
+            ¡¡¡¡10£®ÄÜ¾­³£Ë¼¿¼¶Ô²ß£¬É¨³ýÊµÏÖÄ¿±êÖÐµÄÕÏ°­¡£<BR>
+            ¡¡ 
+            <INPUT type=radio value=1 
+                  name=c9>
+            ÊÇ&nbsp;&nbsp; 
+            <INPUT type=radio value=2 name=c9>
+            ·ñ <BR>
+            ÿÿÿÿ11£®ÄÜÃ¿Ìì¼ì²é×ÔÒÑµ±ÌìµÄÐÐ¶¯Ð§ÂÊ¡£ <BR>
+            ¡¡ 
+            <INPUT type=radio value=1 
+                  name=c10>
+            ÊÇ&nbsp;&nbsp; 
+            <INPUT type=radio value=2 name=c10>
+            ·ñ <BR>
+            ÿÿÿÿ12£®¾­³£ÑÏ¸ñ²é¶ÔÔ¤¶¨Ä¿±êºÍÊµ¼Ê³É¼¨¡£<BR>
+            ¡¡ 
+            <INPUT type=radio value=1 
+                  name=c11>
+            ÊÇ&nbsp;&nbsp; 
+            <INPUT type=radio value=2 name=c11>
+            ·ñ <BR>
+            ÿÿÿÿ13£®¶Ô¹¤×÷µÄ³É¹û·Ç³£Ãô¸Ð¡£ <BR>
+            ¡¡ 
+            <INPUT type=radio value=1 
+                  name=c12>
+            ÊÇ&nbsp;&nbsp; 
+            <INPUT type=radio value=2 name=c12>
+            ·ñ <BR>
+            ÿÿÿÿ14£®½ñÌìÔ¤ÏÈ°²ÅÅµÄ¹¤×÷¾ö²»ÍÏÑÓµ½Ã÷Ìì¡£ <BR>
+            ¡¡ 
+            <INPUT type=radio value=1 
+                  name=c13>
+            ÊÇ&nbsp;&nbsp; 
+            <INPUT type=radio value=2 name=c13>
+            ·ñ <BR>
+            ÿÿÿÿ15£®Ï°¹ßÓÚÔÚÕÆÎÕÓÐ¹ØÐÅÏ¢»ù´¡ÉÏÖÆ¶¨Ä¿±êºÍ¼Æ»®¡£<BR>
+            ¡¡ 
+            <INPUT type=radio 
+                  value=1 name=c14>
+            ÊÇ&nbsp;&nbsp; 
+            <INPUT type=radio value=2 
+                  name=c14>
+            ·ñ </P>
+          <HR align=center width=500 color=green SIZE=1>
+          <P align=center><SPAN 
+                  style="FONT-SIZE: 9pt; LINE-HEIGHT: 140%">
+            <INPUT type=hidden 
+                  name=ftype>
+            <INPUT type=hidden name=cptype>
+            <INPUT type=hidden 
+                  name=cpname>
+            <INPUT type=hidden name=score>
+            <INPUT style="FONT-SIZE: 9pt; FONT-FAMILY: ËÎÌå" onclick=processForm(this.form) type=button value="Ìá½»´ð¾í>>²âÆÀ½á¹û" name=button>
+            <INPUT type=reset value=ÖØÐÂÑ¡Ôñ name=B2>
+            <BR>
+            <TEXTAREA style="FONT-SIZE: 9pt; COLOR: blue; FONT-FAMILY: ËÎÌå" name=answer rows=6 cols=70></TEXTAREA>
+            </SPAN></P>
+          <DIV align=center><A class=mainz 
+                  href="javascript:closewin();"><FONT 
+                  color=#000000>¹Ø±Õ´°¿Ú</FONT></A> </DIV>
+        </FORM></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</BODY></HTML>

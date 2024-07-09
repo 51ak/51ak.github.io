@@ -1,0 +1,195 @@
+<HTML><HEAD><TITLE>素质测评_问题处理能力测评</TITLE>
+<SCRIPT 
+language=JavaScript>function closewin() {    window.close(); return;} </SCRIPT>
+
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<STYLE type=text/css>.zi9pt {
+	FONT-SIZE: 9pt
+}
+</STYLE>
+</HEAD>
+<BODY bgColor=#f2f2f2>
+<SCRIPT language=JavaScript>
+      var ftype="素质测评";
+      var cptype="职业素质";
+      var cpname="问题处理能力";
+//
+function processForm(form){
+var xf=0;
+if (form.c1[0].checked==1) xf+=1;
+if (form.c2[0].checked==1) xf+=1;
+if (form.c3[0].checked==1) xf+=1;
+if (form.c4[0].checked==1) xf+=1;
+if (form.c5[0].checked==1) xf+=1;
+if (form.c6[0].checked==1) xf+=1;
+if (form.c7[0].checked==1) xf+=1;
+if (form.c8[0].checked==1) xf+=1;
+if (form.c9[0].checked==1) xf+=1;
+if (form.c10[0].checked==1) xf+=1;
+if (form.c1[1].checked==1) xf+=2;
+if (form.c2[1].checked==1) xf+=2;
+if (form.c3[1].checked==1) xf+=2;
+if (form.c4[1].checked==1) xf+=2;
+if (form.c5[1].checked==1) xf+=2;
+if (form.c6[1].checked==1) xf+=2;
+if (form.c7[1].checked==1) xf+=2;
+if (form.c8[1].checked==1) xf+=2;
+if (form.c9[1].checked==1) xf+=2;
+if (form.c10[1].checked==1) xf+=2;
+if (form.c1[2].checked==1) xf+=3;
+if (form.c2[2].checked==1) xf+=3;
+if (form.c3[2].checked==1) xf+=3;
+if (form.c4[2].checked==1) xf+=3;
+if (form.c5[2].checked==1) xf+=3;
+if (form.c6[2].checked==1) xf+=3;
+if (form.c7[2].checked==1) xf+=3;
+if (form.c8[2].checked==1) xf+=3;
+if (form.c9[2].checked==1) xf+=3;
+if (form.c10[2].checked==1) xf+=3;
+
+result=xf;
+form.score.value=result;
+form.ftype.value=ftype;
+form.cptype.value=cptype;
+form.cpname.value=cpname;
+if (xf==0)
+form.answer.value="你没有选择任何项，请重新选择！"
+else
+if (xf>=25)
+form.answer.value="你的分数为"+xf+"分，你的处理问题有能力很强，所以作出的决定是从实际情况出发的。";
+else
+if (xf>=15)
+form.answer.value="你的分数为"+xf+"分，你处理问题稍有点迟疑，不要做出那些会使你以后为难的决定， 从一开始就要面对现实。";
+else
+form.answer.value="你的分数为"+xf+"分，你面临问题时，不要让你的想象力冲昏头脑。";
+return result;}
+function collection(form)
+{
+if (processForm(form)==0) 
+ alert ("您没有做任何选择!请重新选择!");
+else { 
+ form.action="/cpxt/collection.asp";
+ form.method="post";
+//form.score.value=processForm(form);
+form.submit();}
+}
+// -->
+
+</SCRIPT>
+<TABLE width="770" border=1 
+            align=center cellPadding=0 cellSpacing=0 bordercolor="#000066" class=zi9pt>
+  <TBODY>
+    <TR vAlign=top> 
+      <TD> <P>　 </P>
+        <P align=center><FONT color=#000099 
+                  size=3><B>问题处理能力测评</B></FONT></P>
+        <FORM name=hhr>
+          <P>一些日常生活中的琐事，看起来无关重要，而万一处理不当，往往会化给你带来许多麻烦。请做下列试题，测评一下你处理问题的能力如何。</P>
+          <P>1、生日、结婚、纪念日等，这些看来你不可避免地要花钱时：<BR>
+            <INPUT type=radio value=12 
+                  name=c1>
+            告诉对方不要通知自己这些事，这样便可以不蚶裎锪恕?BR&gt;
+            <INPUT type=radio 
+                  value=32 name=c1>
+            只送礼物给那些被你认为是重要的人。<BR>
+            <INPUT type=radio 
+                  value=33 name=c1>
+            经常收集一些小的或比较奇特的礼物来应付这些情况。</P>
+          <P>2、你和别人发生矛盾或纠纷，不得不去法庭诉理时：<BR>
+            <INPUT type=radio value=11 
+                  name=c2>
+            对去法庭的焦虑和不安使你失眠了。<BR>
+            <INPUT type=radio value=31 
+                  name=c2>
+            暂时把它忘却，到出庭时再设法去应付。<BR>
+            <INPUT type=radio value=32 
+                  name=c2>
+            这是人生中难免要发生的事件之一，并不怎么重要。</P>
+          <P>3、你房间里的家俱被水管漏水给损坏时：<BR>
+            <INPUT type=radio value=11 name=c3>
+            你非常不快，口口声声地抱怨着。<BR>
+            <INPUT type=radio value=31 name=c3>
+            你想借此不交房租，并写了批评信。<BR>
+            <INPUT type=radio value=32 name=c3>
+            你自己擦洗、修理、使家俱复原。</P>
+          <P>4、你和邻居发生了争执，久无结果时：<BR>
+            <INPUT type=radio value=13 name=c4>
+            靠喝酒来解闷和把它忘了。<BR>
+            <INPUT type=radio value=33 name=c4>
+            请来律师，讨论怎样诉讼。<BR>
+            <INPUT type=radio value=14 name=c4>
+            出外散步，来平息你的愤怒。</P>
+          <P>5、生活中的各种压力使你和爱人变得易怒时：<BR>
+            <INPUT type=radio value=14 
+                  name=c5>
+            你想尽量不钻牛角尖，设法避免引起争吵。<BR>
+            <INPUT type=radio value=34 
+                  name=c5>
+            设法向第三者倾诉自己的感情。<BR>
+            <INPUT type=radio value=35 name=c5>
+            坚持和爱人一起讨论，研究解脱的办法。</P>
+          <P>6、一位好友将要结婚，而你认为他们的结合将会是痛苦的：<BR>
+            <INPUT type=radio value=15 
+                  name=c6>
+            设法使自己认为还有时间会改变计划的。<BR>
+            <INPUT type=radio value=35 
+                  name=c6>
+            不必着急，因为还有时间会改变计划的。<BR>
+            <INPUT type=radio value=36 
+                  name=c6>
+            认真地给那位朋友进行解释，耐心地阐述你的观点。</P>
+          <P>7、你的能力得到承认，并得到了一个重要工作时：<BR>
+            <INPUT type=radio value=16 
+                  name=c7>
+            放弃这种机会，这种工作的要求太高。<BR>
+            <INPUT type=radio value=36 
+                  name=c7>
+            怀疑自己能否承担起这项工作。<BR>
+            <INPUT type=radio value=37 name=c7>
+            仔细分析这项工作的要求，做好准备设法把干好。</P>
+          <P>8、你的亲友在事故中受了重伤，当你得知这个消息时：<BR>
+            <INPUT type=radio value=17 
+                  name=c8>
+            服镇静药来度过以后的几小时。<BR>
+            <INPUT type=radio value=37 name=c8>
+            抑制住自己的感情，因为你还要告诉其他亲友。<BR>
+            <INPUT type=radio value=18 name=c8>
+            听到消息便失声痛哭。</P>
+          <P>9、每逢节假日，你和爱人总要去看望谁的父母而发生口角时：<BR>
+            <INPUT type=radio value=18 
+                  name=c9>
+            认为最公证的办法是：根本不和家人共聚，以减少麻烦。<BR>
+            <INPUT type=radio 
+                  value=38 name=c9>
+            订个生硬计划，每个节假日都要和家中的各个成员共度。<BR>
+            <INPUT 
+                  type=radio value=39 name=c9>
+            决定在重要的节假日里，和你的家人团聚，而在其它节假日里则与爱人的家人共度。</P>
+          <P>10、当你感觉身体不舒服时：<BR>
+            <INPUT type=radio value=19 name=c10>
+            拖延着不去就诊，认为慢慢会好的。<BR>
+            <INPUT type=radio value=39 name=c10>
+            自己诊断一下便知害了什么病。<BR>
+            <INPUT type=radio value=310 name=c10>
+            及时告诉家人，然后去医院检查。 </P>
+          <P align=center><SPAN 
+                  style="FONT-SIZE: 9pt; LINE-HEIGHT: 140%">
+            <INPUT type=hidden 
+                  name=ftype>
+            <INPUT type=hidden name=cptype>
+            <INPUT type=hidden 
+                  name=cpname>
+            <INPUT type=hidden name=score>
+            <INPUT style="FONT-SIZE: 9pt; FONT-FAMILY: 宋体" onclick=processForm(this.form) type=button value="提交答卷>>测评结果" name=button>
+            <INPUT type=reset value=重新选择 name=B2>
+            <BR>
+            <TEXTAREA style="FONT-SIZE: 9pt; COLOR: blue; FONT-FAMILY: 宋体" name=answer rows=6 cols=70></TEXTAREA>
+            </SPAN></P>
+          <DIV align=center><A class=mainz 
+                  href="javascript:closewin();"><FONT 
+                  color=#000000>关闭窗口</FONT></A> </DIV>
+        </FORM></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</BODY></HTML>

@@ -1,0 +1,488 @@
+<HTML><HEAD><TITLE>知识测评_管理学基础</TITLE>
+<SCRIPT 
+language=JavaScript>function closewin() {    window.close(); return;} </SCRIPT>
+
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<STYLE type=text/css>.zi9pt {
+	FONT-SIZE: 9pt
+}
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<SCRIPT language=JavaScript>
+<!--
+      var ftype="知识测评";
+      var cptype="工商管理知识";
+      var cpname="管理学知识";
+//
+function processForm(form) {
+var xf = 0
+if (form.Q01[0].checked) { xf += 0 }
+if (form.Q01[1].checked) { xf += 1 }
+if (form.Q01[2].checked) { xf += 0 }
+if (form.Q01[3].checked) { xf += 0 }
+
+if (form.Q02[0].checked) { xf += 1 }
+if (form.Q02[1].checked) { xf += 0 }
+if (form.Q02[2].checked) { xf += 0 }
+if (form.Q02[3].checked) { xf += 0 }
+
+if (form.Q03[0].checked) { xf += 0 }
+if (form.Q03[1].checked) { xf += 0 }
+if (form.Q03[2].checked) { xf += 1 }
+if (form.Q03[3].checked) { xf += 0 }
+
+if (form.Q04[0].checked) { xf += 0 }
+if (form.Q04[1].checked) { xf += 0 }
+if (form.Q04[2].checked) { xf += 1}
+if (form.Q04[3].checked) { xf += 0 }
+
+
+if (form.Q05[0].checked) { xf += 0 }
+if (form.Q05[1].checked) { xf += 0 }
+if (form.Q05[2].checked) { xf += 0 }
+if (form.Q05[3].checked) { xf += 1 }
+
+
+if (form.Q06[0].checked) { xf += 0 }
+if (form.Q06[1].checked) { xf += 0 }
+if (form.Q06[2].checked) { xf += 1 }
+if (form.Q06[3].checked) { xf += 0 }
+
+
+if (form.Q07[0].checked) { xf += 1 }
+if (form.Q07[1].checked) { xf += 0 }
+if (form.Q07[2].checked) { xf += 0 }
+if (form.Q07[3].checked) { xf += 0 }
+
+
+if (form.Q08[0].checked) { xf += 0 }
+if (form.Q08[1].checked) { xf += 1 }
+if (form.Q08[2].checked) { xf += 0 }
+if (form.Q08[3].checked) { xf += 0 }
+
+
+if (form.Q09[0].checked) { xf += 0 }
+if (form.Q09[1].checked) { xf += 0 }
+if (form.Q09[2].checked) { xf += 0 }
+if (form.Q09[3].checked) { xf += 1 }
+
+
+if (form.Q10[0].checked) { xf += 0 }
+if (form.Q10[1].checked) { xf += 0 }
+if (form.Q10[2].checked) { xf += 1 }
+if (form.Q10[3].checked) { xf += 0 }
+
+if (form.Q11[0].checked) { xf += 1 }
+if (form.Q11[1].checked) { xf += 0 }
+if (form.Q11[2].checked) { xf += 0 }
+if (form.Q11[3].checked) { xf += 0 }
+
+if (form.Q12[0].checked) { xf += 0 }
+if (form.Q12[1].checked) { xf += 0 }
+if (form.Q12[2].checked) { xf += 0 }
+if (form.Q12[3].checked) { xf += 1 }
+
+if (form.Q13[0].checked) { xf += 0 }
+if (form.Q13[1].checked) { xf += 0 }
+if (form.Q13[2].checked) { xf += 1 }
+if (form.Q13[3].checked) { xf += 0 }
+
+if (form.Q14[0].checked) { xf += 0 }
+if (form.Q14[1].checked) { xf += 1 }
+if (form.Q14[2].checked) { xf += 0 }
+if (form.Q14[3].checked) { xf += 0 }
+
+if (form.Q15[0].checked) { xf += 0 }
+if (form.Q15[1].checked) { xf += 0 }
+if (form.Q15[2].checked) { xf += 1 }
+if (form.Q15[3].checked) { xf += 0 }
+
+if (form.Q16[0].checked) { xf += 0 }
+if (form.Q16[1].checked) { xf += 0 }
+if (form.Q16[2].checked) { xf += 1 }
+if (form.Q16[3].checked) { xf += 0 }
+
+if (form.Q17[0].checked) { xf += 0 }
+if (form.Q17[1].checked) { xf += 0 }
+if (form.Q17[2].checked) { xf += 0 }
+if (form.Q17[3].checked) { xf += 1 }
+
+if (form.Q18[0].checked) { xf += 0 }
+if (form.Q18[1].checked) { xf += 0 }
+if (form.Q18[2].checked) { xf += 1 }
+if (form.Q18[3].checked) { xf += 0 }
+
+if (form.Q19[0].checked) { xf += 1 }
+if (form.Q19[1].checked) { xf += 0 }
+if (form.Q19[2].checked) { xf += 0 }
+if (form.Q19[3].checked) { xf += 0 }
+
+if (form.Q20[0].checked) { xf += 0 }
+if (form.Q20[1].checked) { xf += 0 }
+if (form.Q20[2].checked) { xf += 1 }
+if (form.Q20[3].checked) { xf += 0 }
+
+result=xf;
+form.score.value=result;
+form.ftype.value=ftype;
+form.cptype.value=cptype;
+form.cpname.value=cpname;
+if (xf>=18)  form.answer.value="你的分数为"+xf+"分（总分20分）,你的管理学知识很扎实。";
+else
+if (xf>=14) form.answer.value="你的分数为"+xf+"分（总分20分）,你的管理学知识较好。";
+else 
+if (xf>=10) form.answer.value="你的分数为"+xf+"分（总分20分）,你的管理学知识为及格水平.";
+else 
+form.answer.value="你的分数为"+xf+"分（总分20分）,很遗憾，你的管理学不及格。";
+return result;}
+function collection(form)
+{
+//if (processForm(form)==0) 
+// alert ("您没有做任何选择!请重新选择!");
+//else { 
+ form.action="/cpxt/collection.asp";
+ form.method="post";
+//form.score.value=processForm(form);
+form.submit();}
+
+// -->
+
+</SCRIPT>
+<TABLE width="770" border=1 
+            align=center cellPadding=0 cellSpacing=0 bordercolor="#000066" class=zi9pt>
+  <TBODY>
+    <TR vAlign=top> 
+      <TD> <P>　 </P>
+        <P align=center><FONT color=#ffffff size=2><B><FONT 
+                  color=#000099 size=3>管理学基础</FONT></B></FONT> </P>
+        <FORM name=hhr>
+          <P>&nbsp;1、股份有限公司的最高权力机构是： 　<BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q01>
+            董事长<BR>
+            　 
+            <INPUT type=radio value=2 name=Q01>
+            股东会<BR>
+            　 
+            <INPUT type=radio value=3 name=Q01>
+            监事会<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q01>
+            总经理 </P>
+          <P>2、在一定规模条件下，管理幅度越大，其管理层次就会： <BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q02>
+            越少 <BR>
+            　 
+            <INPUT type=radio value=2 name=Q02>
+            越多<BR>
+            　 
+            <INPUT type=radio value=3 name=Q02>
+            时多时少<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q02>
+            不变</P>
+          <P>3、我国目前大多数企业采用的是下面哪一种组织形式？ 　<BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q03>
+            直线制 <BR>
+            　 
+            <INPUT type=radio value=2 name=Q03>
+            职能制<BR>
+            　 
+            <INPUT type=radio value=3 name=Q03>
+            直线职能制 <BR>
+            　 
+            <INPUT type=radio value=4 name=Q03>
+            事业部制<BR>
+          </P>
+          <P>4、在企业资产中，以下哪一项是无形资产？ 　　　 <BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q04>
+            企业战略<BR>
+            　 
+            <INPUT type=radio value=2 name=Q04>
+            企业行为准则 <BR>
+            　 
+            <INPUT type=radio value=3 name=Q04>
+            企业市场商誉<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q04>
+            企业文化</P>
+          <P>5、企业将经营领域扩展到与原先完全不相关的产品生产和销售领域中，属于 <BR>
+            　 
+            <INPUT type=radio 
+                  value=1 name=Q05>
+            多角化策略<BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q05>
+            一体化策略 <BR>
+            　 
+            <INPUT type=radio value=3 name=Q05>
+            横向多角化策略<BR>
+            　 
+            <INPUT type=radio value=4 name=Q05>
+            混合多角化<BR>
+          </P>
+          <P>6、商鞅在秦国推行改革，他在城门口立了一根木桩，声称能将木桩从南门移到北门的，奖励五百金，但没有人去尝试。根据期望理论，这是由于：　　　<BR>
+            　 
+            <INPUT type=radio value=1 name=Q06>
+            五百金的效价太低<BR>
+            　 
+            <INPUT 
+                  type=radio value=2 name=Q06>
+            居民对完成要求的期望很低 <BR>
+            　 
+            <INPUT 
+                  type=radio value=3 name=Q06>
+            居民对得到报酬的期望很低<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q06>
+            枪打出头鸟，大家都不敢尝试</P>
+          <P>7、管理的首要职能是： 　<BR>
+            　 
+            <INPUT type=radio value=1 name=Q07>
+            计划<BR>
+            　 
+            <INPUT type=radio value=2 name=Q07>
+            组织<BR>
+            　 
+            <INPUT 
+                  type=radio value=3 name=Q07>
+            领导<BR>
+            　 
+            <INPUT type=radio value=4 
+                  name=Q07>
+            控制<BR>
+          </P>
+          <P>8、一般而言，越接近组织的最高层，管理人员的管理幅度就： 　　<BR>
+            　 
+            <INPUT type=radio 
+                  value=1 name=Q08>
+            越大<BR>
+            　 
+            <INPUT type=radio value=2 name=Q08>
+            越小<BR>
+            　 
+            <INPUT type=radio value=3 name=Q08>
+            不能确定<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q08>
+            与管理层次无关<BR>
+          </P>
+          <P>9、下述哪一句话不是我国推行现代企业制度的基本要求？ 　<BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q09>
+            权责明确 <BR>
+            　 
+            <INPUT type=radio value=2 name=Q09>
+            产权明晰<BR>
+            　 
+            <INPUT type=radio value=3 name=Q09>
+            政企分开<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q09>
+            自负盈亏</P>
+          <P>10、管理工作的核心工作是 　　<BR>
+            　 
+            <INPUT type=radio value=1 name=Q10>
+            计划<BR>
+            　 
+            <INPUT type=radio value=2 name=Q10>
+            组织<BR>
+            　 
+            <INPUT 
+                  type=radio value=3 name=Q10>
+            协调<BR>
+            　 
+            <INPUT type=radio value=4 
+                  name=Q10>
+            控制<BR>
+            <BR>
+            11、强调对人的管理要因人而异是“＿＿”的观点。<BR>
+            　 
+            <INPUT 
+                  type=radio value=1 name=Q11>
+            复杂人<BR>
+            　 
+            <INPUT type=radio 
+                  value=2 name=Q11>
+            自我实现人<BR>
+            　 
+            <INPUT type=radio value=3 
+                  name=Q11>
+            经济人 <BR>
+            　 
+            <INPUT type=radio value=4 name=Q11>
+            社会人 </P>
+          <P>12、计划是一动态过程，其步骤包括<BR>
+            　 
+            <INPUT type=radio value=1 name=Q12>
+            预测、决策、制定方案<BR>
+            　 
+            <INPUT type=radio value=2 name=Q12>
+            确定目标。预测、决策、预算并拟定派生计划 <BR>
+            　 
+            <INPUT type=radio value=3 name=Q12>
+            预测、决策。制定方案。预算<BR>
+            　 
+            <INPUT type=radio value=4 name=Q12>
+            确定目标。拟定可行方案。决策、执行可行方案<BR>
+            <BR>
+            13、标准化的形成与完善过程是一个不断应用＿＿原则在处理问题的过程。 <BR>
+            　 
+            <INPUT type=radio value=1 name=Q13>
+            统一指挥<BR>
+            　 
+            <INPUT 
+                  type=radio value=2 name=Q13>
+            统一领导<BR>
+            　 
+            <INPUT type=radio 
+                  value=3 name=Q13>
+            弹性原则<BR>
+            　 
+            <INPUT type=radio value=4 
+                  name=Q13>
+            例外事件<BR>
+            <BR>
+            14、专业化是有限度的，合理的专业化限度受两方面因素的影响<BR>
+            　 
+            <INPUT type=radio value=2 name=Q14>
+            人的因素, 技术因素<BR>
+            　 
+            <INPUT 
+                  type=radio value=3 name=Q14>
+            技术因素，管理因素<BR>
+            　 
+            <INPUT type=radio 
+                  value=4 name=Q14>
+            心理因素，物理因素<BR>
+            　 
+            <INPUT type=radio value=4 
+                  name=Q14>
+            心理因素，经济因素<BR>
+            <BR>
+            15、总经理如果指定一个总经理办公室的职员去干预客房部的管理运作，这位总经理违反了 <BR>
+            　 
+            <INPUT type=radio value=1 name=Q15>
+            管理幅度原则<BR>
+            　 
+            <INPUT 
+                  type=radio value=2 name=Q15>
+            统一指挥原则<BR>
+            　 
+            <INPUT type=radio 
+                  value=3 name=Q15>
+            授权原则<BR>
+            　 
+            <INPUT type=radio value=4 
+                  name=Q15>
+            协调原则 <BR>
+            <BR>
+            16、妨碍目标得以实现的因素，称为 <BR>
+            　 
+            <INPUT 
+                  type=radio value=1 name=Q16>
+            主要因素 <BR>
+            　 
+            <INPUT type=radio 
+                  value=2 name=Q16>
+            关键因素<BR>
+            　 
+            <INPUT type=radio value=3 
+                  name=Q16>
+            限定因素<BR>
+            　 
+            <INPUT type=radio value=4 name=Q16>
+            环境因素</P>
+          <P>17、上层主管人员的重要任务是 <BR>
+            　 
+            <INPUT type=radio value=1 name=Q17>
+            监督执行<BR>
+            　 
+            <INPUT type=radio value=2 name=Q17>
+            协调执行<BR>
+            　 
+            <INPUT 
+                  type=radio value=3 name=Q17>
+            监督控制<BR>
+            　 
+            <INPUT type=radio 
+                  value=4 name=Q17>
+            决策控制</P>
+          <P>18、指导与领导工作原理是指 <BR>
+            　 
+            <INPUT type=radio value=1 name=Q18>
+            职务要求明确原理<BR>
+            　 
+            <INPUT type=radio value=2 name=Q18>
+            指明目标原理<BR>
+            　 
+            <INPUT type=radio value=3 name=Q18>
+            责权利一致原理<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q18>
+            不断培养原理</P>
+          <P>19、激励原理属于<BR>
+            　 
+            <INPUT type=radio value=1 name=Q19>
+            指导与领导工作的原理<BR>
+            　 
+            <INPUT type=radio value=2 name=Q19>
+            人员配备的原理 <BR>
+            　 
+            <INPUT type=radio value=3 name=Q19>
+            主管人员考评原理<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q19>
+            主管人员培养原理</P>
+          <P>20、管理审核的目标是<BR>
+            　 
+            <INPUT type=radio value=1 name=Q20>
+            评价主管人员的工作质量和管理水平<BR>
+            　 
+            <INPUT type=radio value=2 name=Q20>
+            评价工人的工作质量和技术水平<BR>
+            　 
+            <INPUT type=radio value=3 name=Q20>
+            评价一个组织整个管理系统的管理质量 <BR>
+            　 
+            <INPUT type=radio value=4 name=Q20>
+            评价厂长(经理)的工作质量和管理水平 </P>
+          <P align=center><SPAN 
+                  style="FONT-SIZE: 9pt; LINE-HEIGHT: 140%">
+            <INPUT type=hidden 
+                  name=ftype>
+            <INPUT type=hidden name=cptype>
+            <INPUT type=hidden 
+                  name=cpname>
+            <INPUT type=hidden name=score>
+            <INPUT style="FONT-SIZE: 9pt; FONT-FAMILY: 宋体" onclick=processForm(this.form) type=button value="提交答卷>>测评结果" name=button>
+            <INPUT type=reset value=重新选择 name=B2>
+            <BR>
+            <TEXTAREA style="FONT-SIZE: 9pt; COLOR: blue; FONT-FAMILY: 宋体" name=answer rows=6 cols=70></TEXTAREA>
+            </SPAN></P>
+          <P align=center><A class=mainz 
+                  href="javascript:closewin();"><FONT 
+                  color=#000000>关闭窗口</FONT></A> </P>
+        </FORM></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</BODY></HTML>

@@ -1,0 +1,291 @@
+<HTML><HEAD><TITLE>素质测评_事业心测评</TITLE>
+<SCRIPT 
+language=JavaScript>function closewin() {    window.close(); return;} </SCRIPT>
+
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<STYLE type=text/css>.zi9pt {
+	FONT-SIZE: 9pt
+}
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<SCRIPT language=JavaScript>
+      var ftype="素质测评";
+      var cptype="职业素质";
+      var cpname="事业心";
+//
+function processForm(form) {
+var xf = 0
+if (form.c0[0].checked) { xf += 5 }  
+if (form.c0[1].checked) { xf += 4 } 
+if (form.c0[2].checked) { xf += 3 } 
+if (form.c0[3].checked) { xf += 2 }
+if (form.c0[4].checked) { xf += 1 }
+
+if (form.c1[0].checked) { xf += 5 }  
+if (form.c1[1].checked) { xf += 4 } 
+if (form.c1[2].checked) { xf += 3 } 
+if (form.c1[3].checked) { xf += 2 }
+if (form.c1[4].checked) { xf += 1 }
+
+if (form.c2[0].checked) { xf += 5 }  
+if (form.c2[1].checked) { xf += 4 } 
+if (form.c2[2].checked) { xf += 3 } 
+if (form.c2[3].checked) { xf += 2 }
+if (form.c2[4].checked) { xf += 1 }
+
+if (form.c3[0].checked) { xf += 5 }  
+if (form.c3[1].checked) { xf += 4 } 
+if (form.c3[2].checked) { xf += 3 } 
+if (form.c3[3].checked) { xf += 2 }
+if (form.c3[4].checked) { xf += 1 }
+
+if (form.c4[0].checked) { xf += 5 }  
+if (form.c4[1].checked) { xf += 4 } 
+if (form.c4[2].checked) { xf += 3 } 
+if (form.c4[3].checked) { xf += 2 }
+if (form.c4[4].checked) { xf += 1 }
+
+if (form.c5[0].checked) { xf += 5 }  
+if (form.c5[1].checked) { xf += 4 } 
+if (form.c5[2].checked) { xf += 3 } 
+if (form.c5[3].checked) { xf += 2 }
+if (form.c5[4].checked) { xf += 1 }
+
+if (form.c6[0].checked) { xf += 5 }  
+if (form.c6[1].checked) { xf += 4 } 
+if (form.c6[2].checked) { xf += 3 } 
+if (form.c6[3].checked) { xf += 2 }
+if (form.c6[4].checked) { xf += 1 }
+
+if (form.c7[0].checked) { xf += 5 }  
+if (form.c7[1].checked) { xf += 4 } 
+if (form.c7[2].checked) { xf += 3 } 
+if (form.c7[3].checked) { xf += 2 }
+if (form.c7[4].checked) { xf += 1 }
+
+if (form.c8[0].checked) { xf += 5 }  
+if (form.c8[1].checked) { xf += 4 } 
+if (form.c8[2].checked) { xf += 3 } 
+if (form.c8[3].checked) { xf += 2 }
+if (form.c8[4].checked) { xf += 1 }
+
+if (form.c9[0].checked) { xf += 5 }  
+if (form.c9[1].checked) { xf += 4 } 
+if (form.c9[2].checked) { xf += 3 } 
+if (form.c9[3].checked) { xf += 2 }
+if (form.c9[4].checked) { xf += 1 }
+
+result=xf;
+form.score.value=result;
+form.ftype.value=ftype;
+form.cptype.value=cptype;
+form.cpname.value=cpname;
+if (xf<10)
+form.answer.value="你没有选择任何项或尚未做完，请重新选择！"
+else
+if (xf>=40)
+form.answer.value="你的分数为"+xf+"分，你的事业心很强，成就动机很高，办事追求成功、完美，不喜欢半途而废。如果一件事没办好或失败了，你会感到非常不满意。你经常生活在一种紧张、焦虑的氛围中。你也许应该为自己创造一种轻松愉快的气氛来调剂身心，使工作完成得更为出色。";
+else
+if (xf>=25)
+form.answer.value="你的分数为"+xf+"分，你有较强的事业心和工作能力，能妥善处理好自己的能力和任务完成水平之间的关系，失败了也能正确对待。你身心健康，但还要不断提高自己的工作能力。";
+else
+form.answer.value="你的分数为"+xf+"分，你的事业心不强，不喜欢争强好胜，只求过一种安稳的日子。你对自己的工作标准提得过低，这样不利于你能力的充分发挥和提高。你应该在工作上严格要求自己，在奋斗中实现自己的价值。";
+return result;}
+function collection(form)
+{
+if (processForm(form)==0) 
+ alert ("您没有做任何选择!请重新选择!");
+else
+ { 
+ form.action="/cpxt/collection.asp";
+ form.method="post";
+//form.score.value=processForm(form);
+form.submit();}
+}
+// -->
+
+</SCRIPT>
+<TABLE width="770" border=1 
+            align=center cellPadding=0 cellSpacing=0 bordercolor="#000066" class=zi9pt>
+  <TBODY>
+    <TR vAlign=top> 
+      <TD> <P>　 </P>
+        <P align=center><FONT color=#ffffff size=2><B><FONT 
+                  color=#000099 size=3>事业心测评</FONT></B></FONT></P>
+        <FORM name=hhr>
+          <P>�� 
+          <P><FONT 
+                  color=#0000ff>　　</FONT>虽然说仅有事业心并不能够保证一定可以取得事业的成功，但没有事业心的人则绝对不可能有什么大的成就。每一个成功人士都有一颗很强的事业心，都希望自己成为一个优秀的、出类拔萃的人。</P>
+          <BR>
+          <FONT 
+                  color=#0000ff>　</FONT>1．做一件事情，当结果与你的估计相符时，你就感到很满意；否则，即使别人说你成功了，你也会感到不满意。<BR>
+          &nbsp; 
+          <INPUT type=radio value=1 name=c0>
+          非常符合 
+          <INPUT type=radio 
+                  value=2 name=c0>
+          比较符合 
+          <INPUT type=radio value=3 name=c0>
+          难以回答 
+          <INPUT type=radio value=4 name=c0>
+          不太符合 
+          <INPUT type=radio 
+                  value=5 name=c0>
+          很不符合 
+          <P>&nbsp;&nbsp;2．通常，对所做的事，你要求达到的标准往往要高于一般人。<BR>
+            &nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c1>
+            非常符合 
+            <INPUT type=radio value=2 
+                  name=c1>
+            比较符合 
+            <INPUT type=radio value=3 name=c1>
+            难以回答 
+            <INPUT 
+                  type=radio value=4 name=c1>
+            不太符合 
+            <INPUT type=radio value=5 
+                  name=c1>
+            很不符合 </P>
+          <P>　3．对感兴趣的事，你都能尽力而为；对不感兴趣的事，干好干坏无所谓。<BR>
+            &nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c2>
+            非常符合 
+            <INPUT type=radio value=2 
+                  name=c2>
+            比较符合 
+            <INPUT type=radio value=3 name=c2>
+            难以回答 
+            <INPUT 
+                  type=radio value=4 name=c2>
+            不太符合 
+            <INPUT type=radio value=5 
+                  name=c2>
+            很不符合 </P>
+          <P>　4．你觉得，做出成就是人生最重要的、最幸福的事情，即使苦些也值行。<BR>
+            &nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c3>
+            非常符合 
+            <INPUT type=radio value=2 
+                  name=c3>
+            比较符合 
+            <INPUT type=radio value=3 name=c3>
+            难以回答 
+            <INPUT 
+                  type=radio value=4 name=c3>
+            不太符合 
+            <INPUT type=radio value=5 
+                  name=c3>
+            很不符合 </P>
+          <P>　5．每做一事，你通常都从工作方法上入手。<BR>
+            &nbsp; 
+            <INPUT type=radio value=1 
+                  name=c4>
+            非常符合 
+            <INPUT type=radio value=2 name=c4>
+            比较符合 
+            <INPUT 
+                  type=radio value=3 name=c4>
+            难以回答 
+            <INPUT type=radio value=4 
+                  name=c4>
+            不太符合 
+            <INPUT type=radio value=5 name=c4>
+            很不符合 </P>
+          <P>　6．你经常成功，失败很少，即使失败了，也会在别的方面寻找弥补。<BR>
+            &nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c5>
+            非常符合 
+            <INPUT type=radio value=2 
+                  name=c5>
+            比较符合 
+            <INPUT type=radio value=3 name=c5>
+            难以回答 
+            <INPUT 
+                  type=radio value=4 name=c5>
+            不太符合 
+            <INPUT type=radio value=5 
+                  name=c5>
+            很不符合 </P>
+          <P>　7．好胜心强，从不服输。<BR>
+            &nbsp; 
+            <INPUT type=radio value=1 name=c6>
+            非常符合 
+            <INPUT type=radio value=2 name=c6>
+            比较符合 
+            <INPUT type=radio 
+                  value=3 name=c6>
+            难以回答 
+            <INPUT type=radio value=4 name=c6>
+            不太符合 
+            <INPUT type=radio value=5 name=c6>
+            很不符合 </P>
+          <P>　8．如果有几件事，重要程度相同、难易不等，你会选：<BR>
+            &nbsp; 
+            <INPUT type=radio 
+                  value=1 name=c7>
+            最难的 
+            <INPUT type=radio value=2 name=c7>
+            比较难的 
+            <INPUT type=radio value=3 name=c7>
+            中等难度的 
+            <INPUT type=radio 
+                  value=4 name=c7>
+            比较容易的 
+            <INPUT type=radio value=5 name=c7>
+            最容易的</P>
+          <P>　9．如果人们做某种事，预先有标准的话，你会选：<BR>
+            &nbsp; 
+            <INPUT type=radio 
+                  value=1 name=c8>
+            最高标准 
+            <INPUT type=radio value=2 name=c8>
+            较高标准 
+            <INPUT type=radio value=3 name=c8>
+            标准适中 
+            <INPUT type=radio 
+                  value=4 name=c8>
+            较低标准 
+            <INPUT type=radio value=5 name=c8>
+            最低标准</P>
+          <P>　10．你很想轰轰烈烈地做一番大事业。<BR>
+            &nbsp; 
+            <INPUT type=radio value=1 
+                  name=c9>
+            非常符合 
+            <INPUT type=radio value=2 name=c9>
+            比较符合 
+            <INPUT 
+                  type=radio value=3 name=c9>
+            难以回答 
+            <INPUT type=radio value=4 
+                  name=c9>
+            不太符合 
+            <INPUT type=radio value=5 name=c9>
+            很不符合 </P>
+          <P align=center><SPAN 
+                  style="FONT-SIZE: 9pt; LINE-HEIGHT: 140%">
+            <INPUT type=hidden 
+                  name=ftype>
+            <INPUT type=hidden name=cptype>
+            <INPUT type=hidden 
+                  name=cpname>
+            <INPUT type=hidden name=score>
+            <INPUT style="FONT-SIZE: 9pt; FONT-FAMILY: 宋体" onclick=processForm(this.form) type=button value="提交答卷>>测评结果" name=button>
+            <INPUT type=reset value=重新选择 name=B2>
+            <BR>
+            <TEXTAREA style="FONT-SIZE: 9pt; COLOR: blue; FONT-FAMILY: 宋体" name=answer rows=6 cols=70></TEXTAREA>
+            </SPAN></P>
+          <DIV align=center><A class=mainz 
+                  href="javascript:closewin();"><FONT 
+                  color=#000000>关闭窗口</FONT></A> </DIV>
+        </FORM></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</BODY></HTML>

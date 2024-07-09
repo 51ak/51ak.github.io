@@ -1,0 +1,501 @@
+<HTML><HEAD><TITLE>知识测评_生产管理</TITLE>
+<SCRIPT 
+language=JavaScript>function closewin() {    window.close(); return;} </SCRIPT>
+
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<STYLE type=text/css>.zi9pt {
+	FONT-SIZE: 9pt
+}
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<SCRIPT language=JavaScript>
+<!--
+      var ftype="知识测评";
+      var cptype="工商管理知识";
+      var cpname="生产管理";
+//
+function processForm(form) {
+var xf = 0
+if (form.Q01[0].checked) { xf += 0 }
+if (form.Q01[1].checked) { xf += 1 }
+if (form.Q01[2].checked) { xf += 0 }
+if (form.Q01[3].checked) { xf += 0 }
+
+if (form.Q02[0].checked) { xf += 1 }
+if (form.Q02[1].checked) { xf += 0 }
+if (form.Q02[2].checked) { xf += 0 }
+if (form.Q02[3].checked) { xf += 0 }
+
+if (form.Q03[0].checked) { xf += 0 }
+if (form.Q03[1].checked) { xf += 1 }
+if (form.Q03[2].checked) { xf += 0 }
+if (form.Q03[3].checked) { xf += 0 }
+
+if (form.Q04[0].checked) { xf += 0 }
+if (form.Q04[1].checked) { xf += 1 }
+if (form.Q04[2].checked) { xf += 0 }
+if (form.Q04[3].checked) { xf += 0 }
+
+
+if (form.Q05[0].checked) { xf += 0 }
+if (form.Q05[1].checked) { xf += 1 }
+if (form.Q05[2].checked) { xf += 0 }
+if (form.Q05[3].checked) { xf += 0 }
+
+
+if (form.Q06[0].checked) { xf += 0 }
+if (form.Q06[1].checked) { xf += 1 }
+if (form.Q06[2].checked) { xf += 0 }
+if (form.Q06[3].checked) { xf += 0 }
+
+
+if (form.Q07[0].checked) { xf += 0 }
+if (form.Q07[1].checked) { xf += 0 }
+if (form.Q07[2].checked) { xf += 0 }
+if (form.Q07[3].checked) { xf += 1 }
+
+
+if (form.Q08[0].checked) { xf += 0 }
+if (form.Q08[1].checked) { xf += 1 }
+if (form.Q08[2].checked) { xf += 0 }
+if (form.Q08[3].checked) { xf += 0 }
+
+
+if (form.Q09[0].checked) { xf += 0 }
+if (form.Q09[1].checked) { xf += 1 }
+if (form.Q09[2].checked) { xf += 0 }
+if (form.Q09[3].checked) { xf += 0 }
+
+
+if (form.Q10[0].checked) { xf += 0 }
+if (form.Q10[1].checked) { xf += 0 }
+if (form.Q10[2].checked) { xf += 1 }
+if (form.Q10[3].checked) { xf += 0 }
+
+if (form.Q11[0].checked) { xf += 0 }
+if (form.Q11[1].checked) { xf += 0 }
+if (form.Q11[2].checked) { xf += 1 }
+if (form.Q11[3].checked) { xf += 0 }
+
+if (form.Q12[0].checked) { xf += 0 }
+if (form.Q12[1].checked) { xf += 0 }
+if (form.Q12[2].checked) { xf += 0 }
+if (form.Q12[3].checked) { xf += 1 }
+
+if (form.Q13[0].checked) { xf += 0 }
+if (form.Q13[1].checked) { xf += 0 }
+if (form.Q13[2].checked) { xf += 0 }
+if (form.Q13[3].checked) { xf += 1 }
+
+if (form.Q14[0].checked) { xf += 0 }
+if (form.Q14[1].checked) { xf += 0 }
+if (form.Q14[2].checked) { xf += 0 }
+if (form.Q14[3].checked) { xf += 1 }
+
+if (form.Q15[0].checked) { xf += 0 }
+if (form.Q15[1].checked) { xf += 0 }
+if (form.Q15[2].checked) { xf += 1 }
+if (form.Q15[3].checked) { xf += 0 }
+
+if (form.Q16[0].checked) { xf += 1 }
+if (form.Q16[1].checked) { xf += 0 }
+if (form.Q16[2].checked) { xf += 0 }
+if (form.Q16[3].checked) { xf += 0 }
+
+if (form.Q17[0].checked) { xf += 1 }
+if (form.Q17[1].checked) { xf += 0 }
+if (form.Q17[2].checked) { xf += 0 }
+if (form.Q17[3].checked) { xf += 0 }
+
+if (form.Q18[0].checked) { xf += 0 }
+if (form.Q18[1].checked) { xf += 0 }
+if (form.Q18[2].checked) { xf += 1 }
+if (form.Q18[3].checked) { xf += 0 }
+
+if (form.Q19[0].checked) { xf += 1 }
+if (form.Q19[1].checked) { xf += 0 }
+if (form.Q19[2].checked) { xf += 0 }
+if (form.Q19[3].checked) { xf += 0 }
+
+if (form.Q20[0].checked) { xf += 0 }
+if (form.Q20[1].checked) { xf += 0 }
+if (form.Q20[2].checked) { xf += 0 }
+if (form.Q20[3].checked) { xf += 1 }
+
+
+
+result=xf;
+form.score.value=result;
+form.ftype.value=ftype;
+form.cptype.value=cptype;
+form.cpname.value=cpname;
+if (xf>=18)  form.answer.value="你的分数为"+xf+"分（总分20分）,你的生产管理知识很扎实。";
+else
+if (xf>=14) form.answer.value="你的分数为"+xf+"分（总分20分）,你的生产管理知识较好。";
+else 
+if (xf>=10) form.answer.value="你的分数为"+xf+"分（总分20分）,你的生产管理知识为及格水平.";
+else 
+form.answer.value="你的分数为"+xf+"分（总分20分）,很遗憾，你的生产管理知识不及格。";
+return result;}
+function collection(form)
+{
+//if (processForm(form)==0) 
+// alert ("您没有做任何选择!请重新选择!");
+//else  { 
+ form.action="/cpxt/collection.asp";
+ form.method="post";
+//form.score.value=processForm(form);
+form.submit();}
+
+// -->
+
+</SCRIPT>
+<TABLE width="770" border=1 
+            align=center cellPadding=0 cellSpacing=0 bordercolor="#003366" class=zi9pt>
+  <TBODY>
+    <TR vAlign=top> 
+      <TD> <P>　 </P>
+        <P align=center><FONT color=#ffffff size=2><B><FONT 
+                  color=#000099 size=3>生产管理</FONT></B></FONT> </P>
+        <FORM name=hhr>
+          <P>&nbsp;1、生产过程是由如下四个部分构成的生产运动过程，其中核心部分为：<BR>
+            　 
+            <INPUT 
+                  type=radio value=2 name=Q01>
+            生产技术准备过程<BR>
+            　 
+            <INPUT type=radio 
+                  value=2 name=Q01>
+            基本生产过程<BR>
+            　 
+            <INPUT type=radio value=3 
+                  name=Q01>
+            辅助生产过程<BR>
+            　 
+            <INPUT type=radio value=4 name=Q01>
+            生产服务过程</P>
+          <P>2、某汽车公司生产两种型号的汽车、三种型号的运输用卡车和一种型号的公交用车，则该企业拥有的产品线为： 　　 　　 <BR>
+            　 
+            <INPUT type=radio value=1 name=Q02>
+            3条 <BR>
+            　 
+            <INPUT 
+                  type=radio value=2 name=Q02>
+            6条<BR>
+            　 
+            <INPUT type=radio value=3 
+                  name=Q02>
+            5条<BR>
+            　 
+            <INPUT type=radio value=4 name=Q02>
+            不能确定</P>
+          <P>3、成批轮番生产企业编制生产作业计划的方法是：　<BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q03>
+            在制品定额法<BR>
+            　 
+            <INPUT type=radio value=2 name=Q03>
+            提前期法 <BR>
+            　 
+            <INPUT type=radio value=3 name=Q03>
+            生产周期法<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q03>
+            订货点法 </P>
+          <P>4、在一个生产车间里，集中了各种不同类型的生产设备和不同工种的工人，对某种产品进行不同工艺方法加工的是：<BR>
+            　 
+            <INPUT type=radio value=1 name=Q04>
+            工艺专业化生产车间<BR>
+            　 
+            <INPUT 
+                  type=radio value=2 name=Q04>
+            对象专业化生产车间 <BR>
+            　 
+            <INPUT type=radio 
+                  value=3 name=Q04>
+            大量流水生产车间<BR>
+            　 
+            <INPUT type=radio value=4 
+                  name=Q04>
+            成批流水生产车间</P>
+          <P>5、分析和判断工序质量是否稳定可采用： 　　　<BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q05>
+            排列图法<BR>
+            　 
+            <INPUT type=radio value=2 name=Q05>
+            控制图法<BR>
+            　 
+            <INPUT type=radio value=3 name=Q05>
+            散布图法<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q05>
+            因果分析图法 <BR>
+          </P>
+          <P>6、企业生产能力结构很复杂,是一种系统的、整体的综合生产能力。下列提法不正确的是：　<BR>
+            　 
+            <INPUT 
+                  type=radio value=1 name=Q06>
+            综合生产能力是对各部分生产能力的综合平衡的结果<BR>
+            　 
+            <INPUT type=radio value=2 name=Q06>
+            综合生产能力总是受到各部分生产能力中最高量能力的限制<BR>
+            　 
+            <INPUT type=radio value=3 
+                  name=Q06>
+            企业生产配置的直接目的是实现最优组合的生产能力<BR>
+            　 
+            <INPUT type=radio 
+                  value=4 name=Q06>
+            综合生产能力的最优状态是各部分生产能力平衡协调，利用充分，达到最高产量。</P>
+          <P>7、库存有多种功能与作用,下列哪一项不是:　 <BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q07>
+            预防生产和销售的不确定性<BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q07>
+            实现经济生产批量<BR>
+            　 
+            <INPUT type=radio value=3 name=Q07>
+            实现经济购买批量<BR>
+            　 
+            <INPUT type=radio value=4 name=Q07>
+            降低企业财务费用 　<BR>
+          </P>
+          <P>8、由于工人没有正确地按照规定的工艺规程操作而造成的质量波动属于:<BR>
+            　 
+            <INPUT type=radio 
+                  value=1 name=Q08>
+            偶然性波动<BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q08>
+            系统性波动<BR>
+            　 
+            <INPUT type=radio value=3 name=Q08>
+            突发性波动<BR>
+            　 
+            <INPUT type=radio value=4 name=Q08>
+            以上选项都不对<BR>
+          </P>
+          <P>9、恰值其时管理（JIT即Just-in-time)是七十年代中期发展起来的一种新的管理概念，起源于日本的丰田公司，这是一种 <BR>
+            　 
+            <INPUT type=radio value=1 name=Q09>
+            简单的库存管理方式<BR>
+            　 
+            <INPUT type=radio value=2 name=Q09>
+            先进的生产管理方式<BR>
+            　 
+            <INPUT 
+                  type=radio value=3 name=Q09>
+            人力资源管理模式<BR>
+            　 
+            <INPUT type=radio 
+                  value=4 name=Q09>
+            现代财务管理模式　 </P>
+          <P>10、机械装配行业常常采用MRPⅡ系统安排生产，那么，MRPⅡ系统是指： <BR>
+            　 
+            <INPUT 
+                  type=radio value=1 name=Q10>
+            库存控制系统<BR>
+            　 
+            <INPUT type=radio 
+                  value=2 name=Q10>
+            生产和库存控制系统 <BR>
+            　 
+            <INPUT type=radio value=3 
+                  name=Q10>
+            生产资源计划系统 <BR>
+            　 
+            <INPUT type=radio value=4 name=Q10>
+            生产流水线控制系统 　<BR>
+            <BR>
+            11、经济订货批量(EOQ)是使总库存成本最低时的订货批量，下列哪一项不影响经济订货批量的确定：<BR>
+            　 
+            <INPUT type=radio value=1 name=Q11>
+            某期间内总需求量<BR>
+            　 
+            <INPUT 
+                  type=radio value=2 name=Q11>
+            订货成本 <BR>
+            　 
+            <INPUT type=radio 
+                  value=3 name=Q11>
+            安全库存<BR>
+            　 
+            <INPUT type=radio value=4 
+                  name=Q11>
+            单位产品保管费用 </P>
+          <P>12、下列哪一项不属于库存费用/成本：　<BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q12>
+            产品成本<BR>
+            　 
+            <INPUT type=radio value=2 name=Q12>
+            保管费用 <BR>
+            　 
+            <INPUT type=radio value=3 name=Q12>
+            订货费用 <BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q12>
+            产品运输费用<BR>
+            <BR>
+            13、决定零部件是外购还是自制，需要考虑的最重要的因素: <BR>
+            　 
+            <INPUT 
+                  type=radio value=1 name=Q13>
+            成本<BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q13>
+            质量保证<BR>
+            　 
+            <INPUT type=radio value=3 name=Q13>
+            供应的可靠性<BR>
+            　 
+            <INPUT type=radio value=4 name=Q13>
+            生产的专业化程度<BR>
+            <BR>
+            14、机加工车间刚刚换了车床,新车床比原车床工作效率可提高20%，车间技术组提出是否应该提高其工时定额？车工不同意，理由是：对新车床还不熟悉，很难达到额定效率。车间主任和副主任商量出以下四种解决方案，请你选择一项最合理的解决办法： 
+            <BR>
+            　 
+            <INPUT type=radio value=2 name=Q14>
+            由全体车工开会讨论，决定新车床的工作定额。<BR>
+            　 
+            <INPUT type=radio value=3 name=Q14>
+            由车间主任决定，是否采取新定额，定额是多少。<BR>
+            　 
+            <INPUT type=radio value=4 
+                  name=Q14>
+            由车间的职工代表开会讨论，决定新车床定额。<BR>
+            　 
+            <INPUT type=radio value=4 
+                  name=Q14>
+            报工厂劳动科，由他们会同设备科，经过严格的测评来确定新车床的工作定额。<BR>
+            <BR>
+            15、对生产设备的布置，大多数要求按工艺原则排列，这种生产类型属于：<BR>
+            　 
+            <INPUT type=radio value=1 name=Q15>
+            大量生产类型<BR>
+            　 
+            <INPUT 
+                  type=radio value=2 name=Q15>
+            大批生产类型<BR>
+            　 
+            <INPUT type=radio 
+                  value=3 name=Q15>
+            单件小批生产类型<BR>
+            　 
+            <INPUT type=radio value=4 
+                  name=Q15>
+            中批生产类型<BR>
+            <BR>
+            16、质量保证体系及组成部分是按PDCA的管理循环，周而复始地进行着，其中的"D"属于： <BR>
+            　 
+            <INPUT type=radio value=1 name=Q16>
+            执行阶段<BR>
+            　 
+            <INPUT 
+                  type=radio value=2 name=Q16>
+            计划阶段<BR>
+            　 
+            <INPUT type=radio 
+                  value=3 name=Q16>
+            检查阶段<BR>
+            　 
+            <INPUT type=radio value=4 
+                  name=Q16>
+            处理阶段</P>
+          <P>17、企业在安排产品生产进度计划时，对市场需求量大，而且比较稳定的产品，其全年任务可采取：<BR>
+            　 
+            <INPUT 
+                  type=radio value=1 name=Q17>
+            平均分配的方式<BR>
+            　 
+            <INPUT type=radio 
+                  value=2 name=Q17>
+            分期递增方法<BR>
+            　 
+            <INPUT type=radio value=3 
+                  name=Q17>
+            抛物线形递增方式<BR>
+            　 
+            <INPUT type=radio value=4 name=Q17>
+            集中轮番方式</P>
+          <P>18、当产品生产出来以后，通过检验以控制质量的方法，称为： <BR>
+            　 
+            <INPUT type=radio 
+                  value=1 name=Q18>
+            预先控制<BR>
+            　 
+            <INPUT type=radio value=2 
+                  name=Q18>
+            适时控制<BR>
+            　 
+            <INPUT type=radio value=3 name=Q18>
+            反馈控制<BR>
+            　 
+            <INPUT type=radio value=4 name=Q18>
+            前馈控制 </P>
+          <P>19、传统的流水线生产对下列哪种情况最为适用?<BR>
+            　 
+            <INPUT type=radio value=1 
+                  name=Q19>
+            生产技术较为稳定、品种较少、批量大的产品生产<BR>
+            　 
+            <INPUT type=radio 
+                  value=2 name=Q19>
+            多品种、小批量产品的生产<BR>
+            　 
+            <INPUT type=radio value=3 
+                  name=Q19>
+            单件小批产品的生产<BR>
+            　 
+            <INPUT type=radio value=4 name=Q19>
+            技术简单、品种较多、批量较大的产品生产</P>
+          <P>20、制造企业过量库存造成"积压资金，占用仓库"的被动局面，为改变这种局面，向零库存或尽可能少库存的目标努力，可以采取的最有效方法为：<BR>
+            　 
+            <INPUT type=radio value=1 name=Q20>
+            积极开拓产品需求市场<BR>
+            　 
+            <INPUT 
+                  type=radio value=2 name=Q20>
+            定期清仓核资、处理积压物品<BR>
+            　 
+            <INPUT 
+                  type=radio value=3 name=Q20>
+            推行定额库存、超额受罚<BR>
+            　 
+            <INPUT 
+                  type=radio value=4 name=Q20>
+            以上方案均欠妥，应采取其他的有效方法</P>
+          <P align=center><SPAN 
+                  style="FONT-SIZE: 9pt; LINE-HEIGHT: 140%">
+            <INPUT type=hidden 
+                  name=ftype>
+            <INPUT type=hidden name=cptype>
+            <INPUT type=hidden 
+                  name=cpname>
+            <INPUT type=hidden name=score>
+            <INPUT style="FONT-SIZE: 9pt; FONT-FAMILY: 宋体" onclick=processForm(this.form) type=button value="提交答卷>>测评结果" name=button>
+            <INPUT type=reset value=重新选择 name=B2>
+            <BR>
+            <TEXTAREA style="FONT-SIZE: 9pt; COLOR: blue; FONT-FAMILY: 宋体" name=answer rows=6 cols=70></TEXTAREA>
+            </SPAN></P>
+          <P align=center><A class=mainz 
+                  href="javascript:closewin();"><FONT 
+                  color=#000000>关闭窗口</FONT></A> </P>
+        </FORM></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</BODY></HTML>

@@ -1,0 +1,299 @@
+<HTML><HEAD><TITLE>个性测评_职业倾向测评2</TITLE>
+<SCRIPT 
+language=JavaScript>function closewin() {    window.close(); return;} </SCRIPT>
+
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<STYLE type=text/css>.zi9pt {
+	FONT-SIZE: 9pt
+}
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<SCRIPT language=JavaScript>
+<!--  
+      var ftype="性格测评";
+      var cptype="职业性格";
+      var cpname="职业取向(2)";
+//
+function processForm(form){
+var xf1,xf2,hc1, hc2, hc3, hc4, hc5, hc6, hc7, hc8, hc9,hc10,hc11,hc12;
+xf=hc1=hc2=hc3=hc4=hc5=hc6=hc7=hc8=hc9=hc10=hc11=hc12=1;
+//loops through the radio buttons finding out which one is selected
+if (form.c1[1].checked==1) hc1=2;
+if (form.c1[2].checked==1) hc1=3;
+if (form.c1[3].checked==1) hc1=4;
+if (form.c1[4].checked==1) hc1=5;
+if (form.c2[1].checked==1) hc2=2;
+if (form.c2[2].checked==1) hc2=3;
+if (form.c2[3].checked==1) hc2=4;
+if (form.c2[4].checked==1) hc2=5;
+if (form.c3[1].checked==1) hc3=2;
+if (form.c3[2].checked==1) hc3=3;
+if (form.c3[3].checked==1) hc3=4;
+if (form.c3[4].checked==1) hc3=5;
+if (form.c4[1].checked==1) hc4=2;
+if (form.c4[2].checked==1) hc4=3;
+if (form.c4[3].checked==1) hc4=4;
+if (form.c4[4].checked==1) hc4=5;
+if (form.c5[1].checked==1) hc5=2;
+if (form.c5[2].checked==1) hc5=3;
+if (form.c5[3].checked==1) hc5=4;
+if (form.c5[4].checked==1) hc5=5;
+if (form.c6[1].checked==1) hc6=2;
+if (form.c6[2].checked==1) hc6=3;
+if (form.c6[3].checked==1) hc6=4;
+if (form.c6[4].checked==1) hc6=5;
+if (form.c7[1].checked==1) hc7=2;
+if (form.c7[2].checked==1) hc7=3;
+if (form.c7[3].checked==1) hc7=4;
+if (form.c7[4].checked==1) hc7=5;
+if (form.c8[1].checked==1) hc8=2;
+if (form.c8[2].checked==1) hc8=3;
+if (form.c8[3].checked==1) hc8=4;
+if (form.c8[4].checked==1) hc8=5;
+if (form.c9[1].checked==1) hc9=2;
+if (form.c9[2].checked==1) hc9=3;
+if (form.c9[3].checked==1) hc9=4;
+if (form.c9[4].checked==1) hc9=5;
+if (form.c10[1].checked==1) hc10=2;
+if (form.c10[2].checked==1) hc10=3;
+if (form.c10[3].checked==1) hc10=4;
+if (form.c10[4].checked==1) hc10=5;
+if (form.c11[1].checked==1) hc11=2;
+if (form.c11[2].checked==1) hc11=3;
+if (form.c11[3].checked==1) hc11=4;
+if (form.c11[4].checked==1) hc11=5;
+if (form.c12[1].checked==1) hc12=2;
+if (form.c12[2].checked==1) hc12=3;
+if (form.c12[3].checked==1) hc12=4;
+if (form.c12[4].checked==1) hc12=5;
+xf1=hc1+hc3+hc5+hc7+hc9+hc11;
+xf2=hc2+hc4+hc6+hc8+hc10+hc12;	
+
+result=xf1+xf2;
+form.score.value=result;
+form.ftype.value=ftype;
+form.cptype.value=cptype;
+form.cpname.value=cpname;
+{if (xf1>=23)
+answer1="你的艺术取向分数为"+xf1+"分,为较高水平；";
+else
+if (xf1>=13)
+answer1="你的艺术取向分数为"+xf1+"分,为中等水平；";
+else
+answer1="你的艺术取向分数为"+xf1+"分,为较低水平；";
+}
+{if (xf2>=23)
+answer2="你的研究取向分数为"+xf2+"分,为较高水平；";
+else
+if (xf2>=13)
+answer2="你的研究取向分数为"+xf2+"分,为中等水平；";
+else
+answer2="你的研究取向分数为"+xf2+"分,为较低水平；";
+}	
+answer3="分数越高，表明你越喜欢该类型的工作。***艺术取向的个体喜欢艺术性工作。这种取向类型的人往往具有某些艺术技能，喜欢创造性的工作，富于想象力。这类人通常喜欢同观念而不是事务打交道。他们较开放、好想象、独立、有创造性。如果他们没有成为艺术家，仍然能够选择那些能发挥其特长的工作。***研究取向的个体喜欢各种研究性工作。这类人通常具有较高的数学和科学研究能力，喜欢独立工作，喜欢解决问题，喜欢通观念而不是同仁或事务打交道。他们逻辑性强、好奇、聪明、仔细、独立、安详、俭朴。";
+form.answer.value=answer1+answer2+answer3;
+return result;
+}
+function collection(form)
+{
+if (processForm(form)==0) 
+ alert ("您没有做任何选择!请重新选择!");
+else
+ { 
+ form.action="/cpxt/collection.asp";
+ form.method="post";
+//form.score.value=processForm(form);
+form.submit();}
+}
+// -->
+
+</SCRIPT>
+<TABLE width="770" border=1 
+            align=center cellPadding=0 cellSpacing=0 bordercolor="#000066" class=zi9pt>
+  <TBODY>
+    <TR vAlign=top> 
+      <TD> <P>　 </P>
+        <P align=center><FONT color=#ffffff size=2><B><FONT 
+                  color=#000099 size=3>职业倾向测评(2)</FONT></B></FONT> </P>
+        <FORM name=hhr>
+          <P>本测评通过测试你在艺术和研究两个类型取向的职业兴趣,帮助你选择更适合自己的职业。每一个题目都给出一种活动或技能、职业，请你根据自身的实际情况选择。</P>
+          <P>1、演奏乐器。<BR>
+            <INPUT type=radio value=1 name=c1>
+            非常不喜欢 
+            <INPUT 
+                  type=radio value=3 name=c1>
+            稍有不喜欢 
+            <INPUT type=radio value=5 
+                  name=c1>
+            无所谓 
+            <INPUT type=radio value=V1 name=c1>
+            稍有喜欢 
+            <INPUT 
+                  type=radio value=V2 name=c1>
+            非常喜欢 </P>
+          <P>2、了解鸟类迁徙规律。<BR>
+            <INPUT type=radio value=11 name=c2>
+            非常不喜欢 
+            <INPUT type=radio value=31 name=c2>
+            稍有不喜欢 
+            <INPUT type=radio 
+                  value=51 name=c2>
+            无所谓 
+            <INPUT type=radio value=V3 name=c2>
+            稍有喜欢 
+            <INPUT type=radio value=V4 name=c2>
+            非常喜欢 </P>
+          <P>3、设计服装。<BR>
+            <INPUT type=radio value=12 name=c3>
+            非常不喜欢 
+            <INPUT 
+                  type=radio value=32 name=c3>
+            稍有不喜欢 
+            <INPUT type=radio value=52 
+                  name=c3>
+            无所谓 
+            <INPUT type=radio value=V5 name=c3>
+            稍有喜欢 
+            <INPUT 
+                  type=radio value=V6 name=c3>
+            非常喜欢 </P>
+          <P>4、研究天空的星系。<BR>
+            <INPUT type=radio value=13 name=c4>
+            非常不喜欢 
+            <INPUT type=radio value=33 name=c4>
+            稍有不喜欢 
+            <INPUT type=radio 
+                  value=53 name=c4>
+            无所谓 
+            <INPUT type=radio value=V7 name=c4>
+            稍有喜欢 
+            <INPUT type=radio value=V8 name=c4>
+            非常喜欢 </P>
+          <P>5、创作诗歌。<BR>
+            <INPUT type=radio value=14 name=c5>
+            非常不喜欢 
+            <INPUT 
+                  type=radio value=34 name=c5>
+            稍有不喜欢 
+            <INPUT type=radio value=54 
+                  name=c5>
+            无所谓 
+            <INPUT type=radio value=V9 name=c5>
+            稍有喜欢 
+            <INPUT 
+                  type=radio value=V10 name=c5>
+            非常喜欢 </P>
+          <P>6、植物专家。<BR>
+            <INPUT type=radio value=15 name=c6>
+            非常不喜欢 
+            <INPUT 
+                  type=radio value=35 name=c6>
+            稍有不喜欢 
+            <INPUT type=radio value=55 
+                  name=c6>
+            无所谓 
+            <INPUT type=radio value=V11 name=c6>
+            稍有喜欢 
+            <INPUT 
+                  type=radio value=V12 name=c6>
+            非常喜欢 </P>
+          <P>7、作家。<BR>
+            <INPUT type=radio value=16 name=c7>
+            非常不喜欢 
+            <INPUT 
+                  type=radio value=36 name=c7>
+            稍有不喜欢 
+            <INPUT type=radio value=56 
+                  name=c7>
+            无所谓 
+            <INPUT type=radio value=V13 name=c7>
+            稍有喜欢 
+            <INPUT 
+                  type=radio value=V14 name=c7>
+            非常喜欢 </P>
+          <P>8、地理学家。<BR>
+            <INPUT type=radio value=17 name=c8>
+            非常不喜欢 
+            <INPUT 
+                  type=radio value=37 name=c8>
+            稍有不喜欢 
+            <INPUT type=radio value=57 
+                  name=c8>
+            无所谓 
+            <INPUT type=radio value=V15 name=c8>
+            稍有喜欢 
+            <INPUT 
+                  type=radio value=V16 name=c8>
+            非常喜欢 </P>
+          <P>9、画家。<BR>
+            <INPUT type=radio value=18 name=c9>
+            非常不喜欢 
+            <INPUT 
+                  type=radio value=38 name=c9>
+            稍有不喜欢 
+            <INPUT type=radio value=58 
+                  name=c9>
+            无所谓 
+            <INPUT type=radio value=V17 name=c9>
+            稍有喜欢 
+            <INPUT 
+                  type=radio value=V18 name=c9>
+            非常喜欢 </P>
+          <P>10、探讨骨髓的功能。<BR>
+            <INPUT type=radio value=19 name=c10>
+            非常不喜欢 
+            <INPUT type=radio value=39 name=c10>
+            稍有不喜欢 
+            <INPUT type=radio 
+                  value=59 name=c10>
+            无所谓 
+            <INPUT type=radio value=V19 name=c10>
+            稍有喜欢 
+            <INPUT type=radio value=V20 name=c10>
+            非常喜欢 </P>
+          <P>11、歌唱表演。<BR>
+            <INPUT type=radio value=110 name=c11>
+            非常不喜欢 
+            <INPUT type=radio value=310 name=c11>
+            稍有不喜欢 
+            <INPUT type=radio 
+                  value=510 name=c11>
+            无所谓 
+            <INPUT type=radio value=V21 name=c11>
+            稍有喜欢 
+            <INPUT type=radio value=V22 name=c11>
+            非常喜欢 </P>
+          <P>12、探讨人类的起源。<BR>
+            <INPUT type=radio value=111 name=c12>
+            非常不喜欢 
+            <INPUT type=radio value=311 name=c12>
+            稍有不喜欢 
+            <INPUT type=radio 
+                  value=511 name=c12>
+            无所谓 
+            <INPUT type=radio value=V23 name=c12>
+            稍有喜欢 
+            <INPUT type=radio value=V24 name=c12>
+            非常喜欢</P>
+          <P align=center><SPAN 
+                  style="FONT-SIZE: 9pt; LINE-HEIGHT: 140%">
+            <INPUT type=hidden 
+                  name=ftype>
+            <INPUT type=hidden name=cptype>
+            <INPUT type=hidden 
+                  name=cpname>
+            <INPUT type=hidden name=score>
+            <INPUT style="FONT-SIZE: 9pt; FONT-FAMILY: 宋体" onclick=processForm(this.form) type=button value="提交答卷>>测评结果" name=button>
+            <INPUT type=reset value=重新选择 name=B2>
+            <BR>
+            <TEXTAREA style="FONT-SIZE: 9pt; COLOR: blue; FONT-FAMILY: 宋体" name=answer rows=6 cols=70></TEXTAREA>
+            </SPAN></P>
+          <P align=center><A class=mainz 
+                  href="javascript:closewin();"><FONT 
+                  color=#000000>关闭窗口</FONT></A> </P>
+        </FORM></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</BODY></HTML>

@@ -1,0 +1,294 @@
+<HTML><HEAD><TITLE>个性测评_领导意识测评</TITLE>
+<SCRIPT 
+language=JavaScript>function closewin() {    window.close(); return;} </SCRIPT>
+
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<STYLE type=text/css>.zi9pt {
+	FONT-SIZE: 9pt
+}
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<SCRIPT language=JavaScript>
+      var ftype="性格测评";
+      var cptype="基本性格";
+      var cpname="领导意识";
+//
+function processForm(form){
+var xf=0;
+if (form.c1[0].checked==1) xf+=1;
+if (form.c1[1].checked==1) xf+=0;
+
+if (form.c2[0].checked==1) xf+=1;
+if (form.c2[1].checked==1) xf+=0;
+
+if (form.c3[0].checked==1) xf+=1;
+if (form.c3[1].checked==1) xf+=0;
+
+if (form.c4[0].checked==1) xf+=1;
+if (form.c4[1].checked==1) xf+=0;
+
+if (form.c5[0].checked==1) xf+=1;
+if (form.c5[1].checked==1) xf+=0;
+
+if (form.c6[0].checked==1) xf+=1;
+if (form.c6[1].checked==1) xf+=0;
+
+if (form.c7[0].checked==1) xf+=1;
+if (form.c7[1].checked==1) xf+=0;
+
+if (form.c8[0].checked==1) xf+=0;
+if (form.c8[1].checked==1) xf+=1;
+
+if (form.c9[0].checked==1) xf+=0;
+if (form.c9[1].checked==1) xf+=1;
+
+if (form.c10[0].checked==1) xf+=0;
+if (form.c10[1].checked==1) xf+=1;
+
+if (form.c11[0].checked==1) xf+=0;
+if (form.c11[1].checked==1) xf+=1;
+
+if (form.c12[0].checked==1) xf+=0;
+if (form.c12[1].checked==1) xf+=1;
+
+if (form.c13[0].checked==1) xf+=0;
+if (form.c13[1].checked==1) xf+=1;
+
+if (form.c14[0].checked==1) xf+=0;
+if (form.c14[1].checked==1) xf+=1;
+
+if (form.c15[0].checked==1) xf+=0;
+if (form.c15[1].checked==1) xf+=1;
+
+if (form.c16[0].checked==1) xf+=0;
+if (form.c16[1].checked==1) xf+=1;
+
+if (form.c17[0].checked==1) xf+=1;
+if (form.c17[1].checked==1) xf+=0;
+
+if (form.c18[0].checked==1) xf+=1;
+if (form.c18[1].checked==1) xf+=0;
+
+if (form.c19[0].checked==1) xf+=0;
+if (form.c19[1].checked==1) xf+=1;
+
+if (form.c20[0].checked==1) xf+=1;
+if (form.c20[1].checked==1) xf+=0;
+
+
+result=xf;
+form.score.value=result;
+form.ftype.value=ftype;
+form.cptype.value=cptype;
+form.cpname.value=cpname;
+if (xf==0)
+form.answer.value="你没有选择任何项，请重新选择！若的确选了，则得分为零。"
+else
+if (xf>=14)
+form.answer.value="你的分数为"+xf+"分，你是个标准的跟随者，不适合领导别人。你喜欢被动地听人指挥。在紧急的情况下，你多半不会主动出头带领群众，但你很愿意跟大家配合。";
+else
+if (xf>=7)
+form.answer.value="你的分数为"+xf+"分，你是个介于领导者和跟随者之间的人。你可以随时带头，或指挥别人该怎么做。不过，因为你的个性不够积极，冲劲不足，所以常常是扮演跟随者的角色。";
+else
+form.answer.value="你的分数为"+xf+"分，你是个天生的领导者。你的个性很强，不愿接受别人的指挥。你喜欢使唤别人，如果别人不愿听从的话，你就会变得很叛逆，不肯轻易服从别人。";
+return result;}
+function collection(form)
+{
+if (processForm(form)==0) 
+ alert ("您没有做任何选择!请重新选择!");
+else
+  { 
+ form.action="/cpxt/collection.asp";
+ form.method="post";
+//form.score.value=processForm(form);
+form.submit();}
+}
+// -->
+
+</SCRIPT>
+<TABLE width="770" border=1 
+            align=center cellPadding=0 cellSpacing=0 bordercolor="#000066" class=zi9pt>
+  <TBODY>
+    <TR vAlign=top> 
+      <TD> <P>　 </P>
+        <P align=center><FONT color=#ffffff size=2><B><FONT 
+                  color=#000099 size=3>领导意识测评</FONT></B></FONT> </P>
+        <FORM name=hhr>
+          <P>你是一个领导者，或是一个跟随者？看一看你的性格因素中是否有领导意识或者强烈程度如何。</P>
+          <P>1、别人拜托你帮忙，你很少拒绝吗？ <BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT 
+                  type=radio value=12 name=c1>
+            是 　　 
+            <INPUT type=radio value=33 
+                  name=c1>
+            否</P>
+          <P>2、为了避免与人发生争执，即使你是对的，你也不愿发表意见吗？<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT type=radio value=1 name=c2>
+            是 　　 
+            <INPUT type=radio 
+                  value=3 name=c2>
+            否</P>
+          <P>3、你遵守一般的法规吗？<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT type=radio 
+                  value=1 name=c3>
+            是　　 
+            <INPUT type=radio value=3 name=c3>
+            否</P>
+          <P>4、你经常向别人说抱歉吗？<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT type=radio 
+                  value=1 name=c4>
+            是　　 
+            <INPUT type=radio value=3 name=c4>
+            否</P>
+          <P>5、如果有人笑你身上的衣服．你会再穿它一遍吗？<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c5>
+            是 　　 
+            <INPUT type=radio value=3 
+                  name=c5>
+            否</P>
+          <P>6、你永远走在时髦的前列吗？<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c6>
+            是 　　 
+            <INPUT type=radio value=3 
+                  name=c6>
+            否</P>
+          <P>7、你曾经穿那种好看却不舒服的衣服吗？<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c7>
+            是 　　 
+            <INPUT type=radio value=3 
+                  name=c7>
+            否。</P>
+          <P>8、开车时，你曾经咒骂别的驾驶者吗？<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c8>
+            是 　　 
+            <INPUT type=radio value=3 
+                  name=c8>
+            否</P>
+          <P>9、你对反应较慢的人没有耐心吗？<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c9>
+            是 　　 
+            <INPUT type=radio value=3 
+                  name=c9>
+            否</P>
+          <P>10、你经常对人发誓吗？ <BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT type=radio 
+                  value=1 name=c10>
+            是 　　 
+            <INPUT type=radio value=3 name=c10>
+            否</P>
+          <P>11、你曾经让对方觉得不如你或比你差劲吗？<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c11>
+            是 　　 
+            <INPUT type=radio value=3 
+                  name=c11>
+            否</P>
+          <P>12、你曾经大力批评电视上的言论吗？<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c12>
+            是 　　 
+            <INPUT type=radio value=3 
+                  name=c12>
+            否</P>
+          <P>13、对公司及家庭既定的规则不遵守？<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c13>
+            是 　　 
+            <INPUT type=radio value=3 
+                  name=c13>
+            否</P>
+          <P>14、惯于坦白自己的想法，而不考虑后果吗？<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c14>
+            是 　　 
+            <INPUT type=radio value=3 
+                  name=c14>
+            否</P>
+          <P>15、你是个不轻易忍受别人的人吗？<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c15>
+            是 　　 
+            <INPUT type=radio value=3 
+                  name=c15>
+            否</P>
+          <P>16、与人争论时，你总爱争赢吗？<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c16>
+            是 　　 
+            <INPUT type=radio value=3 
+                  name=c16>
+            否</P>
+          <P>17、你总是让别人替你做重要的决定吗？<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c17>
+            是 　　 
+            <INPUT type=radio value=3 
+                  name=c17>
+            否</P>
+          <P>18、你喜欢将钱投资在财富上，而胜过于个人成长吗？ <BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT type=radio value=1 name=c18>
+            是 　　 
+            <INPUT type=radio 
+                  value=3 name=c18>
+            否</P>
+          <P>19、你故意在穿着上吸引他人的注意吗？<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c19>
+            是 　　 
+            <INPUT type=radio value=3 
+                  name=c19>
+            否</P>
+          <P>20、你不喜欢标新立异吗？<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT type=radio 
+                  value=1 name=c20>
+            是 　　 
+            <INPUT type=radio value=3 name=c20>
+            否</P>
+          <BLOCKQUOTE></BLOCKQUOTE>
+          <P align=center><SPAN 
+                  style="FONT-SIZE: 9pt; LINE-HEIGHT: 140%">
+            <INPUT type=hidden 
+                  name=ftype>
+            <INPUT type=hidden name=cptype>
+            <INPUT type=hidden 
+                  name=cpname>
+            <INPUT type=hidden name=score>
+            <INPUT style="FONT-SIZE: 9pt; FONT-FAMILY: 宋体" onclick=processForm(this.form) type=button value="提交答卷>>测评结果" name=button>
+            <INPUT type=reset value=重新选择 name=B2>
+            <BR>
+            <TEXTAREA style="FONT-SIZE: 9pt; COLOR: blue; FONT-FAMILY: 宋体" name=answer rows=6 cols=70></TEXTAREA>
+            </SPAN></P>
+          <P align=center><A class=mainz 
+                  href="javascript:closewin();"><FONT 
+                  color=#000000>关闭窗口</FONT></A> </P>
+        </FORM></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</BODY></HTML>

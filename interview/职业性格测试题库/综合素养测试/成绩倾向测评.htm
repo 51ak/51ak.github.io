@@ -1,0 +1,319 @@
+<HTML><HEAD><TITLE>素质测评_成功倾向测评</TITLE>
+<SCRIPT 
+language=JavaScript>function closewin() {    window.close(); return;} </SCRIPT>
+
+<META http-equiv=Content-Type content="text/html; charset=gb2312">
+<STYLE type=text/css>.zi9pt {
+	FONT-SIZE: 9pt
+}
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<SCRIPT language=JavaScript>
+      var ftype="素质测评";
+      var cptype="职业素质";
+      var cpname="成功倾向";
+//
+
+function processForm(form) {
+var xf = 0
+if (form.c0[0].checked) { xf += 0 }  
+if (form.c0[1].checked) { xf += 1 } 
+if (form.c0[2].checked) { xf += 2 } 
+if (form.c0[3].checked) { xf += 3 }
+if (form.c1[0].checked) { xf += 3 }  
+if (form.c1[1].checked) { xf += 2 } 
+if (form.c1[2].checked) { xf += 1 } 
+if (form.c1[3].checked) { xf += 0 }
+if (form.c2[0].checked) { xf += 2 }  
+if (form.c2[1].checked) { xf += 3 } 
+if (form.c2[2].checked) { xf += 1 } 
+if (form.c2[3].checked) { xf += 0 }
+if (form.c3[0].checked) { xf += 1 }  
+if (form.c3[1].checked) { xf += 3 } 
+if (form.c3[2].checked) { xf += 2 } 
+if (form.c3[3].checked) { xf += 0 }
+if (form.c4[0].checked) { xf += 3 }  
+if (form.c4[1].checked) { xf += 2 } 
+if (form.c4[2].checked) { xf += 1 } 
+if (form.c4[3].checked) { xf += 0 }
+if (form.c5[0].checked) { xf += 3 }  
+if (form.c5[1].checked) { xf += 2 } 
+if (form.c5[2].checked) { xf += 1 } 
+if (form.c5[3].checked) { xf += 0 }
+if (form.c6[0].checked) { xf += 3 }  
+if (form.c6[1].checked) { xf += 2 } 
+if (form.c6[2].checked) { xf += 1 } 
+if (form.c6[3].checked) { xf += 0 }
+if (form.c7[0].checked) { xf += 3 }  
+if (form.c7[1].checked) { xf += 2 } 
+if (form.c7[2].checked) { xf += 1 } 
+if (form.c7[3].checked) { xf += 0 }
+if (form.c8[0].checked) { xf += 3 }  
+if (form.c8[1].checked) { xf += 2 } 
+if (form.c8[2].checked) { xf += 1 } 
+if (form.c8[3].checked) { xf += 0 }
+if (form.c9[0].checked) { xf += 3 }  
+if (form.c9[1].checked) { xf += 2 } 
+if (form.c9[2].checked) { xf += 1 } 
+if (form.c9[3].checked) { xf += 0 }
+if (form.c10[0].checked) { xf += 3 }  
+if (form.c10[1].checked) { xf += 2 } 
+if (form.c10[2].checked) { xf += 1 } 
+if (form.c10[3].checked) { xf += 0 }
+if (form.c11[0].checked) { xf += 3 }  
+if (form.c11[1].checked) { xf += 2 } 
+if (form.c11[2].checked) { xf += 1 } 
+if (form.c11[3].checked) { xf += 0 }
+if (form.c12[0].checked) { xf += 3 }  
+if (form.c12[1].checked) { xf += 2 } 
+if (form.c12[2].checked) { xf += 1 } 
+if (form.c12[3].checked) { xf += 0 }
+if (form.c13[0].checked) { xf += 3 }  
+if (form.c13[1].checked) { xf += 2 } 
+if (form.c13[2].checked) { xf += 1 } 
+if (form.c13[3].checked) { xf += 0 }
+if (form.c14[0].checked) { xf += 3 }  
+if (form.c14[1].checked) { xf += 2 } 
+if (form.c14[2].checked) { xf += 1 } 
+if (form.c14[3].checked) { xf += 0 }
+
+result=xf;
+
+form.score.value=result;
+form.ftype.value=ftype;
+form.cptype.value=cptype;
+form.cpname.value=cpname;
+if (xf==0)
+form.answer.value="你没有选择任何项，请重新选择！"
+else
+if (xf>=31)
+form.answer.value="你的分数为"+xf+"分，(满分45分):你有获得权力和金钱的倾向，要爬上任何一个组织的高峰对你来说都是非常容易的事，而且你通常办得到。";
+else
+if (xf>=16)
+form.answer.value="你的分数为"+xf+"分，(满分45分):也许你根本没有想到去争取高位，至少在目前是如此，但是这并不说明你没有这个能力，只是你还没有准备好作出必要的牺牲和妥协。你对公司政策的不满导致你在工作的义务和业余爱好之间寻求平衡，这个倾向促使你寻求自我业余目标的发展。";
+else
+form.answer.value="你的分数为"+xf+"分，(满分45分):对你来说，成功的意义是圆满的家庭生活和精神生活，而不是权力和金钱的获得。你能在工作之外得到成就感，可能不适合向组织内的高层发展，建议你专注于自我目标的实现。";
+return result;}
+function collection(form)
+{
+if (processForm(form)==0) 
+ alert ("您没有做任何选择!请重新选择!");
+else { 
+ form.action="/cpxt/collection.asp";
+ form.method="post";
+//form.score.value=processForm(form);
+form.submit();}
+}
+// -->
+
+</SCRIPT>
+<TABLE width="770" border=1 
+            align=center cellPadding=0 cellSpacing=0 bordercolor="#000066" class=zi9pt>
+  <TBODY>
+    <TR vAlign=top> 
+      <TD> <P>　 </P>
+        <P align=center><FONT color=#ffffff size=3><B><FONT 
+                  color=#000099>成功倾向测评</FONT></B></FONT> </P>
+        <FORM name=hhr>
+          <P>�� 
+          <P>　这里对你的成功倾向作一解剖，希望你能对自己有个正确的估价。</P>
+          <BR>
+          　 &nbsp;1.快乐的意义对我来说比金钱更重要。<BR>
+          &nbsp;&nbsp;&nbsp; 
+          <INPUT 
+                  type=radio value=1 name=c0>
+          非常同意 
+          <INPUT type=radio value=2 
+                  name=c0>
+          有些同意 
+          <INPUT type=radio value=3 name=c0>
+          有些不同意 
+          <INPUT 
+                  type=radio value=4 name=c0>
+          不同意 
+          <P>　　2.假如我知道工作必须完成,那么工作的压力和困难并不能困扰我。<BR>
+            &nbsp;&nbsp;&nbsp; 
+            <INPUT type=radio value=1 name=c1>
+            非常同意 
+            <INPUT type=radio 
+                  value=2 name=c1>
+            有些同意 
+            <INPUT type=radio value=3 name=c1>
+            有些不同意 
+            <INPUT type=radio value=4 name=c1>
+            不同意 </P>
+          <P>　　3.有时候成败的确能论英雄。<BR>
+            &nbsp;&nbsp;&nbsp; 
+            <INPUT type=radio 
+                  value=1 name=c2>
+            非常同意 
+            <INPUT type=radio value=2 name=c2>
+            有些同意 
+            <INPUT type=radio value=3 name=c2>
+            有些不同意 
+            <INPUT type=radio 
+                  value=4 name=c2>
+            不同意 </P>
+          <P>　　4.我对犯错误非常严厉。<BR>
+            &nbsp;&nbsp;&nbsp; 
+            <INPUT type=radio 
+                  value=1 name=c3>
+            非常同意 
+            <INPUT type=radio value=2 name=c3>
+            有些同意 
+            <INPUT type=radio value=3 name=c3>
+            有些不同意 
+            <INPUT type=radio 
+                  value=4 name=c3>
+            不同意 </P>
+          <P>　　5.我的名誉对我来说极为重要。<BR>
+            &nbsp;&nbsp;&nbsp; 
+            <INPUT type=radio 
+                  value=1 name=c4>
+            非常同意 
+            <INPUT type=radio value=2 name=c4>
+            有些同意 
+            <INPUT type=radio value=3 name=c4>
+            有些不同意 
+            <INPUT type=radio 
+                  value=4 name=c4>
+            不同意 </P>
+          <P>　　6.我的适应能力非常强,知道什么时候将会改变,并为这种变化做准备。<BR>
+            &nbsp;&nbsp;&nbsp; 
+            <INPUT type=radio value=1 name=c5>
+            非常同意 
+            <INPUT type=radio 
+                  value=2 name=c5>
+            有些同意 
+            <INPUT type=radio value=3 name=c5>
+            有些不同意 
+            <INPUT type=radio value=4 name=c5>
+            不同意 </P>
+          <P>　　7.一旦我下定决心，就会坚持到底。<BR>
+            &nbsp;&nbsp;&nbsp; 
+            <INPUT type=radio 
+                  value=1 name=c6>
+            非常同意 
+            <INPUT type=radio value=2 name=c6>
+            有些同意 
+            <INPUT type=radio value=3 name=c6>
+            有些不同意 
+            <INPUT type=radio 
+                  value=4 name=c6>
+            不同意 </P>
+          <P>　　8.我非常喜欢别人把我看成是一个身负重任的人。<BR>
+            &nbsp;&nbsp;&nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c7>
+            非常同意 
+            <INPUT type=radio value=2 
+                  name=c7>
+            有些同意 
+            <INPUT type=radio value=3 name=c7>
+            有些不同意 
+            <INPUT 
+                  type=radio value=4 name=c7>
+            不同意 </P>
+          <P>　　9.我有些嗜好花费很高，而且我有能力去享受。<BR>
+            &nbsp;&nbsp;&nbsp; 
+            <INPUT 
+                  type=radio value=1 name=c8>
+            非常同意 
+            <INPUT type=radio value=2 
+                  name=c8>
+            有些同意 
+            <INPUT type=radio value=3 name=c8>
+            有些不同意 
+            <INPUT 
+                  type=radio value=4 name=c8>
+            不同意 </P>
+          <P>　　10.我很小心的将时间和精力花在某一个计划上，如果我认为它会有积极和正面的效果。<BR>
+            &nbsp;&nbsp;&nbsp; 
+            <INPUT type=radio value=1 name=c9>
+            非常同意 
+            <INPUT type=radio 
+                  value=2 name=c9>
+            有些同意 
+            <INPUT type=radio value=3 name=c9>
+            有些不同意 
+            <INPUT type=radio value=4 name=c9>
+            不同意 </P>
+          <P>　　11.作为团体的一员,让团体成功比获得个人的认可更为重要。<BR>
+            &nbsp;&nbsp;&nbsp; 
+            <INPUT type=radio value=1 name=c10>
+            非常同意 
+            <INPUT type=radio 
+                  value=2 name=c10>
+            有些同意 
+            <INPUT type=radio value=3 name=c10>
+            有些不同意 
+            <INPUT type=radio value=4 name=c10>
+            不同意 </P>
+          <P>　　12.我宁愿看到一个方案推迟，也不愿意无计划，无组织地随便完成。<BR>
+            &nbsp;&nbsp;&nbsp; 
+            <INPUT type=radio value=1 name=c11>
+            非常同意 
+            <INPUT type=radio 
+                  value=2 name=c11>
+            有些同意 
+            <INPUT type=radio value=3 name=c11>
+            有些不同意 
+            <INPUT type=radio value=4 name=c11>
+            不同意 </P>
+          <P>　　13.我以能够正确地表达自己的意思为荣，但是我必须确定别人是否能正确了解我。 <BR>
+            &nbsp;&nbsp;&nbsp; 
+            <INPUT type=radio value=1 name=c12>
+            非常同意 
+            <INPUT type=radio value=2 name=c12>
+            有些同意 
+            <INPUT 
+                  type=radio value=3 name=c12>
+            有些不同意 
+            <INPUT type=radio value=4 
+                  name=c12>
+            不同意 </P>
+          <P>　　14.我的工作情绪是很高昂的,我有用不完的精力,很少感到精力枯竭。<BR>
+            &nbsp;&nbsp;&nbsp; 
+            <INPUT type=radio value=1 name=c13>
+            非常同意 
+            <INPUT type=radio 
+                  value=2 name=c13>
+            有些同意 
+            <INPUT type=radio value=3 name=c13>
+            有些不同意 
+            <INPUT type=radio value=4 name=c13>
+            不同意 </P>
+          <P>　　15.大体来说,常识和良好的判断对我来说,比了不起的点子更有价值。<BR>
+            &nbsp;&nbsp;&nbsp;&nbsp; 
+            <INPUT type=radio value=1 name=c14>
+            非常同意 
+            <INPUT type=radio 
+                  value=2 name=c14>
+            有些同意 
+            <INPUT type=radio value=3 name=c14>
+            有些不同意 
+            <INPUT type=radio value=4 name=c14>
+            不同意<FONT 
+                  color=#0000ff> </FONT></P>
+          <P align=center><SPAN 
+                  style="FONT-SIZE: 9pt; LINE-HEIGHT: 140%">
+            <INPUT type=hidden 
+                  name=ftype>
+            <INPUT type=hidden name=cptype>
+            <INPUT type=hidden 
+                  name=cpname>
+            <INPUT type=hidden name=score>
+            <INPUT style="FONT-SIZE: 9pt; FONT-FAMILY: 宋体" onclick=processForm(this.form) type=button value="提交答卷>>测评结果" name=button>
+            <INPUT type=reset value=重新选择 name=B2>
+            <BR>
+            <TEXTAREA style="FONT-SIZE: 9pt; COLOR: blue; FONT-FAMILY: 宋体" name=answer rows=6 cols=70></TEXTAREA>
+            </SPAN></P>
+          <DIV align=center><A class=mainz 
+                  href="javascript:closewin();"><FONT 
+                  color=#000000>关闭窗口</FONT></A> </DIV>
+        </FORM></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</BODY></HTML>
