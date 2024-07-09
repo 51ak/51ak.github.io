@@ -17,11 +17,11 @@
     </item>
     
     <item>
-      <title>日记</title>
-      <link>/categories/%E6%97%A5%E8%AE%B0/</link>
+      <title>chatgpt</title>
+      <link>/categories/chatgpt/</link>
       <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
       
-      <guid>/categories/%E6%97%A5%E8%AE%B0/</guid>
+      <guid>/categories/chatgpt/</guid>
       <description></description>
     </item>
     
@@ -31,6 +31,15 @@
       <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E8%A7%82%E7%82%B9/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>日记</title>
+      <link>/categories/%E6%97%A5%E8%AE%B0/</link>
+      <pubDate>Fri, 21 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E6%97%A5%E8%AE%B0/</guid>
       <description></description>
     </item>
     
@@ -76,15 +85,6 @@
       <pubDate>Wed, 24 Apr 2024 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>chatgpt</title>
-      <link>/categories/chatgpt/</link>
-      <pubDate>Tue, 23 Apr 2024 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/chatgpt/</guid>
       <description></description>
     </item>
     
