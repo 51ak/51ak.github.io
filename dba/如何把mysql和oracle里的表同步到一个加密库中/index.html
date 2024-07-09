@@ -71,7 +71,41 @@
   <main>
     <h2 id="如图">如图</h2>
 <p><img src="/img/2022auto/2024-04-24-16-32-18.png" alt="如何把MySQL和Oracle里的表同步到一个加密库中"></p>
+<h2 id="加密配置元信息表">加密配置元信息表</h2>
+<pre><code>
+REATE TABLE `encrypt_baseinfo` (
+  `from_linkname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '来源数据库信息',
+  `from_linktype` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'mysql' COMMENT 'mysql,oracle,mongo',
+  `from_connstr` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '127.0.0.1;3306;u_test;password;db_test;',
+  `to_linkname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '目标数据库信息',
+  `to_linktype` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'mysql' COMMENT 'mysql,oracle,mongo',
+  `to_connstr` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '127.0.0.1;3306;u_test;password;db_test;',
+  `kafka_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'kafka_name',
+  `kafka_groupid` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'kakfak_groupid',
+  `kakfak_offset` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'kakfak_auto_offset_reset',
+  PRIMARY KEY (`from_linkname`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='加密字段基础信息表'
 
+ CREATE TABLE `encrypt_col_info` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID、主键',
+  `service_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '服务信息',
+  `db_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '数据库信息',
+  `tab_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '表名',
+  `col_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '列名',
+  `sub_col_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'json_key信息',
+  `col_type` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '字段类型',
+  `col_desc` varchar(5000) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '列名描述信息',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  `linkname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `sec_type` tinyint NOT NULL DEFAULT '0' COMMENT '加密类型：0，1：卡号，2：身份证，3：手机，4：地址',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='加密字段信息表'
+
+</code></pre><h3 id="判断配置表里的数据类型是否正确的快速方法">判断配置表里的数据类型是否正确的快速方法</h3>
+<pre><code> select concat('mysqlw -h ',replace(linkname,'my','mysql'),'-w.corp.dboop.com -P ',replace(linkname,'my',''),' ',db_name, ' -e &quot;select ','''',col_type,''' as coltype,',col_name ,' from ',tab_name ,' where length(',col_name,')&gt;5 limit 2&quot;')  from encrypt_col_info where linkname='my3344' ;
+
+</code></pre>
     <a href="/"> >> Home</a>
   </main>
 
