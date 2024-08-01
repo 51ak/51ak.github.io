@@ -6,7 +6,16 @@
     <description>Recent content on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 22 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 30 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Centos7安装cx_Oracle驱动</title>
+      <link>/oracle/centos7%E5%AE%89%E8%A3%85cx_oracle%E9%A9%B1%E5%8A%A8/</link>
+      <pubDate>Tue, 30 Jul 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/centos7%E5%AE%89%E8%A3%85cx_oracle%E9%A9%B1%E5%8A%A8/</guid>
+      <description>安装说明  一台cents7的机器上没有安装过oracle python脚本需要调用远程oracle数据库，需要cx_oracle数据库  python3.9 /data/script/datasec/test.py #产生报错 .... File &amp;quot;/data/script/datasec/newSQL.py&amp;quot;, line 3, in &amp;lt;module&amp;gt; import cx_Oracle ModuleNotFoundError: No module named &#39;cx_Oracle&#39;  这个cx_Oracle驱动非常不好装 以下是安装cx_Oracle的标准步骤  安装Oracle客户端  https://www.oracle.com/database/technologies/instant-client/linux-x86-64-downloads.html 在这个网站找到合适的版本，我下的是11.2版本，不同的系统下不同的版本 选择好后，需要用户名密码登陆 下载和安装   wget &amp;quot;https://download.oracle.com/otn/linux/instantclient/11204/oracle-instantclient11.2-basic-11.2.0.4.0-1.x86_64.rpm&amp;quot; rpm -ivh oracle-instantclient11.2-basic-11.2.0.4.0-1.x86_64.rpm  安装完后，会有个目录：  ll /usr/lib/oracle/11.2/client64/lib/ total 183252 -rw-r--r-- 1 root root 53865194 Aug 25 2013 libclntsh.so.11.1 -rw-r--r-- 1 root root 7996693 Aug 25 2013 libnnz11.so -rw-r--r-- 1 root root 1973074 Aug 25 2013 libocci.</description>
+    </item>
+    
     <item>
       <title>用ai技术来帮普通人完成扣篮</title>
       <link>/book/%E7%94%A8ai%E6%8A%8A%E7%85%A7%E7%89%87%E5%8F%98%E6%88%90%E8%A7%86%E9%A2%91%E6%95%88%E6%9E%9C%E6%83%8A%E4%BA%BA/</link>
