@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>51ak带你看MYSQL5.7源码2：编译现有的代码 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">51ak带你看MYSQL5.7源码2：编译现有的代码</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+<p>现在把刚才在VSCODE里看到的源码，安装成服务。</p>
+
+<p>测试机：CENTOS6 (虚机配置为4c+4g )，</p>
+
+<p>YUM安装相关组件</p>
+
+<pre><code> yum -y install gcc-c++ ncurses-devel cmake make perl gcc autoconf automake zlib libxml libgcrypt libtool bison
+</code></pre>
+
+<p>执行完成后看一下现有的BOOTST版本 如果有删掉</p>
+
+<pre><code>root@wjz-3-227 ~]# rpm -qa boost*
+boost-filesystem-1.41.0-18.el6.x86_64
+boost-system-1.41.0-18.el6.x86_64
+[root@wjz-3-227 ~]#  yum -y remove boost-*
+Loaded plugins: fastestmirror, refresh-packagekit, security
+Setting up Remove Process
+Resolving Dependencies
+--&gt; Running transaction check
+</code></pre>
+
+<p>上传我们编辑好的文件到测试机，放在/work目录下</p>
+
+<p>拷贝安装BOOST</p>
+
+<pre><code>
+root@wjz-3-227 mysql-server]# ll
+total 108
+drwxr-xr-x.  8 root root  4096 Mar 22  2018 boost_1_59_0
+-rw-r--r--.  1 root root   160 Dec 28 12:00 filter-provides.sh
+-rw-r--r--.  1 root root   176 Dec 28 12:00 filter-requires.sh
+drwxr-xr-x. 32 root root  4096 Mar 22  2018 mysql-5.1.72
+drwxr-xr-x. 35 root root  4096 Mar 22  2018 mysql-5.7.21
+-rw-r--r--.  1 root root 88859 Dec 28 12:00 mysql.spec
+[root@wjz-3-227 mysql-server]# cp -r  boost_1_59_0 /usr/local/boost
+</code></pre>
+
+<p>执行以下脚本</p>
+
+<pre><code>groupadd mysql
+mkdir /home/mysql
+mkdir /home/mysql/data
+useradd mysql -g mysql -d /home/mysql
+
+cd mysql-5.7.21/
+mkdir debug
+cd debug
+</code></pre>
+
+<p>开始MAKE</p>
+
+<pre><code>cmake .. \
+-DCMAKE_INSTALL_PREFIX=/home/mysql  \
+-DMYSQL_DATADIR=/home/mysql/data \
+-DDEFAULT_CHARSET=utf8  \
+-DDEFAULT_COLLATION=utf8_general_ci \
+-DMYSQL_TCP_PORT=3306 \
+-DMYSQL_USER=mysql  \
+-DWITH_MYISAM_STORAGE_ENGINE=1  \
+-DWITH_INNOBASE_STORAGE_ENGINE=1  \
+-DWITH_ARCHIVE_STORAGE_ENGINE=1  \
+-DWITH_BLACKHOLE_STORAGE_ENGINE=1  \
+-DDOWNLOAD_BOOST=1  \
+-DWITH_BOOST=/usr/local/boost
+</code></pre>
+
+<p>出现 下图表示成功。</p>
+
+<p><img src="/img/mysql15.png" alt="mysql_dev15" /></p>
+
+<p>make -j 4</p>
+
+<p>漫长的等待，编译成功（测试机性能太次）</p>
+
+<p><img src="/img/mysql16.png" alt="mysql_dev16" /></p>
+
+<p>下面安装和初始化：</p>
+
+<pre><code>make install 
+make clean 
+rm -f CMakeCache.txt 
+cd /home/mysql
+chown -R mysql:mysql .
+ll
+ bin/mysqld --initialize --user=mysql --basedir=/home/mysql --datadir=/home/mysql/data #这一步记住生成的密码,一会要用
+ll data/
+vim /etc/my.cnf 
+vim mysql.server 
+cp mysql.server  /etc/init.d/mysqld3306
+chmod 755 /etc/init.d/mysqld3306 
+cd ..
+ll
+service mysqld3306 start
+bin/mysql -h127.0.0.1 -uroot -p
+</code></pre>
+
+</main>
+<h2 class="date">发布日期:2018/03/22</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/mysql%E6%BA%90%E7%A0%81">mysql源码</a> <a href="/categories/c">c</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

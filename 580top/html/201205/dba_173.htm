@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySQL数据库中隐藏空间问题的分析</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="mysql的隐藏空间，我们这里就介绍一下关于mysql数据库中隐藏空间问题的分析。mysql的隐藏空间通过环境变量tmpdir的设置实现。如果未设置tmpdir，mysql将使用系统的默认值，通常为/tmp、/var/tmp或/usr/tmp。mysql使用环境变量tmpdir的值作为保存临时文件的目录的路径名。如果未设置tmpdir，mysql将使用系统的默认值，通常为/tmp、/var/MySQL数据库中隐藏空间问题的分析" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化">性能与优化</a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlzhishi/l_14_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>MySQL数据库中隐藏空间问题的分析</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   MySQL的隐藏空间，我们这里就介绍一下关于MySQL数据库中隐藏空间问题的分析。MySQL的隐藏空间通过环境变量TMPDIR的设置实现。如果未设置TMPDIR，MySQL将使用系统的默认值，通常为/tmp、/var/tmp或/usr/tmp。 　　MySQL使用环境变量TMPDIR的值作为保存临时文件的目录的路径名。如果未设置TMPDIR，MySQL将使用系统的默认值，通常为/tmp、/var/tmp或/usr/tmp。如果包含临时文件目录的文件系统过小，可对<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d使用“&amp;mdash;tmpdir”选项，在具有足够空间的文件系统内指定1个目录。<br />　　在MySQL 5.1中，“—tmpdir”选项可被设置为数个路径的列表，以循环方式使用。在Unix平台上，路径用冒号字符“:”隔开，在Windows、NetWare和OS/2平台上，路径用分号字符“;”隔开。注意，为了有效分布负载，这些路径应位于不同的物理磁盘上，而不是位于相同磁盘的不同分区中。<br />　　如果MySQL服务器正作为复制从服务器使用，不应将“--tmpdir”设置为指向基于内存的文件系统的目录，或当服务器主机重启时将清空的目录。对于复制从服务器，需要在机器重启时仍保留一些临时文件，以便能够复制临时表或执行LOAD DATA INFILE操作。如果在服务器重启时丢失了临时文件目录下的文件，复制将失败。<br />　　MySQL会以隐含方式创建所有的临时文件。这样，就能确保中止<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d时会删除所有临时文件。使用隐含文件的缺点在于，在临时文件目录所在的位置中，看不到占用了文件系统的大临时文件。<br />　　进行排序时(ORDER BY或GROUP BY)，MySQL通常会使用1个或多个临时文件。所需的最大磁盘空间由下述表达式决定：<br />　　(length of what is sorted + sizeof(row pointer))<br />　　* number of matched rows<br />　　* 2<br />　　“row pointer”(行指针)的大小通常是4字节，但在以后，对于大的表，该值可能会增加。<br />　　对于某些SELECT查询，MySQL还会创建临时SQL表。它们不是隐含表，并具有SQL_*形式的名称。<br />　　ALTER TABLE会在与原始表目录相同的目录下创建临时表。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

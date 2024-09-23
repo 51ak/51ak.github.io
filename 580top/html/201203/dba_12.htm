@@ -1,0 +1,242 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>创建SQLSERVER数据库TDE（透明数据加密）的TSQL</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="usemasterSELECTname,is_master_key_encrypted_by_serverFROMsys.databases;--查看master数据库下的密钥信息SELECT*FROMsys.symmetric_keys;--创建证书用来保护数据库加密密钥创建SQLSERVER数据库TDE（透明数据加密）的TSQL" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识">基础知识</a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA">高可用性和HA</a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化"><span class="zc_666">性能与优化</span></a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决">故障与解决</a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserveryouhua/l_4_1.htm">性能与优化</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>创建SQLSERVER数据库TDE（透明数据加密）的TSQL</h1></div>
+					<div id="atSource"> 作者：[51ak ] </div>
+					
+                    <div id="viewcontent">
+                   <div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">use</span><span style="font-size: 9pt;"> <span style="color: blue;">master</span></span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">SELECT</span><span style="font-size: 9pt;"> <span style="color: teal;">name</span><span style="color: gray;">,</span><span style="color: teal;">is_master_key_encrypted_by_server</span> <span style="color: blue;">FROM</span> <span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">databases</span><span style="color: gray;">;</span></span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">--</span><span style="color: green; font-size: 9pt;">查看master数据库下的密钥信息</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">SELECT</span><span style="font-size: 9pt;"> <span style="color: gray;">*</span> <span style="color: blue;">FROM</span> <span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">symmetric_keys</span><span style="color: gray;">;</span></span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">--</span><span style="color: green; font-size: 9pt;">创建证书用来保护数据库加密密钥(DEK)</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">CREATE</span><span style="font-size: 9pt;"> <span style="color: blue;">CERTIFICATE</span> <span style="color: teal;">db_sql_error_cert</span> <span style="color: blue;">WITH</span> <span style="color: blue;">SUBJECT</span> <span style="color: gray;">=</span> <span style="color: red;">N'db_sql_error_cert'</span><span style="color: gray;">;</span></span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">IF</span><span style="font-size: 9pt;"> <span style="color: fuchsia;">DB_ID</span><span style="color: gray;">(</span><span style="color: red;">'db_sql_error2'</span><span style="color: gray;">)</span> <span style="color: gray;">IS</span> <span style="color: gray;">NOT</span> <span style="color: gray;">NULL</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">DROP</span> <span style="color: blue;">DATABASE</span> <span style="color: teal;">db_sql_error2</span></span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">USE</span><span style="font-size: 9pt;"> <span style="color: teal;">db_sql_error</span><span style="color: gray;">;</span></span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">--</span><span style="color: green; font-size: 9pt;">创建由master_server_cert保护的DEK 数据库加密密钥（对称密钥）</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">CREATE</span><span style="font-size: 9pt;"> <span style="color: blue;">DATABASE</span> <span style="color: blue;">ENCRYPTION</span> <span style="color: blue;">KEY</span> </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">WITH</span><span style="font-size: 9pt;"> <span style="color: blue;">ALGORITHM</span> <span style="color: gray;">=</span> <span style="color: blue;">AES_128</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">ENCRYPTION</span><span style="font-size: 9pt;"> <span style="color: blue;">BY</span> <span style="color: blue;">SERVER</span> <span style="color: blue;">CERTIFICATE</span> <span style="color: teal;">db_sql_error_cert</span><span style="color: gray;">;</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">GO</span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">--</span><span style="color: green; font-size: 9pt;">执行上语句以后出现：</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">/*</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">Warning: The certificate used for encrypting the database encryption key has not been backed up. You should immediately back up the certificate and the private key associated with the certificate. If the certificate ever becomes unavailable or if you must restore or attach the database on another server, you must have backups of both the certificate and the private key or you will not be able to open the database.</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">*/</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">--</span><span style="color: green; font-size: 9pt;">提示你，立刻备份证书;这里备份证书,不比制定加密私钥的对称密钥了.因为他的密钥是通过master数据库的主数据库密钥加密了.</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">USE</span><span style="font-size: 9pt;"> <span style="color: blue;">master</span><span style="color: gray;">;</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">BACKUP</span><span style="font-size: 9pt;"> <span style="color: blue;">CERTIFICATE</span> <span style="color: teal;">db_sql_error_cert</span> <span style="color: blue;">TO</span> <span style="color: blue;">FILE</span> <span style="color: gray;">=</span> <span style="color: red;">'D:\db_sql_error_cert.cer'</span> </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">WITH</span> <span style="color: blue;">PRIVATE</span> <span style="color: blue;">KEY </span><span style="color: gray;">(</span> </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">FILE</span> <span style="color: gray;">=</span> <span style="color: red;">'D:\db_sql_error_cert.pvk'</span> <span style="color: gray;">,</span> </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">ENCRYPTION</span> <span style="color: blue;">BY</span> <span style="color: blue;">PASSWORD</span> <span style="color: gray;">=</span> <span style="color: red;">'Wokofo2'</span> <span style="color: gray;">);</span></span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">--</span><span style="color: green; font-size: 9pt;">相应的，我们也备份一下数据库主密钥(master)</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">USE</span><span style="font-size: 9pt;"> <span style="color: blue;">master</span><span style="color: gray;">;</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">--</span><span style="color: green; font-size: 9pt;">如果没有启用主密钥的自动解密功能</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">--OPEN MASTER KEY DECRYPTION BY PASSWORD = '</span><span style="color: green; font-size: 9pt;">浪客!@#$%^&amp;*()0A';</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">BACKUP</span><span style="font-size: 9pt;"> <span style="color: blue;">MASTER</span> <span style="color: blue;">KEY</span> <span style="color: blue;">TO</span> <span style="color: blue;">FILE</span> <span style="color: gray;">=</span> <span style="color: red;">'D:\master.cer'</span> </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">ENCRYPTION</span> <span style="color: blue;">BY</span> <span style="color: blue;">PASSWORD</span> <span style="color: gray;">=</span> <span style="color: red;">'Wokofo2'</span><span style="color: gray;">;</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">GO</span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">--</span><span style="color: green; font-size: 9pt;">生产环境下，设置成单用户在运行加密</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">ALTER</span><span style="font-size: 9pt;"> <span style="color: blue;">DATABASE</span> <span style="color: teal;">db_sql_error</span> <span style="color: blue;">SET</span> <span style="color: blue;">SINGLE_USER</span> <span style="color: blue;">WITH</span> <span style="color: blue;">ROLLBACK</span> <span style="color: blue;">IMMEDIATE</span><span style="color: gray;">;</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">GO</span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">--</span><span style="color: green; font-size: 9pt;">备份成功以后，开启TDE 加密</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">ALTER</span><span style="font-size: 9pt;"> <span style="color: blue;">DATABASE</span> <span style="color: teal;">db_sql_error</span> <span style="color: blue;">SET</span> <span style="color: blue;">ENCRYPTION</span> <span style="color: blue;">ON</span><span style="color: gray;">;</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">GO</span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">--</span><span style="color: green; font-size: 9pt;">设置多用户访问</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">ALTER</span><span style="font-size: 9pt;"> <span style="color: blue;">DATABASE</span> <span style="color: teal;">db_sql_error</span> <span style="color: blue;">SET</span> <span style="color: blue;">MULTI_USER</span> <span style="color: blue;">WITH</span> <span style="color: blue;">ROLLBACK</span> <span style="color: blue;">IMMEDIATE</span><span style="color: gray;">;</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">GO</span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">--</span><span style="color: green; font-size: 9pt;">查看db_encryption_test数据库是否被加密 encryption_state:3 TDE加密了</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">SELECT</span><span style="font-size: 9pt;"> <span style="color: fuchsia;">DB_NAME</span><span style="color: gray;">(</span><span style="color: teal;">database_id</span><span style="color: gray;">),</span><span style="color: teal;">encryption_state</span> <span style="color: blue;">FROM</span> <span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">dm_database_encryption_keys</span><span style="color: gray;">;</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">/*</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">发现tempdb也被加密了。MSDN解释是：如果实例中有一个数据库启用了TDE加密，那么tempdb也被加密</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">*/</span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">USE</span><span style="font-size: 9pt;"> <span style="color: blue;">master</span><span style="color: gray;">;</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">器还原了MASTER</span><span style="font-size: 9pt;"> <span style="color: blue;">KEY </span><span style="color: gray;">(</span></span><span style="color: teal; font-size: 9pt;">原机器master库无master</span><span style="font-size: 9pt;"> <span style="color: blue;">key</span><span style="color: gray;">)</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">RESTORE</span><span style="font-size: 9pt;"> <span style="color: blue;">MASTER</span> <span style="color: blue;">KEY</span> </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">FROM</span> <span style="color: blue;">FILE</span> <span style="color: gray;">=</span> <span style="color: red;">'E:\master.cer'</span> </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">DECRYPTION</span> <span style="color: blue;">BY</span> <span style="color: blue;">PASSWORD</span> <span style="color: gray;">=</span> <span style="color: red;">'Wokofo2'</span> </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">ENCRYPTION</span> <span style="color: blue;">BY</span> <span style="color: blue;">PASSWORD</span> <span style="color: gray;">=</span> <span style="color: red;">'Wokofo2'</span><span style="color: gray;">;</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">GO</span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">--</span><span style="color: green; font-size: 9pt;">如果没有自动加密</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">OPEN</span><span style="font-size: 9pt;"> <span style="color: blue;">MASTER</span> <span style="color: blue;">KEY</span> <span style="color: blue;">DECRYPTION</span> <span style="color: blue;">BY</span> <span style="color: blue;">PASSWORD</span><span style="color: gray;">=</span><span style="color: red;">N'Wokofo2'</span><span style="color: gray;">;</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">--</span><span style="color: green; font-size: 9pt;">创建证书</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">CREATE</span><span style="font-size: 9pt;"> <span style="color: blue;">CERTIFICATE</span> <span style="color: teal;">master_server_cert</span> </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">FROM</span> <span style="color: blue;">FILE</span> <span style="color: gray;">=</span> <span style="color: red;">'e:\db_sql_error_cert.cer'</span> </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">WITH</span> <span style="color: blue;">PRIVATE</span> <span style="color: blue;">KEY </span><span style="color: gray;">(</span><span style="color: blue;">FILE</span> <span style="color: gray;">=</span> <span style="color: red;">'e:\db_sql_error_cert.pvk'</span><span style="color: gray;">,</span> </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp; <span style="color: blue;">DECRYPTION</span> <span style="color: blue;">BY</span> <span style="color: blue;">PASSWORD</span> <span style="color: gray;">=</span> <span style="color: red;">'Wokofo2'</span><span style="color: gray;">);</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">GO</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">-</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">CLOSE</span><span style="font-size: 9pt;"> <span style="color: blue;">MASTER</span> <span style="color: blue;">KEY</span></span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+	
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

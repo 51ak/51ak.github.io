@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>关系型数据库是怎么工作的4:数组/树/哈希表 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">关系型数据库是怎么工作的4:数组/树/哈希表</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+
+
+<h1 id="array-tree-and-hash-table">Array, Tree and Hash table</h1>
+
+<p>data structures. It’s important because they’re the backbone of modern databases. I’ll also introduce the notion of database index.</p>
+
+<p>Array
+The two-dimensional array is the simplest data structure. A table can be seen as an array. For example:</p>
+
+<p><img src="/img/array-300x255.png" alt="array" title="array" /></p>
+
+<p>This 2-dimensional array is a table with rows and columns:</p>
+
+<p>Each row represents a subject
+The columns the features that describe the subjects.
+Each column stores a certain type of data (integer, string, date …).
+Though it’s great to store and visualize data, when you need to look for a specific value it sucks.</p>
+
+<p>For example, if you want to find all the guys who work in the UK, you’ll have to look at each row to find if the row belongs to the UK. This will cost you N operations (N being the number of rows) which is not bad but could there be a faster way? This is where trees come into play.</p>
+
+<p>Note: Most modern databases provide advanced arrays to store tables efficiently like heap-organized tables or index-organized tables. But it doesn’t change the problem of fast searching for a specific condition on a group of columns.</p>
+
+<p>下一章节：</p>
+
+</main>
+<h2 class="date">发布日期:2017/09/12</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%90%86%E8%AE%BA">数据库理论</a> <a href="/categories/%E7%BF%BB%E8%AF%91">翻译</a> <a href="/categories/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93">关系型数据库</a> <a href="/categories/mysql">mysql</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E8%BD%AC%E8%AF%91">转译</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

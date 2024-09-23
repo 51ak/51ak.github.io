@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>常用脚本_ssh无密码认证(linux互信)| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">常用脚本_ssh无密码认证(linux互信)</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#a机添加b机ssh信任">A机添加B机ssh信任</a></li>
+    <li><a href="#ssh">ssh</a></li>
+    <li><a href="#ssh无密码认证-rsa">ssh无密码认证 RSA</a></li>
+    <li><a href="#ssh无密码认证-dsa">ssh无密码认证 DSA</a></li>
+    <li><a href="#查看生产的密匙">查看生产的密匙</a></li>
+    <li><a href="#用ssh--v-显示详细的登陆信息查找原因">用ssh -v 显示详细的登陆信息查找原因：</a></li>
+    <li><a href="#拷贝本地生产的key到远程服务器端两种方法">拷贝本地生产的key到远程服务器端（两种方法）</a></li>
+    <li><a href="#ssh密钥分发脚本">ssh密钥分发脚本</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="a机添加b机ssh信任">A机添加B机ssh信任</h2>
+<pre><code># B机执行
+ssh-keygen  -t  rsa
+一路回车
+cat /root/.ssh/idrsa.pub
+
+
+# A机执行
+vim /root/.ssh/authorized_keys
+
+将B机的pub信息加入
+</code></pre><h2 id="ssh">ssh</h2>
+<pre><code>ssh-keygen -t rsa -N &quot;&quot; -f ~/.ssh/id_rsa -q -b 2048 -C &quot;test@ppabc.cn&quot;
+</code></pre><h2 id="ssh无密码认证-rsa">ssh无密码认证 RSA</h2>
+<pre><code>ssh-keygen -t rsa
+cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+</code></pre><h2 id="ssh无密码认证-dsa">ssh无密码认证 DSA</h2>
+<pre><code>ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa
+cat ~/.ssh/id_dsa.pub &gt;&gt; ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+</code></pre><h2 id="查看生产的密匙">查看生产的密匙</h2>
+<p><code>cat ~/.ssh/id_dsa</code></p>
+<h2 id="用ssh--v-显示详细的登陆信息查找原因">用ssh -v 显示详细的登陆信息查找原因：</h2>
+<pre><code>ssh -v localhost
+</code></pre><h2 id="拷贝本地生产的key到远程服务器端两种方法">拷贝本地生产的key到远程服务器端（两种方法）</h2>
+<ul>
+<li>方法1</li>
+</ul>
+<pre><code>cat ~/.ssh/id_dsa.pub | ssh 远程用户名@远程服务器ip 'cat - &gt;&gt; ~/.ssh/authorized_keys'
+scp ~/.ssh/id_dsa.pub username@远程机器IP:/userhome/.ssh/authorized_keys
+ssh-copy-id  -i /root/.ssh/id_dsa.pub root@192.168.1.2
+
+</code></pre><ul>
+<li>方法2</li>
+</ul>
+<pre><code>scp ~/.ssh/id_dsa.pub test@10.0.0.1:/home/test/
+
+</code></pre><p>##登陆远程服务器test@10.0.0.1 后执行：</p>
+<pre><code>cat /home/test/id_dsa.pub &gt;&gt;  ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+
+</code></pre><h2 id="ssh密钥分发脚本">ssh密钥分发脚本</h2>
+<pre><code>#!/bin/sh
+read -p &quot;输入远端服务器IP: &quot; ip
+##ssh-copy-id -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.pub root@$ip
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@$ip
+ssh root@$ip 'sed -i &quot;s/^#RSAAuthentication\ yes/RSAAuthentication\ yes/g&quot; /etc/ssh/sshd_config'
+ssh root@$ip 'sed -i &quot;s/^#PubkeyAuthentication\ yes/PubkeyAuthentication yes/g&quot; /etc/ssh/sshd_config'
+ssh root@$ip 'sed -i &quot;s/^#PermitRootLogin\ yes/PermitRootLogin\ yes/g&quot; /etc/ssh/sshd_config'
+ssh root@$ip 'service sshd restart'
+hostname=`ssh root@${ip} 'hostname'`
+echo &quot;添加主机名和IP到本地/etc/hosts文件中&quot;
+echo &quot;$ip    $hostname&quot; &gt;&gt; /etc/hosts
+echo &quot;远端主机主机名称为$hostname, 请查看 /etc/hosts 确保该主机名和IP添加到主机列表文件中&quot;
+Footer
+© 2022 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Docs
+
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2021/05/14</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/linux">linux</a> <a href="/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC">常用脚本</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%9F%BA%E7%A1%80">基础</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

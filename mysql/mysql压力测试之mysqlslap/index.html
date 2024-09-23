@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL压力测试之MySQLslap| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL压力测试之MySQLslap</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#使用语法如下">使用语法如下：</a></li>
+    <li><a href="#参数-options">参数 [options]</a></li>
+    <li><a href="#优点">优点：</a></li>
+    <li><a href="#缺点">缺点：</a></li>
+    <li><a href="#常用场景">常用场景</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="使用语法如下">使用语法如下：</h2>
+<pre><code>mysqlslap [options]
+</code></pre><h2 id="参数-options">参数 [options]</h2>
+<ul>
+<li>&ndash;auto-generate-sql, -a 自动生成测试表和数据，表示用mysqlslap工具自己生成的SQL脚本来测试并发压力。</li>
+<li>&ndash;auto-generate-sql-load-type=type 测试语句的类型。代表要测试的环境是读操作还是写操作还是两者混合的。取值包括：read，key，write，update和mixed(默- 认)。</li>
+<li>&ndash;auto-generate-sql-add-auto-increment 代表对生成的表自动添加auto_increment列，从5.1.18版本开始支持。</li>
+<li>&ndash;number-char-cols=N, -x N 自动生成的测试表中包含多少个字符类型的列，默认1</li>
+<li>&ndash;number-int-cols=N, -y N 自动生成的测试表中包含多少个数字类型的列，默认1</li>
+<li>&ndash;number-of-queries=N 总的测试查询次数(并发客户数×每客户查询次数)</li>
+<li>&ndash;query=name,-q 使用自定义脚本执行测试，例如可以调用自定义的一个存储过程或者sql语句来执行测试。</li>
+<li>&ndash;create-schema 代表自定义的测试库名称，测试的schema，MySQL中schema也就是database。</li>
+<li>&ndash;commint=N 多少条DML后提交一次。</li>
+<li>&ndash;compress, -C 如果服务器和客户端支持都压缩，则压缩信息传递。</li>
+<li>&ndash;concurrency=N, -c N 表示并发量，也就是模拟多少个客户端同时执行select。可指定多个值，以逗号或者&ndash;delimiter参数指定的值做为分隔符。例如：- &ndash;concurrency=100,200,500。</li>
+<li>&ndash;engine=engine_name, -e engine_name 代表要测试的引擎，可以有多个，用分隔符隔开。例如：&ndash;engines=myisam,innodb。</li>
+<li>&ndash;iterations=N, -i N 测试执行的迭代次数，代表要在不同并发环境下，各自运行测试多少次。</li>
+<li>&ndash;only-print 只打印测试语句而不实际执行。</li>
+<li>&ndash;detach=N 执行N条语句后断开重连。</li>
+<li>&ndash;debug-info, -T 打印内存和CPU的相关信息。</li>
+</ul>
+<h2 id="优点">优点：</h2>
+<ul>
+<li>可以针对某些特定类型的语句进行测试， 例如：</li>
+</ul>
+<pre><code>mysqlslap --no-defaults  -h 127.0.0.1 -P 3307 --query=敏感列无索引where查询.sql --create-schema=db_test  --concurrency=10,20
+mysqlslap --no-defaults  -h 127.0.0.1 -P 3307 --query=敏感列有索引where查询.sql --create-schema=db_test  --concurrency=10,20
+mysqlslap --no-defaults  -h 127.0.0.1 -P 3307 --query=其他列where查询.sql --create-schema=db_test  --concurrency=10,20
+</code></pre><h2 id="缺点">缺点：</h2>
+<ul>
+<li>压测结果只有响应时间</li>
+<li>没有再细粒度的压测报告</li>
+</ul>
+<h2 id="常用场景">常用场景</h2>
+<ul>
+<li>生成一个指定的sql文件，用这个sql对指定的服务做压测</li>
+<li>而不是压测软件生成sql和表做压测</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/07/10</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC">常用脚本</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%9F%BA%E7%A1%80">基础</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

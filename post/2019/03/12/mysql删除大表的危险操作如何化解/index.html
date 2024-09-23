@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>mysql删除大表的危险操作如何化解 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">mysql删除大表的危险操作如何化解</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+<p>mysql作为一个很脆弱的数据库，在删除大表（2G以上）会有严重的性能问题，长时间的堵塞甚至会HANG住整个实例</p>
+
+<p>整个删除表的流程如下：</p>
+
+<ol>
+<li>数据库接收到一个DROP TABLE 操作</li>
+<li>INODB会在tablecache维护一个全局独占锁(此时这张表的操作全部HANG住)</li>
+<li>准备元信息变更</li>
+<li>向操作系统发起删除文件通知</li>
+<li>等操作系统返回（ 这一步如果文件大了，会要花掉很长）</li>
+<li>元信息变更完成</li>
+<li>释放全局独占锁</li>
+</ol>
+
+<p>DBA在处理这些问题时，不可以直接删除 ，建议走以下流程</p>
+
+<p>##1.找到具体表对应文件</p>
+
+<pre><code>ll   /data/mysql3306/data/数据库名/表名*
+</code></pre>
+
+<p>找到表的文件</p>
+
+<p>##2.对ibd文件创建硬链接</p>
+
+<pre><code>#ln       source  target
+
+ln /data/mysql3306/data/数据库名/表名.ibd  /data/mysql3306/data/数据库名/表名.ibddbaback
+</code></pre>
+
+<p>(如果有从库，先从所有从库上建这个硬链，再到主库上建这个硬链）</p>
+
+<p>##3.进入mysql ,DROP 表</p>
+
+<pre><code>drop table 表名
+
+</code></pre>
+
+<p>##4.去操作系统中删除真正的大物理文件
+有两种方式：
+这是网上找到一种SHELL脚本（未测试）</p>
+
+<pre><code>for i in `seq 50 -1 1 ` ;do sleep 2;truncate -s ${i}G  /data/mysql3306/data/数据库名/表名.ibddbaback;done 
+rm -rf /data/mysql/mysql_3306/data/db222/t_user.ibd.hdlk
+</code></pre>
+
+<p>还有一种是前DBA同事写了一个小程序slowrm
+可以在DBA站点上下载</p>
+
+<p>以上流程不可偷懒，否则删大表容易把库和实例整崩了</p>
+
+</main>
+<h2 class="date">发布日期:2019/03/12</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86">故障处理</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

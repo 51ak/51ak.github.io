@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>python on Classic</title>
+    <link>/categories/python/</link>
+    <description>Recent content in python on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 12 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/python/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Centos7安装minnconda和常用命令</title>
+      <link>/ops/centos7%E5%AE%89%E8%A3%85minnconda%E5%92%8C%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Thu, 12 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/centos7%E5%AE%89%E8%A3%85minnconda%E5%92%8C%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</guid>
+      <description>下载  官网：https://docs.anaconda.com/miniconda/ 找到下载地方：  这里演示的是x86服务器  mkdir -p ~/miniconda3 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3 rm ~/miniconda3/miniconda.sh 使用 常用命令  验证安装  source ~/miniconda3/bin/activate conda --version  安装包   conda install package_name 例如：conda install numpy
+  安装特定版本的包   conda install package_name=versio 例如：conda install numpy=1.18.1
+  更新包   conda update package_name例如： conda update numpy
+  移除包   conda remove package_name # 例如：conda remove numpy</description>
+    </item>
+    
+    <item>
+      <title>Centos7安装cx_Oracle驱动</title>
+      <link>/oracle/centos7%E5%AE%89%E8%A3%85cx_oracle%E9%A9%B1%E5%8A%A8/</link>
+      <pubDate>Tue, 30 Jul 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/centos7%E5%AE%89%E8%A3%85cx_oracle%E9%A9%B1%E5%8A%A8/</guid>
+      <description>安装说明  一台cents7的机器上没有安装过oracle python脚本需要调用远程oracle数据库，需要cx_oracle数据库  python3.9 /data/script/datasec/test.py #产生报错 .... File &amp;quot;/data/script/datasec/newSQL.py&amp;quot;, line 3, in &amp;lt;module&amp;gt; import cx_Oracle ModuleNotFoundError: No module named &#39;cx_Oracle&#39;  这个cx_Oracle驱动非常不好装 以下是安装cx_Oracle的标准步骤  安装Oracle客户端  https://www.oracle.com/database/technologies/instant-client/linux-x86-64-downloads.html 在这个网站找到合适的版本，我下的是11.2版本，不同的系统下不同的版本 选择好后，需要用户名密码登陆 下载和安装   wget &amp;quot;https://download.oracle.com/otn/linux/instantclient/11204/oracle-instantclient11.2-basic-11.2.0.4.0-1.x86_64.rpm&amp;quot; rpm -ivh oracle-instantclient11.2-basic-11.2.0.4.0-1.x86_64.rpm  安装完后，会有个目录：  ll /usr/lib/oracle/11.2/client64/lib/ total 183252 -rw-r--r-- 1 root root 53865194 Aug 25 2013 libclntsh.so.11.1 -rw-r--r-- 1 root root 7996693 Aug 25 2013 libnnz11.so -rw-r--r-- 1 root root 1973074 Aug 25 2013 libocci.</description>
+    </item>
+    
+    <item>
+      <title>用Python操作Milvus向量数据库的简明教程</title>
+      <link>/ops/%E7%94%A8python%E6%93%8D%E4%BD%9Cmilvus%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/</link>
+      <pubDate>Fri, 24 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E7%94%A8python%E6%93%8D%E4%BD%9Cmilvus%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/</guid>
+      <description>本文介绍如何使用 Python 操作 Milvus 向量数据库，包括创建集合、插入数据、创建索引和执行搜索。Milvus 是一款专为向量查询与检索设计的开源向量数据库，特别适用于 AI 和机器学习场景。
+ 环境准备 安装 Milvus服务端  1.docker 安装  wget https://github.com/milvus-io/milvus/releases/download/v2.2.3/milvus-standalone-docker-compose.yml -O docker-compose.yml docker-compose up -d   脚本 安装    wget https://raw.githubusercontent.com/milvus-io/milvus/master/scripts/standalone_embed.sh bash standalone_embed.sh start 安装 Milvus 客户端 在开始之前，请确保已经在环境中安装了 Milvus 客户端库 pymilvus。你可以使用以下命令进行安装：
+pip install pymilvus 连接 Milvus 首先，我们需要连接到本地的 Milvus 服务。假设 Milvus 服务运行在 127.0.0.1，端口为 19530。
+from pymilvus import connections # 连接到 Milvus 服务 connections.connect(alias=&amp;#34;default&amp;#34;, host=&amp;#39;127.0.0.1&amp;#39;, port=&amp;#39;19530&amp;#39;) 定义集合 Schema 接下来，我们需要定义 Milvus 集合的 schema。假设我们要存储的集合包含一个 ID 字段和一个向量字段，向量维度为 128。</description>
+    </item>
+    
+    <item>
+      <title>python报错ModuleNotFoundError_No_module_named_lzma</title>
+      <link>/ops/python%E6%8A%A5%E9%94%99modulenotfound_no_module_named_lzma/</link>
+      <pubDate>Thu, 23 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/python%E6%8A%A5%E9%94%99modulenotfound_no_module_named_lzma/</guid>
+      <description>执行Python脚本时报错  File &amp;quot;/usr/local/python3.9/lib/python3.9/site-packages/pooch/processors.py&amp;quot;, line 14, in &amp;lt;module&amp;gt; import lzma File &amp;quot;/usr/local/python3.9/lib/python3.9/lzma.py&amp;quot;, line 27, in &amp;lt;module&amp;gt; from _lzma import * ModuleNotFoundError: No module named &#39;_lzma&#39; 修复方法一：backports  安装 backports.lzma  yum install xz-devel -y yum install python-backports-lzma -y pip3.9 install backports.lzma  修改 lzma.py vim /usr/local/python3.9/lib/python3.9/lzma.py  #修改前 from _lzma import * from _lzma import _encode_filter_properties, _decode_filter_properties #修改后 try: from _lzma import * from _lzma import _encode_filter_properties, _decode_filter_properties except ImportError: from backports.</description>
+    </item>
+    
+    <item>
+      <title>安装百度飞浆PaddleSpeech</title>
+      <link>/book/%E5%AE%89%E8%A3%85%E7%99%BE%E5%BA%A6%E9%A3%9E%E6%B5%86paddlespeech/</link>
+      <pubDate>Wed, 22 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/book/%E5%AE%89%E8%A3%85%E7%99%BE%E5%BA%A6%E9%A3%9E%E6%B5%86paddlespeech/</guid>
+      <description>安装  pip3.9 install paddlepaddle -i https://mirror.baidu.com/pypi/simple pip3.9 install pytest-runner -i https://mirror.baidu.com/pypi/simple pip3.9 install paddlespeech -i https://mirror.baidu.com/pypi/simple 报错1:ImportError: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.22&#39; not found  解决：   find / -name &amp;quot;libstdc++.so.6*&amp;quot; #找到一个路径 export LD_LIBRARY_PATH=/root/anaconda3/pkgs/libstdcxx-ng-8.2.0-hdf63c60_1/lib/:$LD_LIBRARY_PATH 报错2: </description>
+    </item>
+    
+    <item>
+      <title>安装Baichuan2百川智能大模型</title>
+      <link>/ops/%E5%AE%89%E8%A3%85baichuan2%E7%99%BE%E5%B7%9D%E6%99%BA%E8%83%BD%E5%A4%A7%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Mon, 25 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%AE%89%E8%A3%85baichuan2%E7%99%BE%E5%B7%9D%E6%99%BA%E8%83%BD%E5%A4%A7%E6%A8%A1%E5%9E%8B/</guid>
+      <description>下载模型和预安装 git clone https://github.com/baichuan-inc/Baichuan2 python3.9 -V /usr/local/python3.9/bin/python3.9 -m pip install --upgrade pip python3.9 -m venv baichuan2 source baichuan2/bin/activate python -V python3.9 -m pip install --upgrade pip pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/ vim cli_demo.py 运行和报错处理  执行python3.9 cli_demo.py 
+ 报错:urllib3 v2.0 only supports OpenSSL 1.1.1+ ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+, currently the &#39;ssl&#39; module is compiled with &#39;OpenSSL 1.0.2k-fips 26 Jan 2017&#39;. See: https://github.com/urllib3/urllib3/issues/2168 排查：  进python环境  python3.</description>
+    </item>
+    
+    <item>
+      <title>一个简单有趣的程序</title>
+      <link>/ops/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E6%9C%89%E8%B6%A3%E7%9A%84%E7%A8%8B%E5%BA%8F/</link>
+      <pubDate>Thu, 21 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E6%9C%89%E8%B6%A3%E7%9A%84%E7%A8%8B%E5%BA%8F/</guid>
+      <description>会编程实在是一件很好玩的事 手机里选了300张照片 想着单纯的洗照片有点无聊 得在每张照片上加个单词 这时候 写一段python 简单而高效  代码如下： from PIL import Image, ImageDraw, ImageFont import os # def writeWord(fontname=&#39;沐瑶软笔手写体.ttf&#39;,words=&amp;quot;Python&amp;quot;): # img = Image.new(&#39;RGB&#39;, (800, 400), color = &#39;white&#39;) # draw = ImageDraw.Draw(img) # font = ImageFont.truetype(f&#39;fonts/{fontname}&#39;, 100) # draw.text((100, 150), words, font = font, fill = &#39;black&#39;) # img.save(&#39;PythonArt.png&#39;) def watermark_Image(img_path,output_path, text): img = Image.open(img_path) drawing = ImageDraw.Draw(img) black = (254, 223, 225, 179) font = ImageFont.truetype(&#39;fonts/opposansb.ttf&#39;, 350) drawing.</description>
+    </item>
+    
+    <item>
+      <title>安装MiniGPT-4</title>
+      <link>/ops/%E5%AE%89%E8%A3%85minigpt-4/</link>
+      <pubDate>Tue, 18 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%AE%89%E8%A3%85minigpt-4/</guid>
+      <description>克隆项目 # 安装 git-lfs curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | sudo bash yum install git-lfs git clone https://github.com/Vision-CAIR/MiniGPT-4.git git clone https://huggingface.co/lmsys/vicuna-13b-delta-v0 mv vicuna-13b-delta-v0 /data/MiniGPT-4/vicuna_weights 安装补丁 cd /data/MiniGPT-4/ cd ckp/ #https://drive.google.com/file/d/1a4zLvaiDBr-36pasffmgpvH5P7CKmpze/view #https://drive.google.com/u/0/uc?id=1a4zLvaiDBr-36pasffmgpvH5P7CKmpze&amp;amp;export=download wget https://doc-0s-08-docs.googleusercontent.com/docs/securesc/dbq4d7c2ha9354fqj5612le3gl157ov5/pcnbepjp7icjk54rrfgio602v738i398/1681803150000/09448752369347632296/09178445193473466964/1a4zLvaiDBr-36pasffmgpvH5P7CKmpze?e=download&amp;amp;ax=ALy03A4aDltm3f1TddEAJesIj7YsB_KKlm56C61-M72rzjuPpluLCR3UOUv28FXMkNc3q5s ## 修改配置 vim /data/MiniGPT-4/eval_configs/minigpt4_eval.yaml ckpt: &#39;/data/MiniGPT-4/ckp/&#39; vim /data/MiniGPT-4/minigpt4/configs/models/minigpt4.yaml llama_model: &amp;quot;/data/MiniGPT-4/vicuna_weights/&amp;quot; 安装依赖 pip3.9 install omegaconf #1681803684 yum install xz-devel -y yum install python-backports-lzma -y pip3.9 install backports.lzma yum install python-backports-lzma -y yum install -y xz-devel mesa-libGL python-backports-lzma vim /usr/local/python3.9/lib/python3.9/lzma.py pip3.9 install iopath pip3.</description>
+    </item>
+    
+    <item>
+      <title>将没有parentid的二维表转换成json的树状结构(python版)</title>
+      <link>/ops/%E5%B0%86%E6%B2%A1%E6%9C%89parentid%E7%9A%84%E4%BA%8C%E7%BB%B4%E8%A1%A8%E8%BD%AC%E6%8D%A2%E6%88%90json%E7%9A%84%E6%A0%91%E7%8A%B6%E7%BB%93%E6%9E%84python%E7%89%88/</link>
+      <pubDate>Fri, 06 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B0%86%E6%B2%A1%E6%9C%89parentid%E7%9A%84%E4%BA%8C%E7%BB%B4%E8%A1%A8%E8%BD%AC%E6%8D%A2%E6%88%90json%E7%9A%84%E6%A0%91%E7%8A%B6%E7%BB%93%E6%9E%84python%E7%89%88/</guid>
+      <description>需求  数据库里有这样的二维表  (id,country,province,city) (1,&amp;quot;a&amp;quot;,&amp;quot;aa&amp;quot;,&amp;quot;aa1&amp;quot;), (&amp;quot;2&amp;quot;,&amp;quot;a&amp;quot;,&amp;quot;aa&amp;quot;,&amp;quot;aa2&amp;quot;), (&amp;quot;3&amp;quot;,&amp;quot;b&amp;quot;,&amp;quot;bb&amp;quot;,&amp;quot;bb1&amp;quot;), (&amp;quot;4&amp;quot;,&amp;quot;b&amp;quot;,&amp;quot;bb&amp;quot;,&amp;quot;bb2&amp;quot;), (&amp;quot;5&amp;quot;,&amp;quot;b&amp;quot;,&amp;quot;bb&amp;quot;,&amp;quot;bb3&amp;quot;), (&amp;quot;6&amp;quot;,&amp;quot;c&amp;quot;,&amp;quot;cc&amp;quot;,&amp;quot;cc1&amp;quot;), 转换成在json中可用的树状结构
+[{ &amp;quot;id&amp;quot;: &amp;quot;a&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;a&amp;quot;, &amp;quot;leaf&amp;quot;: false, &amp;quot;children&amp;quot;: [{ &amp;quot;id&amp;quot;: &amp;quot;a|aa&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;a&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;aa&amp;quot;, &amp;quot;leaf&amp;quot;: false, &amp;quot;children&amp;quot;: [{ &amp;quot;id&amp;quot;: 1, &amp;quot;parent_id&amp;quot;: &amp;quot;a|aa&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;aa1&amp;quot;, &amp;quot;leaf&amp;quot;: true }, { &amp;quot;id&amp;quot;: &amp;quot;2&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;a|aa&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;aa2&amp;quot;, &amp;quot;leaf&amp;quot;: true }] }] }, { &amp;quot;id&amp;quot;: &amp;quot;b&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;b&amp;quot;, &amp;quot;leaf&amp;quot;: false, &amp;quot;children&amp;quot;: [{ &amp;quot;id&amp;quot;: &amp;quot;b|bb&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;b&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;bb&amp;quot;, &amp;quot;leaf&amp;quot;: false, &amp;quot;children&amp;quot;: [{ &amp;quot;id&amp;quot;: &amp;quot;3&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;b|bb&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;bb1&amp;quot;, &amp;quot;leaf&amp;quot;: true }, { &amp;quot;id&amp;quot;: &amp;quot;4&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;b|bb&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;bb2&amp;quot;, &amp;quot;leaf&amp;quot;: true }, { &amp;quot;id&amp;quot;: &amp;quot;5&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;b|bb&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;bb3&amp;quot;, &amp;quot;leaf&amp;quot;: true }] }] }, { &amp;quot;id&amp;quot;: &amp;quot;c&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;c&amp;quot;, &amp;quot;leaf&amp;quot;: false, &amp;quot;children&amp;quot;: [{ &amp;quot;id&amp;quot;: &amp;quot;c|cc&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;c&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;cc&amp;quot;, &amp;quot;leaf&amp;quot;: false, &amp;quot;children&amp;quot;: [{ &amp;quot;id&amp;quot;: &amp;quot;6&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;c|cc&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;cc1&amp;quot;, &amp;quot;leaf&amp;quot;: true }] }] }]  本来以为很好写的一小段,写起来发现还挺麻烦的  难点  二维表转json tree 还是比较常见的写法,但是这个二维表里没有parentid,所以上下级关系需要用country,province 两列来对齐生成  代码  我写了一个python版的实现   class jsontree_str_(): def __init__(self) -&amp;gt; None: pass def get_jsonstr_parentid(self,rows,columns): sb_rows=[] columnsi=len(columns) if len(rows)==0 or columnsi&amp;lt;3: return sb_rows dict_ids={} for row in rows: for i in range(1,columnsi): idstr=&amp;quot;|&amp;quot;.</description>
+    </item>
+    
+    <item>
+      <title>Python入门之书上没有的东西</title>
+      <link>/ops/python%E5%85%A5%E9%97%A8%E4%B9%8B%E4%B9%A6%E4%B8%8A%E6%B2%A1%E6%9C%89%E7%9A%84%E4%B8%9C%E8%A5%BF/</link>
+      <pubDate>Mon, 26 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/python%E5%85%A5%E9%97%A8%E4%B9%8B%E4%B9%A6%E4%B8%8A%E6%B2%A1%E6%9C%89%E7%9A%84%E4%B8%9C%E8%A5%BF/</guid>
+      <description>分享分  为Python零基础同学做了一场入门分享 准备了1个小时的ppt 现场因为有很多演示，共花了90分钟 还好今天没人过来抢会议室。  ppt 说重点：  三天打鱼两天晒网的学习Python是不现实的，每天抽小半个小时敲代码，坚持下去，一两个星期就能入门。 最先要学的不是基础知识，而是环境配置和工具的选择 基础知识不用啃得太死，差不多理解了有印象就行，后面随着练习会不断强化，自然就学会了 练习为王，千万不要死看书，不动手。 多写，多练习，遇到报错顺着问题解决，一开始有卡住的找朋友同事帮忙，后面要学着自己搜索 多利用搜索引擎，随着技能的提升，会不断的有新问题出现。 要针对一个具体的目标和小型项目来进行练习。  </description>
+    </item>
+    
+    <item>
+      <title>vscode在mac上用PyQt5制作窗口应用</title>
+      <link>/ops/python%E5%88%B6%E4%BD%9Cmac%E7%A8%8B%E5%BA%8F/</link>
+      <pubDate>Tue, 20 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/python%E5%88%B6%E4%BD%9Cmac%E7%A8%8B%E5%BA%8F/</guid>
+      <description>环境准备  vscode python3 (我用的是python3.9)  安装PyQt5 pip3 install PyQt5 pip3 install PyQt5-tools VSCode中安装和配置pyqt插件 安装了后点设置
+Qtdesigner：这里写入designer.app的完整路径 {这里写python的安装绝对路径}/site-packages/qt5_applications/Qt/bin/Designer.app/Contents/MacOS/Designer
+至此就完成了环境准备
+设计一个窗体程序 建一个项目文件夹，然后右键新建一个form 打开的design窗口，拖动控件，完成窗体设计 保存窗体到 form1.ui 直接cmd+s 保存即可，这里的form1名字可以随意起
+编译form1.ui到py文件 右键选compile
+这里还可以继续调整生成py文件（如果有需要的话）
+新建一个启动文件 main.py import sys from PyQt5.QtWidgets import QMainWindow,QApplication,QWidget from Ui_form1 import Ui_Dialog #导入你写的界面类 class MyMainWindow(QMainWindow,Ui_Dialog): #这里也要记得改 def __init__(self,parent =None): super(MyMainWindow,self).__init__(parent) self.setupUi(self) if __name__ == &amp;quot;__main__&amp;quot;: app = QApplication(sys.argv) myWin = MyMainWindow() myWin.show() sys.exit(app.exec_()) 调试和生成程序 调试代码 用pyton单应用启动调试main.py ，顺利的话会出现刚刚设计好的窗体。 如果有报错的话，解决它
+安装pyinstall  pip3 install pyinstaller 编译和生成一个可执行文件  sudo pyinstaller --windowed --onefile --clean --noconfirm main.</description>
+    </item>
+    
+    <item>
+      <title>show engine innodb status 工具化实现</title>
+      <link>/mysql/mysql%E7%9A%84showinnodbstatus/</link>
+      <pubDate>Wed, 06 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84showinnodbstatus/</guid>
+      <description>为什么要写这个工具 当MySQL出现性能问题时，DBA经常得去innodb status ，
+但是innodb status的输出信息非常丰富也很复杂。滚了几个屏幕的指标，像这样的得翻好几页，几百行的结果。
+ 哪些是重要的指标 指标具体代表什么意思 指标的值是否正常  非常考验DBA的眼力。
+考虑到以上的不方便，写了个小脚本把这些指标提取出来，并将指标对应的中文意思和合理取值范围做了详细的备注。
+实现思路  当用户选中MySQL实例，并点击show engine innnodb statutus按钮时 后台进程去该实例执行 show engine innnodb statutus 语句 返回结果做正则筛选，将各种指标和值保存在一个字典中 提前准备好一个指标的字典，字典里记了该值的中文说明和取值范围（取值范围这个还没做好） 两个字典一合并，输出一个分好类的可视化结果  指标提取和定义 脚本内容是定义了一个数据字典去翻译这些指标
+{ &amp;quot;background_thread&amp;quot;:(&amp;quot;后台进程:除掉用户请求的活动会话，MySQL后台进程也会定时的进行一系列工作。&amp;quot;,[(&amp;quot;master_thread_loops_active&amp;quot;,&amp;quot;&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;后台master线程avtive执行次数合计值&amp;lt;/b&amp;gt;,后台master线程的每次循环时会选择一种状态来执行(active、shutdown、idle),active次数/idle次数 比值越高，代表系统的写操作越繁忙。&amp;quot;), (&amp;quot;master_thread_loops_idle&amp;quot;,&amp;quot;&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;后台master线程idle执行次数合计值&amp;lt;/b&amp;gt;,和上一个指标连起来看,idle次数越高，代表系统的写操作越少。所以该指标值越大，系统写资源越充足&amp;quot;), (&amp;quot;master_thread_log_flush_and_writes&amp;quot;,&amp;quot;Bytes&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;后台master线程刷新redo日志&amp;lt;/b&amp;gt;,定期刷新redo日志，和参数innodb_flush_log_at_timeout控制刷新时间&amp;quot;) ] ) ,&amp;quot;bufferpool_memory&amp;quot;:(&amp;quot;缓冲池:有关已读和已写页面的统计信息。可以从这些数字中获得缓冲池的使用情况。&amp;quot;,[ (&amp;quot;total_large_memory_allocated&amp;quot;,&amp;quot;Bytes&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;分配给InnoDB Buffer Pool的总内存&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;dictionary_memory_allocated&amp;quot;,&amp;quot;Bytes&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;分配给InnoDB数据字典的内存&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;buffer_pool_size&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;分配给IBP的内存，单位pages&amp;lt;/b&amp;gt;,每页16k&amp;quot;) ,(&amp;quot;buffer_pool_hit&amp;quot;,&amp;quot;/1000&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool命中率&amp;lt;/b&amp;gt;每1000次请求有*次命中buffer pool,非常重要&amp;quot;) ,(&amp;quot;free_buffers&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool Free List 总大小，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;database_pages&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool LRU List 总大小，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;old_database_pages&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool old LRU 总大小，单位pages(冷端)&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;modified_db_pages&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool中脏页的数量，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pending_reads&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;等待读入Buffer Pool的页数量，单位pages&amp;lt;/b&amp;gt;,理论上不应该有等待队列&amp;quot;) ,(&amp;quot;pending_writes_lru&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;LRU中buffer中等待被刷的脏页数，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pending_writes_flush_list&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在checkpoint期间要刷新的缓冲池页数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pending_writes_single_page&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在缓冲池中写入挂起的独立页的数目&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_made_young&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;热点页数&amp;lt;/b&amp;gt;,在缓冲池LRU list中年轻的总页数(移动新页面到sublist的头部)&amp;quot;) ,(&amp;quot;pages_made_not_young&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;old sublist中的page数，冷端的page数&amp;lt;/b&amp;gt;,在缓冲池LRU列表中不年轻的页面总数(保留旧页面在sublist中，不改变)&amp;quot;) ,(&amp;quot;pages_made_young_per_sec&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒LRU链中被young的page数&amp;lt;/b&amp;gt;,oungs/s度量标准仅用于old pages，基于对page的访问次数，而不是页的数量。对页进行多次访问都会被计算。如果见到非常低的值，可能需要减小延迟或增加old page LRU list 的比例。增大后，页面需要更长的时间才会移动到尾部，这就增加了再次访问page，从而使他们made young的可能性增大&amp;quot;) ,(&amp;quot;pages_made_non_young_per_sec&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒LRU链中未被young的page数&amp;lt;/b&amp;gt;，可以一定程度上看出库的繁忙程度和命中率,Not young，如果在执行大表扫描时未看到较高的non-young和non-youngs/s，请增加innodb_old_blocks_time。&amp;quot;) ,(&amp;quot;pages_read&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool中读取的page总数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_created&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在bufferpool中创建的page数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_written&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool写入的page数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_read_per_sec&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool中读取的page数/秒&amp;lt;/b&amp;gt;, 比较重要，代表库的繁忙程度&amp;quot;) ,(&amp;quot;pages_created_per_sec&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在bufferpool中创建的page数/秒&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_written_per_sec&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool写入的page数/秒&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_read_ahead&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒平均预读操作次数&amp;lt;/b&amp;gt;k&amp;quot;) ,(&amp;quot;evicted_without_access&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒驱逐的page数&amp;lt;/b&amp;gt;k&amp;quot;) ,(&amp;quot;random_read_ahead&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒钟随机预读操作的次数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;lrn_len&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;LRU的长度&amp;lt;/b&amp;gt;&amp;quot;) ] ) .</description>
+    </item>
+    
+    <item>
+      <title>服务器过保日期批量查询python</title>
+      <link>/ops/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E4%BF%9D%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2python%E8%84%9A%E6%9C%AC/</link>
+      <pubDate>Sat, 09 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E4%BF%9D%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2python%E8%84%9A%E6%9C%AC/</guid>
+      <description>浪潮服务器过保查询  import json import urllib import requests # def chenck_hardware_info(sn): url = &#39;https://www.inspur.com/eportal/ui&#39; sn_file = &amp;quot;/tm/sn.text&amp;quot; def request_datatime(sn): params = { &amp;quot;struts.portlet.action&amp;quot;: &amp;quot;/portlet/download-front!serverConfig.action&amp;quot;, &amp;quot;sn&amp;quot;: sn, &amp;quot;src&amp;quot;: &amp;quot;inspur&amp;quot;, &amp;quot;language&amp;quot;: &amp;quot;CN&amp;quot;, &amp;quot;pageId&amp;quot;: &amp;quot;2317460&amp;quot;, &amp;quot;moduleId&amp;quot;: &amp;quot;82efecfc33da48b4a66567cb3dcbe5f3&amp;quot; } headers = { &amp;quot;Referer&amp;quot;: &amp;quot;https://www.inspur.com/eportal/ui?pageId=2317460&amp;quot;, &amp;quot;Cookie&amp;quot;: &amp;quot;JSESSIONID=****; ........(这里写cookie地址)&amp;quot; } r = requests.post(url, headers=headers, params=urllib.parse.urlencode(params)) resp = r.text[1:len(r.text)-1] resp = json.loads(resp) #print(resp[&#39;Date&#39;]) return resp[&#39;warranty1&#39;] def post_info(sn): r1 = request_datatime(sn) url = &amp;quot;http://cmdbbackend.dev.tujia.com/api/inventoryitem/sn/update/life&amp;quot; headers = { &amp;quot;OPS-Token&amp;quot;:&amp;quot;IHmioqYhb0XgBAsEiHeK_guibinw&amp;quot;, &amp;quot;Content-Type&amp;quot;:&amp;quot;application/json&amp;quot; } data = [{ &amp;quot;serialNo&amp;quot;: sn, &amp;quot;contractPeriod&amp;quot;: r1 }] r = requests.</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_python</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_python/</link>
+      <pubDate>Wed, 05 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_python/</guid>
+      <description>python安装 yum install -y gcc zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel yum install -y libffi-devel cd /opt/ wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tar.xz tar -xvJf Python-3.7.0.tar.xz mkdir -p /usr/local/python3 cd Python-3.7.4 ./configure --prefix=/usr/local/python3 make &amp;amp;&amp;amp; make install ln -s /usr/local/python3/bin/python3 /usr/local/bin/python3 ln -s /usr/local/python3/bin/pip3 /usr/local/bin/pip3 python3 -V pip3 -V </description>
+    </item>
+    
+  </channel>
+</rss>

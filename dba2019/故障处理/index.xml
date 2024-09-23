@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>故障处理 on dboop.com</title>
+    <link>/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/</link>
+    <description>Recent content in 故障处理 on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 16 Sep 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Innodb_row_lock_waits和Innodb_row_lock_current_waits报警处理</title>
+      <link>/post/2019/09/16/innodb_row_lock_waits%E5%92%8Cinnodb_row_lock_current_waits%E6%8A%A5%E8%AD%A6%E5%A4%84%E7%90%86/</link>
+      <pubDate>Mon, 16 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/09/16/innodb_row_lock_waits%E5%92%8Cinnodb_row_lock_current_waits%E6%8A%A5%E8%AD%A6%E5%A4%84%E7%90%86/</guid>
+      <description>刚才有RD部门负责人在企业微信上问我他们的一个MYSQL实例Innodb_row_lock_waits在报警，这个是什么情况？
+得益于我们把数据库的报警，发送给了RD负责人，每个负责人会对自己业务线的数据库性能比较关心，比DBA还要关心。 通常DBA收到这种row_lock报警只要不是连续的长时间报，一般会忽略。 这也是我们努力做数据库负责人制度的原因。
+回归正题，处理Innodb_row_lock_waits或者Innodb_row_lock_current_waits报警。
+报警判断 首先第一步这不是个严重的报警，如果没有其他并发报警. 但这个报警一般会对业务来说，行数增多，意味着更多的锁等待时长
+行锁的报警规则设置如下： &amp;lt;counter_node&amp;gt;&amp;lt;counter&amp;gt;Innodb_row_lock_waits&amp;lt;/counter&amp;gt;&amp;lt;checkpoint&amp;gt;0,10,30,80,5000&amp;lt;/checkpoint&amp;gt;&amp;lt;weight&amp;gt;1&amp;lt;/weight&amp;gt;&amp;lt;/counter_node&amp;gt;
+报警排查 show engine innodb status \G
+观察结果TRANSACTIONS 这一段：
+TRANSACTIONS
+Trx id counter 581112825 Purge done for trx&amp;rsquo;s n:o &amp;lt; 581112824 undo n:o &amp;lt; 0 state: running but idle History list length 34 LIST OF TRANSACTIONS FOR EACH SESSION: &amp;mdash;TRANSACTION 421991409852768, not started 0 lock struct(s), heap size 1136, 0 row lock(s) &amp;mdash;TRANSACTION 421991409917520, not started 0 lock struct(s), heap size 1136, 0 row lock(s) &amp;mdash;TRANSACTION 421991409914784, not started 0 lock struct(s), heap size 1136, 0 row lock(s) &amp;mdash;TRANSACTION 421991409911136, not started 0 lock struct(s), heap size 1136, 0 row lock(s)</description>
+    </item>
+    
+    <item>
+      <title>socket timeout exception和常见网络丢包情况--笔记</title>
+      <link>/post/2019/07/26/socket-timeout-exception%E5%92%8C%E5%B8%B8%E8%A7%81%E7%BD%91%E7%BB%9C%E4%B8%A2%E5%8C%85%E6%83%85%E5%86%B5-%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Fri, 26 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/07/26/socket-timeout-exception%E5%92%8C%E5%B8%B8%E8%A7%81%E7%BD%91%E7%BB%9C%E4%B8%A2%E5%8C%85%E6%83%85%E5%86%B5-%E7%AC%94%E8%AE%B0/</guid>
+      <description>今天参加了一场内部的网络方面的分享 这是现场记下和整理的笔记  socket timeout exception出现一般有两种情况 一、超时时间过短 慢查询、负载高等  二、网络连接丢包 TCP重试机制：20ms重传，指数递增。  数据库传输路径 网卡&amp;ndash;&amp;gt;驱动&amp;ndash;&amp;gt;硬件缓存&amp;ndash;》内核
+网卡 网卡在内存中分配一个缓冲区:sk_buffer 如果无法及时写到sk_buffer ,会产生丢包 ()
+写入SK_BUFFER后，网卡立即发起一个CPU硬件中断
+驱动 CPU接受到后，触发网卡驱动的软中断程序，消费SK_BUFFER上的数据，交给内核协议处理
+硬件缓存 默认将sk_buffer队列数据写入到CPU队列，如果满了也会丢弃
+内核 数据我进到IP层后 因为窗口可调整不会丢包,但TCP握手还是会丢包
+client发送sync SERVER在收到后 SYNC_QUEUE半连接队列，然后返回syn+ack client 收到后 发送ack server 收到后写入accept_queue 全连接队列
+server收到client的syn后，把相关信息放到半连接队列中 server回复syn+ack给client server收到client的ack，如果这时全连接队列没满，那么从连接队列拿出相关信息放入到全连接队列中，否则按tcp_abort_on_overflow指示的执行。
+当这两个连接满时会发生丢包，试如下参数 /proc/sys/net/ipv4/tcp_abort_on_overflow 为0表示当队列满时丢弃 /proc/sys/net/ipv4/tcp_abort_on_overflow 为1表示当队列满时发送RST报文
+应用进程过程中常见的可能导致超时的情况: 1.JVM Full GC 2.上游服务较慢 3.慢SQL 4.使用了慢Redis命令 5.系统CPU使用率较高(可能是外部进程使用较高，可能是Java进程中存在死锁或死循环) 6.磁盘IO wait导致 7.打开的文件数过多
+监控  NIC缓冲区到driver buffer缓冲区过程中，如果NIC缓冲区消费能力小于NIC写入能力，则会发生网络丢包 命令行可以通过ifconfig 查看overruns对应的值 或者cat /proc/net/dev里面fifo列对应的值 命令行可以通过ifconfig 查看dropped对应的值 或者cat /proc/net/dev里面dropped列对应的值
+当出现这两种值时，需要使用top 检查cpu core0的idle比例，如果cpu idle较低， 可能需要更换配置更好的机器。</description>
+    </item>
+    
+    <item>
+      <title>记一次主从复制错误处理和修复过程(mysql5.7 gtid)</title>
+      <link>/post/2019/05/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E5%92%8C%E4%BF%AE%E5%A4%8D%E8%BF%87%E7%A8%8Bmysql5.7-gtid/</link>
+      <pubDate>Mon, 27 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/05/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E5%92%8C%E4%BF%AE%E5%A4%8D%E8%BF%87%E7%A8%8Bmysql5.7-gtid/</guid>
+      <description>MYSQL的复制会在极端条件下出现主从不一致的问题 原因有很多种,这里记一下比较完整的处理过程 网上的很多处理方法都是基于早期版本的没有GIID环境
+stop slave; SET GLOBAL SQL_SLAVE_SKIP_COUNTER = 1 ; start slave;  这篇会介绍GIID下的复制错误快速恢复和修复过程
+##收到报警 收到报警,一个从节点Slave_SQL_Running状态异常 当时是周末的晚上,看到报警时已经DOWN了10分钟了 联VPN到线上又花了几分钟 上线确认以下信息,确认是有问题
+show slave status \G #得到以下关键信息 Last_SQL_Error_Timestamp: 报错时间 Slave_SQL_Running: 报错进程 Slave_SQL_Running_State: 报错信息 Could not execute Delete_rows event on table \*; Can&#39;t find record in &#39;\*&#39;, Error_code: 1032; handler error HA_ERR_KEY_NOT_FOUND; the event&#39;s master log mysql-bin.002339, end_log_pos 162227594  ##问题已确认,第二步确定影响 因为这个从库已经不同步了,需要保证业务没有影响 show processlist; 发现正常读业务已经被中件间切走了,只有BI的一个业务线因为用了DNS直连没有切走, 比较坑的是这个BI线不确定是谁负责的,但考虑BI应用读脏数据影响不大,就直接把问题交给值班人员让他联系了.(这里提一下,我们只有BI类应用会出现这种问题,业务类的访问已经都对接了具体的人)
+##开始尝试修复复制 这里说的尝试修复是快速的修复问题,不能保证100%成功 使用的方法还是跳过报错的事务,使整个复制进行下去
+show slave status \G #找关键的Slave_SQL_Running_State 列的Error_code 内容 ,这里面是1032 #查系统表找到这个GTID:ed3e8c5d-b102-11e8-9dbc-1418773c97b3:534249277 并跳过它 select LAST_SEEN_TRANSACTION from performance_schema.</description>
+    </item>
+    
+    <item>
+      <title>mysql删除大表的危险操作如何化解</title>
+      <link>/post/2019/03/12/mysql%E5%88%A0%E9%99%A4%E5%A4%A7%E8%A1%A8%E7%9A%84%E5%8D%B1%E9%99%A9%E6%93%8D%E4%BD%9C%E5%A6%82%E4%BD%95%E5%8C%96%E8%A7%A3/</link>
+      <pubDate>Tue, 12 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/03/12/mysql%E5%88%A0%E9%99%A4%E5%A4%A7%E8%A1%A8%E7%9A%84%E5%8D%B1%E9%99%A9%E6%93%8D%E4%BD%9C%E5%A6%82%E4%BD%95%E5%8C%96%E8%A7%A3/</guid>
+      <description>mysql作为一个很脆弱的数据库，在删除大表（2G以上）会有严重的性能问题，长时间的堵塞甚至会HANG住整个实例
+整个删除表的流程如下：
+ 数据库接收到一个DROP TABLE 操作 INODB会在tablecache维护一个全局独占锁(此时这张表的操作全部HANG住) 准备元信息变更 向操作系统发起删除文件通知 等操作系统返回（ 这一步如果文件大了，会要花掉很长） 元信息变更完成 释放全局独占锁  DBA在处理这些问题时，不可以直接删除 ，建议走以下流程
+##1.找到具体表对应文件
+ll /data/mysql3306/data/数据库名/表名*  找到表的文件
+##2.对ibd文件创建硬链接
+#ln source target ln /data/mysql3306/data/数据库名/表名.ibd /data/mysql3306/data/数据库名/表名.ibddbaback  (如果有从库，先从所有从库上建这个硬链，再到主库上建这个硬链）
+##3.进入mysql ,DROP 表
+drop table 表名  ##4.去操作系统中删除真正的大物理文件 有两种方式： 这是网上找到一种SHELL脚本（未测试）
+for i in `seq 50 -1 1 ` ;do sleep 2;truncate -s ${i}G /data/mysql3306/data/数据库名/表名.ibddbaback;done rm -rf /data/mysql/mysql_3306/data/db222/t_user.ibd.hdlk  还有一种是前DBA同事写了一个小程序slowrm 可以在DBA站点上下载
+以上流程不可偷懒，否则删大表容易把库和实例整崩了</description>
+    </item>
+    
+  </channel>
+</rss>

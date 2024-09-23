@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>linux on dboop.com</title>
+    <link>/categories/linux/</link>
+    <description>Recent content in linux on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 05 May 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Mysql复制慢原因定位,磁盘IO瓶颈(centos)</title>
+      <link>/post/2019/05/05/mysql%E5%A4%8D%E5%88%B6%E6%85%A2%E5%8E%9F%E5%9B%A0%E5%AE%9A%E4%BD%8D%E7%A3%81%E7%9B%98io%E7%93%B6%E9%A2%88centos/</link>
+      <pubDate>Sun, 05 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/05/05/mysql%E5%A4%8D%E5%88%B6%E6%85%A2%E5%8E%9F%E5%9B%A0%E5%AE%9A%E4%BD%8D%E7%A3%81%E7%9B%98io%E7%93%B6%E9%A2%88centos/</guid>
+      <description>线上一mysql实例报复制延时
+1.查看相关性能监控
+如下图所示,写入量在每秒1500,WQPS在3000左右
+SSH上机器确认下
+2.top 查看和定位下资源等待情况(%Cpu(s): 2.0 us, 0.8 sy, 0.0 ni, 97.0 id, 0.3 wa) 如下图所示 wa在30%以上,明显的IO等待 ,这里的wa是CPU WAIT IO 时间
+3.iostat 查看定位实时更新磁盘工作情况( rkB/s, wkB/s,avgrq-sz,avgqu-sz ,%util)
+如下图所示,sdb这组SSD 写入wkb/s 和 avgrq ,util使用率都比较高 确认IO瓶颈
+4.联系RD业务负责人,确认是导数据引起的.调整复制参数以加快复制速度</description>
+    </item>
+    
+  </channel>
+</rss>

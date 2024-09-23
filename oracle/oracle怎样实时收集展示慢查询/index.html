@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Oracle实时慢日志收集和展示| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Oracle实时慢日志收集和展示</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#oracle怎样实时收集展示慢查询">Oracle怎样实时收集展示慢查询？</a>
+      <ul>
+        <li><a href="#方法一定时收集awr报告">方法一：定时收集awr报告</a></li>
+        <li><a href="#方法二oracle中间件记录慢查询">方法二：Oracle中间件记录慢查询</a></li>
+        <li><a href="#方法三定时直接读取正在执行的sql">方法三：定时直接读取正在执行的SQL</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="oracle怎样实时收集展示慢查询">Oracle怎样实时收集展示慢查询？</h2>
+<p>当网上搜相关问题或问一个身边的OracleDBA ，通常会有两种类型的答案</p>
+<ul>
+<li>看awr报告</li>
+<li>扔过来一段SQL脚本。</li>
+</ul>
+<blockquote>
+<p>类似于MySQL的慢日志方案：<code>Slowlog--logstash--&gt;es--&gt;MySQL--&gt;web页</code></p>
+<p>但Oracle没有现成的slowlog可以用。</p>
+</blockquote>
+<p><strong>所以我们先后采用尝试了以下三种方法。</strong></p>
+<h3 id="方法一定时收集awr报告">方法一：定时收集awr报告</h3>
+<p>我们去年和黄老师一起尝试了定时生成awr报告，获取topSQL入库后，再收集展示的方法，这个方案需要对OracleAWR的缓存表理解得很深入，黄老师哼哼哧哧花了一个月时间，最终完成了统一收集，并通过web页展示，但总体效果不好。
+主要缺点在于</p>
+<ul>
+<li>不能做到实时，甚至不能准实时（取决于多长时间生成一次awr报告）</li>
+<li>只能每个实例取topSQL 方案呆板且不理性
+<em>总结：实现难度大，效果差</em></li>
+</ul>
+<h3 id="方法二oracle中间件记录慢查询">方法二：Oracle中间件记录慢查询</h3>
+<p>去年年底的时候我们在写一个Oracle中件间，业务访问Oracle数据库需要连接到Proxy上，然后在Proxy上记录查询日志，这种方法理论上是完全可以的，但是当我去尝试去实现这个功能的时候发现很困难，因为我们采用了端口中转的方式，可以抓到客户端和服务端的通信包，但是不能对应上这些通信包的对应关系。这就导致计算SQL执行时间这一步没法实现。
+然后我们架构组也在做jdbc层的中件间，这个是100%可以轻松实现的，但只适用于java程序，对于非java代码访问数据库就无能为力了
+<em>总结：收集得很准，但开发工作量大，需要很长的时间</em></p>
+<h3 id="方法三定时直接读取正在执行的sql">方法三：定时直接读取正在执行的SQL</h3>
+<p>这个方案是我们年前做了一个Oracle长时间无响应SQL的报警功能（超过60秒没执行完的SQL会发钉钉报警），然后一次故障处理时，法爷说这个功能改一下刚好可以做慢查询收集整理。</p>
+<p>于是我们快速的试了下这个方案（代价很小，花了半个小时就完成了，任务配置和报表展示）</p>
+<ol>
+<li>新建存放慢SQL信息的表一个字典表/一个慢SQL表（5分钟）</li>
+<li>配置一个每分钟去所有Oracle实例上收集的任务（15分钟）</li>
+<li>配合已有CMDB信息，完成慢SQL和研发负责人的对应，写一个SQL （5分钟）</li>
+<li>用这个SQL配置出来一张可展示的报表，设置成全体研发可见（5分钟）
+<em>总结：零开发工作，只要建个表，配置一个定时job和报表，就可以完成，效果不错</em></li>
+</ol>
+<p>得到这样的一张这样的：实时展示Oracle慢查询的报表
+<img src="/img/2022/oracle_slowsqlMain_mask.png" alt="Oracle慢查询的报表"></p>
+<p>&ndash;
+done</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/02/11</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/oracle">oracle</a> <a href="/categories/slowlog">slowlog</a> <a href="/categories/dashboard">dashboard</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

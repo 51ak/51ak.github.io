@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>常用脚本_iptables| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">常用脚本_iptables</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装和启动">安装和启动</a></li>
+    <li><a href="#常用命令">常用命令</a></li>
+    <li><a href="#路由转发">路由转发：</a></li>
+    <li><a href="#封端口">封端口</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="安装和启动">安装和启动</h2>
+<pre><code>systemctl status iptables
+
+yum install iptables-services
+
+systemctl start iptables #启动
+
+systemctl status iptables #查看运行状态
+
+systemctl restart iptables.service #重启
+
+systemctl stop iptables.service #停止
+
+systemctl enable iptables.service #设置开机启动
+
+systemctl disable iptables.service #禁止开机启动
+
+</code></pre><h2 id="常用命令">常用命令</h2>
+<pre><code>iptables -h #查询帮助
+
+iptables -L -n #列出（filter表）所有规则
+
+iptables -L -n --line-number #列出（filter表）所有规则，带编号
+
+iptables -L -n -t nat #列出（nat表）所有规则
+
+iptables -F #清除（filter表）中所有规则
+
+iptables -F -t nat #清除（nat表）中所有规则
+
+service iptables save #保存配置（保存配置后必须重启iptables）
+
+systemctl restart iptables.service #重启
+
+
+查看：
+iptables -L -n --line-number
+
+iptables -t nat -A PREROUTING  -p tcp -d 127.0.2.174 --dport 1521 -j DNAT --to-destination 127.0.2.24:1521
+
+
+iptables -t nat -A POSTROUTING -p tcp -d 127.0.2.24 --dport 1521 -j SNAT --to-source 127.0.2.174 
+
+iptables -t nat -A PREROUTING   --dport 1521 -j DNAT --to-destination 127.0.2.24:1521
+</code></pre><h2 id="路由转发">路由转发：</h2>
+<pre><code>vim /etc/sysctl.conf
+ 
+添加如下：
+net.ipv4.ip_forward = 1 (永久开启转发功能)
+ 
+sysctl -p
+
+
+iptables -F
+iptables -F -t nat 
+
+iptables -t nat  -A PREROUTING -p tcp -m tcp --dport 1521 -j DNAT --to-destination 127.0.2.24:1521
+iptables -t nat  -A POSTROUTING -d 127.0.2.24/32 -p tcp -m tcp --dport 1521 -j SNAT --to-source 127.0.2.174
+
+
+service iptables save #保存配置（保存配置后必须重启iptables）
+
+systemctl restart iptables.service #重启
+
+
+
+iptables -t nat -A POSTROUTING -j MASQUERADE
+
+</code></pre><h2 id="封端口">封端口</h2>
+<pre><code>想禁掉一台机器的指定端口范围，帮我看下这样写可以吗？
+iptables -A INPUT -p tcp --dport  3000:10000 -j DROP #禁掉其他机器对端口的访问权限
+iptables -A INPUT -p tcp --dport 3000:10000 -s 127.0.2.98 -j ACCEPT #开放2.98对端口的访问权限
+iptables -A INPUT -p tcp --dport 3000:10000 -s 127.0.2.99 -j ACCEPT  #开放2.99对端口的访问权限 （这个能不能和上面的合并）
+service iptables save  
+service iptables restart
+iptables -L -n 
+
+iptables -D INPUT -p tcp --dport  3000:10000 -j DROP 
+
+
+iptables -A INPUT -p tcp --dport 3000:10000 -s 127.0.2.98 -j ACCEPT
+
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2021/05/07</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/linux">linux</a> <a href="/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC">常用脚本</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%9F%BA%E7%A1%80">基础</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OracleGoldenGate运维常用命令| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">OracleGoldenGate运维常用命令</span></h1>
+</div>
+
+
+  <main>
+    <h2 id="常用命令">常用命令</h2>
+<h3 id="1-管理mgr进程命令">1. 管理(MGR)进程命令</h3>
+<pre><code>INFO MANAGER         返回有关管理器端口和进程id的信息。
+START MANAGER       开启管理进程
+STATUS MANAGER     返回管理进程状态
+STOP MANAGER         停止管理进程
+</code></pre><h3 id="2-采集extract进程命令">2. 采集(EXTRACT)进程命令</h3>
+<pre><code>ADD EXTRACT          添加一个采集组
+ALTER EXTRACT        更改采集组的属性
+CLEANUP EXTRACT    删除采集组的运行历史记录
+DELETE EXTRACT      删除采集组。
+INFO EXTRACT          返回有关采集组的信息。
+KILL EXTRACT            强制终止采集组。
+LAG EXTRACT             返回有关采集延迟的信息。
+REGISTER EXTRACT    向Oracle数据库注册采集组START EXTRACT 启动采集组
+STATS EXTRACT          返回处理采集的统计信息。
+STATUS EXTRACT        返回采集组的状态
+STOP EXTRACT           停止采集组。
+FORCEAPPEND           允许data pump在现有的初始加载文件上添加新的跟踪文件
+UNREGISTER EXTRACT       从Oracle数据库注销采集组。
+</code></pre><h3 id="3-回放replicat进程命令">3. 回放(Replicat)进程命令</h3>
+<pre><code>ADD REPLICAT          添加一个复制组
+ALTER REPLICAT       更改复制组的属性。
+CLEANUP REPLICAT     删除复制组的运行历史。
+DELETE REPLICAT    删除一个复制组。
+INFO REPLICAT       返回关于复制组的信息。
+KILL REPLICAT         强制终止一个复制组。
+LAG REPLICAT         返回关于复制延迟的信息。
+REGISTER REPLICAT      向Oracle数据库注册一个复制组。
+START REPLICAT       启动一个复制组。
+STATS REPLICAT        返回处理一个复制组的统计信息。
+STATUS REPLICAT     返回一个复制组的状态。
+STOP REPLICAT        停止复制组。
+</code></pre><h3 id="4-er-命令">4. ER 命令</h3>
+<pre><code>INFO ER *        返回有关指定的通配符组的信息。
+KILL ER *          强制终止指定的通配符组。
+LAG ER *          返回有关指定通配符组的滞后信息
+START ER *      启动指定的通配符组。
+STATS ER *       返回处理指定通配符的统计信息组。
+STATUS ER *    返回指定的通配符组的状态。
+STOP ER *        停止指定的通配符组。
+</code></pre><h3 id="5-trail-文件相关命令">5. trail 文件相关命令</h3>
+<pre><code>ADD EXTTRAIL         添加到Oracle GoldenGate配置的本地跟踪。
+ADD RMTTRAIL       添加到Oracle GoldenGate配置的远程跟踪。
+ALTER EXTTRAIL     更改本地路径的属性。
+ALTER RMTTRAIL    更改远程跟踪的属性
+DELETE EXTTRAIL     从Oracle GoldenGate配置中移除本地踪迹。
+DELETE RMTTRAIL    从Oracle GoldenGate配置中删除远程跟踪。
+INFO EXTTRAIL     返回关于本地路径的信息。
+INFO RMTTRAIL   返回关于远程跟踪的信息。
+</code></pre><h3 id="6-编辑配置相关">6. 编辑配置相关</h3>
+<pre><code>EDIT PARAMS    在默认文本编辑器中打开参数文件
+SET EDITOR       设置用于编辑参数文件的默认文本编辑器程序。
+VIEW PARAMS   在屏幕上以只读模式显示参数文件的内容。
+INFO PARAM      返回参数定义信息。
+</code></pre><h3 id="7-检查点相关命令">7. 检查点相关命令</h3>
+<pre><code>ADD CHECKPOINTTABLE    创建一个检查点
+CLEANUP CHECKPOINTTABLE   删除不再需要的检查点记录。
+DELETE CHECKPOINTTABLE   删除检查点
+INFO CHECKPOINTTABLE     返回关于检查点的信息。
+</code></pre><h3 id="8-系统命令">8. 系统命令</h3>
+<pre><code>INFO ALL    显示系统上所有Oracle GoldenGate进程的状态和延迟。
+OBEY     处理包含Oracle GoldenGate命令列表的文件。
+SHELL    在GGSCI接口中执行shell命令。
+SHOW   显示Oracle GoldenGate环境的属性。
+VERSIONS   显示有关操作系统和数据库的信息。
+VIEW GGSEVT  显示Oracle GoldenGate错误日志(ggserr.logfile)。
+VIEW REPORT  显示由Extract或Replicat生成的进程报告或丢弃文件。
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2024/01/08</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/oracle">oracle</a> <a href="/categories/ogg">ogg</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

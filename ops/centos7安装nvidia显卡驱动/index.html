@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Centos7安装nvidia显卡驱动| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Centos7安装nvidia显卡驱动</span></h1>
+</div>
+
+
+  <main>
+    <p>1.安装依赖</p>
+<pre><code>yum -y install epel-release
+yum -y install gcc binutils wget
+yum -y install kernel-devel
+</code></pre><p>2.禁用Nouveau</p>
+<pre><code>检查是否开启Nouveau
+
+lsmod | grep nouveau
+注意：无信息输出表示已被禁用无需在操作以下步骤；
+echo -e &quot;blacklist nouveau\noptions nouveau modeset=0&quot; &gt; /etc/modprobe.d/blacklist.conf
+
+mv /boot/initramfs-$(uname -r).img /boot/initramfs-$(uname -r).img.bak
+
+dracut /boot/initramfs-$(uname -r).img $(uname -r)
+
+reboot
+
+
+lsmod | grep nouveau
+
+注意：无任何信息输出表示禁用成功；
+</code></pre><p>3.检查驱动</p>
+<pre><code>rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm
+yum -y install https://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm
+yum -y install nvidia-detect
+
+nvidia-detect -v
+# 本来应该显示
+This device requires the current....
+# 结果显卡太老，显示
+Probing for supported NVIDIA devices...
+[102b:0534] Matrox Electronics Systems Ltd. G200eR2
+[10de:1bb3] NVIDIA Corporation GP104GL [Tesla P4]
+This device does not appear to be supported at present
+Please report at http://elrepo.org/bugs quoting the output from '/sbin/lspci -nn'
+
+手动下载
+https://www.nvidia.cn/Download/index.aspx?lang=cn
+
+</code></pre><p>4.安装cuda</p>
+<pre><code>wget https://developer.download.nvidia.com/compute/cuda/12.1.1/local_installers/cuda-repo-rhel7-12-1-local-12.1.1_530.30.02-1.x86_64.rpm
+rpm -i cuda-repo-rhel7-12-1-local-12.1.1_530.30.02-1.x86_64.rpm
+yum clean all
+yum -y install nvidia-driver-latest-dkms
+yum -y install cuda
+</code></pre><p>5.驱动安装</p>
+<pre><code>下载驱动
+
+
+chmod +x NVIDIA-Linux-*.run
+
+
+
+sh ./NVIDIA-Linux-*.run -s
+
+./NVIDIA-Linux-*.run --kernel-source-path=/usr/src/kernels/3.10.0-1160.31.1.el7.x86_64 -k $(uname -r)
+
+
+常见错误
+1.安装时报错“ERROR: Unable to find the kernel source tree for the currently running kernel. Please make sure you have installed the kernel source files for your kernel and that they are properly configured; on
+
+Red Hat Linux systems, for example, be sure you have the 'kernel-source' or 'kernel-devel' RPM installed. If you know the correct kernel source files are installed, you may specify the
+
+kernel source path with the '--kernel-source-path' command line option.”
+
+解决办法：
+yum -y install epel-release
+yum -y install kernel-devel
+rpm -qa |grep kernel
+
+./NVIDIA-Linux-*.run --kernel-source-path=/usr/src/kernels/3.10.0-1160.31.1.el7.x86_64 -k $(uname -r)
+
+./NVIDIA-Linux-*.run  -no-x-check -no-nouveau-check -no-opengl-files --kernel-source-path=/usr/src/kernels/3.10.0-1160.31.1.el7.x86_64  -k $(uname -r)
+ailed to run `/usr/sbin/dkms build -m nvidia -v 460.106.00 -k 3.10.0-1160.el7.x86_64`: Sign command:
+         /lib/modules/3.10.0-1160.el7.x86_64/build/scripts/sign-file
+         Binary /lib/modules/3.10.0-1160.el7.x86_64/build/scripts/sign-file not found, modules won't be signed                                                  
+         Error! Your kernel headers for kernel 3.10.0-1160.el7.x86_64 cannot be found at /lib/modules/3.10.0-1160.el7.x86_64/build or
+         /lib/modules/3.10.0-1160.el7.x86_64/source.                                                                                                            
+         Please install the linux-headers-3.10.0-1160.el7.x86_64 package or use the --kernelsourcedir option to tell DKMS where it's located.
+</code></pre><pre><code>3:37:39 ls
+13:37:52 lspci | grep nouveau
+13:38:03 gcc --version
+13:38:09 cmake --version
+13:38:29 yum install build-essential -y
+13:38:57 yum install build-essential
+13:39:11 yum install gcc
+13:40:38 gcc --version
+13:40:48 yum install cmake
+13:41:08 cmake --version
+13:41:40 ls
+13:41:47 cd /usr/src/
+13:41:47 ls
+13:41:51 ./NVIDIA-Linux-x86_64-410.129-diagnostic.run
+13:42:38 nvidia-detect -v
+13:43:48 uname -r
+13:43:51 ls
+13:44:33 ./NVIDIA-Linux-x86_64-410.129-diagnostic.run --kernel-source-path=/usr/src/kernels/3.10.0-1160.el7.x86_64
+13:45:03 kernel-devel
+13:45:11 yum install kernel-devel
+13:46:03 ls
+13:46:06 cd kernels/
+13:46:06 ls
+13:46:11 cd ..
+13:46:24 ./NVIDIA-Linux-x86_64-410.129-diagnostic.run --kernel-source-path=/usr/src/kernels/3.10.0-1160.31.1.el7.x86_64
+13:49:51 nvidia-smi
+13:50:11 conda env list
+13:51:01 scp 10.20.3.27:/root/Anaconda3-5.0.1-Linux-x86_64.sh ./
+13:52:09 ls
+13:52:22 mv Anaconda3-5.0.1-Linux-x86_64.sh /home/croot/
+13:53:11 bzip2
+13:53:17 yum install bzip2
+13:53:30 bzip2
+13:53:32 bunzip2
+14:22:50 sudo rpm -i cuda-repo-rhel7-10.0.130-1.x86_64.rpm
+14:23:08 ls
+14:23:12 wget https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-10.0.130-1.x86_64.rpm
+14:23:16 ls
+14:23:22 sudo rpm -i cuda-repo-rhel7-10.0.130-1.x86_64.rpm
+14:23:42 sudo yum clean all
+14:24:03 sudo yum install cuda
+15:30:52 ls
+15:30:55 wget https://developer.nvidia.com/compute/cuda/10.0/Prod/local_installers/cuda_10.0.130_410.48_linux
+15:40:40 ls
+15:40:54 wget http://developer.download.nvidia.com/compute/cuda/10.0/Prod/patches/1/cuda_10.0.130.1_linux.run
+15:40:58 ls
+15:41:14 which bash
+15:41:26 ll -a
+15:41:32 ls
+15:41:50 /usr/bin/bash cuda_10.0.130_410.48_linux
+15:50:00 ls
+15:50:23 which bash
+15:50:44 /usr/bin/bash cuda_10.0.130_410.48_linux
+
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/04/17</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/centos">centos</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>mysql:innodb_flush_log_at_trx_commit参数 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">mysql:innodb_flush_log_at_trx_commit参数</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+
+
+<p>Mysql：</p>
+
+<h3 id="innodb-flush-log-at-trx-commit参数">innodb_flush_log_at_trx_commit参数</h3>
+
+<p>innodb_flush_log_at_trx_commit：是 InnoDB 引擎特有的，ib_logfile的刷新方式（ ib_logfile：记录的是redo log和undo log的信息）</p>
+
+<p><em>取值:0/1/2</em></p>
+
+<h5 id="innodb-flush-log-at-trx-commit-0">innodb_flush_log_at_trx_commit=0</h5>
+
+<p>表示每隔一秒把log buffer刷到文件系统中(os buffer)去，并且调用文件系统的“flush”操作将缓存刷新到磁盘上去。也就是说一秒之前的日志都保存在日志缓冲区，也就是内存上，如果机器宕掉，可能丢失1秒的事务数据。</p>
+
+<h5 id="innodb-flush-log-at-trx-commit-1">innodb_flush_log_at_trx_commit=1</h5>
+
+<p>表示在每次事务提交的时候，都把log buffer刷到文件系统中(os buffer)去，并且调用文件系统的“flush”操作将缓存刷新到磁盘上去。这样的话，数据库对IO的要求就非常高了，如果底层的硬件提供的IOPS比较差，那么MySQL数据库的并发很快就会由于硬件IO的问题而无法提升。</p>
+
+<h5 id="innodb-flush-log-at-trx-commit-2">innodb_flush_log_at_trx_commit=2</h5>
+
+<p>表示在每次事务提交的时候会把log buffer刷到文件系统中去，但并不会立即刷写到磁盘。如果只是MySQL数据库挂掉了，由于文件系统没有问题，那么对应的事务数据并没有丢失。只有在数据库所在的主机操作系统损坏或者突然掉电的情况下，数据库的事务数据可能丢失1秒之类的事务数据。这样的好处，减少了事务数据丢失的概率，而对底层硬件的IO要求也没有那么高(log buffer写到文件系统中，一般只是从log buffer的内存转移的文件系统的内存缓存中，对底层IO没有压力)。</p>
+
+<h3 id="影响对象">影响对象</h3>
+
+<p>这里共有4个对象,依次是
+buffer-pool ,log-buffer, os-cache,binlog-file
+只有最后一个binlog-file是磁盘文件
+每个事务都会更新buffer-pool里的对象
+然后行为:
+- innodb_flush_log_at_trx_commit=0  每次事务只更新buffer-pool,其他三个对象都需要等每秒种(不能保证完全是1秒) 把buffer-pool的内容写入log-buffer,同时写入os-cache,binlog-file
+- innodb_flush_log_at_trx_commit=1  每次事务更新buffer-pool ,log-buffer, os-cache,binlog-file 4个对象,且直接FLUSH磁盘数据,所以最慢也最安全
+- innodb_flush_log_at_trx_commit=2  每次事务更新buffer-pool,log-buffer,os-cache,比上面少了个flush 文件这一步,FLUSH的进程是每秒钟刷一次.所以比1快比0慢</p>
+
+<h3 id="性能差异">性能差异</h3>
+
+<p>一般我们简单的估算 innodb_flush_log_at_trx_commit=1能写10000条数据时,innodb_flush_log_at_trx_commit=2能写12000条,innodb_flush_log_at_trx_commit=0 能写16000条 .差不多是1/1.<sup>2</sup>&frasl;<sub>1</sub>.6倍性能差异
+当然这个数据非常不严谨,只是参考,需要考虑环境差异和sync_binlog参数.</p>
+
+<h3 id="数据安全">数据安全</h3>
+
+<ul>
+<li>innodb_flush_log_at_trx_commit=0  如果MYSQL进程崩溃,丢失1秒钟事务</li>
+<li>innodb_flush_log_at_trx_commit=1  如果同时sync_binlog=1,最多丢失一个事务数据</li>
+<li>innodb_flush_log_at_trx_commit=2  如果mysql进程崩溃,系统没挂机器存活,则参考=1,如果是机器挂了或操作系统崩溃,则参考=0</li>
+</ul>
+
+<h3 id="建议">建议</h3>
+
+<p>线上建议强制采有innodb_flush_log_at_trx_commit=1</p>
+
+</main>
+<h2 class="date">发布日期:2017/08/01</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/innodb_flush_log_at_trx_commit">innodb_flush_log_at_trx_commit</a> <a href="/categories/mysql%E5%8F%82%E6%95%B0">mysql参数</a> 
+  
+  
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

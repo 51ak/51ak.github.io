@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>langchain on Classic</title>
+    <link>/categories/langchain/</link>
+    <description>Recent content in langchain on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 05 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/langchain/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Langchain的生态链开源产品</title>
+      <link>/book/langchain%E7%9A%84%E7%94%9F%E6%80%81%E9%93%BE%E5%BC%80%E6%BA%90%E4%BA%A7%E5%93%81/</link>
+      <pubDate>Wed, 05 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/book/langchain%E7%9A%84%E7%94%9F%E6%80%81%E9%93%BE%E5%BC%80%E6%BA%90%E4%BA%A7%E5%93%81/</guid>
+      <description>Langchain生态 低代码  Langflow: LangFlow是LangChain的UI Flowise - LangchainJS UI：拖放 UI 以使用 LangchainJS 构建自定义的 LLM 流程 Databerry：用于语义搜索和文档检索的无代码平台 LangchainUI: 开源聊天人工智能工具包 Yeager.ai：Yeager.ai Agent 是第一个 Langchain Agent 创建者，旨在帮助您轻松构建、原型设计和部署 AI 支持的代理  服务  GPTCache：用于为 LLM 查询创建语义缓存的库 Gorilla：LLM 的 API 商店 LlamaHub：社区制作的 LLM 数据加载器库 EVAL：带有 Langchain 的弹性多功能代理。 将执行您的所有请求。 Auto-evaluator：使用Langchain进行问答的轻量级评估工具 Langchain Visualizer：LangChain工作流程的可视化和调试工具 LLM策略：使用LLM实现策略模式 datasetGPT：使用 LLM 生成文本和会话数据集的命令行界面。 spellbook-forge：使您的 LLM 提示可执行并受版本控制。 自动评估器: Langchain 自动评估器 Jina：使用 Jina 进行生产的 Langchain 应用程序 Gradio 工具: Gradio LLM 代理 steamship-langchain：Steamship 适配器，使 LangChain 开发者能够在 Steamship 上快速部署应用程序🐍 LangForge：用于创建和部署 LangChain 应用程序的工具包 BentoChain: LangChain 在 BentoML 上的部署 LangCorn: 使用 FastApi 自动为 LangChain 应用程序提供服务 Langchain 服务：带有 Qdrant 矢量存储和 Kong 网关的自定 Langchain 设置 Lanarky: 使用 FastAPI 交付可用于生产的 LLM 项目 Dify：一个用于插件和数据集的 API，一个用于快速工程和可视化操作的界面，所有这些都用于创建强大的 AI 应用程序。 LangchainJS Worker：cloudflare 上的 LangchainJS Worker Chainlit：在几分钟内构建 Python LLM 应用程序 Zep：Zep：LLM/Chatbot 应用程序的长期内存存储 Langchain Decorators：LangChain 顶部的一层，为编写自定义 langchain 提示和链提供语法糖 FastAPI + Chroma：ChatGPT 的示例插件，利用 FastAPI、LangChain 和 Chroma AilingBot：快速将Langchain上构建的应用集成到Slack、企业微信、飞书、钉钉等IM中。  代理  CollosalAI Chat：使用 RLHF 实施 LLM，由 Colossal-AI 项目提供支持 AgentGPT：使用 Langchain 和 OpenAI (Vercel / Nextjs) 的 AI 代理 本地 GPT：受到私有 GPT 的启发，将 GPT4ALL 模型替换为 Vicuna-7B 模型，并使用 InstructorEmbeddings 代替 LlamaEmbeddings ThinkGPT：增强 LLM 并超越其极限的代理技术 Camel-AutoGPT：法学硕士和自动代理（如 BabyAGI 和 AutoGPT）的角色扮演方法 私有GPT：利用GPT的力量与您的文档进行私密交互，100%私密，无数据泄露 RasaGPT：RasaGPT 是第一个构建在 Rasa 和 Langchain 之上的无头 LLM 聊天机器人平台。 SkyAGI：LLM 代理中新兴的人类行为模拟能力 PyCodeAGI：一个小型 AGI 实验，根据用户想要构建的应用程序生成 Python 应用程序 BabyAGI UI：让在网络应用程序中使用babyagi更容易运行和开发，比如ChatGPT SuperAgent：将 LLM Agent 部署到生产环境 Voyager：具有大型语言模型的开放式实体代理 ix：自治 GPT-4 代理平台 DuetGPT：对话式半自主开发助手，无需复制粘贴即可进行 AI 结对编程。 生产环境中的多模式 LangChain 代理: 部署 LangChain Agent 并将其连接到 Telegram DemoGPT：DemoGPT 使您只需使用提示即可创建快速演示。 它在 Langchain 文档树上应用了 ToT 方法。 SuperAGI：SuperAGI - 开发优先的开源自主人工智能代理框架 自主 HR 聊天机器人：一个自主代理，可以使用现有工具自主回答 HR 相关查询 BlockAGI：BlockAGI 进行迭代、特定领域的研究，并输出详细的叙述性报告来展示其发现  模板  AI：Vercel 模板，用于使用 React、Svelte 和 Vue 构建人工智能驱动的应用程序，对 LangChain 提供一流的支持 create-t3-turbo-ai：基于 t3、Langchain 友好的样板，用于构建类型安全、全栈、LLM 驱动的样板 使用 Nextjs 和 Prisma 的 Web 应用程序 LangChain.</description>
+    </item>
+    
+  </channel>
+</rss>

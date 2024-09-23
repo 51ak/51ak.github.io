@@ -1,0 +1,426 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>图数据库nebula实时慢日志收集和展示| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">图数据库nebula实时慢日志收集和展示</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#目的">目的</a></li>
+    <li><a href="#1建一张表每隔1分钟时间可调但我们的场景1分钟足够了">1.建一张表，每隔1分钟（时间可调，但我们的场景1分钟足够了）</a></li>
+    <li><a href="#2收集到的信息做个dashboard页实时展示出来">2.收集到的信息，做个dashboard页，实时展示出来</a></li>
+    <li><a href="#3对于每个慢查询做个子页面看到详细的nql和每次执行用时等详细信息">3.对于每个慢查询，做个子页面，看到详细的NQL和每次执行用时等详细信息。</a></li>
+    <li><a href="#4总结">4.总结</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="目的">目的</h2>
+<p>因为我们的图数据库从neo4j社区版转到nebula graph方向。最近在项目压测的时候，一开始很平稳，运行一段时间后，NQL会越来越慢，发现性能巨差。nebula经常卡死，表现为：</p>
+<ul>
+<li>nebula-storaged.service和nebula-graphd.service服务经常挂掉。</li>
+<li>业务侧反馈执行什么NQL都很慢</li>
+<li>nebula show query里发现有大量（300-500个）running的进程。平时很快的NQL也卡在那</li>
+</ul>
+<p>系统资源</p>
+<ul>
+<li>内存紧张 ，大量的虚拟内存被占用</li>
+<li>io,cpu也较高</li>
+</ul>
+<p>在做了一些参数调优后，发现状态有所缓解，但是一段时间后，还是会慢慢卡死，从现象上推测是有一种或几种慢NQL多次执行后，把系统资源消耗完了，导致大面积的堵塞。所以面临的需求还是要有个慢查询排查工具。</p>
+<p>参考上一次做oracle慢日志收集展示的方法，
+<a href="https://www.dboop.com/oracle/oracle%E6%80%8E%E6%A0%B7%E5%AE%9E%E6%97%B6%E6%94%B6%E9%9B%86%E5%B1%95%E7%A4%BA%E6%85%A2%E6%9F%A5%E8%AF%A2/">https://www.dboop.com/oracle/oracle%E6%80%8E%E6%A0%B7%E5%AE%9E%E6%97%B6%E6%94%B6%E9%9B%86%E5%B1%95%E7%A4%BA%E6%85%A2%E6%9F%A5%E8%AF%A2/</a></p>
+<p>变化的是：</p>
+<ul>
+<li>因为nebula的集群就一个，不需要做oracle慢日志的大表套小表，数担据量不大就建了一张monitor_nebula_slow表存放数据.</li>
+<li>nebula抓到的慢查询里的NQL是没有去参数化的，需要自己做去参数化，把相同类型的NQL，标识为同一个md5id</li>
+<li></li>
+</ul>
+<h2 id="1建一张表每隔1分钟时间可调但我们的场景1分钟足够了">1.建一张表，每隔1分钟（时间可调，但我们的场景1分钟足够了）</h2>
+<pre><code>CREATE TABLE `monitor_nebula_slow` (
+  `logid` int unsigned NOT NULL AUTO_INCREMENT,
+  `SessionID` varchar(50) NOT NULL DEFAULT '',
+  `ExecutionPlanID` varchar(50) NOT NULL DEFAULT '',
+  `User` varchar(50) NOT NULL DEFAULT '',
+  `Host` varchar(50) NOT NULL DEFAULT '',
+  `StartTime` datetime DEFAULT NULL,
+  `DurationInUSec` int unsigned NOT NULL DEFAULT '0',
+  `Status` varchar(50) NOT NULL DEFAULT '',
+  `Query` varchar(5000) NOT NULL DEFAULT '',
+  `_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `md5id` varchar(64) NOT NULL DEFAULT '',
+  PRIMARY KEY (`logid`),
+  KEY `ix_monitor_nebula_slow` (`_timestamp`)
+) ENGINE=InnoDB AUTO_INCREMENT=13231 DEFAULT CHARSET=utf8mb3
+
+</code></pre><h2 id="2收集到的信息做个dashboard页实时展示出来">2.收集到的信息，做个dashboard页，实时展示出来</h2>
+<p>源码如下：</p>
+<pre><code>&lt;para&gt;
+  &lt;name&gt;btime&lt;/name&gt;
+  &lt;title&gt;开始时间&lt;/title&gt;
+  &lt;type&gt;datetime&lt;/type&gt;
+  &lt;defaultvalue&gt;getdate()-4h&lt;/defaultvalue&gt;
+   &lt;format&gt;%Y-%m-%d %H:%M:00&lt;/format&gt;
+  &lt;/para&gt;
+
+  
+  &lt;para&gt;
+  &lt;name&gt;etime&lt;/name&gt;
+  &lt;title&gt;结束时间&lt;/title&gt;
+  &lt;type&gt;datetime&lt;/type&gt;
+  &lt;defaultvalue&gt;getdate()-1m&lt;/defaultvalue&gt;
+   &lt;format&gt;%Y-%m-%d 23:59:59&lt;/format&gt;
+  &lt;/para&gt;
+
+
+
+
+
+      &lt;para&gt;
+  &lt;name&gt;nql&lt;/name&gt;
+     &lt;title&gt;NQL&lt;/title&gt;
+  &lt;type&gt;string&lt;/type&gt;
+  &lt;defaultvalue&gt;&lt;/defaultvalue&gt;
+  &lt;/para&gt;
+  
+    
+
+  
+ &lt;para&gt;
+   &lt;title&gt;nodeid&lt;/title&gt;
+  &lt;name&gt;nodeid&lt;/name&gt;
+    &lt;type&gt;select&lt;/type&gt;
+   &lt;item_text&gt;全部,10.0.0.77,10.0.0.78,10.0.0.79&lt;/item_text&gt;
+      &lt;item_value&gt;all,10.0.0.77:9669,10.0.0.78:9669,10.0.0.79:9669&lt;/item_value&gt;
+    &lt;defaultvalue&gt;all&lt;/defaultvalue&gt; 
+  &lt;/para&gt;
+
+&lt;page&gt;
+  &lt;viewtype&gt;mutibar&lt;/viewtype&gt;
+     &lt;chart_title&gt;title : {text: 'Nebula实时慢日志(节点)',x:'center',y:20},&lt;/chart_title&gt;
+    &lt;chart_legendstyle2&gt;x: 'right',y: '200',borderWidth: 0,orient:'vertical'&lt;/chart_legendstyle2&gt;
+  &lt;chart_legendstyle&gt;x: 'right',y:0,borderWidth: 0,orient:'vertical'&lt;/chart_legendstyle&gt;
+   &lt;chart_addin&gt;grid:{width:880,y:10},&lt;/chart_addin&gt;
+  &lt;connstr&gt;link:dboop_nebula_slow&lt;/connstr&gt;
+  &lt;sqlstr&gt;&lt;![CDATA[
+select 
+date_format(aa.ftime, '%%m-%%d %%H:%%i') as ftime
+,ifnull(bb.DBOwner,'') as sqlstr
+,ifnull(bb.counts,0)  as counts 
+from dba_report_datetime1  aa 
+left join (
+SELECT  date_format(a._timestamp, '%%Y-%%m-%%d %%H:%%i') as ftime,
+replace(Host,':9669','')  as 'DBOwner',
+count(*)  as counts
+from  `monitor_nebula_slow`  a 
+where a._timestamp between %s AND %s
+and (a.Query like concat('%%',%s,'%%') or %s='')
+and (a.Host=%s or %s='all')
+group by ftime, DBOwner
+)bb on aa.ftime=bb.ftime
+where aa.ftime between %s AND %s and aa.ftime&lt;curtime()
+order by ftime,counts desc
+
+]]&gt;
+  &lt;/sqlstr&gt;
+  &lt;sqlpara&gt;#1&lt;/sqlpara&gt;
+    &lt;sqlpara&gt;#2&lt;/sqlpara&gt;
+  &lt;sqlpara&gt;#3&lt;/sqlpara&gt;  &lt;sqlpara&gt;#3&lt;/sqlpara&gt;
+  &lt;sqlpara&gt;#4&lt;/sqlpara&gt;  &lt;sqlpara&gt;#4&lt;/sqlpara&gt;
+   &lt;sqlpara&gt;#1&lt;/sqlpara&gt;
+    &lt;sqlpara&gt;#2&lt;/sqlpara&gt;
+  &lt;width&gt;1080px&lt;/width&gt;
+  &lt;height&gt;160px&lt;/height&gt;
+   &lt;tableformat&gt;rowconvert 1 15&lt;/tableformat&gt;
+  &lt;chart_group&gt;a&lt;/chart_group&gt;
+  &lt;chart_datazoom&gt;60&lt;/chart_datazoom&gt;
+&lt;/page&gt;
+
+
+&lt;page&gt;
+  &lt;viewtype&gt;mutibar&lt;/viewtype&gt;
+     &lt;chart_title&gt;title : {text: 'Nebula实时慢日志(NQL)',x:'center',y:20},&lt;/chart_title&gt;
+    &lt;chart_legendstyle2&gt;x: 'right',y: '200',borderWidth: 0,orient:'vertical'&lt;/chart_legendstyle2&gt;
+  &lt;chart_legendstyle&gt;x: 'right',y:0,borderWidth: 0,orient:'vertical'&lt;/chart_legendstyle&gt;
+   &lt;chart_addin&gt;grid:{width:880,y:10},&lt;/chart_addin&gt;
+  &lt;connstr&gt;link:dboop_nebula_slow&lt;/connstr&gt;
+  &lt;sqlstr&gt;&lt;![CDATA[
+select 
+date_format(aa.ftime, '%%m-%%d %%H:%%i') as ftime
+,ifnull(bb.DBOwner,'') as sqlstr
+,ifnull(bb.counts,0)  as counts 
+from dba_report_datetime1  aa 
+left join (
+SELECT  date_format(a._timestamp, '%%Y-%%m-%%d %%H:%%i') as ftime,
+left(md5id,15)  as 'DBOwner',
+count(*)  as counts
+from  `monitor_nebula_slow`  a 
+where a._timestamp between %s AND %s
+and (a.Query like concat('%%',%s,'%%') or %s='')
+and (a.Host=%s or %s='all')
+group by ftime, DBOwner
+)bb on aa.ftime=bb.ftime
+where aa.ftime between %s AND %s and aa.ftime&lt;curtime()
+order by ftime,counts desc
+
+]]&gt;
+  &lt;/sqlstr&gt;
+  &lt;sqlpara&gt;#1&lt;/sqlpara&gt;
+    &lt;sqlpara&gt;#2&lt;/sqlpara&gt;
+  &lt;sqlpara&gt;#3&lt;/sqlpara&gt;  &lt;sqlpara&gt;#3&lt;/sqlpara&gt;
+  &lt;sqlpara&gt;#4&lt;/sqlpara&gt;  &lt;sqlpara&gt;#4&lt;/sqlpara&gt;
+   &lt;sqlpara&gt;#1&lt;/sqlpara&gt;
+    &lt;sqlpara&gt;#2&lt;/sqlpara&gt;
+  &lt;tableformat&gt;rowconvert 1 15&lt;/tableformat&gt;
+  &lt;width&gt;1080px&lt;/width&gt;
+  &lt;height&gt;360px&lt;/height&gt;
+  &lt;chart_group&gt;a&lt;/chart_group&gt;
+  &lt;chart_datazoom&gt;60&lt;/chart_datazoom&gt;
+&lt;/page&gt;
+
+
+
+&lt;page&gt;
+  &lt;viewtype&gt;table&lt;/viewtype&gt;
+  &lt;connstr&gt;link:dboop_nebula_slow&lt;/connstr&gt;
+  &lt;title2&gt;时间段内最频繁慢NQLTop50&lt;/title2&gt;
+  &lt;sqlstr&gt;&lt;![CDATA[
+SELECT 
+concat('&lt;a href=&quot;view.html?action=v&amp;report_action=v&amp;report_ptname=dvjtlec9pqgza1782rx4wb0hyk&amp;sqlid=',a.md5id,'&quot; target=&quot;_blank&quot;&gt;',left(a.md5id,10),'&lt;/a&gt;' )
+ as md5,
+concat(max(left(a.Query,120)),'...') as nqlstr,
+case when count(*)&gt;10 then concat('&lt;span class=&quot;f_red f_bold&quot;&gt;',count(*),'&lt;/span&gt;') else concat(count(*)) end as  '累计次数',
+case when sum(DurationInUSec)&gt;1000000000 then concat('&lt;span class=&quot;f_red &quot;&gt;',format(sum(DurationInUSec)/1000000,2),'秒&lt;/span&gt;') else concat(format(sum(DurationInUSec)/1000000,2),'秒') end as '累计耗时',
+case when avg(DurationInUSec)&gt;100000000 then concat('&lt;span class=&quot;f_red &quot;&gt;',format(avg(DurationInUSec)/1000000,2),'秒&lt;/span&gt;') else concat(format(avg(DurationInUSec)/1000000,2),'秒') end as '平均耗时',
+case when max(DurationInUSec)&gt;100000000 then concat('&lt;span class=&quot;f_red &quot;&gt;',format(max(DurationInUSec)/1000000,2),'秒&lt;/span&gt;') else concat(format(max(DurationInUSec)/1000000,2),'秒') end as '最慢耗时'
+from  `monitor_nebula_slow`  a 
+where a._timestamp between %s AND %s
+and (a.Query like concat('%%',%s,'%%') or %s='')
+and (a.Host=%s or %s='all')
+group  by a.md5id 
+order by sum(DurationInUSec) desc
+limit 50
+
+]]&gt;
+  &lt;/sqlstr&gt;
+  &lt;sqlpara&gt;#1&lt;/sqlpara&gt;
+    &lt;sqlpara&gt;#2&lt;/sqlpara&gt;
+  &lt;sqlpara&gt;#3&lt;/sqlpara&gt;  &lt;sqlpara&gt;#3&lt;/sqlpara&gt;
+  &lt;sqlpara&gt;#4&lt;/sqlpara&gt;  &lt;sqlpara&gt;#4&lt;/sqlpara&gt;
+    &lt;width&gt;1140px&lt;/width&gt;
+&lt;/page&gt;
+
+
+&lt;debug&gt;true&lt;/debug&gt;
+
+
+</code></pre><p>页面展示效果如下：</p>
+<p><img src="/img/2022/nebula_slowlog_view.png" alt="nebula慢查询实时展示页" title="nebula慢查询实时展示页"></p>
+<h2 id="3对于每个慢查询做个子页面看到详细的nql和每次执行用时等详细信息">3.对于每个慢查询，做个子页面，看到详细的NQL和每次执行用时等详细信息。</h2>
+<p>子页面源代码：</p>
+<pre><code>&lt;page&gt;
+  &lt;viewtype&gt;table&lt;/viewtype&gt;
+   &lt;tableheader&gt;&lt;![CDATA[
+&lt;tr style=&quot;height:25px;&quot;&gt;
+
+&lt;th width=&quot;100&quot;&gt;&lt;h3&gt;发生时间&lt;/h3&gt;&lt;/th&gt;
+&lt;th width=&quot;50&quot;&gt;&lt;h3&gt;用时&lt;/h3&gt;&lt;/th&gt;
+&lt;th&gt;&lt;h3&gt;NQL&lt;/h3&gt;&lt;/th&gt;
+&lt;/tr&gt;
+
+
+
+ ]]&gt;
+  &lt;/tableheader&gt;  
+  
+  
+  &lt;connstr&gt;link:dboop_nebula_slow&lt;/connstr&gt;
+  &lt;sqlstr&gt;&lt;![CDATA[
+select date_format(StartTime, '%%m-%%d %%H:%%i:%%s') as ftime
+,case when max(DurationInUSec)/1000000&gt;5 then 
+
+concat('&lt;span class=&quot;f_red&quot;&gt;',format(max(DurationInUSec)/1000000,2),'&lt;/span&gt;秒')
+ else
+concat('&lt;span&gt;',format(max(DurationInUSec)/1000000,2),'&lt;/span&gt;秒')
+end
+as costtime
+,
+concat('',a.`Query`
+,' &lt;br&gt;'
+,' &lt;b&gt;SessionID: &lt;/b&gt;&lt;span class=&quot;f_666&quot;&gt;',a.SessionID,'&lt;/span&gt;'
+,' &lt;b&gt;状态:&lt;/b&gt;&lt;span class=&quot;f_red&quot;&gt;'
+,case 
+when Status='RUNNING'   then '&lt;span class=&quot;f_666&quot;&gt;RUNNING&lt;/span&gt;' 
+else Status  end,'&lt;/span&gt;'
+,' &lt;b&gt;User:&lt;/b&gt;&lt;span class=&quot;f_666&quot;&gt;',a.User,'@',a.Host,'&lt;/span&gt;'
+,''
+) as 'NSQL' from 
+ monitor_nebula_slow a
+where _timestamp  between %s and %s
+ and md5id=%s 
+group by StartTime,NSQL
+order by StartTime desc 
+    ]]&gt;
+  &lt;/sqlstr&gt;
+
+  &lt;sqlpara&gt;#1&lt;/sqlpara&gt;
+    &lt;sqlpara&gt;#2&lt;/sqlpara&gt;
+    &lt;sqlpara&gt;#3&lt;/sqlpara&gt;
+   
+  &lt;width&gt;100%&lt;/width&gt;
+
+&lt;/page&gt;
+
+
+&lt;para&gt;
+  &lt;name&gt;开始时间&lt;/name&gt;
+  &lt;type&gt;datetime&lt;/type&gt;
+  &lt;defaultvalue&gt;getdate()-4h&lt;/defaultvalue&gt;
+   &lt;format&gt;%Y-%m-%d %H:%M:00&lt;/format&gt;
+  &lt;/para&gt;
+
+  
+  &lt;para&gt;
+  &lt;name&gt;结束时间&lt;/name&gt;
+  &lt;type&gt;datetime&lt;/type&gt;
+  &lt;defaultvalue&gt;getdate()-1m&lt;/defaultvalue&gt;
+   &lt;format&gt;%Y-%m-%d %H:%M:00&lt;/format&gt;
+  &lt;/para&gt;
+
+
+  &lt;para&gt;
+  &lt;name&gt;sqlid&lt;/name&gt;
+  &lt;type&gt;string&lt;/type&gt;
+  &lt;defaultvalue&gt;&lt;/defaultvalue&gt;
+  &lt;/para&gt;
+
+
+</code></pre><p>子页面效果如下：
+<img src="/img/2022/nebula_slowlog_detail.png" alt="nebula慢查询实时展示页" title="nebula慢查询实时展示页"></p>
+<h2 id="4总结">4.总结</h2>
+<p>通过以上的配置，我们快速的制作了一个辅助定位nebula Graph的慢查询问题的工具，可以实时的定位问题点。再和研发同学一起解决问题。</p>
+<p>这个工具基于Python3.9+Django+MySQL完成，开发加调试共用时：3小时。</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/06/17</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/nosql">nosql</a> <a href="/categories/slowlog">slowlog</a> <a href="/categories/nebula">nebula</a> <a href="/categories/dashboard">dashboard</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

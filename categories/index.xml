@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Classic</title>
+    <link>/categories/</link>
+    <description>Recent content in Categories on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 14 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DBA</title>
+      <link>/categories/dba/</link>
+      <pubDate>Sat, 14 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/dba/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>画图</title>
+      <link>/categories/%E7%94%BB%E5%9B%BE/</link>
+      <pubDate>Sat, 14 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E7%94%BB%E5%9B%BE/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>观点</title>
+      <link>/categories/%E8%A7%82%E7%82%B9/</link>
+      <pubDate>Fri, 13 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E8%A7%82%E7%82%B9/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>centos</title>
+      <link>/categories/centos/</link>
+      <pubDate>Thu, 12 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/centos/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>python</title>
+      <link>/categories/python/</link>
+      <pubDate>Thu, 12 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mysql</title>
+      <link>/categories/mysql/</link>
+      <pubDate>Tue, 10 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/mysql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>日志</title>
+      <link>/categories/%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Tue, 10 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E6%97%A5%E5%BF%97/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>chatgpt</title>
+      <link>/categories/chatgpt/</link>
+      <pubDate>Mon, 09 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/chatgpt/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>运维</title>
+      <link>/categories/%E8%BF%90%E7%BB%B4/</link>
+      <pubDate>Sat, 07 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E8%BF%90%E7%BB%B4/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>常用脚本</title>
+      <link>/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/</link>
+      <pubDate>Thu, 05 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>数据库会议</title>
+      <link>/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%9A%E8%AE%AE/</link>
+      <pubDate>Mon, 26 Aug 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%9A%E8%AE%AE/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>oracle</title>
+      <link>/categories/oracle/</link>
+      <pubDate>Tue, 30 Jul 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/oracle/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>人工智能</title>
+      <link>/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</link>
+      <pubDate>Mon, 22 Jul 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>资源</title>
+      <link>/categories/%E8%B5%84%E6%BA%90/</link>
+      <pubDate>Mon, 08 Jul 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E8%B5%84%E6%BA%90/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>日记</title>
+      <link>/categories/%E6%97%A5%E8%AE%B0/</link>
+      <pubDate>Fri, 21 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E6%97%A5%E8%AE%B0/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>自动化流程</title>
+      <link>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/</link>
+      <pubDate>Wed, 24 Apr 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>操作规范</title>
+      <link>/categories/%E6%93%8D%E4%BD%9C%E8%A7%84%E8%8C%83/</link>
+      <pubDate>Mon, 11 Mar 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E6%93%8D%E4%BD%9C%E8%A7%84%E8%8C%83/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mysql8.0</title>
+      <link>/categories/mysql8.0/</link>
+      <pubDate>Thu, 25 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/mysql8.0/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>redis</title>
+      <link>/categories/redis/</link>
+      <pubDate>Tue, 23 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/redis/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>故障处理</title>
+      <link>/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/</link>
+      <pubDate>Tue, 23 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ogg</title>
+      <link>/categories/ogg/</link>
+      <pubDate>Thu, 18 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/ogg/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>基础原理</title>
+      <link>/categories/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/</link>
+      <pubDate>Tue, 02 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>运维SQL</title>
+      <link>/categories/%E8%BF%90%E7%BB%B4sql/</link>
+      <pubDate>Fri, 29 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E8%BF%90%E7%BB%B4sql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>报错</title>
+      <link>/categories/%E6%8A%A5%E9%94%99/</link>
+      <pubDate>Thu, 23 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E6%8A%A5%E9%94%99/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>安全</title>
+      <link>/categories/%E5%AE%89%E5%85%A8/</link>
+      <pubDate>Fri, 10 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E5%AE%89%E5%85%A8/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SQL上线</title>
+      <link>/categories/sql%E4%B8%8A%E7%BA%BF/</link>
+      <pubDate>Thu, 19 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/sql%E4%B8%8A%E7%BA%BF/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>生活</title>
+      <link>/categories/%E7%94%9F%E6%B4%BB/</link>
+      <pubDate>Wed, 18 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E7%94%9F%E6%B4%BB/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>工作技能</title>
+      <link>/categories/%E5%B7%A5%E4%BD%9C%E6%8A%80%E8%83%BD/</link>
+      <pubDate>Sun, 08 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E5%B7%A5%E4%BD%9C%E6%8A%80%E8%83%BD/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>自动化</title>
+      <link>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/</link>
+      <pubDate>Thu, 21 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>大聪明</title>
+      <link>/categories/%E5%A4%A7%E8%81%AA%E6%98%8E/</link>
+      <pubDate>Fri, 08 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E5%A4%A7%E8%81%AA%E6%98%8E/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>langchain</title>
+      <link>/categories/langchain/</link>
+      <pubDate>Wed, 05 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/langchain/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>postgreSQL</title>
+      <link>/categories/postgresql/</link>
+      <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/postgresql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mysql升级</title>
+      <link>/categories/mysql%E5%8D%87%E7%BA%A7/</link>
+      <pubDate>Thu, 20 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/mysql%E5%8D%87%E7%BA%A7/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mysql复制</title>
+      <link>/categories/mysql%E5%A4%8D%E5%88%B6/</link>
+      <pubDate>Thu, 06 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/mysql%E5%A4%8D%E5%88%B6/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>proxy</title>
+      <link>/categories/proxy/</link>
+      <pubDate>Thu, 06 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/proxy/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>高可用</title>
+      <link>/categories/%E9%AB%98%E5%8F%AF%E7%94%A8/</link>
+      <pubDate>Thu, 06 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E9%AB%98%E5%8F%AF%E7%94%A8/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>文心一言</title>
+      <link>/categories/%E6%96%87%E5%BF%83%E4%B8%80%E8%A8%80/</link>
+      <pubDate>Tue, 28 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E6%96%87%E5%BF%83%E4%B8%80%E8%A8%80/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>数据</title>
+      <link>/categories/%E6%95%B0%E6%8D%AE/</link>
+      <pubDate>Tue, 21 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E6%95%B0%E6%8D%AE/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>有趣的</title>
+      <link>/categories/%E6%9C%89%E8%B6%A3%E7%9A%84/</link>
+      <pubDate>Tue, 21 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E6%9C%89%E8%B6%A3%E7%9A%84/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ppt</title>
+      <link>/categories/ppt/</link>
+      <pubDate>Fri, 17 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/ppt/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>硬件</title>
+      <link>/categories/%E7%A1%AC%E4%BB%B6/</link>
+      <pubDate>Tue, 10 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E7%A1%AC%E4%BB%B6/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>binlog</title>
+      <link>/categories/binlog/</link>
+      <pubDate>Tue, 27 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/binlog/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mongodb</title>
+      <link>/categories/mongodb/</link>
+      <pubDate>Thu, 08 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/mongodb/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nosql</title>
+      <link>/categories/nosql/</link>
+      <pubDate>Thu, 08 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/nosql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>监控</title>
+      <link>/categories/%E7%9B%91%E6%8E%A7/</link>
+      <pubDate>Thu, 08 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E7%9B%91%E6%8E%A7/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>raft</title>
+      <link>/categories/raft/</link>
+      <pubDate>Thu, 03 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/raft/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>分布式</title>
+      <link>/categories/%E5%88%86%E5%B8%83%E5%BC%8F/</link>
+      <pubDate>Thu, 25 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E5%88%86%E5%B8%83%E5%BC%8F/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>undolog</title>
+      <link>/categories/undolog/</link>
+      <pubDate>Thu, 28 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/undolog/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>事务</title>
+      <link>/categories/%E4%BA%8B%E5%8A%A1/</link>
+      <pubDate>Thu, 28 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E4%BA%8B%E5%8A%A1/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nebula</title>
+      <link>/categories/nebula/</link>
+      <pubDate>Wed, 29 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/nebula/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>dashboard</title>
+      <link>/categories/dashboard/</link>
+      <pubDate>Thu, 23 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/dashboard/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>slowlog</title>
+      <link>/categories/slowlog/</link>
+      <pubDate>Fri, 17 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/slowlog/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>评价标准</title>
+      <link>/categories/%E8%AF%84%E4%BB%B7%E6%A0%87%E5%87%86/</link>
+      <pubDate>Tue, 22 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E8%AF%84%E4%BB%B7%E6%A0%87%E5%87%86/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>大事务</title>
+      <link>/categories/%E5%A4%A7%E4%BA%8B%E5%8A%A1/</link>
+      <pubDate>Fri, 18 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E5%A4%A7%E4%BA%8B%E5%8A%A1/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>数据库代理</title>
+      <link>/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A3%E7%90%86/</link>
+      <pubDate>Tue, 18 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A3%E7%90%86/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mac</title>
+      <link>/categories/mac/</link>
+      <pubDate>Tue, 27 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/mac/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>linux</title>
+      <link>/categories/linux/</link>
+      <pubDate>Wed, 07 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/linux/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>innodb</title>
+      <link>/categories/innodb/</link>
+      <pubDate>Sat, 13 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/innodb/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>锁</title>
+      <link>/categories/%E9%94%81/</link>
+      <pubDate>Sat, 13 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E9%94%81/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>drop table</title>
+      <link>/categories/drop-table/</link>
+      <pubDate>Thu, 26 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/drop-table/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>原理</title>
+      <link>/categories/%E5%8E%9F%E7%90%86/</link>
+      <pubDate>Thu, 18 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E5%8E%9F%E7%90%86/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sqlserver</title>
+      <link>/categories/sqlserver/</link>
+      <pubDate>Fri, 21 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/sqlserver/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>windowscluter</title>
+      <link>/categories/windowscluter/</link>
+      <pubDate>Sun, 12 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/windowscluter/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

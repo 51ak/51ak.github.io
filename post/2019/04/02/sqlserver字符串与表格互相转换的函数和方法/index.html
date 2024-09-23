@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sqlserver字符串与表格互相转换的函数和方法 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Sqlserver字符串与表格互相转换的函数和方法</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+<p>##A.将逗号分隔的字符串分拆成表格的方法：
+拆分的方法有很多，临时表.SUBSTRING &hellip;但都不如XML来得清凉爽快</p>
+
+<pre><code>declare @tempstr varchar(500)
+set @tempstr='54,57,55,56,59'
+
+declare @Xmlstr xml
+set @Xmlstr=Co nVERT(xml,'&lt;root&gt;&lt;v&gt;' + REPLACE(@tempstr, ',', '&lt;/v&gt;&lt;v&gt;') + '&lt;/v&gt;&lt;/root&gt;') 
+SELECT  ids=N.v.value('.', 'int')  FROM @Xmlstr.nodes('/root/v') N(v)
+</code></pre>
+
+<p>写成函数如下：</p>
+
+<pre><code>create FUNCTIo n [dbo].[ufn_sys_Str2Table]
+    (
+      @SplitStr nvarchar(max),
+      @Separator nvarchar(10) = ','
+    )
+RETURNS @ResultTable TABLE
+    (
+      [sid] INT IDENTITY(1, 1) ,
+      [svalue] nvarchar(max)
+    )
+as
+begin
+--把字串转成XML
+declare @Tempxml xml;
+set @Tempxml=Co nVERT(xml,'&lt;d&gt;'+REPLACE(@SplitStr,@Separator,'&lt;/d&gt;&lt;d&gt;')+'&lt;/d&gt;')
+
+--把XML转成表
+insert into @ResultTable ([svalue])
+select co nvert(nvarchar(max),Tb.co.query('data(.)') ) as rvalue from @Tempxml.nodes('/d') Tb(co)
+RETURN ;
+end
+</code></pre>
+
+<p>##B.统计一个字符串在另一个字符串出现的次数的函数</p>
+
+<pre><code>CREATE FUNCTIo n [dbo].[fnQueryCharCountFromString]
+(
+    @Str    NVARCHAR(MAX),        --待查找字符串
+    @Spilt    CHAR(1)                --需查找的字符
+)
+RETURNS INT
+AS
+BEGIN
+    
+    DECLARE @Count    INT
+    SELECT @Count = COUNT(*) 
+    FROM (
+        SELECT SUBSTRING(s,n,1) AS split
+        FROM (
+            SELECT @Str AS s,n
+            FROM dbo.nums
+            WHERE n &lt; LEN(@Str)) D
+        ) A
+    WHERE A.split = @Spilt
+    RETURN @Count;
+
+END
+</code></pre>
+
+<p>##C.把表格拼成字符串，多伴生使用于GROUP BY
+假定要聚合的字段是id ,要统计的字段是tname</p>
+
+<pre><code>select a.tname from @T1 a for xml path('row')
+select id,REPLACE(replace((select a.tname from @T1 a where a.id=t.id for xml path('row')),'&lt;row&gt;&lt;tname&gt;',''),'&lt;/tname&gt;&lt;/row&gt;',',')
+from @T1 t group by id
+
+</code></pre>
+
+</main>
+<h2 class="date">发布日期:2019/04/02</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/sqlserver">sqlserver</a> <a href="/categories/sql%E8%AF%AD%E6%B3%95">SQL语法</a> <a href="/categories/sql%E6%8A%80%E5%B7%A7">SQL技巧</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

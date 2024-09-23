@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>微软mcitp认证70-450考试：列几个样题和答案解析21-25</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="questio n 21you are a professio nal level sql sever 2008 database administrator in an internatio nal corporatio n named wiikigo. you are experienced in managing databases in an enterprise-level organi微软mcitp认证70-450考试：列几个样题和答案解析21-25" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a href="../kaoshi/l_34_1.htm" class="hover"　title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../microsoft/l_35_1.htm" title="微软认证"><span class="zc_666">微软认证</span></a>|</li><li><a  href="../OracleCTP/l_36_1.htm" title="Oracle认证">Oracle认证</a>|</li><li><a  href="../ruankao/l_37_1.htm" title="软考数据库工程师">软考数据库工程师</a>|</li><li><a  href="../siji/l_38_1.htm" title="计算机四级数据库工程师">计算机四级数据库工程师</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../kaoshi/l_34_1.htm">DBA考试</a>&nbsp;&gt;&nbsp;<a href="../microsoft/l_35_1.htm">微软认证</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>微软mcitp认证70-450考试：列几个样题和答案解析21-25</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   <p>QUESTIo n 21<br />
+You are a professio nal level SQL Sever 2008 Database Administrator in an internatio nal corporatio n named Wiikigo. </p>
+<p>You are experienced in managing databases in an enterprise-level organizatio n, optimizing and sustaining the database life cycle. </p>
+<p>In the company, your job is to implement solutio ns o n security, troubleshooting, deployment and optimizatio n. A SQL Server 2008 instance is managed by you. </p>
+<p>A database is hosted by the instance and the database is co nfigured by utilizing high-safety mirroring operatio n mode alo ng with a witness server. </p>
+<p>A memory failure is experienced by the witness server; therefore the server will be offline for five hours. </p>
+<p>The mirroring strategy should be reset to cut the risk of database unavailability to the least level. </p>
+<p>Which actio n should you perform to finish the task?</p>
+<p>A.&nbsp;To finish the task, database mirroring should be paused.<br />
+B.&nbsp;To finish the task, the witness server should be moved from the mirroring sessio n.<br />
+C.&nbsp;To finish the task, asynchro nous operating mode should be utilized.<br />
+D.&nbsp;To finish the task, database mirroring should be removed.</p>
+<p>&nbsp;<br />
+QUESTIo n 21</p>
+<p>Answer: B</p>
+<p><br />
+Explanatio n/Reference:</p>
+<p>Removing the witness will keep the mirroring sessio n but without automatic failover.</p>
+<p>You can remove the witness from a sessio n if you are co nnected to the current principal server.</p>
+<p>To remove the witness<br />
+1.&nbsp;Co nnect to the principal server instance and, in the Object Explorer pane, click the server name to expand the server tree. <br />
+2.&nbsp;Expand Databases, and select the database whose witness you want to remove. <br />
+3.&nbsp;Right-click the database, select Tasks, and then click Mirror. This opens the Mirroring page of the Database Properties dialog box. <br />
+4.&nbsp;To remove the witness, delete its server network address from the Witness field. </p>
+<p>Note If you switch from high-safety mode with automatic failover to high-performance mode, the Witness field is automatically cleared. </p>
+<p><br />
+1. Principal 与Mirror 以及 Witness 三台实例都安装为相同版本，目前是到SQL Server 2008 SP1。<br />
+2. 需要有一个域帐户分别添加到 三台数据库实例所在的Server 的 Administrators组、以及SQL Server 相关的组中； 由于具体的组的功能不清楚，因此建议所有组都添加该域帐户，确保权限运行正常。<br />
+3. 将第二步中的域帐户设置为SQL Server 服务，SQL Server Agent 的启动帐户，并重启服务。<br />
+4. 确保Principal 与Miroor 两台实例上的数据数据及日志相同。备份模式为完全备份，恢复模式为完全，向Mirror实例上恢复数据库时必须选择为NoRecovery模式。</p>
+<p>&nbsp;</p>
+<p>&nbsp;<br />
+QUESTIo n 22</p>
+<p>You are a professio nal level SQL Sever 2008 Database Administrator in an internatio nal corporatio n named Wiikigo. </p>
+<p>You are experienced in managing databases in an enterprise-level organizatio n, optimizing and sustaining the database life cycle. In the company, your job is to implement solutio ns o n security, troubleshooting, deployment and optimizatio n. </p>
+<p>A SQL Server 2008 instance is managed by you. And a large financial database is hosted by the instance. </p>
+<p>The backup strategies listed below are co ntained by the database. </p>
+<p>First, the performance of a full database backup is implemented o nce a week. <br />
+Seco ndly, the performance of a differential backup is implemented every day. <br />
+Thirdly, the performance of a transactio n log backup is implemented every hour. </p>
+<p>An end-of-year batch process should be implemented, and the process takes two hours to run. About five percent of data within the database will be changed by the batch process. </p>
+<p>Since you are the technical support, you are required to make sure that the batch operatio n can be rolled back in the shortest time, if the batch process is not approved by the Finance department. What should you do first before start the batch process?</p>
+<p>A.&nbsp;You should perform a differential backup.<br />
+B.&nbsp;You should create a marked transactio n. And then you should perform a transactio n log backup.<br />
+C.&nbsp;You should create a database snapshot.<br />
+D.&nbsp;You should record the time before the batch operatio n. And then you should perform a transactio n log<br />
+backup.</p>
+<p>&nbsp;<br />
+QUESTIo n 22</p>
+<p>Answer: C</p>
+<p><br />
+Explanatio n/Reference:</p>
+<p>Reaso ns to take database snapshots include:<br />
+&nbsp;Maintaining historical data for report generatio n.</p>
+<p>Because a database snapshot provides a static view of a database, a snapshot can extend access to data from a particular point in time. For example, you can create a database snapshot at the end of a given time period(such as a financial quarter) for later reporting. You can then run end-of-period reports o n the snapshot. If disk space permits, you can also maintain end-of-period snapshots indefinitely, allowing queries against the results from these periods; for example, to investigate organizatio nal performance.</p>
+<p>&nbsp;Using a mirror database that you are maintaining for availability purposes to offload reporting.</p>
+<p>Using database snapshots with database mirroring permits you to make the data o n the mirror server accessible for reporting. Additio nally, running queries o n the mirror database can free up resources o n the principal. For more informatio n, see Database Mirroring and Database Snapshots. </p>
+<p>&nbsp;Safeguarding data against administrative error. </p>
+<p>&nbsp;Before doing major updates, such as a bulk update or a schema change, create a database snapshot o n the database protects data. If you make a mistake, you can use the snapshot to recover by reverting the database to the snapshot. Reverting is potentially much faster for this purpose than restoring from a backup; however, you cannot roll forward afterward. </p>
+<p><br />
+&nbsp;<br />
+QUESTIo n 23</p>
+<p>You are a professio nal level SQL Sever 2008 Database Administrator in an internatio nal corporatio n named Wiikigo. </p>
+<p>You are experienced in managing databases in an enterprise-level organizatio n, optimizing and sustaining the database life cycle. In the company, your job is to implement solutio ns o n security, troubleshooting, deployment and optimizatio n. </p>
+<p>Four SQL Server 2008 instances are managed by you. And they are respectively named Ins01, Ins02, Ins03 and Ins04. A single database applicatio n is hosted by each instance. </p>
+<p>All four instances should be removed to a new SQL Server failover cluster. You can see the co nfiguratio n of the four instances from the table listed below.</p>
+<p>&nbsp;</p>
+<p>All the four instances are sufficiently optimized, and there are no spare CPU cycles or extra memory in the instances. <br />
+All four databases will be hosted by the new cluster o n a single virtual cluster IP address. </p>
+<p>Since you are the technical support, you are required to set the new cluster to handle the workload of all the database applicatio ns with the least amount of hardware resources. </p>
+<p>From the four cluster co nfiguratio n, which o ne should be utilized?</p>
+<p>A.&nbsp;Four-node active/active/active/active cluster should be utilized and a minimum of 9 processors and a<br />
+25-GB memory are co ntained by each node.<br />
+B.&nbsp;Two-node active/passive cluster should be utilized and a minimum of 18 processors and a 50-GB memory are co ntained by each node. 双机热备<br />
+C.&nbsp;Two-node active/active cluster should be utilized and a minimum of 9 processors and a 25-GB memory are co ntained by each node.<br />
+D.&nbsp;Four-node active/active/active/passive cluster should be utilized and a minimum of 18 processors and a<br />
+50-GB memory are co ntained by each node.</p>
+<p>&nbsp;<br />
+QUESTIo n 23</p>
+<p>Answer: B</p>
+<p><br />
+Explanatio n/Reference:</p>
+<p>To use the least amount of hardware resources, we will create a single two nodes Active-Passive cluster.</p>
+<p>As all the instances should be able to run without impact, we will sum the number of CPU; here it is 18 CPU for each node<br />
+Memory needed= 16 GB + 8 GB + 16 GB + 8 GB = 48 GB + 2 GB for the OS = 50 GB</p>
+<p><br />
+&nbsp;<br />
+QUESTIo n 24</p>
+<p>You are a professio nal level SQL Sever 2008 Database Administrator in an internatio nal corporatio n named Wiikigo. </p>
+<p>You are experienced in managing databases in an enterprise-level organizatio n, optimizing and sustaining the database life cycle. In the company, your job is to implement solutio ns o n security, troubleshooting, deployment and optimizatio n. </p>
+<p>A SQL Server 2008 infrastructure is managed by you. An instance runs o n a computer, and the computer has eight quad-core processors and 128-GB RAM. </p>
+<p>The instance is utilized by four different applicatio ns. Not o nly a low number of CXPACKET waits but also a large number of lazy writer waits are experienced by the instance. </p>
+<p>The performance of the instance should be optimized. </p>
+<p>Which actio n will you perform to accomplish the goal?</p>
+<p>A.&nbsp;To accomplish the goal, software no n-uniform memory access (soft-NUMA) should be co nfigured.<br />
+B.&nbsp;To accomplish the goal, the Resource Governor should be co nfigured.<br />
+C.&nbsp;To accomplish the goal, the Windows System Resource Manager should be co nfigured.<br />
+D.&nbsp;To accomplish the goal, an increase should be co nfigured in the maximum degree of parallelism optio n.</p>
+<p>&nbsp;<br />
+QUESTIo n 24</p>
+<p>Answer: A</p>
+<p><br />
+Explanatio n/Reference:<br />
+The instance is utilized by four different applicatio ns. Not o nly a low number of CXPACKET waits but also a large number of lazy writer waits are experienced by the instance. </p>
+<p>with software no n-uniform memory access, we could set multiple threads to i/o see example below:</p>
+<p>Co nsider the following example. </p>
+<p>A computer with eight CPUs does not have hardware NUMA. Three soft-NUMA nodes are co nfigured. Database Engine instance A is co nfigured to use CPUs 1 through 4. A seco nd instance of the Database Engine is installed and co nfigured to use CPUs 5 through 8.<br />
+&nbsp;The example can be visually represented as:<br />
+CPUs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 2&nbsp;&nbsp;&nbsp; 3 4&nbsp;&nbsp; 5 6 7 8<br />
+Soft-NUMA&nbsp; &lt;-N0--&gt;&lt;-N1-&gt;&lt;----N2----&gt;<br />
+SQL Server &lt;instance A &gt;&lt;instance B&gt;<br />
+Instance A, which experiences significant I/O, now has two I/O threads and two lazy writer threads, while instance B, which performs processor-intensive operatio ns, has o nly o ne I/O thread and o ne lazy writer thread. Differing amounts of memory can be assigned to the instances, but unlike hardware NUMA, they both receive memory from the same operating system memory block and there is no memory-to-processor affinity.</p>
+<p><br />
+&nbsp;<br />
+QUESTIo n 25</p>
+<p>You are a professio nal level SQL Sever 2008 Database Administrator in an internatio nal corporatio n named Wiikigo. </p>
+<p>You are experienced in managing databases in an enterprise-level organizatio n, optimizing and sustaining the database life cycle. In the company, your job is to implement solutio ns o n security, troubleshooting, deployment and optimizatio n.</p>
+<p>A SQL Server 2008 instance is managed by you. A database is hosted by the instance, and sensitive data is included in the database. </p>
+<p>A database backup strategy will be implemented for the database. You need to have all backups of the database encrypted. The backups should not be accessed by unauthorized users. </p>
+<p>Which actio n will you perform?</p>
+<p>A.&nbsp;Transparent database encryptio n should be utilized.<br />
+B.&nbsp;Windows BitLocker Drive Encryptio n technology should be utilized.<br />
+C.&nbsp;The BACKUP statement should be utilized alo ng with the PASSWORD optio n.<br />
+D.&nbsp;The BACKUP statement should be utilized alo ng with the MEDIAPASSWORD optio n.</p>
+<p>&nbsp;<br />
+QUESTIo n 25</p>
+<p>Answer: A</p>
+<p><br />
+Explanatio n/Reference:</p>
+<p>You can take several precautio ns to help secure the database such as designing a secure system, encrypting co nfidential assets, and building a firewall around the database servers. </p>
+<p>However, in a scenario where the physical media (such as drives or backup tapes) are stolen, a malicious party can just restore or attach the database and browse the data. o ne solutio n is to encrypt the sensitive data in the database and protect the keys that are used to encrypt the data with a certificate. This prevents anyo ne without the keys from using the data, but this kind of protectio n must be planned in advance.</p>
+<p>Transparent data encryptio n (TDE) performs real-time I/O encryptio n and decryptio n of the data and log files. The encryptio n uses a database encryptio n key (DEK), which is stored in the database boot record for availability during recovery. The DEK is a symmetric key secured by using a certificate stored in the master database of the server or an asymmetric key protected by an EKM module. TDE protects data &quot;at rest&quot;, meaning the data and log files. It provides the ability to comply with many laws, regulatio ns, and guidelines established in various industries. This enables software developers to encrypt data by using AES and 3DES encryptio n algorithms without changing existing applicatio ns.</p>
+<p><br />
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+	
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

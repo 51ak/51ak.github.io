@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Centos7安装php8.1和composer| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Centos7安装php8.1和composer</span></h1>
+</div>
+
+
+  <main>
+    <h2 id="设置yum源">设置yum源</h2>
+<pre><code> yum -y install https://mirrors.tuna.tsinghua.edu.cn/remi/enterprise/remi-release-7.rpm
+yum -y install yum-utils
+</code></pre><h2 id="安装php81">安装php8.1</h2>
+<pre><code> yum -y install php81-php-cli php81-php-common php81-php-devel php81-php-embedded php81-php-fpm php81-php-gd php81-php-mbstring php81-php-mysqlnd php81-php-pdo php81-php-opcache php81-php-xml php81-php-soap php81-php-posix
+
+
+查看是否安装成功及php配置文件以及对应目录
+rpm -qa |grep php81
+pm -ql php81-php-fpm
+</code></pre><h2 id="系统配置">系统配置</h2>
+<pre><code> ln -sf /opt/remi/php81/root/usr/bin/php* /usr/bin
+
+查看PHP版本
+
+ php -v
+
+</code></pre><h2 id="安装composer">安装：composer</h2>
+<pre><code>php -r &quot;copy('https://install.phpcomposer.com/installer', 'composer-setup.php');&quot;
+php composer-setup.php
+cp composer.phar /usr/bin/composer
+
+cd /www/wwwroot/www.top580.com/php
+composer install
+composer update
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/11/16</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/centos">centos</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

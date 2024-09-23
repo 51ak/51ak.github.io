@@ -1,0 +1,320 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>信创和国产数据库| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">信创和国产数据库</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#什么是信创">什么是“信创”</a>
+      <ul>
+        <li><a href="#信创的主要厂商">信创的主要厂商</a></li>
+        <li><a href="#信创的市场">信创的市场</a></li>
+        <li><a href="#信创的进展">信创的进展</a></li>
+      </ul>
+    </li>
+    <li><a href="#国产数据库">国产数据库</a>
+      <ul>
+        <li><a href="#国产数据库的发展">国产数据库的发展</a></li>
+        <li><a href="#1真自主研发的">1.真自主研发的</a></li>
+        <li><a href="#2购买了国外的代码和版权">2.购买了国外的代码和版权</a></li>
+        <li><a href="#3改造国外的开源数据库">3.改造国外的开源数据库</a></li>
+      </ul>
+    </li>
+    <li><a href="#小结">小结</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="什么是信创">什么是“信创”</h2>
+<ul>
+<li>“信创”的全称是“信息技术应用创新产业”，旨在实现信息技术领域的自主可控，保障国家信息安全。信创产业的主体包括基础硬件、基础软件、应用软件、信息安全、系统集成等部分。</li>
+<li>数字化基础设施的安全可控关系到经济发展，直接决定着供应链安全、产业链安全和信息化安全，进而决定国家安全。近年来，国际局势波诡云谲，在频繁的制裁断供事件下，科技自立自主自强变得更加迫在眉睫。“十四五”规划纲要已明确要将科技自立自强作为国家发展的战略支撑，2023年两会上发布的《政府工作报告》强调要建设现代化产业体系，推进科技自立自强。《数字中国建设整体布局规划》则提出要构筑自立自强的数字技术创新体系，筑牢可信可控的数字安全屏障。2022年我国中央及各地政府更是相继发布了上百条信创相关政策，构建具有完全自主知识产权的创新技术体系。</li>
+<li>通俗的说是用国产硬件(芯片,存储,)</li>
+<li>划重点:自主可控</li>
+<li>划范围:基础硬件、基础软件、应用软件、信息安全、系统集成</li>
+<li>在实际执行中核心的是：芯片、操作系统、数据库、中间件、整机</li>
+</ul>
+<h3 id="信创的主要厂商">信创的主要厂商</h3>
+<ul>
+<li>芯片CPU：飞腾、鲲鹏、海光、龙芯、兆芯、申威</li>
+<li>操作系OS：普华软件、中标麒麟、银河麒麟、统信UOS、红旗、中科方德、中兴新支点</li>
+<li>数据库DB：武汉达梦、人大金仓、神州通用、南大通用、万里开源、华为GaussDB、阿里Oceanbase</li>
+<li>中间件：东方通、金蝶、宝兰德、华宇软件、普元信息</li>
+<li>办公软件：金山软件、福昕软件、万兴科技</li>
+<li>安全保密：三六零、奇安信、中孚信息、万里红、格尔软件</li>
+</ul>
+<h3 id="信创的市场">信创的市场</h3>
+<h4 id="行业">行业</h4>
+<ul>
+<li>信创体系覆盖2+8+N个领域</li>
+<li>2:即党、政</li>
+<li>8:金融、电力、电信、石油、交通、教育、医疗、航空航天8个关于国计民生的重要行业</li>
+<li>N:N个消费市场。N个行业中的办公OA、编辑类的国产软件。</li>
+</ul>
+<h4 id="市场规模">市场规模</h4>
+<ul>
+<li>预计2023年中国信创产业规模将达20961.9亿元</li>
+<li>2027年有望达到37011.3亿元</li>
+</ul>
+<h4 id="方向">方向</h4>
+<ul>
+<li>信创的国有自主可控软硬件替代国外的商业软件一般采用两种方式进行</li>
+<li>方向一：上云，通过将服务迁移或合并至阿里云，电信云，华为云，腾讯云&hellip;由云厂商提供信创服务</li>
+<li>方向二：自主替换，可以由单位自身的研发团队或第三方国产厂商支持完成软硬件服务的替换</li>
+</ul>
+<h3 id="信创的进展">信创的进展</h3>
+<ul>
+<li>进展非常快，趋势明确</li>
+<li>除部分领域（芯片,操作系统）进展不顺利外</li>
+<li>存储,数据库，整机，中件间等领域进展得非常顺利</li>
+<li>大量的国产硬件,数据库已经完成了对国外商业软件的替换</li>
+<li>部分单位和关键行业也完成私有云或公有云的迁移。</li>
+<li>进展非常顺利的原因：</li>
+<li>1.国家政策要求</li>
+<li>2.国外商业软硬件有巨大的利润空间，这部分利润空间可以节省出来</li>
+<li>最核心的信创是：芯片，存储，操作系统，数据库，通用软件</li>
+<li>下面从我了解的角度来展开聊聊国产数据库的那点事</li>
+<li>有哪些是真国产，哪些是假国产</li>
+<li>哪些是真的自主研发，哪些是披着皮的洋鬼子</li>
+</ul>
+<h2 id="国产数据库">国产数据库</h2>
+<h3 id="国产数据库的发展">国产数据库的发展</h3>
+<ul>
+<li>国产数据库在信创政策出来之前</li>
+<li>就已经在茁壮成长了</li>
+<li>原因一：国外的商业数据库太贵了</li>
+<li>一套oracle集群收费每年可能要到几十万块钱</li>
+<li>正版的太贵，只能商业谈判走折扣</li>
+<li>有的甚至直接用盗版</li>
+<li>原因二：国外的开源数据库技术发展</li>
+<li>主要是mysql,Pg的发展</li>
+<li>给国内的厂商和技术团队提供了方便的二次开发定制的机会</li>
+<li>等到信创的政策出来后</li>
+<li>巨大的利润空间和强大的需求</li>
+<li>引起国产数据库全面开花</li>
+<li>这些年国产数据库的创业团队如雨后春笋一样</li>
+<li>爆炸增长</li>
+<li>其中有传统的老厂商</li>
+<li>也有踩着互联网浪潮过来的创业新厂</li>
+<li>这些国产数据库厂商不管有多少家</li>
+<li>但总是逃不过以下三个大类</li>
+<li>1.真自主研发（6家）</li>
+<li>2.买了国外的商业版权和代码，自行改造（3家）</li>
+<li>3.基与国外开源数据库改造（200多家）</li>
+</ul>
+<h3 id="1真自主研发的">1.真自主研发的</h3>
+<ul>
+<li>这个类别下目前只有6家厂商</li>
+<li>当然他们或多或少的也用了一些国外的代码或组件</li>
+<li>但是在行业内还是能认可这6家厂商</li>
+<li>确实是“从0到1”的在研发自己的数据库</li>
+<li>而不是在已有的国外数据库产品上改造或加功能</li>
+<li>这个起点和难度不可同日而语</li>
+<li>这6个厂商可以说是国产数据库的6道光</li>
+</ul>
+<p><img src="/img/2022auto/2023-11-10-11-39-00.png" alt="真自主研发"></p>
+<h3 id="2购买了国外的代码和版权">2.购买了国外的代码和版权</h3>
+<ul>
+<li>这个类别下目前3家厂商</li>
+<li>南大通用，华胜天成，福建星格瑞</li>
+<li>2014年南大通用和华胜天成通过购买授权方式获得了Informix的源代码</li>
+<li>2015年福建星格瑞也购买了Informix的源代码</li>
+<li>据说他们每家用了1亿元买回来的代码</li>
+<li>听起来很贵</li>
+<li>但是对一个数据库产品来说还行</li>
+<li>因为国内几大银行每年给商业数据库交的版权费平均也快1亿了</li>
+<li>问题是他们的买的是10年的代码版权</li>
+<li>2014和2015年买的</li>
+<li>眼瞅着就快到期了</li>
+<li>而且2017年IBM把整个Informix业务卖给了印度公司HCL。</li>
+<li>印度阿三的HCL公司接管了所有的源代码，团队</li>
+<li>后面续费得找印度公司了</li>
+<li>合同怎么谈</li>
+<li>还要不要继续买都是个问题</li>
+<li>而且这种算是自主可控吗？</li>
+</ul>
+<h3 id="3改造国外的开源数据库">3.改造国外的开源数据库</h3>
+<ul>
+<li>这是现在最火的方向了</li>
+<li>比起自研和从国外买</li>
+<li>有免费的现成的且代码开源的成熟数据库可以拿来用和改</li>
+<li>节约了大量的研发成本</li>
+<li>降代了研发难度</li>
+<li>可以用很小的代价（套个皮）</li>
+<li>就发布出一个自己的国产数据库</li>
+<li>如果有研发资源</li>
+<li>再改进一些功能点</li>
+<li>或者加一些个性化的特点</li>
+<li>产品更有卖点</li>
+<li>国内目前新起的99%的国产数据库都是基于此方向</li>
+<li>其中有两个流派</li>
+<li>MySQL派</li>
+<li>PostgreSQL派</li>
+<li>分别是基于开源的MySQL和PostgreSQL改造变种而来</li>
+</ul>
+<h4 id="mysql派">MySQL派</h4>
+<ul>
+<li>以阿里去IOE开始</li>
+<li>MySQL在国内公司迅速普及</li>
+<li>尤其是互联网公司</li>
+<li>国内的互联网公司80%以上都主要使用MySQL数据库</li>
+<li>借助这股热潮</li>
+<li>在MySQL上的改版国产数据库有很广泛的群众基础</li>
+<li>尤其是国内的云厂商已经完成了MySQL的平替</li>
+<li>也就是说你在国内的云厂商上买的MySQL实例</li>
+<li>比如阿里云上的MySQL其实是阿里改版的MySQL</li>
+<li>这块也是目前发展得最快的国产数据库方向了</li>
+<li>目前国内阿里和腾讯是这个领域的领头者</li>
+</ul>
+<p><img src="/img/2022auto/2023-11-10-15-38-11.png" alt="MySQL派"></p>
+<h4 id="postgresql派">PostgreSQL派</h4>
+<ul>
+<li>这个改造有个很大的优势</li>
+<li>基于PostgreSQL改造的通常对oracle的兼容性比较高</li>
+<li>有的基于PostgreSQL改进的国产数据库已经可以达到90%的Oracle兼容性</li>
+<li>这个流派下有个很重要的分支：华为高斯</li>
+<li>华为在PostgreSQL上打造了华为的OpenGauss的数据库</li>
+<li>然后又有厂商在华为OpenGauss的数据库上衍生了很多种国产数据库</li>
+<li>其中就有人大金仓和南大通用</li>
+<li>在国内用得比较多</li>
+<li>华为自己又转头做了GaussDB产品线</li>
+<li>华为在这个赛道里做了两个产品线</li>
+<li>一个是免费开源的OpenGauss和闭源的GaussDB</li>
+<li>是这个领域的重要参与者</li>
+</ul>
+<p><img src="/img/2022auto/2023-11-10-15-37-51.png" alt="PostgreSQL派"></p>
+<h2 id="小结">小结</h2>
+<ul>
+<li>国产数据库正在快速发展</li>
+<li>有6家公认的自研数据库，其中ob发展的势头最好</li>
+<li>有3家购买了infomix代码的，面临后续发展风险</li>
+<li>有几百家基于开源MySQL改造变种的国产数据库,目前发展得最好(领头:阿里,腾讯)</li>
+<li>有近百家基于开源PostgreSQL改造变种的国产数据库,一般对Oracle的兼容性比较高(领头：华为)</li>
+<li>这是总结</li>
+</ul>
+<p><img src="/img/2023/guochanshujuku.jpg" alt="国产数据库分类和源头"></p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/11/10</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/dba">DBA</a> <a href="/categories/%E5%AE%89%E5%85%A8">安全</a> <a href="/categories/%E8%BF%90%E7%BB%B4">运维</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

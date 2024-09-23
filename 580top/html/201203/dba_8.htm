@@ -1,0 +1,255 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>数据库快照的脚本1：新建数据库快照</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="数据库快照的脚本1：新建数据库快照数据库快照的脚本2：删除数据库快照数据库快照的脚本3：更新快照物作业这是我写的三个存储过程，可以用来快速完成数据库快照的生成和更新createprocusp_SnapShot_create(@dbnamevarchar(255),--数据库名@snapname数据库快照的脚本1：新建数据库快照" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识">基础知识</a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA"><span class="zc_666">高可用性和HA</span></a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化">性能与优化</a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决">故障与解决</a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserverha/l_3_1.htm">高可用性和HA</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>数据库快照的脚本1：新建数据库快照</h1></div>
+					<div id="atSource"> 作者：[51ak ] </div>
+					
+                    <div id="viewcontent">
+                   <div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<font face="Arial">数据库快照的脚本1：<a href="../../html/201203/dba_8.htm">新建数据库快照</a></font></span></div>
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;"><span style="font-size: 9pt;">&nbsp;<font face="Arial">数据库快照的脚本2：<a href="../../html/201203/dba_9.htm">删除数据库快照</a></font></span></span></div>
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;"><span style="font-size: 9pt;"><span style="font-size: 9pt;">&nbsp;<font face="Arial">数据库快照的脚本3：<a href="../../html/201203/dba_10.htm">更新快照物作业</a></font></span></span></span></div>
+<p>这是我写的三个存储过程，可以用来快速完成数据库快照的生成和更新<br />
+</p>
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">create</span><span style="font-size: 9pt;"> <span style="color: blue;">proc</span> <span style="color: teal;">usp_SnapShot_create</span><span style="color: gray;">(</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">@dbname</span> <span style="color: blue;">varchar</span><span style="color: gray;">(</span>255<span style="color: gray;">),</span> <span style="color: green;">--</span></span><span style="color: green; font-size: 9pt;">数据库名</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">@snapname</span> <span style="color: blue;">varchar</span><span style="color: gray;">(</span>255<span style="color: gray;">),</span><span style="color: green;">--</span></span><span style="color: green; font-size: 9pt;">快照名 </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">@snap_dir</span> <span style="color: blue;">varchar</span><span style="color: gray;">(</span>255<span style="color: gray;">),</span><span style="color: green;">--</span></span><span style="color: green; font-size: 9pt;">保存路径</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">@ischeck_dir</span> <span style="color: blue;">bit</span> <span style="color: gray;">=</span>0 <span style="color: green;">--</span></span><span style="color: green; font-size: 9pt;">是否检查和创建保存路径</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">)</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">as</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">/*</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">exec usp_SnapShot_create 'NorthWind','NorthWind','E:\Wokofo_Data_test' </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">用于创建数据库快照的脚本 2011-7-28</span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">调试实例</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">declare @dbname varchar(255)</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">declare @snapname varchar(255)</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">declare @snap_dir varchar(255)</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">set @dbname='NorthWind'</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">set @snapname='NorthWind_snap1'</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">set @snap_dir='E:\Wokofo_Data_test'</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">*/</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">set</span><span style="font-size: 9pt;"> <span style="color: blue;">nocount</span> <span style="color: blue;">on</span>&nbsp;</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">declare</span><span style="font-size: 9pt;"> <span style="color: teal;">@db_files</span> <span style="color: blue;">table</span><span style="color: gray;">(</span><span style="color: teal;">fname</span> <span style="color: blue;">varchar</span><span style="color: gray;">(</span>255<span style="color: gray;">))</span></span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">insert</span><span style="font-size: 9pt;"> <span style="color: blue;">into</span> <span style="color: teal;">@db_files</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">Ｓelect</span><span style="font-size: 9pt;"> <span style="color: teal;">name</span> <span style="color: blue;">from</span> <span style="color: blue;">master</span><span style="color: gray;">.</span><span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">sysaltfiles</span> <span style="color: blue;">where</span> <span style="color: blue;">dbid</span><span style="color: gray;">=</span><span style="color: fuchsia;">DB_ID</span><span style="color: gray;">(</span><span style="color: teal;">@dbname</span><span style="color: gray;">)</span> <span style="color: gray;">and</span> <span style="color: teal;">name</span> <span style="color: gray;">not</span> <span style="color: gray;">like</span> <span style="color: red;">'%_log'</span></span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">if</span><span style="font-size: 9pt;"> <span style="color: gray;">not</span> <span style="color: gray;">exists(</span><span style="color: blue;">Ｓelect</span> <span style="color: teal;">fname</span> <span style="color: blue;">from</span> <span style="color: teal;">@db_files</span><span style="color: gray;">)</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: blue;">begin</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">print</span> <span style="color: red;">'ERR:</span></span><span style="color: red; font-size: 9pt;">没有找到对应的数据库或数据文件'</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">RETURN</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: blue;">end</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: green;">--</span></span><span style="color: green; font-size: 9pt;">准备工作</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">if</span><span style="color: gray; font-size: 9pt;">(RIGHT(</span><span style="color: teal; font-size: 9pt;">@snap_dir</span><span style="color: gray; font-size: 9pt;">,</span><span style="font-size: 9pt;">1<span style="color: gray;">)&lt;&gt;</span><span style="color: red;">'\'</span><span style="color: gray;">)</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">begin</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">set</span> <span style="color: teal;">@snap_dir</span><span style="color: gray;">=</span><span style="color: teal;">@snap_dir</span><span style="color: gray;">+</span><span style="color: red;">'\'</span> <span style="color: gray;">;</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">end</span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">if</span><span style="color: gray; font-size: 9pt;">(</span><span style="color: fuchsia; font-size: 9pt;">CHARINDEX</span><span style="color: gray; font-size: 9pt;">(</span><span style="color: teal; font-size: 9pt;">@dbname</span><span style="color: gray; font-size: 9pt;">,</span><span style="color: teal; font-size: 9pt;">@snap_dir</span><span style="color: gray; font-size: 9pt;">)&lt;</span><span style="font-size: 9pt;">3<span style="color: gray;">)</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">begin</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">set</span> <span style="color: teal;">@snap_dir</span><span style="color: gray;">=</span><span style="color: teal;">@snap_dir</span><span style="color: gray;">+</span><span style="color: teal;">@snapname</span><span style="color: gray;">+</span><span style="color: red;">'\'</span> <span style="color: gray;">;</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">end</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">--</span><span style="color: green; font-size: 9pt;">检查和创建文件夹</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">if</span><span style="color: gray; font-size: 9pt;">(</span><span style="color: teal; font-size: 9pt;">@ischeck_dir</span><span style="color: gray; font-size: 9pt;">=</span><span style="font-size: 9pt;">1<span style="color: gray;">)</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">begin</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">begin</span> <span style="color: blue;">try</span> &nbsp;&nbsp; </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<span style="color: blue;">DECLARE</span> <span style="color: teal;">@mddir</span> <span style="color: blue;">NVARCHAR</span><span style="color: gray;">(</span>255<span style="color: gray;">)</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<span style="color: blue;">SET</span> <span style="color: teal;">@mddir</span><span style="color: gray;">=</span><span style="color: red;">'md '</span><span style="color: gray;">+</span><span style="color: teal;">@snap_dir</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="color: blue;">EXEC</span> <span style="color: maroon;">sp_configure</span><span style="color: red;">'show advanced options'</span><span style="color: gray;">,</span> 1</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">reconfigure</span> <span style="color: blue;">with</span> <span style="color: blue;">override</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">EXEC</span> <span style="color: maroon;">sp_configure</span><span style="color: red;">'xp_cmdshell'</span><span style="color: gray;">,</span> 1&nbsp;</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">reconfigure</span> <span style="color: blue;">with</span> <span style="color: blue;">override</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">EXEC</span> <span style="color: blue;">master</span><span style="color: gray;">..</span><span style="color: maroon;">xp_cmdshell</span><span style="color: teal;">@mddir</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">EXEC</span> <span style="color: maroon;">sp_configure</span><span style="color: red;">'xp_cmdshell'</span><span style="color: gray;">,</span> 0 </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">reconfigure</span> <span style="color: blue;">with</span> <span style="color: blue;">override</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">EXEC</span> <span style="color: maroon;">sp_configure</span><span style="color: red;">'show advanced options'</span><span style="color: gray;">,</span> 0</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">reconfigure</span> <span style="color: blue;">with</span> <span style="color: blue;">override</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">end</span> <span style="color: blue;">try</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">BEGIN</span> <span style="color: blue;">CATCH</span> </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">print</span> <span style="color: red;">'ERR:</span></span><span style="color: red; font-size: 9pt;">创建路径时出现错误'</span><span style="color: gray; font-size: 9pt;">+</span><span style="color: fuchsia; font-size: 9pt;">Error_Message</span><span style="color: gray; font-size: 9pt;">();</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">end</span> <span style="color: blue;">catch</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">end</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">--</span><span style="color: green; font-size: 9pt;">开始准备脚本</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">declare</span><span style="font-size: 9pt;"> <span style="color: teal;">@sqlstr</span> <span style="color: blue;">varchar</span><span style="color: gray;">(</span><span style="color: fuchsia;">max</span><span style="color: gray;">)</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">set</span><span style="font-size: 9pt;"> <span style="color: teal;">@sqlstr</span><span style="color: gray;">=</span><span style="color: red;">'CREATE DATABASE '</span><span style="color: gray;">+</span><span style="color: teal;">@snapname</span><span style="color: gray;">+</span> <span style="color: red;">' on'</span></span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">while</span><span style="font-size: 9pt;"> <span style="color: gray;">exists(</span><span style="color: blue;">Ｓelect</span> <span style="color: teal;">fname</span> <span style="color: blue;">from</span> <span style="color: teal;">@db_files</span><span style="color: gray;">)</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">begin</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">declare</span> <span style="color: teal;">@t_name</span> <span style="color: blue;">varchar</span><span style="color: gray;">(</span>255<span style="color: gray;">)</span>&nbsp;&nbsp;&nbsp;&nbsp; </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<span style="color: blue;">Ｓelect</span>&nbsp;<span style="color: blue;">top</span> 1 <span style="color: teal;">@t_name</span><span style="color: gray;">=</span><span style="color: teal;">fname</span> <span style="color: blue;">from</span> <span style="color: teal;">@db_files</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">set</span> <span style="color: teal;">@sqlstr</span><span style="color: gray;">=</span><span style="color: teal;">@sqlstr</span><span style="color: gray;">+</span><span style="color: red;">'</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: red; font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; (NAME = N'''</span><span style="color: gray; font-size: 9pt;">+</span><span style="color: teal; font-size: 9pt;">@t_name</span><span style="color: gray; font-size: 9pt;">+</span><span style="color: red; font-size: 9pt;">''', FILENAME = N'''</span><span style="color: gray; font-size: 9pt;">+</span><span style="color: teal; font-size: 9pt;">@snap_dir</span><span style="color: gray; font-size: 9pt;">+</span><span style="color: teal; font-size: 9pt;">@t_name</span><span style="color: gray; font-size: 9pt;">+</span><span style="color: red; font-size: 9pt;">'.snap'')'</span><span style="color: gray; font-size: 9pt;">;</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">if</span><span style="color: gray;">((</span><span style="color: blue;">Ｓelect</span> <span style="color: fuchsia;">COUNT</span><span style="color: gray;">(</span>1<span style="color: gray;">)</span> <span style="color: blue;">from</span> <span style="color: teal;">@db_files</span><span style="color: gray;">)&gt;</span>1<span style="color: gray;">)</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">begin</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">set</span>&nbsp;<span style="color: teal;">@sqlstr</span><span style="color: gray;">=</span><span style="color: teal;">@sqlstr</span><span style="color: gray;">+</span><span style="color: red;">','</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">end</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">delete</span> <span style="color: teal;">@db_files</span>&nbsp;<span style="color: blue;">where</span> <span style="color: teal;">fname</span><span style="color: gray;">=</span><span style="color: teal;">@t_name</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">end</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">set</span><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">@sqlstr</span><span style="color: gray;">=</span><span style="color: teal;">@sqlstr</span><span style="color: gray;">+</span><span style="color: red;">' as snapshot of '</span><span style="color: gray;">+</span><span style="color: teal;">@dbname</span></span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">print</span><span style="font-size: 9pt;"> <span style="color: red;">'</span></span><span style="color: red; font-size: 9pt;">生成快照的语句'</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">print</span><span style="font-size: 9pt;"> <span style="color: teal;">@sqlstr</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">begin</span><span style="font-size: 9pt;"> <span style="color: blue;">try</span> </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">exec</span><span style="color: gray;">(</span><span style="color: teal;">@sqlstr</span><span style="color: gray;">)</span> </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">print</span> <span style="color: red;">'</span></span><span style="color: red; font-size: 9pt;">创建数据库快照'</span><span style="color: gray; font-size: 9pt;">+</span><span style="color: teal; font-size: 9pt;">@snapname</span><span style="color: gray; font-size: 9pt;">+</span><span style="color: red; font-size: 9pt;">'</span><span style="color: red; font-size: 9pt;">成功'</span><span style="font-size: 9pt;">&nbsp;</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">end</span><span style="font-size: 9pt;"> <span style="color: blue;">try</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">BEGIN</span><span style="font-size: 9pt;"> <span style="color: blue;">CATCH</span> </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue;">print</span> <span style="color: red;">'ERR:</span></span><span style="color: red; font-size: 9pt;">创建数据库快照'</span><span style="color: gray; font-size: 9pt;">+</span><span style="color: teal; font-size: 9pt;">@snapname</span><span style="color: gray; font-size: 9pt;">+</span><span style="color: red; font-size: 9pt;">'</span><span style="color: red; font-size: 9pt;">失败'</span><span style="font-size: 9pt;">&nbsp;<span style="color: gray;">+</span><span style="color: fuchsia;">Error_Message</span><span style="color: gray;">();</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">end</span><span style="font-size: 9pt;"> <span style="color: blue;">catch</span></span></div>
+<br />
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+	
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

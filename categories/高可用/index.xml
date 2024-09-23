@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>高可用 on Classic</title>
+    <link>/categories/%E9%AB%98%E5%8F%AF%E7%94%A8/</link>
+    <description>Recent content in 高可用 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 06 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E9%AB%98%E5%8F%AF%E7%94%A8/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL Group Replication(MGR集群)增加节点和迁移节点</title>
+      <link>/mysql/mysqlgroupreplicationmgr%E9%9B%86%E7%BE%A4%E5%A2%9E%E5%8A%A0%E8%8A%82%E7%82%B9%E5%92%8C%E8%BF%81%E7%A7%BB%E8%8A%82%E7%82%B9/</link>
+      <pubDate>Thu, 06 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysqlgroupreplicationmgr%E9%9B%86%E7%BE%A4%E5%A2%9E%E5%8A%A0%E8%8A%82%E7%82%B9%E5%92%8C%E8%BF%81%E7%A7%BB%E8%8A%82%E7%82%B9/</guid>
+      <description>MySQL Group Replication 多主结构的3节点需要切到另外三个节点上，任务需要先加3个节点到集群中，再删掉原来的3个节点。
+ 环境   原实例：
+ 172.0.2.30:3309 172.0.2.31:3309 172.0.2.32:3309    新实例：
+ 172.0.2.83:3309 172.0.2.84:3309 172.0.2.85:3309    修改host - 修改6台主机的/etc/hosts 172.0.2.30 dba-mysql3309-230 dba-mysql3309-230.dboop.com 172.0.2.31 dba-mysql3309-231 dba-mysql3309-231.dboop.com 172.0.2.32 dba-mysql3309-232 dba-mysql3309-232.dboop.com 172.0.2.83 dba-mysql3309-83 dba-mysql3309-83.dboop.com 172.0.2.84 dba-mysql3309-84 dba-mysql3309-84.dboop.com 172.0.2.85 dba-mysql3309-85 dba-mysql3309-85.dboop.com 旧实例上增加seed  检查状态  mysqlw -h 172.0.2.30 -P 3309 -e &amp;quot;show global variables like &#39;group_replication_group_seeds&#39;&amp;quot;; mysqlw -h 172.0.2.31 -P 3309 -e &amp;quot;show global variables like &#39;group_replication_group_seeds&#39;&amp;quot;; mysqlw -h 172.</description>
+    </item>
+    
+    <item>
+      <title>MySQL中间件对比:ProxySQL/MaxScale/ShardingSphere</title>
+      <link>/mysql/mysql%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/</link>
+      <pubDate>Thu, 03 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/</guid>
+      <description>MySQL中件间对比 目标：对比以下3款MySQL中件间
+ ProxySQL MaxScale ShardingSphere  一.Proxy基础能力 兼容性  ProxySQL:良好 MaxScale:mairdb更友好，MGR支持不好 ShardingSphere:良好  发行方  ProxySQL:sysown MaxScale:mairdb ShardingSphere:京东  发布/更新/生态  ProxySQL:c++, 5.1k stars,最新版v2.4.4 1个半月前发布 MaxScale:c,1.6k stars,最新版22.08.2 3个半月前发布 ShardingSphere:java,17.6k stars,最新版5.2.1 16天前发布  运维便利性  ProxySQL:简单 MaxScale:普通 ShardingSphere:复杂（配置文件多且复杂）  二.Proxy高可用架构支持 主从架构下的从库故障  如何探测到   ALL: 每N秒主动探测一次
+  如何响应故障   ALL:探测不到，主动处理: - ShardingSphere:从路由表中标记下线 - proxysql:从group中标记下线 - MaxScale:标记下线
+  切换后状态   ALL:复制拓扑可用
+  影响时长   ALL:1-5 秒</description>
+    </item>
+    
+    <item>
+      <title>MySQL高可用组件之ProxySQL</title>
+      <link>/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Bproxysql/</link>
+      <pubDate>Tue, 25 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Bproxysql/</guid>
+      <description>ProxySQL是什么 介绍  MySQL一款开源的中间件的产品 支持读写分离 支持 Query 路由功能 支持动态指定某个SQL进行缓存 支持动态加载（无需重启ProxySQL服务） 故障切换和SQL过滤功能。  ProxySQL初始化 安装 wget https://github.com/sysown/proxysql/releases/download/v2.4.4/proxysql-2.4.4-1-centos7.x86_64.rpm rpm -ivh proxysql-2.4.4-1-centos7.x86_64.rpm 产生报错： warning: proxysql-2.4.4-1-centos7.x86_64.rpm: Header V4 RSA/SHA512 Signature, key ID 8217c97e: NOKEY error: Failed dependencies: gnutls is needed by proxysql-2.4.4-1.x86_64 libgnutls.so.28()(64bit) is needed by proxysql-2.4.4-1.x86_64 libgnutls.so.28(GNUTLS_1_4)(64bit) is needed by proxysql-2.4.4-1.x86_64 libgnutls.so.28(GNUTLS_3_0_0)(64bit) is needed by proxysql-2.4.4-1.x86_64 libgnutls.so.28(GNUTLS_3_1_0)(64bit) is needed by proxysql-2.4.4-1.x86_64 执行： yum install -y gnutls rpm -ivh proxysql-2.4.4-1-centos7.x86_64.rpm 检查安装情况  rpm -ql proxysql /etc/logrotate.</description>
+    </item>
+    
+    <item>
+      <title>MySQL高可用组件之orchestrator</title>
+      <link>/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Borchestrator/</link>
+      <pubDate>Mon, 17 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Borchestrator/</guid>
+      <description>orchestrator是什么 介绍  GitHub公司的用go语言编写并开源的一个MySQL高可用管理工具 MySQL高可用性和复制拓扑管理工具，支持复制拓扑结构的调整，自动故障转移和手动主从切换等。 提供Web界面展示MySQL复制的拓扑关系及状态，通过Web可更改MySQL实例的复制关系和部分配置信息 同时也提供命令行和api接口，方便运维管理。 相对比MHA来看最重要的是解决了管理节点的单点问题，其通过raft协议保证本身的高可用。  特点  自动发现MySQL的复制拓扑，并且在web上展示。 重构复制关系，可以在web进行拖图来进行复制关系变更。 检测主异常，并可以自动或手动恢复，通过Hooks进行自定义脚本。 支持命令行和web界面管理复制。  功能限制  slave不能手动提升为master 不支持多源复制 不支持并行复制 不支持与PXC联合使用  注意事项  对主机名依赖严重，习惯用ip来管理实例的，需要注意确保主机名可解析 主从拓扑结果目前不支持两个实例互为主备或环形结构 自动故障转移，只负责将主从切换了，把从设置为主，其他的变更（dns或proxy变更以及运维信息的变更等需要自己写hook脚本）  orchestrator的工作原理 orchestrator的探测机制  orchestrator会每隔InstancePollSeconds（默认5s）时间用以下SQL去被监控的实例上读取实例状态  show global status like &#39;Uptime&#39; select @@global.hostname, ifnull(@@global.report_host, &#39;&#39;), @@global.server_id, @@global.version, @@global.version_comment, @@global.read_only, @@global.binlog_format, @@global.log_bin, @@global.log_slave_updates show master status show global status like &#39;rpl_semi_sync_%_status&#39; select @@global.gtid_mode, @@global.server_uuid, @@global.gtid_executed, @@global.gtid_purged, @@global.master_info_repository = &#39;TABLE&#39;, @@global.binlog_row_image show slave status select count(*) &amp;gt; 0 and MAX(User_name) !</description>
+    </item>
+    
+    <item>
+      <title>redis高可用模式双比</title>
+      <link>/dba/redis%E7%9A%84%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB/</link>
+      <pubDate>Fri, 27 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/redis%E7%9A%84%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB/</guid>
+      <description>redis高可用模式 常见的高可用模式对比：
+主从复制时代 主从复制，是指将一台Redis服务器的数据，复制到其他的Redis服务器。前者称为主节点(Master)，后者称为从节点(Slave)；数据的复制是单向的，只能由主节点到从节点。
+主从复制的优点 数据冗余：主从复制实现了数据的热备份，是持久化之外的一种数据冗余方式。 故障恢复：当主节点出现问题时，可以由从节点提供服务，实现快速的故障恢复；实际上是一种服务的冗余。 负载均衡：在主从复制的基础上，配合读写分离，可以由主节点提供写服务，由从节点提供读服务（即写Redis数据时应用连接主节点，读Redis数据时应用连接从节点），分担服务器负载；尤其是在写少读多的场景下，通过多个从节点分担读负载，可以大大提高Redis服务器的并发量。 高可用基石：除了上述作用以外，主从复制还是哨兵和集群能够实施的基础，因此说主从复制是Redis高可用的基础。
+主从复制的工作原理  1）若启动一个Slave机器进程，则它会向Master机器发送一个“sync command”命令，请求同步连接。 2）无论是第一次连接还是重新连接，Master机器都会启动一个后台进程，将数据快照保存到数据文件中（执行rdb操作），同时Master还会记录修改数据的所有命令并缓存在数据文件中。 3）后台进程完成缓存操作之后，Maste机器就会向Slave机器发送数据文件，Slave端机器将数据文件保存到硬盘上，然后将其加载到内存中，接着Master机器就会将修改数据的所有操作一并发送给Slave端机器。- Slave出现故障导致宕机，则恢复正常后会自动重新连接。 4）Master机器收到Slave端机器的连接后，将其完整的数据文件发送给Slave端机器，如果Mater同时收到多个Slave发来的同步请求，则Master会在后台启动一个进程以保存数据文件，然后将其发送给所有的Slave端机器，确保所有的Slave端机器都正常。  Sentinel哨兵时代 哨兵(sentinel)：是一个分布式系统，用于对主从结构中的每台服务器进行监控，当出现故障时通过投票机制选择新的 Master 并将所有 Slave 连接到新的 Master。所以整个运行哨兵的集群的数量不得少于3个节点。
+从Redis2.8版本起，提供了一个稳定版本的Sentinel哨兵来解决高可用的问题，它的思路是启动奇数个Sentinel的服务来监控Redis服务器来保证服务的可用性。 为了保证监控服务器的可用性，我们会对Sentinel做集群部署，Sentinel既监控所有的Redis服务，Sentinel之间也相互监控。 Sentinel本身没有主从之分，地位是平等的，只有Redis服务节点有主从之分。 Sentinel通过Raft共识算法，实现Sentinel选举，选举出一个leader，由leader完成故障转移。
+Raft共识算法： https://www.dboop.com/dba/raft%E5%8D%8F%E8%AE%AE/ 哨兵的核心功能：在主从复制的基础上，哨兵引入了主节点的自动故障转移。
+Sentinel的作用  监控：哨兵会不断地检查主节点和从节点是否运作正常。 自动故障转移：当主节点不能正常工作时，哨兵会开始自动故障转移操作，它会将失效主节点的其中一个从节点升级为新的主节点，并让其他从节点改为复制新的主节点。 通知（提醒）：哨兵可以将故障转移的结果发送给客户端。  Sentinel的结构 哨兵结构由两部分组成，哨兵节点和数据节点。
+ 哨兵节点：哨兵系统由一个或多个哨兵节点组成，哨兵节点是特殊的redis节点，不存储数据。 数据节点：主节点和从节点都是数据节点。  Redis Cluster 时代 redis集群是在redis 3.0版本推出的一个功能，其有效的解决了redis在分布式方面的需求。当遇到单机内存，并发和流量瓶颈等问题时，可采用Cluster方案达到负载均衡的目的。并且从另一方面讲，redis中sentinel有效的解决了故障转移的问题，也解决了主节点下线客户端无法识别新的可用节点的问题，但是如果是从节点下线了，sentinel是不会对其进行故障转移的，并且连接从节点的客户端也无法获取到新的可用从节点，而这些问题在Cluster中都得到了有效的解决。
+key与slot的关系是永远不会变的，会变的只有slot和Redis节点的关系。 如果想让很多个key同时落在同一个节点怎么办呢，只需要在key里面加入{hash tag}即可。 Redis在计算槽编号的时候只会获取{}之间的字符串进行槽编号计算，如下所示：
+user{666}base=&amp;hellip; user{666}fin=&amp;hellip;
+Redis-Cluster 特点  无中心结构。 数据按照slot存储分布在多个节点，节点间数据共享，可动态调整数据分布。 可扩展性，可线性扩展到1000个节点（官网推荐不超过1000个），节点可动态添加或删除。 高可用性，部分节点不可用时，集群仍可用。通过增加Slave做standby数据副本，能够实现故障自动failover，节点之间通过gossip协议交换状态信息，用投票机制完成Slave到Master的角色提升。 降低运维成本，提高系统的扩展性和可用性。  Redis Cluster的作用  （1）数据分区 数据分区(或称数据分片)是集群最核心的功能。  集群将数据分散到多个节点，一方面突破了Redis单机内存大小的限制，存储容量大大增加；另一方面每个主节点都可以对外提供读服务和写服务，大大提高了集群的响应能力。</description>
+    </item>
+    
+  </channel>
+</rss>

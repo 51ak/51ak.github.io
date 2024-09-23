@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>windows换IP的脚本_bat格式</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="自己写的换IP脚本08上运行出现RPC未启用？03，xp等系统正常只惜没时间检查尸体留在此处等日后解旧.bat@echooffrem-------------------------旧机器的参数设置---------------------rem临时外网IPsettmp_wlan_ip=*.*.109.23settmp_wlanwindows换IP的脚本_bat格式" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a href="../yunwei/l_26_1.htm" class="hover"　title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../windowsserver/l_27_1.htm" title="WindowsServer">WindowsServer</a>|</li><li><a  href="../linux/l_31_1.htm" title="linux">linux</a>|</li><li><a  href="../jiankong/l_32_1.htm" title="监控">监控</a>|</li><li><a  href="../zidonghua/l_33_1.htm" title="自动化脚本"><span class="zc_666">自动化脚本</span></a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../yunwei/l_26_1.htm">系统运维</a>&nbsp;&gt;&nbsp;<a href="../zidonghua/l_33_1.htm">自动化脚本</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>windows换IP的脚本_bat格式</h1></div>
+					<div id="atSource"> 作者：[51ak ] </div>
+					
+                    <div id="viewcontent">
+                   自己写的换IP脚本
+<p>08上运行出现RPC未启用？</p>
+<p>03，xp等系统正常</p>
+<p>只惜没时间检查</p>
+<p>尸体留在此处 等日后解</p>
+<p>&nbsp; </p>
+<p>旧.bat</p>
+<p>@echo off<br />
+rem -------------------------旧机器的参数设置---------------------</p>
+<p>rem 临时外网IP<br />
+set tmp_wlan_ip=*.*.109.23<br />
+set tmp_wlan_mask=255.255.255.240 <br />
+rem 临时内网IP <br />
+set tmp_llan_ip=192.168.7.23<br />
+set tmp_llan_mask=255.255.255.0 </p>
+<p>rem 本地原外网IP<br />
+set old_wlan_ip=*.*.109.198<br />
+set old_wlan_mask=255.255.255.240 <br />
+rem 本地原内网IP <br />
+set old_llan_ip=192.168.7.178<br />
+set old_llan_mask=255.255.255.0 <br />
+rem 外网默认网关<br />
+set wan_gateway=*.*.109.1</p>
+<p>echo -------------------------1-旧机器添加临时IP---------------<br />
+netsh interface ip add address wan static addr=%tmp_wlan_ip% mask=%tmp_wlan_mask% <br />
+netsh interface ip add address local static addr=%tmp_llan_ip% mask=%tmp_llan_mask%<br />
+ipconfig /renew<br />
+echo &quot;添加临时IP完成&quot;<br />
+echo &quot;停掉像转移后 回到这里 按任意键继续 &quot;<br />
+@pause</p>
+<p>echo -------------------------2-旧机器删除原IP-----------------------<br />
+netsh interface ip delete address wan&nbsp; addr=%old_wlan_ip% gateway=all<br />
+netsh interface ip delete address local&nbsp; addr=%old_llan_ip% gateway=all<br />
+netsh interface ip set address wanl static&nbsp; addr=%tmp_wlan_ip% mask=%tmp_wlan_mask% gateway=%wan_gateway% 1<br />
+ipconfig /renew<br />
+echo &quot;本机原有IP已删除,本机操作完成，请转新服务器运行脚本&quot;</p>
+<p>@pause</p>
+<p>&nbsp; </p>
+<p>新.bat</p>
+<p>@echo off<br />
+rem --------------------------新机器的参数设置------------------------</p>
+<p>rem 原外网IP<br />
+set old_wlan_ip=*.*.109.23<br />
+set old_wlan_mask=255.255.255.240 <br />
+rem 原内网IP <br />
+set old_llan_ip=192.168.7.23<br />
+set old_llan_mask=255.255.255.0 </p>
+<p>rem 新外网IP<br />
+set new_wlan_ip=*.*.109.198<br />
+set new_wlan_mask=255.255.255.240 <br />
+rem 新内网IP <br />
+set new_llan_ip=192.168.7.178<br />
+set new_llan_mask=255.255.255.0 <br />
+rem 外网默认网关<br />
+set wan_gateway=*.*.109.1</p>
+<p>echo -------------------------3-新机器添加内网IP------------------------<br />
+netsh interface ip set address local static addr=%new_llan_ip% mask=%new_llan_mask% <br />
+netsh interface ip add address local static addr=%old_llan_ip% mask=%old_llan_mask%<br />
+ipconfig /renew<br />
+echo &quot;添加本地IP完成&quot;<br />
+echo &quot;ping 这两个内网IP看是否连通 如果成功 mstsc连到内网IP&quot;<br />
+echo &quot;按任意键进入下一步(改外网ip)&quot;<br />
+@pause<br />
+echo ------------------------4-新机器更改外网IP------------------------<br />
+netsh interface ip set address wan static addr=%new_wlan_ip% mask=%new_wlan_mask%&nbsp; gateway=%wan_gateway% 1<br />
+ipconfig /renew</p>
+<p>echo &quot;新机器更改外网IP(这句话应该看不到)&quot;</p>
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+	
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

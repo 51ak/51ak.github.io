@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>微软不认识闰年2月29日”&字符</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="http://www.cnbeta.com/articles/50580.htm这个网页新闻中报告许多微软软件不能识别闰年的2月29号，其中就包含sqlserver2008，本人就在自己的sqlserver2008中写了几个语句试验，这几个语句显示能得到2月29号这一天，不知道照这则新闻所说在这一天安装软件会不会导致错误。<br/>viewsourceprint?select&nbs微软不认识闰年2月29日”&字符" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识">基础知识</a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA">高可用性和HA</a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化">性能与优化</a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决"><span class="zc_666">故障与解决</span></a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserverguzhang/l_5_1.htm">故障与解决</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>微软不认识闰年2月29日”&字符</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   http://www.cnbeta.com/articles/50580.htm这个网页新闻中报告许多微软软件不能识别闰年的2月29号 ，其中就包含SQL Server 2008，本人就在自己的SQL Server 2008中写了几个语句试验，这几个语句显示能得到2月29号这一天，不知道照这则新闻所说在这一天安装软件会不会导致错误。<br />view sourcePRint?select&nbsp;DATEADD(DD,1,'28/Feb/2008')输出：2008-02-29 00:00:00.000&nbsp;&nbsp;select&nbsp;DATEADD(DD,1,'28/Feb/2004')输出：2004-02-29 00:00:00.000&nbsp;&nbsp;select&nbsp;DATEADD(DD,1,'28/Feb/2000')输出：2000-02-29 00:00:00.000&nbsp;&nbsp;&nbsp;&nbsp;select&nbsp;DATEADD(DD,1,'28/Feb/1996')view sourceprint?输出：1996-02-29 00:00:00.000&nbsp;SQL语句没有出现异常。<br />select N'上海长宁店'<br />在字符串前面加上 N 代表存入数据库时以 Unicode 格式存储。<br />N'string'&nbsp; 表示string是个Unicode字符串<br />Unicode 字符串的格式与普通字符串相似，但它前面有一个 N 标识符（N 代表 SQL-92 标准中的国际语言 (National Language)）。N 前缀必须是大写字母。例如，'Michél' 是字符串常量而 N'Michél' 则是 Unicode 常量。Unicode 常量被解释为 Unicode 数据，并且不使用代码页进行计算。Unicode 常量确实有排序规则，主要用于控制比较和区分大小写。为 Unicode 常量指派当前数据库的默认排序规则，除非使用 COLLATE 子句为其指定了排序规则。Unicode 数据中的每个字符都使用两个字节进行存储，而字符数据中的每个字符则都使用一个字节进行存储。有关更多信息，请参见使用 Unicode 数据。<br />Unicode 字符串常量支持增强的排序规则。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySQL学习教程：MySQL语句优化的原则</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="1、使用索引来更快地遍历表。&nbsp;缺省情况下建立的索引是非群集索引，但有时它并不是最佳的。在非群集索引下，数据在物理上随机存放在数据页上。合理的索引设计要建立在对各种查询的分析和预测上。一般来说：&nbsp;a.有大量重复值、且经常有范围查询（&gt;,&lt;，&gt;=,&lt;=）和orderby、groupby发生的列，可考虑建立群集索引；&nbsp;b.经MySQL学习教程：MySQL语句优化的原则" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识">基础知识</a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化"><span class="zc_666">性能与优化</span></a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlyouhua/l_16_1.htm">性能与优化</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>MySQL学习教程：MySQL语句优化的原则</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   1、使用索引来更快地遍历表。&nbsp;　　缺省情况下建立的索引是非群集索引，但有时它并不是最佳的。在非群集索引下，数据在物理上随机存放在数据页上。合理的索引设计要建立在对各种查询的分析和预测上。一般来说：&nbsp;　　a.有大量重复值、且经常有范围查询（ &gt; ,&lt; ，&gt; =,&lt; =）和order by、group by发生的列，可考虑建立群集索引；&nbsp;　　b.经常同时存取多列，且每列都含有重复值可考虑建立组合索引；&nbsp;　　c.组合索引要尽量使关键查询形成索引覆盖，其前导列一定是使用最频繁的列。索引虽有助于提高性能但不是索引越多越好，恰好相反过多的索引会导致系统低效。用户在表中每加进一个索引，维护索引集合就要做相应的更新工作。&nbsp;　　2、在海量查询时尽量少用格式转换。&nbsp;　　3、ORDER BY和GROPU BY使用ORDER BY和GROUP BY短语，任何一种索引都有助于SELECT的性能提高。&nbsp;　　4、任何对列的操作都将导致表扫描，它包括数据库函数、计算表达式等等，查询时要尽可能将操作移至等号右边。&nbsp;　　5、IN、OR子句常会使用工作表，使索引失效。如果不产生大量重复值，可以考虑把子句拆开。拆开的子句中应该包含索引。&nbsp;　　6、只要能满足你的需求，应尽可能使用更小的数据类型：例如使用MEDIUMINT代替INT&nbsp;　　7、尽量把所有的列设置为NOT NULL，如果你要保存NULL，手动去设置它，而不是把它设为默认值。&nbsp;　　8、尽量少用VARCHAR、TEXT、BLOB类型&nbsp;　　9、如果你的数据只有你所知的少量的几个。最好使用ENUM类型&nbsp;　　10、正如graymice所讲的那样，建立索引。&nbsp;　　以下是我做的一个实验，可以发现索引能极大地提高查询的效率：&nbsp;我有一个会员信息表users，里边有37365条用户记录：&nbsp;在不加索引的时候进行查询：&nbsp;sql语句A:&nbsp;<br />复制内容到剪贴板代码:select * from users where username like '%许%';在<a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a>-Front中的8次查询时长为：1.40,0.54,0.54,0.54,0.53,0.55,0.54 共找到960条记录&nbsp;sql语句B:<br />复制内容到剪贴板代码:select * from users where username like '许%';在<a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a>-Front中的8次查询时长为：0.53,0.53,0.53,0.54,0.53,0.53,0.54,0.54 共找到836条记录&nbsp;sql语句C:<br />复制内容到剪贴板代码:select * from users where username like '%许';在<a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a>-Front中的8次查询时长为：0.51,0.51,0.52,0.52,0.51,0.51,0.52,0.51 共找到7条记录&nbsp;为username列添加索引:<br />复制内容到剪贴板代码:create index usernameindex on users(username(6));再次查询：&nbsp;sql语句A:<br />复制内容到剪贴板代码:select * from users where username like '%许%';在<a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a>-Front中的8次查询时长为：0.35,0.34,0.34,0.35,0.34,0.34,0.35,0.34 共找到960条记录&nbsp;sql语句B:<br />复制内容到剪贴板代码:select * from users where username like '许%';在<a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a>-Front中的8次查询时长为：0.06,0.07,0.07,0.07,0.07,0.07,0.06,0.06 共找到836条记录&nbsp;sql语句C:<br />复制内容到剪贴板代码:select * from users where username like '%许';在<a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a>-Front中的8次查询时长为：0.32,0.31,0.31,0.32,0.31,0.32,0.31,0.31 共找到7条记录&nbsp;　　在实验过程中，我没有另开任何程序，以上的数据说明在单表查询中，建立索引的可以极大地提高查询速度。　　另外要说的是如果建立了索引，对于like '许%'类型的查询，速度提升是最明显的。因此，我们在写sql语句的时候也尽量采用这种方式查询。&nbsp;　　对于多表查询我们的优化原则是：&nbsp;　　尽量将索引建立在：left join on/right join on ...　＋条件，的条件语句中所涉及的字段上。&nbsp;　　多表查询比单表查询更能体现索引的优势。&nbsp;　　11、索引的建立原则：&nbsp;　　如果一列的中数据的前缀重复值很少，我们最好就只索引这个前缀。<a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a>支持这种索引。我在上面用到的索引方法就是对username最左边的6个字符进行索引。索引越短，占用的 磁盘空间越少，在检索过程中花的时间也越少。这方法可以对最多左255个字符进行索引。&nbsp;　　在很多场合，我们可以给建立多列数据建立索引。&nbsp;　　索引应该建立在查询条件中进行比较的字段上，而不是建立在我们要找出来并且显示的字段上&nbsp;　　12、一往情深问到的问题:IN、OR子句常会使用工作表，使索引失效。如果不产生大量重复值，可以考虑把子句拆开。拆开的子句中应该包含索引。&nbsp;这句话怎么理解决，请举个例子&nbsp;例子如下:&nbsp;如果在fields1和fields2上同时建立了索引，fields1为主索引&nbsp;以下sql会用到索引<br />复制内容到剪贴板代码:select * from tablename1 where fields1='value1' and fields2='value2'以下sql不会用到索引<br />复制内容到剪贴板代码:select * from tablename1 where fields1='value1' or fields2='value2'　　13.索引带来查询上的速度的大大提升,但索引也占用了额外的硬盘空间(当然现在一般硬盘空间不成问题),而且往表中插入新记录时索引也要随着更新这也需要一定时间.&nbsp;　　有些表如果经常insert,而较少select,就不用加索引了.不然每次写入数据都要重新改写索引,花费时间; 这个视实际情况而定,通常情况下索引是必需的.&nbsp;　　14.我在对查询效率有怀疑的时候,一般是直接用<a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a>的Explain来跟踪查询情况.&nbsp;　　你用<a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a>-Front是通过时长来比较,我觉得如果从查询时扫描字段的次数来比较更精确一些.&nbsp;<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

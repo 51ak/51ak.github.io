@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>SQL语法 on dboop.com</title>
+    <link>/categories/sql%E8%AF%AD%E6%B3%95/</link>
+    <description>Recent content in SQL语法 on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 02 May 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/sql%E8%AF%AD%E6%B3%95/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>mysql中found_rows函数sql_calc_found_rows的配合</title>
+      <link>/post/2019/05/02/mysql%E4%B8%ADfound_rows%E5%87%BD%E6%95%B0sql_calc_found_rows%E7%9A%84%E9%85%8D%E5%90%88/</link>
+      <pubDate>Thu, 02 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/05/02/mysql%E4%B8%ADfound_rows%E5%87%BD%E6%95%B0sql_calc_found_rows%E7%9A%84%E9%85%8D%E5%90%88/</guid>
+      <description>row_count() 函数一般用于返回被 update, insert, delete,select 实际修改的行数。 配合sql_calc_found_rows,limit 的使用可以实现非常快速的分页功能.
+官方描述:
+ In MySQL 5.6, ROW_COUNT() returns a value as follows: DDL statements: 0. This applies to statements such as CREATE TABLE or DROP TABLE. DML statements other than SELECT: The number of affected rows. This applies to statements such as UPDATE, INSERT, or DELETE (as before), but now also to statements such as ALTER TABLE and LOAD DATA INFILE. SELECT: -1 if the statement returns a result set, or the number of rows “affected” if it does not.</description>
+    </item>
+    
+    <item>
+      <title>Sqlserver字符串与表格互相转换的函数和方法</title>
+      <link>/post/2019/04/02/sqlserver%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%8E%E8%A1%A8%E6%A0%BC%E4%BA%92%E7%9B%B8%E8%BD%AC%E6%8D%A2%E7%9A%84%E5%87%BD%E6%95%B0%E5%92%8C%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Tue, 02 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/04/02/sqlserver%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%8E%E8%A1%A8%E6%A0%BC%E4%BA%92%E7%9B%B8%E8%BD%AC%E6%8D%A2%E7%9A%84%E5%87%BD%E6%95%B0%E5%92%8C%E6%96%B9%E6%B3%95/</guid>
+      <description>##A.将逗号分隔的字符串分拆成表格的方法： 拆分的方法有很多，临时表.SUBSTRING &amp;hellip;但都不如XML来得清凉爽快
+declare @tempstr varchar(500) set @tempstr=&#39;54,57,55,56,59&#39; declare @Xmlstr xml set @Xmlstr=Co nVERT(xml,&#39;&amp;lt;root&amp;gt;&amp;lt;v&amp;gt;&#39; + REPLACE(@tempstr, &#39;,&#39;, &#39;&amp;lt;/v&amp;gt;&amp;lt;v&amp;gt;&#39;) + &#39;&amp;lt;/v&amp;gt;&amp;lt;/root&amp;gt;&#39;) SELECT ids=N.v.value(&#39;.&#39;, &#39;int&#39;) FROM @Xmlstr.nodes(&#39;/root/v&#39;) N(v)  写成函数如下：
+create FUNCTIo n [dbo].[ufn_sys_Str2Table] ( @SplitStr nvarchar(max), @Separator nvarchar(10) = &#39;,&#39; ) RETURNS @ResultTable TABLE ( [sid] INT IDENTITY(1, 1) , [svalue] nvarchar(max) ) as begin --把字串转成XML declare @Tempxml xml; set @Tempxml=Co nVERT(xml,&#39;&amp;lt;d&amp;gt;&#39;+REPLACE(@SplitStr,@Separator,&#39;&amp;lt;/d&amp;gt;&amp;lt;d&amp;gt;&#39;)+&#39;&amp;lt;/d&amp;gt;&#39;) --把XML转成表 insert into @ResultTable ([svalue]) select co nvert(nvarchar(max),Tb.co.query(&#39;data(.)&#39;) ) as rvalue from @Tempxml.</description>
+    </item>
+    
+  </channel>
+</rss>

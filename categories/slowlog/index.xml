@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>slowlog on Classic</title>
+    <link>/categories/slowlog/</link>
+    <description>Recent content in slowlog on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 17 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/slowlog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>图数据库nebula实时慢日志收集和展示</title>
+      <link>/dba/nebula%E6%85%A2%E6%9F%A5%E8%AF%A2%E7%9B%91%E6%8E%A7/</link>
+      <pubDate>Fri, 17 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/nebula%E6%85%A2%E6%9F%A5%E8%AF%A2%E7%9B%91%E6%8E%A7/</guid>
+      <description>目的 因为我们的图数据库从neo4j社区版转到nebula graph方向。最近在项目压测的时候，一开始很平稳，运行一段时间后，NQL会越来越慢，发现性能巨差。nebula经常卡死，表现为：
+ nebula-storaged.service和nebula-graphd.service服务经常挂掉。 业务侧反馈执行什么NQL都很慢 nebula show query里发现有大量（300-500个）running的进程。平时很快的NQL也卡在那  系统资源
+ 内存紧张 ，大量的虚拟内存被占用 io,cpu也较高  在做了一些参数调优后，发现状态有所缓解，但是一段时间后，还是会慢慢卡死，从现象上推测是有一种或几种慢NQL多次执行后，把系统资源消耗完了，导致大面积的堵塞。所以面临的需求还是要有个慢查询排查工具。
+参考上一次做oracle慢日志收集展示的方法， https://www.dboop.com/oracle/oracle%E6%80%8E%E6%A0%B7%E5%AE%9E%E6%97%B6%E6%94%B6%E9%9B%86%E5%B1%95%E7%A4%BA%E6%85%A2%E6%9F%A5%E8%AF%A2/
+变化的是：
+ 因为nebula的集群就一个，不需要做oracle慢日志的大表套小表，数担据量不大就建了一张monitor_nebula_slow表存放数据. nebula抓到的慢查询里的NQL是没有去参数化的，需要自己做去参数化，把相同类型的NQL，标识为同一个md5id   1.建一张表，每隔1分钟（时间可调，但我们的场景1分钟足够了） CREATE TABLE `monitor_nebula_slow` (`logid` int unsigned NOT NULL AUTO_INCREMENT,`SessionID` varchar(50) NOT NULL DEFAULT &#39;&#39;,`ExecutionPlanID` varchar(50) NOT NULL DEFAULT &#39;&#39;,`User` varchar(50) NOT NULL DEFAULT &#39;&#39;,`Host` varchar(50) NOT NULL DEFAULT &#39;&#39;,`StartTime` datetime DEFAULT NULL,`DurationInUSec` int unsigned NOT NULL DEFAULT &#39;0&#39;,`Status` varchar(50) NOT NULL DEFAULT &#39;&#39;,`Query` varchar(5000) NOT NULL DEFAULT &#39;&#39;,`_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,`md5id` varchar(64) NOT NULL DEFAULT &#39;&#39;,PRIMARY KEY (`logid`),KEY `ix_monitor_nebula_slow` (`_timestamp`)) ENGINE=InnoDB AUTO_INCREMENT=13231 DEFAULT CHARSET=utf8mb32.</description>
+    </item>
+    
+    <item>
+      <title>Oracle实时慢日志收集和展示</title>
+      <link>/oracle/oracle%E6%80%8E%E6%A0%B7%E5%AE%9E%E6%97%B6%E6%94%B6%E9%9B%86%E5%B1%95%E7%A4%BA%E6%85%A2%E6%9F%A5%E8%AF%A2/</link>
+      <pubDate>Fri, 11 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E6%80%8E%E6%A0%B7%E5%AE%9E%E6%97%B6%E6%94%B6%E9%9B%86%E5%B1%95%E7%A4%BA%E6%85%A2%E6%9F%A5%E8%AF%A2/</guid>
+      <description>Oracle怎样实时收集展示慢查询？ 当网上搜相关问题或问一个身边的OracleDBA ，通常会有两种类型的答案
+ 看awr报告 扔过来一段SQL脚本。   类似于MySQL的慢日志方案：Slowlog--logstash--&amp;gt;es--&amp;gt;MySQL--&amp;gt;web页
+但Oracle没有现成的slowlog可以用。
+ 所以我们先后采用尝试了以下三种方法。
+方法一：定时收集awr报告 我们去年和黄老师一起尝试了定时生成awr报告，获取topSQL入库后，再收集展示的方法，这个方案需要对OracleAWR的缓存表理解得很深入，黄老师哼哼哧哧花了一个月时间，最终完成了统一收集，并通过web页展示，但总体效果不好。 主要缺点在于
+ 不能做到实时，甚至不能准实时（取决于多长时间生成一次awr报告） 只能每个实例取topSQL 方案呆板且不理性 总结：实现难度大，效果差  方法二：Oracle中间件记录慢查询 去年年底的时候我们在写一个Oracle中件间，业务访问Oracle数据库需要连接到Proxy上，然后在Proxy上记录查询日志，这种方法理论上是完全可以的，但是当我去尝试去实现这个功能的时候发现很困难，因为我们采用了端口中转的方式，可以抓到客户端和服务端的通信包，但是不能对应上这些通信包的对应关系。这就导致计算SQL执行时间这一步没法实现。 然后我们架构组也在做jdbc层的中件间，这个是100%可以轻松实现的，但只适用于java程序，对于非java代码访问数据库就无能为力了 总结：收集得很准，但开发工作量大，需要很长的时间
+方法三：定时直接读取正在执行的SQL 这个方案是我们年前做了一个Oracle长时间无响应SQL的报警功能（超过60秒没执行完的SQL会发钉钉报警），然后一次故障处理时，法爷说这个功能改一下刚好可以做慢查询收集整理。
+于是我们快速的试了下这个方案（代价很小，花了半个小时就完成了，任务配置和报表展示）
+ 新建存放慢SQL信息的表一个字典表/一个慢SQL表（5分钟） 配置一个每分钟去所有Oracle实例上收集的任务（15分钟） 配合已有CMDB信息，完成慢SQL和研发负责人的对应，写一个SQL （5分钟） 用这个SQL配置出来一张可展示的报表，设置成全体研发可见（5分钟） 总结：零开发工作，只要建个表，配置一个定时job和报表，就可以完成，效果不错  得到这样的一张这样的：实时展示Oracle慢查询的报表 &amp;ndash; done</description>
+    </item>
+    
+  </channel>
+</rss>

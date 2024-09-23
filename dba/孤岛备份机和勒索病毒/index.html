@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>孤岛备份机和勒索病毒| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">孤岛备份机和勒索病毒</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#勒索病毒">勒索病毒</a>
+      <ul>
+        <li><a href="#什么是勒索病毒">什么是勒索病毒？</a></li>
+        <li><a href="#怎么写一个勒索病毒">怎么写一个勒索病毒？</a></li>
+        <li><a href="#中了勒索病毒怎么办">中了勒索病毒怎么办？</a></li>
+        <li><a href="#勒索病毒和备份体系的攻防">勒索病毒和备份体系的攻防</a></li>
+      </ul>
+    </li>
+    <li><a href="#孤岛备份机">孤岛备份机</a>
+      <ul>
+        <li><a href="#什么是孤岛备份机">什么是孤岛备份机？</a></li>
+        <li><a href="#我们是怎么设计孤岛备份机的方案重点">我们是怎么设计孤岛备份机的方案？（重点）</a></li>
+        <li><a href="#孤岛备份机怎么对抗勒索病毒">孤岛备份机怎么对抗勒索病毒？</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="勒索病毒">勒索病毒</h2>
+<h3 id="什么是勒索病毒">什么是勒索病毒？</h3>
+<ul>
+<li>勒索病毒就是那种中毒后</li>
+<li>加密你的文件（通常是aes加密算法)</li>
+<li>提示你去支付一些电子货币才能解开文件的一种病毒</li>
+<li>通常是要求支付一定数量的比特币</li>
+<li>像下面这种</li>
+</ul>
+<p><img src="/img/2022auto/2022-08-31-10-50-37.png" alt="勒索病毒"></p>
+<h3 id="怎么写一个勒索病毒">怎么写一个勒索病毒？</h3>
+<ul>
+<li>如果让我写一个简单的勒索病毒</li>
+<li>我可能会这样写</li>
+<li>0.像指定的服务器（控制机）请求一个aes公钥</li>
+<li>1.用这个公钥挨个给本地文件加密
+<ul>
+<li>1.1 遍历本地所有文件</li>
+<li>1.2 给每个文件头加上一个特殊标记（不用多，10来个字节就行）</li>
+<li>1.3 挨个用公钥加密所有文件</li>
+</ul>
+</li>
+<li>2.提示用户文件加密了，要求给钱</li>
+<li>3.如果收到钱了就给他一个解密的代码</li>
+<li>4.解密代码这样写
+<ul>
+<li>4.1 遍历本地所有文件</li>
+<li>4.2 判断是否有特殊标记</li>
+<li>4.3 如果有，则是加密文件</li>
+<li>4.4 用私钥去解开这个文件</li>
+</ul>
+</li>
+<li>当然真实的勒索病毒会更加严谨，我只是描述一下思路</li>
+<li>我也从来没写过</li>
+</ul>
+<h3 id="中了勒索病毒怎么办">中了勒索病毒怎么办？</h3>
+<ul>
+<li>不差钱方案：给钱，然后寄希望于对方的人品。</li>
+<li>运气好方案：这是个常见的普通勒索病毒，网上有很多的工具可以尝试解一下</li>
+<li>报警：造成重大损失的可以公开报警，交给安全部门处理，当然这个破案的难度有点大，数据可能还是找不回来</li>
+<li>补救方案：用备份来救命。
+<ul>
+<li>如果有备份，可以恢复文件，那这时候就基本上可以依靠本身的备份体系来恢复大部分损失（还是会有不可挽回的损失）</li>
+</ul>
+</li>
+</ul>
+<h3 id="勒索病毒和备份体系的攻防">勒索病毒和备份体系的攻防</h3>
+<ul>
+<li>聪明的勒索病毒会攻击备份体系</li>
+<li>1.本机备份：中了勒索病毒以后，本机备份几乎是99%也会中毒，几乎没啥用了</li>
+<li>2.异机备份：如果是个人电脑中毒，很难会感染到备份机，但是如果是机房里的服务器中毒了，那么病毒极有可能会感染备份机。</li>
+<li>3.异机房备份：同异机备份，主要还是一个服务器内网环境。</li>
+<li>如何防止勒索病毒攻击备份体系呢？</li>
+<li>这就是我们接下来下说的孤岛备份机方案</li>
+</ul>
+<h2 id="孤岛备份机">孤岛备份机</h2>
+<h3 id="什么是孤岛备份机">什么是孤岛备份机？</h3>
+<ul>
+<li>它是一个特殊的备份机</li>
+<li>1.它不和普通的服务器连网</li>
+<li>2.本地不开任何端口，任何其他服务器不能请求它的任何服务</li>
+<li>3.只和指定的一台机器直连（通常这台机器是个普通的备份机）</li>
+<li>4.它只以视为“这台普通备份机”的备份机</li>
+<li>5.它会定时拉取普通备份机上的指定目录</li>
+<li>6.拉取完成后的文件，永远不会再次修改</li>
+<li>7.定时清理过期文件</li>
+</ul>
+<h3 id="我们是怎么设计孤岛备份机的方案重点">我们是怎么设计孤岛备份机的方案？（重点）</h3>
+<p><img src="/img/2022auto/2022-08-31-12-05-45.png" alt="孤岛备份机"></p>
+<ul>
+<li>网络隔离，物理隔离，停掉不需要的服务，关掉所有端口，这些交给运维同事去做。要求是没有任何机器可以访问这台备份机】</li>
+<li>保留这台机器到 A机器的9801端品访问（用来拉备份） B机器的80端口访问（用来传递备份信息）</li>
+<li>普通备份机上会有类似这样的目录</li>
+</ul>
+<pre><code>ll  /data/mysql_back/
+drwxr-xr-x  2 root root 4096 9月  11 2021 20210911
+drwxr-xr-x  2 root root 4096 9月  12 2021 20210912
+drwxr-xr-x  2 root root 4096 9月  13 2021 20210913
+drwxr-xr-x  2 root root 4096 9月  14 2021 20210914
+drwxr-xr-x  2 root root 4096 9月  15 2021 20210915
+drwxr-xr-x  2 root root 4096 9月  15 2021 20210916
+drwxr-xr-x  2 root root 4096 9月  17 2021 20210917
+drwxr-xr-x  2 root root 4096 9月  18 2021 20210918
+drwxr-xr-x  2 root root 4096 9月  19 2021 20210919
+drwxr-xr-x  2 root root 4096 9月  29 2021 20210920
+drwxr-xr-x  2 root root 4096 9月  21 2021 20210921
+drwxr-xr-x  2 root root 4096 9月  22 2021 20210922
+</code></pre><ul>
+<li>如果今天是20210922那么只会同步 /data/mysql_back/20210922这个目录</li>
+<li>一定不要同步先前的文件</li>
+<li>当然可能还有 /data/mongo_back/20210922 &hellip;.类似的目录</li>
+<li>同步的方式也可能是拉取（不能推送）</li>
+<li>每同步一个文件后，都会调取指定接口，传送以下信息。</li>
+</ul>
+<p><img src="/img/2022auto/2022-08-31-14-16-04.png" alt="调用备份机接口"></p>
+<ul>
+<li>传递的信息，将和原始备份信息对比，用来判断备份是否传递到孤岛成功，如果不成功会报警。</li>
+<li>每天23点以后，将会将当天的文件，移到另一个目录。这些目录将会永远不再做更改（除非过期删除）</li>
+</ul>
+<h3 id="孤岛备份机怎么对抗勒索病毒">孤岛备份机怎么对抗勒索病毒？</h3>
+<ul>
+<li>孤岛备份机的安全性比普通备份机安全的地方在于它的物理和网络隔离</li>
+<li>因为关了尽可能的服务和端口，几乎没有被攻击的可能（到机房接显示器键盘，这种不算）</li>
+<li>关了任何人的权限，一旦运行起来我都没权限，不纳入整个正常的运维体系</li>
+<li>我们的孤岛机连监控都没装，它只会定时调接口对外吐出来一些信息（我还活着，我备了多少文件了，还有多少空间）</li>
+<li>当普通的勒索病毒，正常有普通备份机就够了，基本不会用上孤岛机</li>
+<li>孤岛机是最后的底裤</li>
+<li>它是有数据延迟的，它存在的价值是救命的底线，被攻击到致命时的最后一口补药。</li>
+<li>孤岛机不止防勒索病毒还防内部员工的删库跑路。</li>
+<li>孤岛备份机一旦运行起来，不去机房接显示器就没法动它。（现实的方案可能会为了运维方便，做点妥协）</li>
+</ul>
+<p><img src="/img/2022auto/2022-08-31-14-28-34.png" alt="无招胜有招"></p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2021/09/22</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/dba">DBA</a> <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96">自动化</a> <a href="/categories/%E5%AE%89%E5%85%A8">安全</a> <a href="/categories/%E8%BF%90%E7%BB%B4">运维</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

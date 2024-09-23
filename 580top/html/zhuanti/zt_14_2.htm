@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>专题报道：《存储引擎InnoDB》 - 数据库管理员DBA学习网站 </title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li><li><a href="../zt/l_index_1.htm" class="hover">网站专题</a></li></ul><ul class="sub"><li><a  href="../zt/l_sqlserver_1.htm" title="SQLServer专题">SQLServer</a>|</li><li><a  href="../zt/l_Oracle_1.htm" title="Oracle专题">Oracle</a>|</li><li><a  href="../zt/l_mysql_1.htm" title="MySQL专题">MySQL</a>|</li><li><a  href="../zt/l_othersql_1.htm" title="其他数据库专题">其他数据库</a>|</li><li><a  href="../zt/l_yunwei_1.htm" title="系统运维专题">系统运维</a>|</li><li><a  href="../zt/l_kaoshi_1.htm" title="DBA考试专题">DBA考试</a>|</li><li><a  href="../zt/l_dbahuati_1.htm" title="DBA话题专题">DBA话题</a>|</li></ul></div></div>
+<br class="clearfloat" />
+</div>
+ 
+ 
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../zt/l_index_1.htm">网站专题</a>&nbsp;&gt;&nbsp; <a href="../zt/l_mysql_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="zt_14_1.htm">存储引擎InnoDB</a></div>
+  <div id="sidebar1">
+
+  <div class='div_tab_tab'>
+	<div id="div_login_title">580top数据库:</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+ &nbsp;</div>    
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+   
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+    <div class="d9"><p>&nbsp;</p></div>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+
+
+    <div class="d3"><p>&nbsp;</p></div>
+    
+    <p>&nbsp;</p>
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  
+
+        <div id="contentdiv"> 
+            <div id="news_list">
+                   <div>
+                              <div class="d2"><h1>专题报道：《存储引擎InnoDB》</h1><span>InnoDB 是 MySQL 上第一个提供外键约束的数据存储引擎，除了提供事务处理外，InnoDB 还支持行锁，提供和 Oracle 一样的一致性的不加锁读取，能增加并发读的用户数量并提高性能，不会增加锁的数量。InnoDB 的设计目标是处理大容量数据时最大化性能，它的 CPU 利用率是其他所有基于磁盘的关系数据库引擎中最有效率的。</span></div><UL><LI class=list_title><SPAN>2009/10/18 23:11:30</SPAN><a href="../200910/dba_1301.htm"  title="innodb_flush_method带来的性能影响 ">innodb_flush_method带来的性能影响 </a>  <LI   class="text">innodb_flush_method有三个值，分别是fdatasync，o_dsync和o_direct，其中fdatasync是默认值。它们控制了innodb刷新日志和数据的模式。fdatasync： innodb使用fsync()函数去更新日志和数据文件。o_dsync： innodb使用o_sync模式打开并更新日志文件，用fsync()函数去更新数据文件。o_direct： innodb<a href="../200910/dba_1301.htm" title="innodb_flush_method带来的性能影响 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="14" title="《存储引擎InnoDB》专题">存储引擎InnoDB</a></SPAN><SPAN>作者：陶方</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2009/10/18 23:13:10</SPAN><a href="../200910/dba_1300.htm"  title="innodb_flush_method 与 Linux File I/O ">innodb_flush_method 与 Linux File I/O </a>  <LI   class="text">陶方在《innodb_flush_method带来的性能影响》中从实验角度比较了fdatasync，o_dsync和o_direct在性能上的差异。本文将试图从linux/unix”文件i/o”（unbuffered i/o）的角度来解释innodb_flush_method是如何影响mysql的i/o。【附录1】innodb_flush_log_at_trx_commit参数确定日志文件何时wr<a href="../200910/dba_1300.htm" title="innodb_flush_method 与 Linux File I/O ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="14" title="《存储引擎InnoDB》专题">存储引擎InnoDB</a></SPAN><SPAN>作者：苏普</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2009/10/19 15:43:51</SPAN><a href="../200910/dba_1299.htm"  title="MySQL优化 之 Discuz论坛优化 ">MySQL优化 之 Discuz论坛优化 </a>  <LI   class="text">很早以前写过一个文章，是关于discuz论坛的优化：mysql优化 之 discuz论坛优化。写的时候是2006年，没想到过了这么久，discuz论坛的问题还是困扰着很多网友，其实从各论坛里看到的问题总结出来，很关键的一点都是因为没有将数据表引擎转成innodb导致的，discuz在并发稍微高一点的环境下就表现的非常糟糕，产生大量的锁等待，这时候如果把数据表引擎改成innodb的话，我相信会好很多<a href="../200910/dba_1299.htm" title="MySQL优化 之 Discuz论坛优化 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="14" title="《存储引擎InnoDB》专题">存储引擎InnoDB</a></SPAN><SPAN>作者：yejr</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2009/10/19 15:45:38</SPAN><a href="../200910/dba_1297.htm"  title="show engine innodb status显示信息不全? ">show engine innodb status显示信息不全? </a>  <LI   class="text">问题：执行 show engine innodb status\\g 时，显示的信息不全，deadlock相关信息太多，后面的都没了原因：这是mysql客户端的一个bug：bug#19825，交互式客户端限制了输出信息最大为 64kb，因此更多的信息无法显示。解决办法：解决方法有两种：1. 启用 innodb_status_file修改 my.cnf，增加类似下面一行innodb_status_f<a href="../200910/dba_1297.htm" title="show engine innodb status显示信息不全? ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="14" title="《存储引擎InnoDB》专题">存储引擎InnoDB</a></SPAN><SPAN>作者：yejr</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2009/10/19 23:23:18</SPAN><a href="../200910/dba_1295.htm"  title="Innodb分表太多或者表分区太多，会导致内存耗尽而宕机 ">Innodb分表太多或者表分区太多，会导致内存耗尽而宕机...</a>  <LI   class="text">因为线上某个应用表分区太多，直接导致遍历表或者dump数据的时候导致内存耗尽死机。原因是innodb的数据字典不会释放内存，会将所有表和分区的信息记录在内存当中，当表数量或者分区数到达一定数量之后(经验值:约10万张表或者10万个表分区，占用将近1g大小的内存)，会导致内存耗尽。my.cnf 配置参数: innodb_additional_mem_pool_size查看数据字典使用多少内存:sho<a href="../200910/dba_1295.htm" title="Innodb分表太多或者表分区太多，会导致内存耗尽而宕机 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="14" title="《存储引擎InnoDB》专题">存储引擎InnoDB</a></SPAN><SPAN>作者：ivan</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2009/10/24 23:16:25</SPAN><a href="../200910/dba_1281.htm"  title="MyISAM和InnoDB的一些记录 ">MyISAM和InnoDB的一些记录 </a>  <LI   class="text">key_buffer_size - 这对myisam表来说非常重要。如果只是使用myisam表，可以把它设置为可用内存的 30-40%。合理的值取决于索引大小、数据量以及负载。记住，myisam表会使用操作系统的缓存来缓存数据，因此需要留出部分内存给它们，很多情况下数据比索引大多了。尽管如此，需要总是检查是否所有的 key_buffer 都被利用了。.myi 文件只有 1gb，而 key_buff<a href="../200910/dba_1281.htm" title="MyISAM和InnoDB的一些记录 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="14" title="《存储引擎InnoDB》专题">存储引擎InnoDB</a></SPAN><SPAN>作者：kimi</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2009/10/31 22:43:56</SPAN><a href="../200910/dba_1268.htm"  title="MySQL InnoDB性能调整的一点实践 ">MySQL InnoDB性能调整的一点实践 </a>  <LI   class="text">因为javaeye网站的数据库服务器搬家的时候被托管商的工作人员狠狠摔了一下，所以硬盘整个挂掉了，我重新安装数据库服务器的时候，顺手下载了percona patch过的mysql5.0版本，使用mysql自带的heavy innodb配置文件改了改，作为my.cnf启动运行。数据库服务器的物理内存有6gb，其中有4gb可以被mysql使用，my.cnf相关配置参数如下： 以下是代码片段：memlo<a href="../200910/dba_1268.htm" title="MySQL InnoDB性能调整的一点实践 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="14" title="《存储引擎InnoDB》专题">存储引擎InnoDB</a></SPAN><SPAN>作者：robbin</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2009/11/8 16:52:33</SPAN><a href="../200911/dba_1262.htm"  title="XtraDB存储引擎 ">XtraDB存储引擎 </a>  <LI   class="text">xtradb存储引擎是percona公司对于innodb存储引擎进行改进加强后的产品，第一个版本为1.0.2-1，发布于2008年底。xtradb兼容innodb的所有特性，并且在io性能，锁性能，内存管理等多个方面进行了增强。下载mysql源代码，当前最新的5.1版本为5.1.40http://dev.mysql.com/downloads/mysql/5.1.html#source下载xtra<a href="../200911/dba_1262.htm" title="XtraDB存储引擎 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="14" title="《存储引擎InnoDB》专题">存储引擎InnoDB</a></SPAN><SPAN>作者：NinGoo</SPAN>  </LI></UL>
+                            </div>
+                            <div class="sabrosus"><a href='zt_14_1.htm' title='回到第一页'>首页</a><a href='zt_14_1.htm' title='上一页'>上一页</a><a href='zt_14_1.htm' title='第1页'>1</a><span class="current">2</span><a href='zt_14_3.htm' title='第3页'>3</a><a href='zt_14_4.htm' title='第4页'>4</a><a href='zt_14_5.htm' title='第5页'>5</a><a href='zt_14_6.htm' title='第6页'>6</a><a>...</a><a href='zt_14_3.htm' title='下一页'>下一页</a><a href='zt_14_11.htm' title='尾页'>尾页</a><input type="hidden" value="2" id="page">&nbsp;&nbsp;<strong>分页：2/11页</strong></div>         
+            </div>        
+        </div>
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+	
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

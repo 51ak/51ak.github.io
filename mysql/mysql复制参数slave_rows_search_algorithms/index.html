@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL复制参数_slave_rows_search_algorithms及无主键表的处理| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL复制参数_slave_rows_search_algorithms及无主键表的处理</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#0起因">0.起因</a></li>
+    <li><a href="#1排查问题">1.排查问题</a></li>
+    <li><a href="#2定位问题">2.定位问题</a></li>
+    <li><a href="#3slave_rows_search_algorithms参数">3.slave_rows_search_algorithms参数</a></li>
+    <li><a href="#4解决问题">4.解决问题</a></li>
+    <li><a href="#5补充">5.补充</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="0起因">0.起因</h2>
+<p>线上MySQL实例，今天报大量延时，且卡住不动。（表现为seconds_behind_master不断上涨，从库gtid不动）</p>
+<p><img src="/img/2022/seconds_behind_master.png" alt="seconds_behind_master不断上涨"></p>
+<p>同时二级从库有复制SQL进程报错</p>
+<pre><code>[ERROR] [MY-010584] [Repl] Slave SQL for channel '': Could not execute Update_rows event on table 「表名」; Can't find record in '「表名」', Error_code: 1032; handler error HA_ERR_END_OF_FILE; the event's master log mysql-bin.000****, end_log_pos *******, Error_code: MY-001032
+</code></pre><h2 id="1排查问题">1.排查问题</h2>
+<p>排查问题时</p>
+<ul>
+<li>确认该实例上的从库不提供线上实时业务访问（业务可以接受延时）。不需要做从库切流量动作</li>
+<li>先是看了一下从库的多线程复制是database级的，开启多线程复制到logical_clock ,问题并没有恢复
+<ul>
+<li>
+<pre><code class="language-stop" data-lang="stop"></code></pre></li>
+</ul>
+</li>
+</ul>
+<p>set global slave_parallel_type=&lsquo;logical_clock&rsquo;;
+set global slave_parallel_workers=4;
+start slave sql_thread;```</p>
+<ul>
+<li>排除掉是线程数不够的原因</li>
+<li>发现processlist中是在等Applying batch of row changes (update)
+<ul>
+<li>确定是卡在sql进程，再看relaylog确实持续增长800M(表示该实例写入不频繁)</li>
+</ul>
+</li>
+<li>解析relaylog 发现是普通的update语句大约有8000次左右
+<ul>
+<li>这个量级的update且是row模式，理论1分钟内就追上了。</li>
+</ul>
+</li>
+<li>查看锁datalocks，发现有大量的行数50几万，都是同一个表的
+<ul>
+<li>slave的sql进程不应该有这个量级的行锁。</li>
+</ul>
+</li>
+<li>查看表结构发现这个表是无主键的表，里面大约有50几万条记录，无主键无索引</li>
+</ul>
+<h2 id="2定位问题">2.定位问题</h2>
+<p>通过上面的问题排查，已定位到无主键表的update 引起的复制同步报警。</p>
+<ul>
+<li>写库上的一条update语句，用row模式传递过来是大约8000次<code>update 表名 set 列1=%s,列2=%s... where 列1=%s,列2=%s...</code></li>
+<li>针对每一行的update，从库都需要一次完整的表扫描。8000次*50万，导致从库同步几乎追不上来</li>
+</ul>
+<h2 id="3slave_rows_search_algorithms参数">3.slave_rows_search_algorithms参数</h2>
+<p>针对无主键表的复制MySQL5.6以后有个参数来调整从库定位数据的方法：slave_rows_search_algorithms</p>
+<p>参考官方文档，</p>
+<ul>
+<li>这个参数是从三个可能选项中选出至少两项</li>
+<li>1.TABLE_SCAN(表扫描)，2.INDEX_SCAN(索引扫描),3.HASH_SCAN(hash定位)</li>
+<li>默认是：INDEX_SCAN,TABLE_SCAN</li>
+<li>一般建议在存在无主键表的复制下，设置为：INDEX_SCAN,HASH_SCAN 通常可以加快从库的同步速度
+<img src="/img/2022/slave_rows_search_algorithms.png" alt="slave_rows_search_algorithms参数"></li>
+</ul>
+<h2 id="4解决问题">4.解决问题</h2>
+<p>针对我们的问题，做了以下处理。</p>
+<ul>
+<li>与这个库的研发负责人，沟通无主键表需要立即增加主键的整改</li>
+<li>调整slave_rows_search_algorithms参数到INDEX_SCAN,HASH_SCAN</li>
+<li>在从库上查看卡住的表的结构，找到筛选度高的列，增加普通索引
+<ul>
+<li>这里不需要关注业务是否需要，单纯只是为了加快复制速度，所以加的索引未来可能会删掉</li>
+<li>加索引的步骤是从库和主库分别执行</li>
+<li>
+<pre><code class="language-set" data-lang="set"></code></pre></li>
+</ul>
+</li>
+</ul>
+<p>alter table 表名 add index idx_表名_tmp(字段);
+set sql_log_bin=1;```</p>
+<ul>
+<li>实时观察data_locks和processlist防止有线上阻塞出现</li>
+<li>加索引过程大约进行了2分钟，加完索引约1分钟后故障恢复</li>
+<li>同时二级从库有复制SQL进程报错的，把它的change master到主库后，自行恢复
+<ul>
+<li>这个实例先前的slave_rows_search_algorithms已经被改成INDEX_SCAN,HASH_SCAN，也就是先前有dba处理过这个参数</li>
+<li>但是理论上它不存在写入脏数据的可能性（开的readonly，且gitd set是正常的）</li>
+<li>非常诡异的是，在加完索引和change master后，自行恢复了。（这个没整明白为啥会有报错，又为啥自行恢复）</li>
+</ul>
+</li>
+</ul>
+<h2 id="5补充">5.补充</h2>
+<p>继续跟踪这个问题，发现这个实例是从oracle上迁到MySQL上的，所以不止这一个表没有主键。只是其他的表这次没有大量的update所以没有暴发，一起补了索引。</p>
+<p>所以</p>
+<ol>
+<li>MySQL的表一定要有主键的，这个规范不能放松（哪怕是异构迁移过来的实例）</li>
+<li>已存在的无主键表，如果造成了复制卡住，可以临时加上普通索引（不用经过业务同意，dba自行选一个列做索引，先恢复故障）</li>
+<li>slave_rows_search_algorithms参数，可以加快无主键表的复制速度，但是不是万能的，需要慎用。</li>
+</ol>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/07/04</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/mysql%E5%A4%8D%E5%88%B6">mysql复制</a> <a href="/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86">故障处理</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

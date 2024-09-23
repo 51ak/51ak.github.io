@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>搭建一套完整的Mysql5.7innodbcluster(GroupReplication&#43;mysqlrouter) | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">搭建一套完整的Mysql5.7innodbcluster(GroupReplication&#43;mysqlrouter)</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+<p>先说三个大步骤：</p>
+
+<p>搭Mysql5.7 Group Replication ,配置成单主模式</p>
+
+<p>安装Mysqlshell,配innodbcluster</p>
+
+<p>安装Mysql-router</p>
+
+<p>第一步：搭Mysql5.7 Group Replication ,配置成单主模式</p>
+
+<p>为了节省步骤，我们用RPM方式安装</p>
+
+<pre><code>yum install -y libaio
+
+yum install libnuma* -y
+rpm -qa | grep -i mysql # 这一步找到旧的mysql
+rpm -e mysql-libs-5.1.73-8.el6_8.x86_64 --nodeps #我测试的实例上只有这个，删了
+rpm -ivh mysql-community-common-5.7.20-1.el6.x86_64.rpm
+rpm -ivh mysql-community-libs-5.7.20-1.el6.x86_64.rpm 
+rpm -ivh mysql-community-devel-5.7.20-1.el6.x86_64.rpm 
+rpm -ivh mysql-community-client-5.7.20-1.el6.x86_64.rpm 
+rpm -ivh mysql-community-libs-compat-5.7.20-1.el6.x86_64.rpm
+rpm -ivh mysql-community-embedded-5.7.20-1.el6.x86_64.rpm
+rpm -ivh mysql-community-server-5.7.20-1.el6.x86_64.rpm
+rpm -qa | grep mysql　#验证
+</code></pre>
+
+<p>拷贝cnf.和服务文件</p>
+
+<pre><code>cp mysqld33* /etc/init.d/
+cp -r mysql33* /home/wokofo/
+</code></pre>
+
+<p>配置文件：</p>
+
+<pre><code>[mysqld]
+#skip-grant-tables=1
+datadir=/home/wokofo/mysql3306/data
+socket=/home/wokofo/mysql3306/mysql.sock
+log-error=/home/wokofo/mysql3306/mysqld.log
+pid-file=/home/wokofo/mysql3306/mysqld.pid
+port=3306
+symbolic-links=0
+user = mysql
+server_id = 6
+skip_ssl
+
+gtid_mode = ON
+enforce_gtid_consistency = ON
+master_info_repository = TABLE
+relay_log_info_repository = TABLE
+binlog_checksum = NONE
+log_slave_updates = ON
+log_bin = binlog
+binlog_format = ROW
+expire_logs_days=7
+relay_log=relay-log
+character_set_server=utf8mb4
+max_connections=10000
+open_files_limit=10000
+slow_query_log=1
+
+long_query_time=1.000
+skip_name_resolve=on
+sql_mode=NO_ENGINE_SUBSTITUTION,NO_AUTO_CREATE_USER
+max_allowed_packet=20480000
+
+
+transaction_write_set_extraction = XXHASH64
+loose-group_replication_group_name=&quot;81125aaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa&quot;
+loose-group_replication_start_on_boot=off
+loose-group_replication_local_address=&quot;172.16.81.127:13306&quot;
+loose-group_replication_group_seeds=&quot;172.16.81.125:13306,172.16.81.126:13306,172.16.81.127:13306&quot;
+loose-group_replication_ip_whitelist = &quot;127.0.0.1,172.16.0.1/16&quot;
+</code></pre>
+
+<p>启动服务:</p>
+
+<p>在主节点上执行：</p>
+
+<pre><code>set sql_log_bin=0;
+grant replication slave,replication client on *.* to 'repluser'@'%' identified by '*************';
+flush privileges;
+set sql_log_bin=1;
+
+install plugin group_replication soname 'group_replication.so';
+
+change master to master_user='repluser',master_password='***********************' for channel 'group_replication_recovery';
+set global group_replication_bootstrap_group=ON;
+START group_replication;
+set global group_replication_bootstrap_group=OFF;
+exit;
+</code></pre>
+
+<p>其他节点上执行：</p>
+
+<pre><code>change master to master_user='repluser',master_password='****************' for channel 'group_replication_recovery'; #这一步如果不是空库，需要自己调
+set global group_replication_allow_local_disjoint_gtids_join=ON;
+START group_replication;
+</code></pre>
+
+<p>任意节点上执行</p>
+
+<pre><code>select * from performance_schema.replication_group_members;
+</code></pre>
+
+<p>验证成功，步骤一完成，GR集群搭建成功</p>
+
+<p>第二步：安装Mysqlshell,配innodbcluster</p>
+
+<p>rpm -ivh mysql57-community-release-el6-11.noarch.rpm
+yum install -y mysql-shell
+python -V #如果低于2.7需要升级</p>
+
+<pre><code>mysqlsh --uri dba@172.16.81.125:3306
+Creating a Session to 'dba@172.16.81.125:3306'
+Enter password:
+
+
+mysql-js&gt; var cluster=dba.createCluster('fvt01',{adoptFromGR:true});
+A new InnoDB cluster will be created on instance 'dba@172.16.81.125:3306'.
+
+Creating InnoDB cluster 'fvt01' on 'dba@172.16.81.125:3306'...
+Adding Seed Instance...
+
+Cluster successfully created. Use Cluster.addInstance() to add MySQL instances.
+At least 3 instances are needed for the cluster to be able to withstand up to
+one server failure.
+
+mysql-js&gt; cluster.status()
+{
+&quot;clusterName&quot;: &quot;fvt01&quot;, 
+&quot;defaultReplicaSet&quot;: {
+&quot;name&quot;: &quot;default&quot;, 
+&quot;primary&quot;: &quot;172.16.81.125:3306&quot;, 
+&quot;status&quot;: &quot;OK&quot;, 
+&quot;statusText&quot;: &quot;Cluster is ONLINE and can tolerate up to ONE failure.&quot;, 
+&quot;topology&quot;: {
+&quot;172.16.81.125:3306&quot;: {
+&quot;address&quot;: &quot;172.16.81.125:3306&quot;, 
+&quot;mode&quot;: &quot;R/W&quot;, 
+&quot;readReplicas&quot;: {}, 
+&quot;role&quot;: &quot;HA&quot;, 
+&quot;status&quot;: &quot;ONLINE&quot;
+}, 
+&quot;l-fvt-mysql2.beta0.cn2:3306&quot;: {
+&quot;address&quot;: &quot;l-fvt-mysql2.beta0.cn2:3306&quot;, 
+&quot;mode&quot;: &quot;R/O&quot;, 
+&quot;readReplicas&quot;: {}, 
+&quot;role&quot;: &quot;HA&quot;, 
+&quot;status&quot;: &quot;ONLINE&quot;
+}, 
+&quot;l-fvt-mysql3.beta0.cn2:3306&quot;: {
+&quot;address&quot;: &quot;l-fvt-mysql3.beta0.cn2:3306&quot;, 
+&quot;mode&quot;: &quot;R/O&quot;, 
+&quot;readReplicas&quot;: {}, 
+&quot;role&quot;: &quot;HA&quot;, 
+&quot;status&quot;: &quot;ONLINE&quot;
+}
+}
+}
+}
+mysql-js&gt; dba.configureLocalInstance(&quot;dba@127.0.0.1:3306&quot;)
+Please provide the password for 'dba@127.0.0.1:3306':
+
+Detecting the configuration file...
+Default file not found at the standard locations.
+Please specify the path to the MySQL configuration file: /home/wokofo/mysql3306/my.cnf
+Validating instance...
+
+The instance '127.0.0.1:3306' is valid for Cluster usage
+You can now use it in an InnoDB Cluster.
+
+{
+&quot;status&quot;: &quot;ok&quot;
+}
+mysql-js&gt; ctrl c
+Bye!
+</code></pre>
+
+<p>第三步：安装Mysql-router</p>
+
+<pre><code></code></pre>
+
+<p>yum install mysql-router</p>
+
+<p>mysqlrouter &ndash;bootstrap 172.16.28.105
+chown mysql:mysql /etc/mysqlrouter/mysqlrouter.conf</p>
+
+<p>cd /usr/local/
+mysqlrouter &ndash;bootstrap dba@172.16.81.125:3306 &ndash;directory myrouter &ndash;user mysql &ndash;force
+cd myrouter/</p>
+
+<p>cat mysqlrouter.conf</p>
+
+<p>sh start.sh</p>
+
+<p>netstat -anp |grep router
+ ```</p>
+
+<p>以上是我最近做MYSQL自动化运维时，解决数据库相关流程的一种思路，正在落实。希望可以解放DBA找人的成本，增加RD对DB的了解。解放DBA的生产力。</p>
+
+<p>上面的负责人制度配合数据库自动运维工具，查询WEB页面化，数据库性能模型，自动化上线系统，日志分析系统 等一套完整的平台，可以很节约生产力。</p>
+
+<p>另外，这套系统的用户验证模块，最好接入公司的统一登录服务或LDAP验证</p>
+
+<p>最终要实现的目标是数据库系统的私有云化，</p>
+
+<p>开发经理去平台上填写新建数据库申请（数据大小，热点数据大小，用途，读写比例等信息），选择高可用模式（MHA,双主，多主，pxc）,</p>
+
+<p>系统 跟据收集到的信息选择实例或机器完成数据库的创建，灾备和高可用方案的部署，监控添加，用户权限生成，</p>
+
+<p>紧接着在数据库运维平台上，数据库的申请人成为数据库负责人后负责后续审批和处理，从而构建自动化流程。</p>
+
+</main>
+<h2 class="date">发布日期:2017/12/23</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mgr">mgr</a> <a href="/categories/mysqlrouter">mysqlrouter</a> <a href="/categories/mysql%E9%AB%98%E5%8F%AF%E7%94%A8">mysql高可用</a> <a href="/categories/mysql">mysql</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

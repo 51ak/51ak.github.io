@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>将没有parentid的二维表转换成json的树状结构(python版)| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">将没有parentid的二维表转换成json的树状结构(python版)</span></h1>
+</div>
+
+
+  <main>
+    <h2 id="需求">需求</h2>
+<ul>
+<li>数据库里有这样的二维表</li>
+</ul>
+<pre><code>(id,country,province,city)
+(1,&quot;a&quot;,&quot;aa&quot;,&quot;aa1&quot;),
+(&quot;2&quot;,&quot;a&quot;,&quot;aa&quot;,&quot;aa2&quot;),
+(&quot;3&quot;,&quot;b&quot;,&quot;bb&quot;,&quot;bb1&quot;),
+(&quot;4&quot;,&quot;b&quot;,&quot;bb&quot;,&quot;bb2&quot;),
+(&quot;5&quot;,&quot;b&quot;,&quot;bb&quot;,&quot;bb3&quot;),
+(&quot;6&quot;,&quot;c&quot;,&quot;cc&quot;,&quot;cc1&quot;),
+</code></pre><p>转换成在json中可用的树状结构</p>
+<pre><code>[{
+	&quot;id&quot;: &quot;a&quot;,
+	&quot;parent_id&quot;: &quot;&quot;,
+	&quot;text&quot;: &quot;a&quot;,
+	&quot;leaf&quot;: false,
+	&quot;children&quot;: [{
+		&quot;id&quot;: &quot;a|aa&quot;,
+		&quot;parent_id&quot;: &quot;a&quot;,
+		&quot;text&quot;: &quot;aa&quot;,
+		&quot;leaf&quot;: false,
+		&quot;children&quot;: [{
+			&quot;id&quot;: 1,
+			&quot;parent_id&quot;: &quot;a|aa&quot;,
+			&quot;text&quot;: &quot;aa1&quot;,
+			&quot;leaf&quot;: true
+		}, {
+			&quot;id&quot;: &quot;2&quot;,
+			&quot;parent_id&quot;: &quot;a|aa&quot;,
+			&quot;text&quot;: &quot;aa2&quot;,
+			&quot;leaf&quot;: true
+		}]
+	}]
+}, {
+	&quot;id&quot;: &quot;b&quot;,
+	&quot;parent_id&quot;: &quot;&quot;,
+	&quot;text&quot;: &quot;b&quot;,
+	&quot;leaf&quot;: false,
+	&quot;children&quot;: [{
+		&quot;id&quot;: &quot;b|bb&quot;,
+		&quot;parent_id&quot;: &quot;b&quot;,
+		&quot;text&quot;: &quot;bb&quot;,
+		&quot;leaf&quot;: false,
+		&quot;children&quot;: [{
+			&quot;id&quot;: &quot;3&quot;,
+			&quot;parent_id&quot;: &quot;b|bb&quot;,
+			&quot;text&quot;: &quot;bb1&quot;,
+			&quot;leaf&quot;: true
+		}, {
+			&quot;id&quot;: &quot;4&quot;,
+			&quot;parent_id&quot;: &quot;b|bb&quot;,
+			&quot;text&quot;: &quot;bb2&quot;,
+			&quot;leaf&quot;: true
+		}, {
+			&quot;id&quot;: &quot;5&quot;,
+			&quot;parent_id&quot;: &quot;b|bb&quot;,
+			&quot;text&quot;: &quot;bb3&quot;,
+			&quot;leaf&quot;: true
+		}]
+	}]
+}, {
+	&quot;id&quot;: &quot;c&quot;,
+	&quot;parent_id&quot;: &quot;&quot;,
+	&quot;text&quot;: &quot;c&quot;,
+	&quot;leaf&quot;: false,
+	&quot;children&quot;: [{
+		&quot;id&quot;: &quot;c|cc&quot;,
+		&quot;parent_id&quot;: &quot;c&quot;,
+		&quot;text&quot;: &quot;cc&quot;,
+		&quot;leaf&quot;: false,
+		&quot;children&quot;: [{
+			&quot;id&quot;: &quot;6&quot;,
+			&quot;parent_id&quot;: &quot;c|cc&quot;,
+			&quot;text&quot;: &quot;cc1&quot;,
+			&quot;leaf&quot;: true
+		}]
+	}]
+}]
+</code></pre><ul>
+<li>本来以为很好写的一小段,写起来发现还挺麻烦的</li>
+</ul>
+<h2 id="难点">难点</h2>
+<ul>
+<li>二维表转json tree 还是比较常见的写法,但是这个二维表里没有parentid,所以上下级关系需要用country,province 两列来对齐生成</li>
+</ul>
+<h2 id="代码">代码</h2>
+<ul>
+<li>我写了一个python版的实现</li>
+</ul>
+<pre><code>
+class jsontree_str_():
+    def __init__(self) -&gt; None:
+        pass
+    def get_jsonstr_parentid(self,rows,columns):  
+        sb_rows=[]    
+        columnsi=len(columns)
+        if len(rows)==0 or columnsi&lt;3:
+            return sb_rows 
+        dict_ids={}
+        for row in rows:
+            for i in range(1,columnsi):
+                idstr=&quot;|&quot;.join('%s' %id for id in row[1:i+1]) if i &lt;columnsi-1  else row[0]
+                if idstr  in dict_ids:
+                    continue
+                else:
+                    dict_ids[idstr]=True
+                    sb_rows.append({
+                        &quot;id&quot;:idstr,
+                        &quot;parent_id&quot;:&quot;|&quot;.join('%s' %id for id in row[1:i]) if i &gt; 1 else &quot;&quot;,
+                        &quot;text&quot;:str(row[i]),
+                        &quot;leaf&quot;:i == columnsi - 1})        
+        return  sb_rows
+    
+
+    def get_jsonstr_tree(self,data: list) -&gt; list:
+        mapping: dict = dict(zip([i['id'] for i in data], data))    
+        resultlist: list = [] 
+        for d in data:
+            # 如果找不到父级项，则是根节点
+            parent: dict = mapping.get(d['parent_id'])
+            if parent is None:
+                resultlist.append(d)
+            else:
+                children: list = parent.get('children')
+                if not children:
+                    children = []
+                children.append(d)
+                parent.update({'children': children})
+        return resultlist
+
+    def remove_dict_node(self,listobj,remotekeys=[]):
+        if len(remotekeys)==0:
+            return 
+        for dict_list in listobj:
+            for delkey in remotekeys:
+                if delkey in dict_list:
+                    dict_list.pop(delkey)
+            if &quot;children&quot; in dict_list:
+                self.remove_dict_node(dict_list[&quot;children&quot;])
+
+    def make_treejson(self,rows,columns,remotekeys=[]):
+        sb_rows=self.get_jsonstr_parentid(rows,columns)
+        listobj=self.get_jsonstr_tree(sb_rows)
+        if len(remotekeys)&gt;0:
+            self.remove_dict_node(listobj)
+        return  json.dumps(listobj)
+
+    def test(self,):
+        rows=[
+        (1,&quot;a&quot;,&quot;aa&quot;,&quot;aa1&quot;),
+        (&quot;2&quot;,&quot;a&quot;,&quot;aa&quot;,&quot;aa2&quot;),
+        (&quot;3&quot;,&quot;b&quot;,&quot;bb&quot;,&quot;bb1&quot;),
+        (&quot;4&quot;,&quot;b&quot;,&quot;bb&quot;,&quot;bb2&quot;),
+        (&quot;5&quot;,&quot;b&quot;,&quot;bb&quot;,&quot;bb3&quot;),
+        (&quot;6&quot;,&quot;c&quot;,&quot;cc&quot;,&quot;cc1&quot;),
+        ]
+        columns=(&quot;id&quot;,&quot;text&quot;,&quot;text1&quot;,&quot;text2&quot;)
+        jsonstr=self.make_treejson(rows,columns)
+        return jsonstr
+
+if __name__ == &quot;__main__&quot;:
+    oostr=jsontree_str_()
+    print(oostr.test())
+
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/01/06</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E8%BF%90%E7%BB%B4">运维</a> <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96">自动化</a> <a href="/categories/python">python</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

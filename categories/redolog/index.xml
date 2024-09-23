@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>redolog on Classic</title>
+    <link>/categories/redolog/</link>
+    <description>Recent content in redolog on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 13 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/redolog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL的7种日志(二):RedoLog</title>
+      <link>/mysql/mysql%E7%9A%84redo%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Fri, 13 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84redo%E6%97%A5%E5%BF%97/</guid>
+      <description>0.前言 续上一篇： MySQL的7种日志(一):概况
+上一篇我准备写MySQL日志还是2个月前的事，这两个月里生活发生了天翻地覆的变化，都没时间更新。
+昨天跟朋友聊天立了flag说今天要续写一篇
+于是中午吃饭时在纸上画了一个流程图。来介绍下MySQL里的RedoLog
+1.几个问题 redolog和binlog一样记录的是数据修改后的记录。区别是什么，存在的意义是什么？  如果不要redolog，直接修改数据行不行？ 答：可以，但是随机读写性能差 先写redolog还是先改数据？答：先写内存里的数据，再写redolog，再写binlog，再写磁盘里的数据 先写redolog还是先写binlog? 答：先写redolog,再写binlog 如果写完redolog，还没来得写binlog时就停电了,怎么办？答：修改不要了，从undolog中回滚数据 如果写完redolog,binlog时还没来得数据落盘就停电了,怎么办？答：重做redolog，提交数据。修改有效  redolog和undolog的关系  答：redolog用来恢复丢失数据（恢复到最后一次提交位置）也称之为前滚操作，undolog是用来回滚到之前的版本，称之为回滚操作  relaylog的作用  答：redolog是用来做崩溃恢复使用的，这种崩溃恢复不需要我们人为的参与，MySQL自己内部自己实现了这种崩溃恢复的功能，我们只管享受这种功能给我们带来的服务即可，这种服务给我们的感受就是：MySQL数据库异常宕机的时候，重启服务之后，数据库中之前提交的记录都不会丢失数据仍然可以正常恢复，不管这种提交的记录是否已经更到具体的表所对应的磁盘page也中。  2.修改数据的流程  当我们要更新一条数据时，比如有一条SQL update userinfo set name=&#39;dboop&#39; where name=&#39;张三&#39;; 最直接的方法：从磁盘上找到对应的数据库文件，把它修改完存放到磁盘中。  方法是可以的，很多简单的程序修改文件也是用的方法，但是性能差。   而数据库中一般会有以下几种方式来写入数据修改  按页组织数据，一些关联近的数据存放在一个页中，MySQL中默认一页是16k 读取和修改数据都是需要先把页加载到内存中,MySQL是放到innodb_buffer_pool中 先改内存，再合适的时候再写入磁盘 先改日志再改数据 日志也是先写内存中的日志buffer，再合适的时候刷入磁盘    下图是简化版的一个数据修改，真实的流程比这复杂很多，这里的数据修改不只是update，按页组织的insert/update/delete操作都是对页修改
+3.Redolog在数据库意外崩溃时的作用 当故障发生时，数据库意外当机，有部分内存中已修改的页（脏页）没来得及刷新到磁盘里。
+在写入redo log时，会顺便记录XID，即当前事务id。在写入binlog时，也会写入XID。
+如果在写入redo log之前崩溃，那么此时redo log与binlog中都没有，是一致的情况，崩溃也无所谓。
+如果在写入redo log prepare阶段后立马崩溃，之后会在崩恢复时，由于redo log没有被标记为commit。于是拿着redo log中的XID去binlog中查找，此时肯定是找不到的，那么执行回滚操作。
+如果在写入binlog后立马崩溃，在恢复时，由redo log中的XID可以找到对应的binlog，这个时候直接提交即可。
+总的来说，在崩溃恢复后，只要redo log不是处于commit阶段，那么就拿着redo log中的XID去binlog中寻找，找得到就提交，否则就回滚。
+在这样的机制下，两阶段提交能在崩溃恢复时，能够对提交中断的事务进行补偿，来确保redo log与binlog的数据一致性
+4.Redolog的刷盘 4.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的7种日志(一):概况</title>
+      <link>/mysql/mysql7%E7%A7%8D%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Mon, 14 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql7%E7%A7%8D%E6%97%A5%E5%BF%97/</guid>
+      <description>0.前言 和其他关系型数据库一样
+MySQL也重度依靠数据库日志来完成一系统的功能。
+总结了以下7种重要的日志。今天先简单给这7兄弟做个整体介绍。
+接下来会分三个章节分别说清楚（binlog/redolog/undolog 这三位不省心的兄弟在做什么).
+1.日志的分类 Binlog:  MySQL最重要的日志（没有之一），记录了所有的DDL和DML语句(除了数据查询语句select、show等)，以事件形式记录 DBA依赖它做：高可用方案，异构数据迁移，备份和恢复，误更新回滚。。。。等等 ，是整个MySQL的灵魂 研发/大数据人员依赖Binlog做数据订阅，数据同步  relaylog:  它是依赖于binlog的日志，格式也和binlog一样。 是MySQL复制进程把“别的实例的binlog&amp;quot;复制到本地后，就叫做relaylog. 作用是为了MySQL高可用复制服务的一种日志。  Slowlog:  慢查询日志用来记录在MySQL中响应时间超过阀值的语句，则会被记录到慢查询日志中。由long_query_time参数控制，默认值10秒， 一般线上环境，我们设置为:0.2秒 或0.5秒 两种标准 一般DBA通常会用脚本将日志收集归类，分析后对部分规则产生报警。 这个日志是文本类型的，打开就能看到，比较简单，很容易理解，也很有用  genlog:  一般轻易不开启，开启以后，会将所有经过的SQL都记录到日志里，非常费资源。 定位奇怪的问题时会用到。审计的时候也能用到。 不建议打开，定位问题后，要及时关闭  errorlog:  数据库产生warning,error时会打印的日志，实例启动失败了，或者实例崩溃了必看的日志。平时做好监控。建议开启死锁print，在errorlog中也能看到死锁信息。  redolog：  可能是最难理解的一个日志了，不同于上面的那些日志，redolog是innodb存储引擎的日志，不是MySQL自身的日志 redolog经常会和binlog/undolog搞混 记住最重要的一点：redolog是为了数据库突然关机或崩溃的时候用的。它的作用是：为了不丢失修改。 redolog通常是物理日志，记录的是数据页的物理修改（区别于binlog的逻辑修改)，而不是某一行或某几行修改成怎样怎样，它用来恢复提交后的物理数据页(恢复数据页，且只能恢复到最后一次提交的位置)。  undolog:  undo和redonlog一样也是是innodb存储引擎的日志，用来回滚行记录到某个版本。undo log一般是逻辑日志，根据每行记录进行记录。 它的作用除了和redolog一起保证数据库突然关机或崩溃的时候，数据不丢失，不混乱。它还是MVCC事务特性的重要组成部分。  小结： 简单介绍完7种日志，其中的三个日志（binlog/redolog/undolog) 涉及知识点非常多，会分别写一篇，慢慢聊。
+&amp;ndash; done</description>
+    </item>
+    
+  </channel>
+</rss>

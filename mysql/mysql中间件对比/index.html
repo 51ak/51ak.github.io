@@ -1,0 +1,331 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL中间件对比:ProxySQL/MaxScale/ShardingSphere| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL中间件对比:ProxySQL/MaxScale/ShardingSphere</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#一proxy基础能力">一.Proxy基础能力</a>
+      <ul>
+        <li><a href="#兼容性">兼容性</a></li>
+        <li><a href="#发行方">发行方</a></li>
+        <li><a href="#发布更新生态">发布/更新/生态</a></li>
+        <li><a href="#运维便利性">运维便利性</a></li>
+      </ul>
+    </li>
+    <li><a href="#二proxy高可用架构支持">二.Proxy高可用架构支持</a>
+      <ul>
+        <li><a href="#主从架构下的从库故障">主从架构下的从库故障</a></li>
+        <li><a href="#主从架构下的主库故障">主从架构下的主库故障</a></li>
+        <li><a href="#主从架构下的主库主动维护下线">主从架构下的主库主动维护下线</a></li>
+        <li><a href="#mgr架构下的故障和主动切换">MGR架构下的故障和主动切换</a></li>
+      </ul>
+    </li>
+    <li><a href="#三中件间功能">三.中件间功能</a>
+      <ul>
+        <li><a href="#分库分表">分库分表</a></li>
+        <li><a href="#读写分离">读写分离</a></li>
+        <li><a href="#权限账号">权限账号</a></li>
+        <li><a href="#慢sql">慢SQL</a></li>
+        <li><a href="#sql审计">SQL审计</a></li>
+        <li><a href="#黑名单">黑名单</a></li>
+        <li><a href="#热加载">热加载</a></li>
+        <li><a href="#ip透传">ip透传</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <p><img src="/img/2022auto/2022-11-03-17-37-06.png" alt="MySQL中间件对比"></p>
+<h1 id="mysql中件间对比">MySQL中件间对比</h1>
+<p>目标：对比以下3款MySQL中件间</p>
+<ul>
+<li>ProxySQL</li>
+<li>MaxScale</li>
+<li>ShardingSphere</li>
+</ul>
+<h2 id="一proxy基础能力">一.Proxy基础能力</h2>
+<h3 id="兼容性">兼容性</h3>
+<ul>
+<li>ProxySQL:良好</li>
+<li>MaxScale:mairdb更友好，MGR支持不好</li>
+<li>ShardingSphere:良好</li>
+</ul>
+<h3 id="发行方">发行方</h3>
+<ul>
+<li>ProxySQL:sysown</li>
+<li>MaxScale:mairdb</li>
+<li>ShardingSphere:京东</li>
+</ul>
+<h3 id="发布更新生态">发布/更新/生态</h3>
+<ul>
+<li>ProxySQL:c++, 5.1k stars,最新版v2.4.4 1个半月前发布</li>
+<li>MaxScale:c,1.6k stars,最新版22.08.2  3个半月前发布</li>
+<li>ShardingSphere:java,17.6k stars,最新版5.2.1  16天前发布</li>
+</ul>
+<h3 id="运维便利性">运维便利性</h3>
+<ul>
+<li>ProxySQL:简单</li>
+<li>MaxScale:普通</li>
+<li>ShardingSphere:复杂（配置文件多且复杂）</li>
+</ul>
+<h2 id="二proxy高可用架构支持">二.Proxy高可用架构支持</h2>
+<h3 id="主从架构下的从库故障">主从架构下的从库故障</h3>
+<ul>
+<li>如何探测到</li>
+</ul>
+<blockquote>
+<p>ALL: 每N秒主动探测一次</p>
+</blockquote>
+<ul>
+<li>如何响应故障</li>
+</ul>
+<blockquote>
+<p>ALL:探测不到，主动处理:
+- ShardingSphere:从路由表中标记下线
+- proxysql:从group中标记下线
+- MaxScale:标记下线</p>
+</blockquote>
+<ul>
+<li>切换后状态</li>
+</ul>
+<blockquote>
+<p>ALL:复制拓扑可用</p>
+</blockquote>
+<ul>
+<li>影响时长</li>
+</ul>
+<blockquote>
+<p>ALL:1-5 秒</p>
+</blockquote>
+<h3 id="主从架构下的主库故障">主从架构下的主库故障</h3>
+<ul>
+<li>如何响应故障</li>
+</ul>
+<blockquote>
+<p>ALL: 依赖其他高可用组件:mha,orchestrator,repmanager</p>
+</blockquote>
+<ul>
+<li>
+<p>ShardingSphere:报错，等高可用组件切换后更新配置信息</p>
+</li>
+<li>
+<p>proxysql:报错，直到一个从的readonly变成可写，改变group</p>
+</li>
+<li>
+<p>MaxScale:报错，等待高可用切换完后主从拓扑变更</p>
+</li>
+<li>
+<p>影响时长</p>
+</li>
+</ul>
+<blockquote>
+<p>ALL:3-10秒</p>
+</blockquote>
+<h3 id="主从架构下的主库主动维护下线">主从架构下的主库主动维护下线</h3>
+<ul>
+<li>如何切走流量</li>
+</ul>
+<blockquote>
+<p>ALL:依赖于其他高可用组件维护主从切换逻辑</p>
+</blockquote>
+<ul>
+<li>影响时长</li>
+</ul>
+<blockquote>
+<p>1-2秒</p>
+</blockquote>
+<h3 id="mgr架构下的故障和主动切换">MGR架构下的故障和主动切换</h3>
+<ul>
+<li>如何探测到</li>
+</ul>
+<blockquote>
+<p>ALL:依赖于MGR自身切换</p>
+</blockquote>
+<ul>
+<li>如何响应故障</li>
+</ul>
+<blockquote>
+<p>ALL:探测到变更路由或group响应</p>
+</blockquote>
+<ul>
+<li>影响时长</li>
+</ul>
+<blockquote>
+<p>2-5秒</p>
+</blockquote>
+<h2 id="三中件间功能">三.中件间功能</h2>
+<h3 id="分库分表">分库分表</h3>
+<ul>
+<li>ShardingSphere:分库不友好，分表ok</li>
+<li>proxySQL:分库友好，分表需要依赖sql规则</li>
+<li>MaxScale:不支持</li>
+</ul>
+<h3 id="读写分离">读写分离</h3>
+<ul>
+<li>ShardingSphere:支持</li>
+<li>proxySQL:支持</li>
+<li>MaxScale:支持</li>
+</ul>
+<h3 id="权限账号">权限账号</h3>
+<ul>
+<li>ShardingSphere:自有权限独立于源端的账号，业务连proxy用户</li>
+<li>proxySQL:proxy+mysql用户。都得存在</li>
+<li>MaxScale:仅mysql用户权限</li>
+</ul>
+<h3 id="慢sql">慢SQL</h3>
+<ul>
+<li>ShardingSphere:不支持</li>
+<li>proxySQL:支持+采样归类，输出到表中</li>
+<li>MaxScale:配置规则，输出到文件</li>
+</ul>
+<h3 id="sql审计">SQL审计</h3>
+<ul>
+<li>ShardingSphere:不支持</li>
+<li>proxySQL:支持+采样归类，输出到表中</li>
+<li>MaxScale:配置规则，输出到文件</li>
+</ul>
+<h3 id="黑名单">黑名单</h3>
+<ul>
+<li>ShardingSphere:不支持</li>
+<li>proxySQL:可以通过SQL规则路由到无用节点</li>
+<li>MaxScale:支持</li>
+</ul>
+<h3 id="热加载">热加载</h3>
+<ul>
+<li>ShardingSphere:说支持，目前测试需要重启才能生效</li>
+<li>proxySQL:load命令</li>
+<li>MaxScale:未找到热加载命令，需重启</li>
+</ul>
+<h3 id="ip透传">ip透传</h3>
+<ul>
+<li>ShardingSphere:不支持，在proxy端能看到processlist</li>
+<li>proxySQL:不支持</li>
+<li>MaxScale:不支持</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/11/03</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/mysql%E5%A4%8D%E5%88%B6">mysql复制</a> <a href="/categories/raft">raft</a> <a href="/categories/%E9%AB%98%E5%8F%AF%E7%94%A8">高可用</a> <a href="/categories/proxy">proxy</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>2011年MSSQL数据打造安全.mdb数据库教程</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="什么是mdb数据库呢?凡是有点制作网站经验的网络管理员都知道，目前使用“iis+asp+access”这套组合方式建立网站是最流行的，大多数中小型internet网站都使用该“套餐”，但随之而来的安全问题也日益显著。其中最容易被攻击者利用的莫过于mdb数据库被非法下载了。<br/>mdb数据库是没有安全防范的，只要入侵者猜测或者扫描到mdb数据库的路径后就可以使用下载工具轻松将其下载到本2011年MSSQL数据打造安全.mdb数据库教程" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA">高可用性和HA</a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化">性能与优化</a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决">故障与解决</a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserverzhishi/l_2_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>2011年MSSQL数据打造安全.mdb数据库教程</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   　　什么是mdb数据库呢?凡是有点制作网站经验的网络管理员都知道，目前使用“IIS+ASP+ACCESS”这套组合方式建立网站是最流行的，大多数中小型Internet网站都使用该“套餐”，但随之而来的安全问题也日益显著。其中最容易被攻击者利用的莫过于mdb数据库被非法下载了。<br />　　mdb数据库是没有安全防范的，只要入侵者猜测或者扫描到mdb数据库的路径后就可以使用下载工具轻松将其下载到本地硬盘，再结合暴力破解工具或一些超级破解工具可以轻松的查看里头的数据库文件内容，企业的隐私和员工的密码从此不在安全。难道我们就没有办法加强mdb数据库的安全吗?难道即便我们只有一点点数据资料也要麻烦sqlserver或者<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>吗?答案是否定的，本篇文章笔者将告诉大家打造安全的mdb数据库文件的独门秘诀。<br />　　一、危机起因:<br />　　一般情况下基于ASP构建的网站程序和论坛的数据库的扩展名默认为mdb，这是很危险的。只要猜测出了数据库文件的位置，然后在浏览器的地址栏里面输入它的URL，就可以轻易地下载文件。就算我们对数据库加上了密码并且里面管理员的密码也被MD5加密，被下载到本地以后也很容易被破解。毕竟目前 MD5已经可以通过暴力来破解了。因此只要数据库被下载了，那数据库就没有丝毫安全性可言了。<br />　　二、常用的补救方法:<br />　　目前常用的数据库文件防止被非法下载的方法有以下几种。<br />　　(1)把数据库的名字进行修改，并且放到很深的目录下面。比如把数据库名修改为Sj6gf5.mdb，放到多级目录中，这样攻击者想简单地猜测数据库的位置就很困难了。当然这样做的弊端就是如果ASP代码文件泄漏，那无论隐藏多深都没有用了。<br />　　(2)把数据库的扩展名修改为ASP或者ASA等不影响数据查询的名字。但是有时候修改为ASP或者ASA以后仍然可以被下载，比如我们将其修改为ASP以后，直接在IE的地址栏里输入网络地址，虽然没有提示下载但是却在浏览器里出现了一大片乱码。如果使用FlashGet或影音传送带等专业的下载工具就可以直接把数据库文件下载下来。不过这种方法有一定的盲目性，毕竟入侵者不能确保该文件就一定是MDB数据库文件修改扩展名的文件，但是对于那些有充足精力和时间的入侵者来说，可以将所有文件下载并全部修改扩展名来猜测。该方法的防范级别将大大降低。<br />　　三、笔者的旁门左道:<br />　　在笔者的测试过程中就遇到了ASP和ASA文件也会被下载的问题，所以经过研究发现了以下的方法。<br />　　如果在给数据库的文件命名的时候，将数据库文件命名为“#admin.asa”则可以完全避免用IE下载，但是如果破坏者猜测到了数据库的路径，用FlashGet还是可以成功地下载下来，然后把下载后的文件改名为“admin.mdb”，则网站秘密就将暴露。所以我们需要找到一种 FlashGet无法下载的方法，但是如何才能让他无法下载呢?大概是因为以前受到unicode漏洞攻击的缘故，网站在处理包含unicode码的链接的时候将会不予处理。所以我们可以利用unicode编码(比如可以利用“%3C ”代替“&lt;”等)，来达到我们的目的。而FlashGet在处理包含unicode码的链接的时候却“自作聪明”地把unicode编码做了对应的处理，比如自动把“%29”这一段unicode编码形式的字符转化成了“(”，所以你向FlashGet提交一个http://127.0.0.1/xweb/data/%29xadminsxx.mdb的下载链接，它却解释成了http: //127.0.0.1/xweb/data/(xadminsxx.mdb，看看我们上面的网址的地方和下面的重命名的地方是不同的，FlashGet 把“%29xadminsxx.mdb”解释为了“(xadminsxx.mdb”，当我们单击“确定”按钮进行下载的时候，它就去寻找一个名为 “(xadminsxx.mdb”的文件。也就是说FlashGet给我们引入了歧途，它当然找不到，所以提示失败了。<br />　　不过如果提示下载失败，攻击者肯定要想采取<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>的攻击方法。由此我们可以采用另一个防范的方法，既然FlashGet去找那个名为 “(xadminsxx.mdb”的文件了，我们可以给它准备一个，我们给它做一个仿真的数据库名为“(xadminsxx.mdb”，这样当入侵者想下载文件的时候的的确确下载了一个数据库回去，只不过这个数据库文件是虚假的或者是空的，在他们暗自窃喜的时候，实际上最终的胜利是属于我们的。<br />　　总结:<br />　　通过本次旁门左道保护MDB数据库文件方法的介绍，我们可以明确两点安全措施，一是迷惑法，也就是将黑客想得到的东西进行改变，例如改变MDB 文件的文件名或者扩展名;二是替代法，也就是将黑客想得到的东西隐藏，用一个没有实际意义的东西替代，这样即使黑客成功入侵，拿到的也是一个虚假的信息，他们还会以为入侵成功而停止接下来的攻击。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

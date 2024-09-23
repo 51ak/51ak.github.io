@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SQL 游标类型详解</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="rs.opensql,conn,a,b<br/>参数a为设定游标的类型，其取值为：<br/>0仅向前游标，只能向前浏览记录，不支持分页、recordset、bookmark<br/>1键集游标，其他用户对记录说做的修改将反映到记录集中，但其他用户增加或删除记录不会反映到记录集中。支持分页、recordset、bookmark<br/>2动态游标功能最强，但耗资源也最多。用户对记录说SQL 游标类型详解" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA">高可用性和HA</a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化">性能与优化</a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决">故障与解决</a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserverzhishi/l_2_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>SQL 游标类型详解</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   RS.OPEN SQL,CONN,A,B<br />参数A为设定游标的类型，其取值为：<br />0 仅向前游标，只能向前浏览记录，不支持分页、Recordset、BookMark<br />1 键集游标，<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>用户对记录说做的修改将反映到记录集中，但<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>用户增加或删除记录不会反映到记录集中。支持分页、Recordset、BookMark<br />2 动态游标功能最强，但耗资源也最多。用户对记录说做的修改，增加或删除记录都将反映到记录集中。支持全功能浏览。<br />3 静态游标，只是数据的一个快照，用户对记录说做的修改，增加或删除记录都不会反映到记录集中。支持向前或向后移动<br /><br />参数B为记录集的锁定类型，其取值为：<br />1 锁定类型，默认的，只读，不能作任何修改<br />2 当编辑时立即锁定记录，最安全的方式<br />3 只有在调用Update方法时才锁定记录集，而在此前的<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>操作仍可对当前记录进行更改、插入和删除等<br />4 当编辑时记录不会被锁定，而更改、插入和删除是在批处理方式下完成的<br /><br />RS.OPEN SQL,CONN,A,B<br />A: ADOPENFORWARDONLY(=0) 只读,且当前数据记录只能向下移动<br />ADOPENSTATIC(=3) 只读,当前数据记录可自由移动<br />ADOPENKEYSET(=1) 可读写,当前数据记录可自由移动<br />ADOPENDYNAMIC(=2) 可读写,当前数据记录可自由移动,可看到新增记录<br />B: ADLOCKREADONLY(=1) 默认值,用来打开只读记录<br />ADLOCKPESSIMISTIC(=2) 悲观锁定<br />ADLOCKOPTIMISTIC(=3) 乐观锁定<br />ADLOCKBATCHOPTIMISTIC(=4) 批次乐观锁定<br /><br />——————————————————————————————————————————————<br /><br />常数 常数值 说明<br />--------------------------------------------------------------<br />adLockReadOnly 1 缺省值，Recordset对象以只读方式启动，无法运行AddNew、Update及Delete等方法<br />adLockPrssimistic 2 当数据源正在更新时，系统会暂时锁住<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>用户的动作，以保持数据一致性。<br />adLockOptimistic 3 当数据源正在更新时，系统并不会锁住<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>用户的动作，<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>用户可以对数据进行增、删、改的操作。<br />adLockBatchOptimistic 4 当数据源正在更新时，<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>用户必须将CursorLocation属性改为adUdeClientBatch才能对数据进行增、删、改的操作。
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

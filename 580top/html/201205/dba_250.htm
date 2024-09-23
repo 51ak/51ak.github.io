@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Oracle使用hash分区优化分析函数查询</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="在oracle中的分析函数都是基于某几个字段划分计算窗口，然后在窗口内进行聚合，排名，等等计算。我想如果我们数据表的hash分区字段与分析函数中的partitionby字段一致的时候，应该可以大大加快分析函数的运行效率。因为每个分区上的数据可以单独进行运算。互不干涉，下面试验来验证我的想法.<br/>第一步：创建一个分区表和普通表，表结构与dba_objects一致：<br/>creaOracle使用hash分区优化分析函数查询" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a href="../Oracle/l_7_1.htm" class="hover"　title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../Oraclezhishi/l_8_1.htm" title="Oracle基础知识">基础知识</a>|</li><li><a  href="../Oracleha/l_9_1.htm" title="Oracle高可用性和HA">高可用性和HA</a>|</li><li><a  href="../Oracleyouhua/l_10_1.htm" title="Oracle性能与优化"><span class="zc_666">性能与优化</span></a>|</li><li><a  href="../Oracleguzhang/l_11_1.htm" title="Oracle故障与解决">故障与解决</a>|</li><li><a  href="../Oraclebi/l_12_1.htm" title="Oracle商业应用">Oracle商业应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../Oracle/l_7_1.htm">Oracle</a>&nbsp;&gt;&nbsp;<a href="../Oracleyouhua/l_10_1.htm">性能与优化</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>Oracle使用hash分区优化分析函数查询</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   在<a href="../../html/Oracle/l_7_1.htm" title="ORACLE" >ORACLE</a>中的分析函数都是基于某几个字段划分计算窗口，然后在窗口内进行聚合，排名，等等计算。我想如果我们数据表的hash分区字段与分析函数中的partition by 字段一致的时候，应该可以大大加快分析函数的运行效率。因为每个分区上的数据可以单独进行运算。互不干涉，下面试验来验证我的想法.<br />　　第一步：创建一个分区表和普通表，表结构与DBA_OBJECTS一致：<br />create　table　t_partition_hash(object_name　varchar2(128),subobject_name　varchar2(30),object_id　number,data_object_id　number,object_type　varchar2(19),created　date,last_ddl_time　date,timestamp　varchar2(19),status　varchar2(7),temporary　varchar2(1),generated　varchar2(1),secondary　varchar2(1))partition　by　hash(object_type)(partition　t_hash_p1　tablespace　USERS,partition　t_hash_p2　tablespace　USERS,partition　t_hash_p3　tablespace　USERS,partition　t_hash_p4　tablespace　USERS,partition　t_hash_p5　tablespace　USERS,partition　t_hash_p6　tablespace　USERS,partition　t_hash_p7　tablespace　USERS,partition　t_hash_p8　tablespace　USERS);　create　table　t_big_hash(object_name　varchar2(128),subobject_name　varchar2(30),object_id　number,data_object_id　number,object_type　varchar2(19),created　date,last_ddl_time　date,timestamp　varchar2(19),status　varchar2(7),temporary　varchar2(1),generated　varchar2(1),secondary　varchar2(1));　　第二步：准备数据，从dba_object中把数据插入到两个表。总共插入数据1610880。<br />insert　into　t_partition_hash　select　*　from　dba_objects;　insert　into　t_partition_hash　select　*　from　dba_objects;　　第三步：本采用RANK函数对两个表进行查询。<br />begininsert　into　　t_rankselect　object_id,　rank()　over　(partition　by　object_type　order　by　object_id)　　r_object_id,rank()　over　(partition　by　object_type　order　by　subobject_name)　r_subobject_name　,rank()　over　(partition　by　object_type　order　by　created)　r_created,rank()　over　(partition　by　object_type　order　by　last_ddl_time)　r_last_ddl_time　,rank()　over　(partition　by　object_type　order　by　status)　r_object_typefrom　t_partition_hash;end;　　使用hash分区表总共执行5次的运行时间分别为：46.156s,33.39s,40.516s 34.875s 38.938s.<br />begininsert　into　　t_rankselect　object_id,　rank()　over　(partition　by　object_type　order　by　object_id)　　r_object_id,rank()　over　(partition　by　object_type　order　by　subobject_name)　r_subobject_name　,rank()　over　(partition　by　object_type　order　by　created)　r_created,rank()　over　(partition　by　object_type　order　by　last_ddl_time)　r_last_ddl_time　,rank()　over　(partition　by　object_type　order　by　status)　r_object_typefrom　t_big_table;end;　　使用非分区表执行5次的执行时间分别为：141.954s，89.656s，77.906s，98.5s，75.906s.　　由此可见采用有效的HASH分区表可以有效提升分析函数在<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>中的执行效率。我相信随着数据量的增加，将会有更明显的效果，回头再测试一个项目中遇到的类似问题<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>当一个DBA离职时，如何清除掉数据库里属于他的那些“东西”</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="一般DBA的帐号权限都很高（废话）DBA离职以后。删除帐号也几乎也是肯定的这里会涉及一个问题。原来由他新建或还原的数据库所有者可能是他的帐号部分数据库作业所有者也是他的帐号此时如果在各服务器上批量DROPLOGIN后会有潜在风险（事实上证明，数据库还是可用，但是作业会有权限出错）需要将这些数据库的对像所有者改回来（一般改成'SA')分享一段脚本，用当一个DBA离职时，如何清除掉数据库里属于他的那些“东西”" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA">高可用性和HA</a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化">性能与优化</a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决">故障与解决</a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserverzhishi/l_2_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>当一个DBA离职时，如何清除掉数据库里属于他的那些“东西”</h1></div>
+					<div id="atSource"> 作者：[51ak ] </div>
+					
+                    <div id="viewcontent">
+                   <p>一般DBA的帐号权限都很高（废话）</p>
+<p>DBA离职以后。删除帐号也几乎也是肯定的</p>
+<p>这里会涉及一个问题。</p>
+<p>原来由他新建或还原的数据库所有者可能是他的帐号</p>
+<p>部分数据库作业所有者也是他的帐号</p>
+<p>此时如果在各服务器上批量DROP&nbsp; LOGIN 后会有潜在风险（事实上证明，数据库还是可用，但是作业会有权限出错）</p>
+<p>需要将这些数据库的对像所有者改回来（一般改成 'SA')</p>
+<p>分享一段脚本，用于批量替换特定用户的数据库作业为 'sa'</p>
+<p>用这个脚本在所有服务器上跑一遍，以后就可以放心DROP LOGIN了</p>
+<p><span style="color: rgb(0, 128, 128);">--</span><span style="color: rgb(0, 128, 128);">可以用这个先查一遍。</span><span style="color: rgb(0, 128, 128);"><br />
+</span><span style="color: rgb(0, 0, 255);">Ｓelect</span> a.<span style="color: rgb(128, 128, 128);">*</span>,b.name <span style="color: rgb(0, 0, 255);">from</span><br />
+( <br />
+<span style="color: rgb(0, 0, 255);">Ｓelect</span> <span style="color: rgb(128, 128, 128);">*</span> <span style="color: rgb(0, 0, 255);">from</span> msdb.dbo.sysjobs <span style="color: rgb(0, 0, 255);">where</span> owner_sid<span style="color: rgb(128, 128, 128);">&lt;&gt;</span><span style="color: rgb(255, 0, 0);">'</span><span style="color: rgb(255, 0, 0);">0x01</span><span style="color: rgb(255, 0, 0);">'</span><br />
+) a<br />
+<span style="color: rgb(128, 128, 128);">left</span> <span style="color: rgb(128, 128, 128);">join</span> master.sys.syslogins b <span style="color: rgb(0, 0, 255);">on</span> a.owner_sid<span style="color: rgb(128, 128, 128);">=</span>b.sid<br />
+<span style="color: rgb(0, 0, 255);">where</span> b.name&nbsp; <span style="color: rgb(0, 0, 255);">is</span> <span style="color: rgb(0, 0, 255);">null</span> <span style="color: rgb(128, 128, 128);">or</span> b.name <span style="color: rgb(128, 128, 128);">like</span> <span style="color: rgb(255, 0, 0);">'</span><span style="color: rgb(255, 0, 0);">%这里换成将要删除的帐号%</span><span style="color: rgb(255, 0, 0);">'</span><br />
+<br />
+<br />
+<span style="color: rgb(0, 128, 128);">--</span><span style="color: rgb(0, 128, 128);">这一段是正式替换的</span><span style="color: rgb(0, 128, 128);"><br />
+</span><span style="color: rgb(0, 0, 255);">declare</span> <span style="color: rgb(0, 128, 0);">@job_id</span> <span style="color: rgb(0, 0, 255);">varchar</span>(<span style="color: rgb(128, 0, 0); font-weight: bold;">255</span>)<br />
+<span style="color: rgb(0, 0, 255);">Ｓelect</span> a.job_id <span style="color: rgb(0, 0, 255);">into</span> #ttt <span style="color: rgb(0, 0, 255);">from</span><br />
+( <br />
+<span style="color: rgb(0, 0, 255);">Ｓelect</span> name,<span style="color: rgb(255, 0, 0);">[</span><span style="color: rgb(255, 0, 0);">enabled</span><span style="color: rgb(255, 0, 0);">]</span>,owner_sid,job_id <span style="color: rgb(0, 0, 255);">from</span> msdb.dbo.sysjobs <span style="color: rgb(0, 0, 255);">where</span> owner_sid<span style="color: rgb(128, 128, 128);">&lt;&gt;</span><span style="color: rgb(255, 0, 0);">'</span><span style="color: rgb(255, 0, 0);">0x01</span><span style="color: rgb(255, 0, 0);">'</span><br />
+) a<br />
+<span style="color: rgb(128, 128, 128);">left</span> <span style="color: rgb(128, 128, 128);">join</span> master.sys.syslogins b <span style="color: rgb(0, 0, 255);">on</span> a.owner_sid<span style="color: rgb(128, 128, 128);">=</span>b.sid<br />
+<span style="color: rgb(0, 0, 255);">where</span> b.name&nbsp; <span style="color: rgb(0, 0, 255);">is</span> <span style="color: rgb(0, 0, 255);">null</span> <span style="color: rgb(128, 128, 128);">or</span> b.name <span style="color: rgb(128, 128, 128);">like</span> <span style="color: rgb(255, 0, 0);">'</span><span style="color: rgb(255, 0, 0);">%这里换成将要删除的帐号%</span><span style="color: rgb(255, 0, 0);">'</span><br />
+<span style="color: rgb(0, 0, 255);">while</span> (<span style="color: rgb(0, 0, 255);">Ｓelect</span> <span style="color: rgb(255, 0, 255);">count</span>(<span style="color: rgb(128, 128, 128);">*</span>) <span style="color: rgb(0, 0, 255);">from</span> #ttt)<span style="color: rgb(128, 128, 128);">&gt;</span><span style="color: rgb(128, 0, 0); font-weight: bold;">0</span><br />
+<span style="color: rgb(0, 0, 255);">begin</span><br />
+<span style="color: rgb(0, 0, 255);">Ｓelect</span> <span style="color: rgb(0, 0, 255);">top</span> <span style="color: rgb(128, 0, 0); font-weight: bold;">1</span> <span style="color: rgb(0, 128, 0);">@job_id</span><span style="color: rgb(128, 128, 128);">=</span>job_id <span style="color: rgb(0, 0, 255);">from</span> #ttt <span style="color: rgb(0, 0, 255);">order</span> <span style="color: rgb(0, 0, 255);">by</span> <span style="color: rgb(128, 0, 0); font-weight: bold;">1</span> <span style="color: rgb(0, 0, 255);">asc</span><br />
+<span style="color: rgb(0, 0, 255);">declare</span> <span style="color: rgb(0, 128, 0);">@sql</span> <span style="color: rgb(0, 0, 255);">varchar</span>(<span style="color: rgb(128, 0, 0); font-weight: bold;">500</span>)<br />
+<span style="color: rgb(0, 0, 255);">Ｓelect</span> <span style="color: rgb(0, 128, 0);">@sql</span> <span style="color: rgb(128, 128, 128);">=</span> <span style="color: rgb(255, 0, 0);">'</span><span style="color: rgb(255, 0, 0);">EXEC msdb.dbo.sp_update_job @job_id=N</span><span style="color: rgb(255, 0, 0);">'''</span><span style="color: rgb(128, 128, 128);">+</span><span style="color: rgb(0, 128, 0);">@job_id</span><span style="color: rgb(128, 128, 128);">+</span><span style="color: rgb(255, 0, 0);">'''</span><span style="color: rgb(255, 0, 0);">, @owner_login_name=N</span><span style="color: rgb(255, 0, 0);">''</span><span style="color: rgb(255, 0, 0);">sa</span><span style="color: rgb(255, 0, 0);">'''</span><br />
+<span style="color: rgb(0, 0, 255);">print</span> (<span style="color: rgb(0, 128, 0);">@sql</span>)<br />
+<span style="color: rgb(0, 0, 255);">exec</span> (<span style="color: rgb(0, 128, 0);">@sql</span>)<br />
+<span style="color: rgb(0, 0, 255);">delete</span> <span style="color: rgb(0, 0, 255);">from</span> #ttt <span style="color: rgb(0, 0, 255);">where</span> job_id<span style="color: rgb(128, 128, 128);">=</span><span style="color: rgb(0, 128, 0);">@job_id</span><br />
+<span style="color: rgb(0, 0, 255);">end</span> <br />
+<span style="color: rgb(0, 0, 255);">truncate</span> <span style="color: rgb(0, 0, 255);">table</span> #ttt<br />
+<span style="color: rgb(0, 0, 255);">drop</span> <span style="color: rgb(0, 0, 255);">table</span> #ttt<br />
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+	
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

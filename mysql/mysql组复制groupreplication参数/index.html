@@ -1,0 +1,252 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL组复制GroupReplication参数| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL组复制GroupReplication参数</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#参数">参数</a>
+      <ul>
+        <li><a href="#group_replication_allow_local_disjoint_gtids_join-已弃用">group_replication_allow_local_disjoint_gtids_join （已弃用）</a></li>
+        <li><a href="#group_replication_allow_local_lower_version_join">group_replication_allow_local_lower_version_join</a></li>
+        <li><a href="#group_replication_auto_increment_increment">group_replication_auto_increment_increment</a></li>
+        <li><a href="#group_replication_bootstrap_group">group_replication_bootstrap_group</a></li>
+        <li><a href="#group_replication_consistency">group_replication_consistency</a></li>
+        <li><a href="#group_replication_member_weight">group_replication_member_weight</a></li>
+        <li><a href="#group_replication_member_expel_timeout">group_replication_member_expel_timeout</a></li>
+        <li><a href="#group_replication_single_primary_mode">group_replication_single_primary_mode</a></li>
+        <li><a href="#group_replication_start_on_boot">group_replication_start_on_boot</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="参数">参数</h2>
+<h3 id="group_replication_allow_local_disjoint_gtids_join-已弃用">group_replication_allow_local_disjoint_gtids_join （已弃用）</h3>
+<ul>
+<li>布尔型，默认值为OFF，MySQL 5.7.17版本引入，5.7.21版本弃用，8.0.4版本中删除。</li>
+<li>这是MySQL5.7时代搭MGR集群时经常会用到的参数，设置为开启后，新加节点变得更容易，但是慎用该参数，不正确的使用可能会导致复制组中的数据出现不一致。MySQL8版本中已弃用。
+<pre><code>即使该组中缺失一些事务（joiner节点比组中的事务还要多），也允许joiner节点加入该组。
+
+</code></pre></li>
+</ul>
+<h3 id="group_replication_allow_local_lower_version_join">group_replication_allow_local_lower_version_join</h3>
+<ul>
+<li>布尔型，默认为OFF，MySQL 5.7.17版本引入。</li>
+<li>也是新节点加入时使用到的变量，一般不会开启，开启后允许低版本的MySQL节点加入集群
+<pre><code>MySQL 8.0.17及其之后的版本在比对版本号时，会考虑次要版本号（例如：MySQL 8.0.17，会将次要版本号17一起进行比较），在MySQL 8.0.16及其之前的版本在比对版本号时，只考虑主要版本号（例如：MySQL 5.7.22，只比对主要版本号5.7）。
+将该系统变量设置为ON并不会使低版本的Server与组兼容，但能允许低版本Server加入组，不过没有任何措施来防止低版本Server与组中现有成员的不兼容行为，因此，为了确保低版本Server的正确操作，必须人为确保如下两项措施，如果不能确保这两项措施，则运行低版本的Server可能会碰到错误而导致加入组失败。
+
+* 运行较低版本的Server加入组之前，必须先停止该Server上的任何写操作
+
+* 从运行较低版本的Server加入组的位置开始，停止对组中所有成员的任何写操作
+</code></pre></li>
+</ul>
+<h3 id="group_replication_auto_increment_increment">group_replication_auto_increment_increment</h3>
+<ul>
+<li>整型类型，默认值为7（如果你的组中有更多或更少的组成员，则，可以在组复制启动之前调整好该系统变量的值，以对应你的组中的成员数量），取值范围：1~65535。MySQL 5.7.17版本引入。</li>
+<li>注意：该系统变量的值在所有组成员上必须相同</li>
+<li>注意：一旦设置将代替系统变量auto_increment_inncrement。且将auto_increment_offset设置为Server id值
+<pre><code>自动设置复制组中的每个成员的自增列的步长值，以确保在多主模式的组中，每个组成员的自增列值有序且不重叠。
+当成员停止组复制时，普通系统变量auto_increment_inncrement和auto_increment_offset的值将会恢复原状（启动组复制之前的值）
+只有当系统变量auto_increment_increment和auto_increment_offset保持默认值时，组复制启动时才会自动做与组复制的适配调整和恢复，如果这两个系统变量的值被设置了非默认值，则组复制不会做自动调整（从MySQL 8.0开始，当组处于单主模式下时，这两个系统变量也不会做自动调整）。所以，对于这两个系统变量的值，要么在组复制下不对其进行手工指定（让其使用默认值），要么就一定要设置正确，否则，在多主模式的主中，很容易造成主键冲突。
+系统变量group_replication_auto_increment_increment在组复制运行时无法修改，需要先停止组复制，修改该系统变量的值，然后再启动组复制
+</code></pre></li>
+</ul>
+<h3 id="group_replication_bootstrap_group">group_replication_bootstrap_group</h3>
+<ul>
+<li>布尔型，默认为OFF，MySQL 5.7 17版本引入。</li>
+<li>只在新建集群时第一个启动节点时用，用完就得关，别轻易设置，容易脑裂
+<pre><code>指定使用哪个Server来引导组（这里指的是将此系统变量设置为ON的Server）。该系统变量只能在一个Server上设置，并且只能在首次引导组或重新引导整个组时在其中一个Server上设置。当复制组引导成功之后需要及时将该系统变量为OFF来动态关闭（在组所有可能涉及的Server的配置文件中建议统一将此系统变量设置为OFF）。如果在某Server上使用该变量引导复制组之后再在另外一个Server中使用该变量引导复制组，则如果两个Server使用了相同的组名称时，可能会产生人为的脑裂。
+</code></pre></li>
+</ul>
+<h3 id="group_replication_consistency">group_replication_consistency</h3>
+<ul>
+<li>注意：这是重要参数,控制事务一致性等级</li>
+<li>从MySQL 8.0.14引进</li>
+<li>对于绝大多数场景，使用默认的 EVENTUAL 等级就足够</li>
+<li>一般我们建议用默认值或Before</li>
+</ul>
+<h4 id="1-eventual">1 EVENTUAL</h4>
+<ul>
+<li>在这个等级下，RO和RW事务执行前，都不会要求等待积压事务先行应用完成。</li>
+<li>这是默认等级，也是在引入该选项前的行为。这意味着以下几点：</li>
+<li>RW事务无需等待，而可能先于其他节点进行外部化（将事务广播到其他节点）。</li>
+<li>RO事务可能读取到旧数据。</li>
+<li>在Primary节点切换时，新产生的RW事务有可能会因为冲突而回滚。</li>
+</ul>
+<h4 id="2-before_on_primary_failover">2 BEFORE_ON_PRIMARY_FAILOVER</h4>
+<ul>
+<li>当发生Primary节点切换时，在新的Primary上需要先等待把所有来自旧Primary节点的积压事务应用完毕，之后才能正式完成切换，转成ONLINE状态，成为新的Primary节点，继续响应新的事务请求。</li>
+<li>这么做可以保证在发生故障转移时，客户端不会查到旧数据，保证了数据一致性，不过客户端上也可能会产生延迟等待。</li>
+</ul>
+<h4 id="3-before">3 BEFORE</h4>
+<ul>
+<li>RW事务在应用之前，RO事务在执行之前，都要先等待前面堆积的事务完成。</li>
+<li>这可以保证RO事务总能读取到最新事务，但对于RW事务而言，只是等待堆积事务应用完成，但并不要求其他节点上也完成该事务。</li>
+</ul>
+<h4 id="4-after">4 AFTER</h4>
+<ul>
+<li>它比BEFORE更近一步，要求RW事务在其他节点上也要等待应用完毕。这样一来，后续的事务在任何节点上就都能获取最新事务数据。</li>
+<li>事实上，要慎用该级别及更高以上级别，可能会引发其他问题，可参考这个文章：技术分享 | 为什么MGR一致性模式不推荐AFTER</li>
+</ul>
+<h4 id="5-before_and_after">5 BEFORE_AND_AFTER</h4>
+<ul>
+<li>一致性级别要求最高，对RO和RW事务都要求同步事务数据。也就是说，RW事务在应用之前，要先等待前面堆积的事务完成，并且还需要等待它的事务变更在其他所有节点上也都应用；RO事务在执行之前，也要先等待前面堆积的事务完成。</li>
+</ul>
+<h3 id="group_replication_member_weight">group_replication_member_weight</h3>
+<ul>
+<li>整型类型，默认值为50，取值范围为：0~100。MySQL 5.7.20版本引入。</li>
+<li>一般在单主模式下用到，设置权重，默认是50
+<pre><code>为组成员指定一个百分比权重，该权重值用于在故障转移时影响如何选举新的主要节点（仅对处于单主模式的组有意义），当处于单主模式的组中，主要节点脱离组时，权重值越高的成员，越优先被选中为主要节点，这在执行计划维护或者在故障转移时期望指定某个组成员成为主要节点时尤其有用（将期望成为主要节点的组成员权重值设置为最高即可）。
+</code></pre></li>
+</ul>
+<h3 id="group_replication_member_expel_timeout">group_replication_member_expel_timeout</h3>
+<ul>
+<li>整型类型，默认值为0，取值范围为：0~3600。MySQL 8.0.13版本引入。
+<pre><code>表示当组复制成员被怀疑失败之后，被驱逐出组之前的等待时间（以秒为单位）。在怀疑产生之前的最初5秒的检测周期不会计入此时间内。更改某个组成员上的系统变量group_replication_member_expel_timeout的值将立即生效。组复制并不强制要求组中的所有成员将此系统变量设置为相同值，但建议设置为相同值，以避免发生意外的驱逐事件。
+
+默认情况下，系统变量group_replication_member_expel_timeout设置值为0，这意味着没有等待期，在5秒的检测期结束后，可疑成员可能被立即驱逐出组。为了避免在较慢的网络上、或在可预期的瞬时网络故障、或在可预期的Server性能变差的情况下发生不必要的驱逐事件，可以为该系统变量指定一个大于0的值（以便在有成员被怀疑失败时，有一个缓冲等待期）。如果可疑成员在怀疑超时之前再次变为活跃状态（恢复组通讯），则它将重新加入组，并应用组中其他成员缓冲的所有消息（追赶组中最新的数据），然后进入ONLINE状态对外提供服务。
+
+如果超过了怀疑时间仍未成功加入组，则被怀疑成员将被立即驱逐出组。如果该成员后续能够恢复组通讯，它将会接收到一个被驱逐出组的视图。此时，如果该成员的系统变量group_replication_autorejoin_tries设置了一个非0值，则该成员在超级只读模式下，将按照该数值执行自动重新加入组的尝试；如果该成员没有指定自动重新连接尝试次数（设置0值），或者当它耗尽了指定的尝试次数时，则它将按照系统变量group_replication_exit_state_action指定的值执行退出操作。
+</code></pre></li>
+</ul>
+<h3 id="group_replication_single_primary_mode">group_replication_single_primary_mode</h3>
+<ul>
+<li>布尔型，默认值为ON，MySQL 5.7.17版本引入。
+<pre><code>用于指定复制组是以单主模式运行工作负载还是多主模式运行工作负载，单主模式时（设置为ON），可读写的primary节点（主要节点）只有一个，其他组成员都为secondaries节点（辅助节点），是只读的。设置为OFF表示关闭单主模式。即，启用多主模式，多主模式时，通常情况下所有的组成员都是可读写的primary节点。
+
+此系统变量是组范围的配置设置，必须保证组中所有的成员具有相同的值，在组复制运行过程中不能修改（需要先执行STOP GROUP_REPLICATION 语句先停止组复制），要使得修改的值生效，需要完全重新引导组（使用系统变量group_replication_bootstrap_group= on重新引导组）。从MySQL 8.0.16开始，可以使用group_replication_switch_to_single_primary_mode()和group_replication_switch_to_multi_primary_mode() udf 在组运行时动态更改这个系统变量的值（同时修改组的运行模式）。有关更多信息，请参见”4.1.2. 修改组的运行模式”。
+</code></pre></li>
+</ul>
+<h3 id="group_replication_start_on_boot">group_replication_start_on_boot</h3>
+<ul>
+<li>布尔型，默认值为ON，MySQL 5.7.17版本引入。</li>
+<li>配置是否在Server启动时一并启动MGR插件及其组复制。</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/11/14</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

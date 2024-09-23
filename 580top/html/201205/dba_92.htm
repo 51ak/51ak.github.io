@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>如何从命令提示符安装 sql server 2008 </title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="参考文献： 联机帮助 如何从命令提示符安装 sql server 2008 a、将sql server 2008的安装文件复制到d:\tools\sql2008b、 提取补丁包内的文件：命令行下运行：sqlserver2008sp3-kb2546951-x64-chs.exe /x:d:\sqlserver2008，将补丁中的文件释放到d:\sqlserver2008\pcu目录下1.复制 set如何从命令提示符安装 sql server 2008 " />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a href="../yunwei/l_26_1.htm" class="hover"　title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../windowsserver/l_27_1.htm" title="WindowsServer">WindowsServer</a>|</li><li><a  href="../linux/l_31_1.htm" title="linux">linux</a>|</li><li><a  href="../jiankong/l_32_1.htm" title="监控">监控</a>|</li><li><a  href="../zidonghua/l_33_1.htm" title="自动化脚本"><span class="zc_666">自动化脚本</span></a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../yunwei/l_26_1.htm">系统运维</a>&nbsp;&gt;&nbsp;<a href="../zidonghua/l_33_1.htm">自动化脚本</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>如何从命令提示符安装 sql server 2008 </h1></div>
+					<div id="atSource"> 作者：[renyb ] </div>
+					
+                    <div id="viewcontent">
+                   <p>参考文献：&nbsp; 联机帮助&nbsp; <span id="nsrTitle"><fo nt color="#ffffff" style="background-color: rgb(51, 153, 255);">如何从命令提示符</fo nt>安装 SQL Server 2008</span> </p>
+<p>A、将SQL Server 2008的安装文件复制到D:\tools\SQL2008</p>
+<p>B、 提取补丁包内的文件：<br />
+命令行下运行：SQLServer2008SP3-KB2546951-x64-CHS.exe /x:d:\SQLServer2008，将补丁中的文件释放到d:\SQLServer2008\PCU目录下</p>
+<p><br />
+1.复制 Setup.exe 和 Setup.rll 提取的协调股的位置原始来源媒体位置</p>
+<p>robocopy D:\tools\SQL2008\PCU D:\tools\SQL2008 Setup.exe</p>
+<p>robocopy D:\tools\SQL2008\PCU D:\tools\SQL2008 Setup.rll</p>
+<p>2.复制所有文件而不是文件夹， 除了Microsoft.SQL.Chainer.PackageData.dll ，从D:\tools\SQL2008\PCU\ 到D:\tools\SQL2008 \ 来更新原始档案。</p>
+<p>robocopy C:\SQLServer2008_FullSP1\pcu\x86 C:\SQLServer2008_FullSP1\x86 /XF Microsoft.SQL.Chainer.PackageData.dll</p>
+<p>robocopy D:\tools\SQL2008\PCU\x64 D:\tools\SQL2008\x64 /XF Microsoft.SQL.Chainer.PackageData.dll</p>
+<p>robocopy C:\SQLServer2008_FullSP1\pcu\ia64 C:\SQLServer2008_FullSP1\ia64 /XF Microsoft.SQL.Chainer.PackageData.dll</p>
+<p><br />
+3. 确定您是否拥有defaultsetup.ini在下列地点：<br />
+C:\SQLServer2008_FullSP1\x86<br />
+C:\SQLServer2008_FullSP1\x64<br />
+C:\SQLServer2008_FullSP1\ia64<br />
+如果你有一个defaultsetup.ini ，增加下列内容到PCUSOURCE=&rdquo;.\PCU&rdquo; ，如下：<br />
+;SQLSERVER2008 Co nfiguratio n File <br />
+[SQLSERVER2008] <br />
+PCUSOURCE=&quot;.\PCU&quot;</p>
+<p>4、 DOS窗口执行</p>
+<p>D:\tools\SQL2008\setup.exe&nbsp; /q /ACTIo n=Install /SQLSVCPASSWORD=&quot;&quot; /AGTSVCPASSWORD=&quot;&quot; /ISSVCPASSWORD=&quot;&quot; /SAPWD=&quot;*******&quot;&nbsp; /Co nfiguratio nFile=D:\tools\Co nfiguratio nFile.ini </p>
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+	
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>硬件 on Classic</title>
+    <link>/categories/%E7%A1%AC%E4%BB%B6/</link>
+    <description>Recent content in 硬件 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 10 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E7%A1%AC%E4%BB%B6/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HDD、SSD、SAS、SATA、PCIE、NVME</title>
+      <link>/dba/hddssdsassatapcienvme/</link>
+      <pubDate>Tue, 10 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/hddssdsassatapcienvme/</guid>
+      <description>我的习惯   先说当我接到采购需求的时候,我通常会跟运维同事说我要选购下面的磁盘
+  pcie ssd 偶尔会强调要更高性能接口的ssd
+  ssd盘 大部分时候数据库都需要ssd
+  sas盘 这时候的意思是采购sas接口的硬盘,一般用来存放日志类的数据
+  sata盘 这是用来存放数据冷备份时候才用的盘
+  这是我的习惯事实上提法非常不标准,但是好像负责采购的和运维的同事也都能听得懂.事实上服务器硬盘
+  按存储介质分类:HDD盘,SSD盘
+  按接口标准分类:IDE,SATA,SAS,PCIE
+   下面的内容从多个网上的文章里整理而来,加了些个人看法
+ 硬盘接口 IDE接口 (已淘汰)  IDE接口，又叫ATA接口、PATA接口、并口。 最早是在1986年由康柏、西部数据等几家公司共同开发。 数据线长得是一条像布条的东西，传输数据慢， 由三部分组成：电源接口、跳线接口（用于区别主盘和从盘）、数据接口。  SCSI接口 (淘汰)  早此年IDE接口应用于PC，对应的服务器的接口是SCSI接口。 SCSI1:最早于1986年提出的,最大传输速率为5MB/s，支持7个设备。 SCSI2:Fast SCSI,1994年,10MB/s（10MHz,最大7个设备)。 SCSI2:Wide SCSI,1996年,20MB/s (10MHz,最大15个设备)。 SCSI3:1995年将总线频率大大地提高，并降低信号的干扰。  SATA接口 (还有不少)  SATA接口,又叫串口硬盘 2003年出现的，可以算是最为主流的硬盘接口形态。由于存在时间很长，SATA接口兼容性极强，几乎所有种类的主板都有SATA接口。 市面上固态硬盘SATA接口在性能标准上，一般采用SATA Ⅲ标准，理论最高速度为6Gbps。 大部分基于SATA接口的固态硬盘的读取性能正常会在500MB/S以上。 SATA数据接口（7针）电源接口（15针） 在SATA接口的基础上，后面又衍生出了两款产品。  SATA接口衍生:mSATA接口 (已淘汰)  mSATA接口是早期为了适应于超极本这类超薄设备而基于SATA开发的。可以看作SATA接口的mini版。 物理形态上有两种尺寸：全高（30mm50mm）和半高（30mm25mm）。  SATA接口衍生:SATA-e接口 (已淘汰)  SATA + PCI-Express的混合体，理论带宽达10Gbps，比SATA3.</description>
+    </item>
+    
+    <item>
+      <title>钱也分很多种</title>
+      <link>/book/%E9%92%B1%E4%B9%9F%E5%88%86%E5%BE%88%E5%A4%9A%E7%A7%8D/</link>
+      <pubDate>Fri, 15 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/book/%E9%92%B1%E4%B9%9F%E5%88%86%E5%BE%88%E5%A4%9A%E7%A7%8D/</guid>
+      <description>选中上下文，就知道是什么钱了。
+中国 . 元 中国澳门 . 元 中国台湾 . 元 中国香港 . 元 美国 . 美元 美国 . 美元_背面 英国 . 英镑 韩国 . 圆 日本 . 元 德国 . 马克 俄罗斯 . 卢布 法国 . 法郎 欧洲 . 欧元 葡萄牙 . 埃斯库多 瑞士 . 法郎 荷兰 . 盾 西班牙 . 比塞塔 加拿大 . 元 意大利 . 里拉 印度 . 卢比 澳大利亚 . 元 新加坡 . 元 泰国 . 铢 越南 .</description>
+    </item>
+    
+    <item>
+      <title>我收藏的一些安全(黑科技)硬件</title>
+      <link>/book/%E6%88%91%E6%94%B6%E8%97%8F%E7%9A%84%E4%B8%80%E4%BA%9B%E5%AE%89%E5%85%A8%E7%A1%AC%E4%BB%B6/</link>
+      <pubDate>Thu, 30 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/book/%E6%88%91%E6%94%B6%E8%97%8F%E7%9A%84%E4%B8%80%E4%BA%9B%E5%AE%89%E5%85%A8%E7%A1%AC%E4%BB%B6/</guid>
+      <description>2020年春节 冠状病毒肆虐
+憋在家里觉得是个机会有大把时间
+重构一个以前自己写的一个项目代码
+战斗的第二天
+笔记本因为长时间不关机
+硬盘烧了
+无法补救的那种
+虽然有备用电脑
+但离开了个人熟悉的软件和环境
+好多事情还是没法做
+比如
+每周四都会在公众号上连载的MySQL视频
+就被迫中断了
+昨晚我仰望星空
+在想宇宙的奥秘和人类&amp;hellip;
+以及软件和硬件的依赖
+再牛的软件还是靠硬件支撑的
+而我对硬件基本是白痴
+日常工作中凡是硬件相关的
+都尽量交给更合适的同事完成
+只有个人电脑和数码产品
+才会花精力去折腾
+但作为一个硬件白痴
+也收藏了一些有趣的硬件
+以前周末会经常去中关村的鼎好，E世界
+瞎逛
+买了很多无用的小东西
+类似于女人对口红的追求
+迷恋板卡和黑科技
+今天跟大家分享3个有趣的跟安全有关的硬件
+提前声明
+不可以学坏了，做坏事，否则后果自负
+1.PM3 呃，这是git上一个很酷炫项目的硬件载体
+华强北给焊出来了
+众所周知街边配钥匙的会配一些小区门禁卡，电梯卡，员工卡,甚至一些加密卡
+那么pm3能做的会更多
+对应的卡片种类极大丰富
+最重要的是破解加密卡，你知道插上usb连上电脑以后那个小卡片就是个裸着的
+2.摩托罗拉c118 上古神器
+2g网络的缺陷魔鬼被这个摩托罗拉这个低端手机给释放了
+连上电脑，关联上附近的信号塔，开始短信嗅探
+浓浓的黑科技感觉
+当然现在是4G，5G时代了
+3.大功率WiFi信号接收器 呃，这个是wifi信号定向（发送）接收器
+但是因为wifi协议的缺陷
+尤其是早期路由器的wps_pin 码漏洞
+介绍下这个Pin漏洞（基本上几个小时一定会破解一个无线wifi密码）
+有定向信号接收器外挂在室外（物理外挂）
+周边1公里的wifi都能破
+好在这几年pin漏洞都补上了
+但抓包暴力依旧还在
+Wifi密码照样不经打
+Wifi信号放大器会增加这种能力的范围和强度
+所以Wifi密码一定要很复杂
+Wifi爆破成功就进内网（然后&amp;hellip;）
+然后，
+再说这个硬件
+它不止是接收信号放大
+也可以把发送信号放大
+想想这又可以怎么搞事
+发散一下思维
+不可以学坏了，做坏事，否则后果自负
+不可以学坏了，做坏事，否则后果自负
+不可以学坏了，做坏事，否则后果自负
+2020-1-30 晨 北京顺义</description>
+    </item>
+    
+  </channel>
+</rss>

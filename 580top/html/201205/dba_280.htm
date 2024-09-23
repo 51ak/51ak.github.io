@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ACCESS数据库的结构</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="规划自己的数据库建好一个数据库后，我们也许会觉得并不知道这个数据库是怎么构成的，总有一种空中楼阁的感觉。其实学习的过程总是一步步渐进地，没有前面的学习现在就不会发现提出这样的问题。在对access已经有了一定的认识之后，现在我们就通过建立一个空的数据库讲解一下数据库是怎样构成的。<br/>当我们想做一件事情的时候，一般都会先考虑一下，然后再去做。在建立一个新数据库的时候，也要想一想这个数ACCESS数据库的结构" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a href="../othersql/l_19_1.htm" class="hover"　title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../nosql/l_20_1.htm" title="NoSQL">NoSQL</a>|</li><li><a  href="../sysbase/l_21_1.htm" title="Sybase">Sybase</a>|</li><li><a  href="../db2/l_22_1.htm" title="DB2">DB2</a>|</li><li><a  href="../access/l_23_1.htm" title="Access"><span class="zc_666">Access</span></a>|</li><li><a  href="../infomix/l_24_1.htm" title="Informix">Informix</a>|</li><li><a  href="../sqlsql/l_25_1.htm" title="其他">其他</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../othersql/l_19_1.htm">其他数据库</a>&nbsp;&gt;&nbsp;<a href="../access/l_23_1.htm">Access</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>ACCESS数据库的结构</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   规划自己的数据库　　建好一个数据库后，我们也许会觉得并不知道这个数据库是怎么构成的，总有一种空中楼阁的感觉。其实学习的过程总是一步步渐进地，没有前面的学习现在就不会发现提出这样的问题。在对<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>已经有了一定的认识之后，现在我们就通过建立一个空的数据库讲解一下数据库是怎样构成的。<br />　　当我们想做一件事情的时候，一般都会先考虑一下，然后再去做。在建立一个新数据库的时候，也要想一想这个数据库是用来干什么的，它要存储哪些数据信息，这些数据之间又有什么关系？ 一方面要知道哪些数据是必须的，是绝对不能缺少的，不然建立数据库获取信息的目地就没法达到了；另一方面也要知道哪些数据是不必要，放在数据库当中只会增加数据库的容量，却并不起任何作用，所以要将这些冗余的数据剔除。这样建立起来的数据库才既能满足我们检索数据的需要，又能节省数据的存储空间。<br /><br />建立一个空的数据库　　既然已经了解了在建立一个数据库之前应该注意的问题，那我们现在就从最基本的新建一个空数据库开始，了解一下<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库的结构。<br />　　在<a href="../../html/access/l_23_1.htm" title="Access" >Access</a> 2000中，新建一个空数据库其实很简单，只要用鼠标单击<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>窗口左上角数据库工具栏中的“新建”按钮，就会在屏幕上弹出一个“新建”对话框。<br /><br />　　在这个对话框弹出以后，我们不再象上次那样选“数据库”选项卡，而是选择“常用”选项卡，并在“常用”选项卡上用鼠标左键双击“数据库”图标。<br /><br />　　屏幕上弹出“文件新建数据库”对话框，在“文件名”中给新建的数据库文件取名“空数据库”，把它存储在“例子”子目录中，单击“创建”按钮将新建的数据库文件保存下来。现在我们不是用的数据库向导，自然也就没有问题要回答了。<br /><a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库中的主要对象及其关系　　我们知道在建筑一栋房子之前，首先必须要有一块地皮，然后才能在地皮上按照设计好的图纸一层层的搭建房子，最后才是人住进去。现在我们有了一个空的数据库，就等于在<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>中已经有了这样一块“地皮”，现在可以建房子了。上一课用数据库向导建立的数据库就是一个已经建筑完毕的“房子”，只是还没有“数据”住进去罢了。在<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>中，所谓的建房材料就是数据库中的主要对象，它包括“表”、“查询”、“窗体”、“报表”、“页面”、“宏”和“模块”。这些对象在数据库中各自负责一定的功能，并且相互协作，这样才能建设出一个数据库。<br />　　在数据库中，“表”用来存储数据；“查询”用来查找数据；人通过“窗体”、“报表”、“页面”获取数据；而“宏”和“模块”则用来实现数据的自动操作。其实对于数据库来说，最重要的功能就是获取数据库中的数据，所以数据在数据库各个对象间的流动就成为我们最关心的事情。为了以后建立数据库的时候能清楚的安排各种结构，应该先了解一下<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库中对象间的作用和联系。<br />　　作为一个数据库，最基本的就是要有表，并且表中存储了数据。比如“通讯录”数据库，首先要建立一个表，然后将某人的联系地址、电话等信息输入到这个数据表中，这样就有了数据库中的数据源。有了这些数据以后，就可以将它们显示在窗体上。这个过程就是将表中的数据和窗体上的控件建立连接，在<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>中把这个过程叫做“绑定”。这样就可以通过屏幕上的各种各样的窗体界面来获得真正存储在表中的数据了。而且合理地在窗体上摆放控件和图案可以使我们更容易操作和理解数据库中数据代表的含意。这样就完成数据从表到窗体的流动，实现了数据库中的数据在计算机和人之间进行了一次沟通。比如在“通讯录”数据库中，使用自动窗体将数据库中的一个记录显示在窗体上，控制窗体上的记录操作按钮在表中前后移动，可以看到对应其它记录的信息。现在，数据库中的表和窗体对象之间的关系应该很清晰了，我们可以画出一个表。至于数据库中的<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>对象，现在先把它们空出来。在以后学习了<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>的几种对象以后，将把这个表示数据库中数据流向的图表补充完整。我们以后可以每学一课，就按照这种方式将各种对象间的数据流向画出来，这对于建立一个完整的数据库很有好处。<br />　　结束语：在这一课中，我们通过建立一个空数据库，结合上一课中的内容，讲解了建立一个新数据库需要注意的问题和数据库中每个对象的用途和相互关系。如果想了解更多关于<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库的知识，掌握<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库的使用方法，那就请看下面几课了。<br /><br /><br />顶一下(0)踩一下(1)
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

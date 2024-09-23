@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>innodb on Classic</title>
+    <link>/categories/innodb/</link>
+    <description>Recent content in innodb on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 13 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="/categories/innodb/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL的锁:innodb锁粒度详解</title>
+      <link>/mysql/mysql%E9%94%81_innodb%E9%94%81%E7%B2%92%E5%BA%A6/</link>
+      <pubDate>Sat, 13 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E9%94%81_innodb%E9%94%81%E7%B2%92%E5%BA%A6/</guid>
+      <description>锁定义 lock_rec_not_gap锁  Record Locks
+ A record lock is a lock on an index record. For example, SELECT c1 FROM t WHERE c1 = 10 FOR UPDATE; prevents any other transaction from inserting, updating, or deleting rows where the value of t.c1 is 10. Record locks always lock index records, even if a table is defined with no indexes. For such cases, InnoDB creates a hidden clustered index and uses this index for record locking.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的innodb中Next-Key锁的解析</title>
+      <link>/dba/innodb_lock_2020/</link>
+      <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/innodb_lock_2020/</guid>
+      <description>去年的某个时候，一个朋友在微信上问我MySQL间隙锁的案例，当时正在赶一个项目，没来得及看那个CASE，后来找不到了。昨天看到这篇jahfer写的博客: https://jahfer.com/posts/innodb-locks/ 觉得在介绍Next-Key锁的这方面很有创意的使用了自制的动画（非常简陋的动画 没啥用，我换成了截图做标记了)，不管是创意还是内容都值得一看
+   作者:jahfer 翻译:51ak   &amp;ndash;翻译全文如下：
+最近，我在调试MySQL高并发问题时有机会深入理解了InnoDB的锁定机制，这篇文章是我学习innodb锁行为的一个总结。
+0.概念介绍 InnoDB只有几个锁定概念,但是它们的使用和行为取决于当前连接正在使用的事务隔离级别
+ …the isolation level is the setting that fine-tunes the balance between performance and reliability, consistency, and reproducibility of results when multiple transactions are making changes and performing queries at the same time. 引自MySQL官方文档 https://dev.mysql.com/doc/refman/5.7/en/innodb-transaction-isolation-levels.html
+ InnoDB一共有4种隔离级别（按最严格到最宽松的顺序）
+ SERIALIZABLE 序列化 REPEATABLE READ (default) 可重复读 READ COMMITTED 读已提交 READ UNCOMMITTED 读未提交  每种隔离级别下的锁行为差异非常大，而我们现在只分析前两种隔离级别（SERIALIZABLE，REPEATABLE READ),首先让我们创建一个book 表。</description>
+    </item>
+    
+    <item>
+      <title>MySQL的行格式(Compact、Redundant、Dynamic和Compressed)</title>
+      <link>/mysql/mysql%E7%9A%84%E8%A1%8C%E6%A0%BC%E5%BC%8Fcompact_redundant_dynamic_compressed/</link>
+      <pubDate>Thu, 18 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84%E8%A1%8C%E6%A0%BC%E5%BC%8Fcompact_redundant_dynamic_compressed/</guid>
+      <description>前言  MySQL的默认存储引擎innodb是按16k大小的page来组织存储数据的 MySQL的*.ibd 数据文件，大小一定是能被16kB整除的 在逻辑上innodb是按btree来组织数据存储的 针对每一行具体的数据，共有4种存储方式可供选择：Compact、Redundant、Dynamic和Compressed 其中：Redundant 已经被淘汰了，不建议使用 Compact/Dynamic/Compressed 用的是同一个原理，只在细节上有点变化，不影响其实现逻辑 所以我们说行格式的时候，就可以从compact格式来分析，后两种是compact格式的变种   以下原理部分，都只说compact行格式。(?因为compact是基础，后两种都是基于它衍生出来的)
+ 行格式在哪里看，怎么修改行格式 查看 mysql&amp;gt; show table status like &#39;%dbooptest%&#39; \G *************************** 1. row *************************** Name: dbooptest Engine: InnoDB Version: 10 Row_format: Dynamic Rows: 9 Avg_row_length: 1820 Data_length: 16384 Max_data_length: 0 Index_length: 0 Data_free: 0 Auto_increment: NULL Create_time: 2020-06-10 20:22:49 Update_time: 2020-06-10 20:22:49 Check_time: NULL Collation: utf8mb4_unicode_ci Checksum: NULL Create_options: Comment: 测试 1 row in set (0.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的事务id:trx_id</title>
+      <link>/mysql/mysql%E7%9A%84%E4%BA%8B%E5%8A%A1id_trx_id/</link>
+      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84%E4%BA%8B%E5%8A%A1id_trx_id/</guid>
+      <description>什么是事务id(trx_id)  可以理解为MySQL官方存储引擎innodb维护的一个全局自增变量:max_trx_id, 一个6字节长度的整数。(max_trx_id如果一直增长，理论上也是有溢出的可能性的，超过2的48次方后，会重新从0开始，这时候会破坏事务的顺序规则) 每当一个事务开始时，需要申请一个新的trx_id值时，就获取max_trx_id的最新值，然后将max_trx_id值加1。  事务id的作用  主要是用来记录事务开始的顺序 会用在各种事务冲突和mvcc中  如何查看事务id 查看当前事务的trx_id  select TRX_ID from INFORMATION_SCHEMA.INNODB_TRX where TRX_MYSQL_THREAD_ID = CONNECTION_ID() 查看当前的事务id列表（活动)  select TRX_ID from INFORMATION_SCHEMA.INNODB_TRX 查看当前的事务id列表（活动+非活动) 看innodb status 的TRANSACTIONS 部分
+show engine innodb status \G # 找到这一部分 TRANSACTIONS 部分 TRANSACTIONS Trx id counter 2419 -- 当前最大事务 ID Purge done for trx&#39;s n:o &amp;lt; 2419 undo n:o &amp;lt; 0 state: running but idle History list length 0 LIST OF TRANSACTIONS FOR EACH SESSION: ---TRANSACTION 421658589187480, not started 0 lock struct(s), heap size 1136, 0 row lock(s) ---TRANSACTION 421658589186624, not started 0 lock struct(s), heap size 1136, 0 row lock(s) ---TRANSACTION 421658589185768, not started 0 lock struct(s), heap size 1136, 0 row lock(s) 上面是我搭的测试环境，所以没有活跃事务， 需要注意的是几个事务id都非常大（例：421658589187480） 这个后面会解释说明</description>
+    </item>
+    
+    <item>
+      <title>MySQL原理_innodb存储格式详解(二)</title>
+      <link>/mysql/mysql%E5%8E%9F%E7%90%86_innodb%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F%E8%AF%A6%E8%A7%A32/</link>
+      <pubDate>Wed, 11 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%8E%9F%E7%90%86_innodb%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F%E8%AF%A6%E8%A7%A32/</guid>
+      <description>MySQL用page页来管理和存储数据文件，这些page页是如何被组织起来的，真实的数据(data,index) 真实是怎么存放在ibd文件和内存中的呢，了解存储格式，将帮助我们更好的理解MySQL是如何工作的，从而更好的理解其他数据库知识点（索引，MVCC,等等），本视频中我将利用Python脚本把这些难以理解的数据页解析出来并图形化展示给大家，望大家知其然而知其所以然
+视频较长，分两段录制，录制时音量较小，注意控制下声音大小。
+  下面是分析.idb文件的脚本，执行结果的明细部分</description>
+    </item>
+    
+    <item>
+      <title>MySQL原理_innodb存储格式详解(一)</title>
+      <link>/mysql/mysql%E5%8E%9F%E7%90%86_innodb%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Tue, 10 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%8E%9F%E7%90%86_innodb%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F%E8%AF%A6%E8%A7%A3/</guid>
+      <description>MySQL用page页来管理和存储数据文件，这些page页是如何被组织起来的，真实的数据(data,index) 真实是怎么存放在ibd文件和内存中的呢，了解存储格式，将帮助我们更好的理解MySQL是如何工作的，从而更好的理解其他数据库知识点（索引，MVCC,等等），本视频中我将利用Python脚本把这些难以理解的数据页解析出来并图形化展示给大家，望大家知其然而知其所以然
+视频较长，分两段录制，录制时音量较小，注意控制下声音大小。
+  核心问题：MySQL（*innodb)是如何组织，存储表数据的？
+innodb单表最大能到多少，为什么？
+为什么innodb数据文件的大小始终可以被16384整除？
+int 和bigint 差别有多大?
+varchar(10) 和varchar(100) 差别有多大？varchar(1000)呢? TEXT 呢?
+1页(page)=基本单位，存储和读取的核心，每页大小默认：16k
+1区(extend)=64页,64*16k=1M
+1组(space)=256区, 256*1M=256M
+每个page都有个编号，整型最大 2^32 x 16k = 64T （单表大小上限）
+下面是分析.idb文件的脚本，执行结果截图 </description>
+    </item>
+    
+  </channel>
+</rss>

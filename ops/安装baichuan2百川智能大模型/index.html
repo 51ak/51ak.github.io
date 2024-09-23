@@ -1,0 +1,395 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>安装Baichuan2百川智能大模型| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">安装Baichuan2百川智能大模型</span></h1>
+</div>
+
+
+  <main>
+    <h2 id="下载模型和预安装">下载模型和预安装</h2>
+<pre><code>git clone https://github.com/baichuan-inc/Baichuan2
+
+
+
+python3.9 -V
+
+/usr/local/python3.9/bin/python3.9 -m pip install --upgrade pip
+
+python3.9 -m venv baichuan2
+
+ source baichuan2/bin/activate
+ 
+ python -V
+ 
+python3.9 -m pip install --upgrade pip
+
+pip install -r requirements.txt  -i https://mirrors.aliyun.com/pypi/simple/
+
+
+vim cli_demo.py 
+
+</code></pre><h2 id="运行和报错处理">运行和报错处理</h2>
+<blockquote>
+<p>执行<code>python3.9 cli_demo.py </code></p>
+</blockquote>
+<h3 id="报错urllib3-v20-only-supports-openssl-111">报错:urllib3 v2.0 only supports OpenSSL 1.1.1+</h3>
+<pre><code>ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'OpenSSL 1.0.2k-fips  26 Jan 2017'. See: https://github.com/urllib3/urllib3/issues/2168
+</code></pre><h4 id="排查">排查：</h4>
+<ul>
+<li>进python环境</li>
+</ul>
+<pre><code>python3.9 
+Python 3.9.15 (main, Mar 22 2023, 18:27:52) 
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-44)] on linux
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; import ssl
+&gt;&gt;&gt; print(ssl.OPENSSL_VERSION)
+OpenSSL 1.0.2k-fips  26 Jan 2017
+&gt;&gt;&gt; exit()
+</code></pre><h4 id="确认问题python版本和ssl版本不匹配">确认问题：python版本和ssl版本不匹配</h4>
+<h4 id="解决">解决：</h4>
+<ul>
+<li>方法一：升openssl</li>
+<li>方法二：降urllib3</li>
+<li>这里选择方法2:</li>
+</ul>
+<pre><code>echo &quot;urllib3&gt;=1.26.6,&lt;2.0&quot; &gt; r.txt
+
+pip install -r r.txt  -i https://mirrors.aliyun.com/pypi/simple/
+
+</code></pre><blockquote>
+<p>执行<code>python3.9 cli_demo.py </code></p>
+</blockquote>
+<h3 id="报错-hostname-huggingfaceco-doesnt-match-apitwittercom">报错: hostname &lsquo;huggingface.co&rsquo; doesn&rsquo;t match &lsquo;api.twitter.com&rsquo;</h3>
+<pre><code>init model ...
+报错：
+    raise CertificateError(&quot;hostname %r doesn't match %r&quot; % (hostname, dnsnames[0]))
+urllib3.util.ssl_match_hostname.CertificateError: hostname 'huggingface.co' doesn't match 'api.twitter.com'
+
+....
+
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='huggingface.co', port=443): Max retries exceeded with url: /baichuan-inc/Baichuan2-7B-Chat/resolve/main/config.json (Caused by SSLError(CertificateError(&quot;hostname 'huggingface.co' doesn't match 'api.twitter.com'&quot;)))
+</code></pre><h4 id="排查-1">排查：</h4>
+<pre><code> wget &quot;https://huggingface.co/&quot;
+Connecting to huggingface.co (huggingface.co)|75.126.124.162|:443... ^C
+</code></pre><h4 id="处理">处理：</h4>
+<ul>
+<li>配置科学上网</li>
+</ul>
+<blockquote>
+<p>执行<code>python3.9 cli_demo.py </code></p>
+</blockquote>
+<h3 id="报错this-modeling-file-requires-the-following-packages-that-were-not-found-in-your-environment-bitsandbytes">报错:This modeling file requires the following packages that were not found in your environment: bitsandbytes</h3>
+<pre><code>init model ...
+
+dynamic_module_utils.py&quot;, line 179, in check_imports
+    raise ImportError(
+ImportError: This modeling file requires the following packages that were not found in your environment: bitsandbytes. Run `pip install bitsandbytes`
+</code></pre><h4 id="排查-2">排查：</h4>
+<pre><code>pip3.9 install bitsandbytes 
+Requirement already satisfied: bitsandbytes in ./baichuan2/lib/python3.9/
+</code></pre><ul>
+<li>python3.9 终端：</li>
+</ul>
+<pre><code>Python 3.9.15 (main, Mar 22 2023, 18:27:52) 
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-44)] on linux
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; import bitsandbytes
+  ...
+  File &quot;/data/Baichuan2/baichuan2/lib/python3.9/site-packages/bitsandbytes/functional.py&quot;, line 12, in &lt;module&gt;
+    from scipy.stats import norm
+ModuleNotFoundError: No module named 'scipy'
+&gt;&gt;&gt; import scipy
+Traceback (most recent call last):
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+ModuleNotFoundError: No module named 'scipy'
+&gt;&gt;&gt; exit()
+</code></pre><h4 id="确认问题缺少scipy库">确认问题，缺少scipy库</h4>
+<h4 id="处理-1">处理：</h4>
+<pre><code> pip3.9 install scipy
+
+Successfully installed scipy-1.11.2
+</code></pre><blockquote>
+<p>执行<code>python3.9 cli_demo.py </code></p>
+</blockquote>
+<h2 id="克隆项目">克隆项目</h2>
+<pre><code># 安装 git-lfs
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | sudo bash
+yum install git-lfs
+
+
+
+git clone https://github.com/Vision-CAIR/MiniGPT-4.git
+git clone https://huggingface.co/lmsys/vicuna-13b-delta-v0
+mv vicuna-13b-delta-v0 /data/MiniGPT-4/vicuna_weights
+</code></pre><h2 id="安装补丁">安装补丁</h2>
+<pre><code>cd /data/MiniGPT-4/
+cd ckp/
+#https://drive.google.com/file/d/1a4zLvaiDBr-36pasffmgpvH5P7CKmpze/view
+#https://drive.google.com/u/0/uc?id=1a4zLvaiDBr-36pasffmgpvH5P7CKmpze&amp;export=download
+wget https://doc-0s-08-docs.googleusercontent.com/docs/securesc/dbq4d7c2ha9354fqj5612le3gl157ov5/pcnbepjp7icjk54rrfgio602v738i398/1681803150000/09448752369347632296/09178445193473466964/1a4zLvaiDBr-36pasffmgpvH5P7CKmpze?e=download&amp;ax=ALy03A4aDltm3f1TddEAJesIj7YsB_KKlm56C61-M72rzjuPpluLCR3UOUv28FXMkNc3q5s
+
+
+## 修改配置
+vim /data/MiniGPT-4/eval_configs/minigpt4_eval.yaml
+ ckpt: '/data/MiniGPT-4/ckp/'
+
+vim /data/MiniGPT-4/minigpt4/configs/models/minigpt4.yaml 
+  llama_model: &quot;/data/MiniGPT-4/vicuna_weights/&quot;
+</code></pre><h2 id="安装依赖">安装依赖</h2>
+<pre><code>pip3.9 install omegaconf
+#1681803684
+yum install xz-devel -y
+yum install python-backports-lzma -y
+pip3.9 install backports.lzma
+yum install python-backports-lzma -y
+yum install -y xz-devel mesa-libGL python-backports-lzma
+vim /usr/local/python3.9/lib/python3.9/lzma.py
+
+pip3.9 install iopath
+pip3.9 install timm
+pip3.9 install cv2
+
+
+
+pip3.9 install  opencv-python  -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+
+pip3.9 install webdataset  -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+pip3.9 install sentencepiece #  -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip3.9 install  transformers
+python3.9  -c &quot;from transformers import pipeline; print(pipeline('sentiment-analysis')('we love you'))&quot;
+conda install -c huggingface transformers
+
+cd ..
+
+git clone https://github.com/huggingface/transformers.git
+
+cd transformers
+pip3.9 install -e .  -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip3.9 install decord
+pip3.9 install decord  -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip3.9 install accelerate
+pip3.9 install  bitsandbytes  -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+</code></pre><h2 id="修复-lib64libstdcso6-version-glibcxx_3421-not-found--报错">修复 /lib64/libstdc++.so.6: version `GLIBCXX_3.4.21' not found  报错</h2>
+<pre><code>strings /usr/lib64/libstdc++.so.6 | grep GLIBCXX 
+GLIBCXX_3.4
+GLIBCXX_3.4.1
+GLIBCXX_3.4.2
+GLIBCXX_3.4.3
+GLIBCXX_3.4.4
+GLIBCXX_3.4.5
+GLIBCXX_3.4.6
+GLIBCXX_3.4.7
+GLIBCXX_3.4.8
+GLIBCXX_3.4.9
+GLIBCXX_3.4.10
+GLIBCXX_3.4.11
+GLIBCXX_3.4.12
+GLIBCXX_3.4.13
+GLIBCXX_3.4.14
+GLIBCXX_3.4.15
+GLIBCXX_3.4.16
+GLIBCXX_3.4.17
+GLIBCXX_3.4.18
+GLIBCXX_3.4.19
+GLIBCXX_DEBUG_MESSAGE_LENGTH
+wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-5.2.0/gcc-5.2.0.tar.bz2
+tar -xf gcc-5.2.0.tar.bz2
+cd gcc-5.2.0
+./contrib/download_prerequisites
+mkdir gcc-temp
+cd gcc-temp
+../configure --enable-checking=release --enable-languages=c,c++ --disable-multilib
+make &amp;&amp; make install
+mv /usr/bin/gcc /usr/bin/gcc.bak
+ /usr/sbin/update-alternatives --install  /usr/bin/gcc gcc /usr/local/bin/x86_64-unknown-linux-gnu-gcc-5.2.0 52
+ 
+gcc -v
+
+Using built-in specs.
+COLLECT_GCC=gcc
+COLLECT_LTO_WRAPPER=/usr/local/libexec/gcc/x86_64-unknown-linux-gnu/5.2.0/lto-wrapper
+Target: x86_64-unknown-linux-gnu
+Configured with: ../configure --enable-checking=release --enable-languages=c,c++ --disable-multilib
+Thread model: posix
+gcc version 5.2.0 (GCC) 
+
+
+
+ g++ -v
+Using built-in specs.
+COLLECT_GCC=g++
+COLLECT_LTO_WRAPPER=/usr/local/libexec/gcc/x86_64-unknown-linux-gnu/5.2.0/lto-wrapper
+Target: x86_64-unknown-linux-gnu
+Configured with: ../configure --enable-checking=release --enable-languages=c,c++ --disable-multilib
+Thread model: posix
+gcc version 5.2.0 (GCC) 
+
+
+
+strings /usr/local/lib64/libstdc++.so.6|grep GLIBCXX
+2. 复制链接
+
+cp /usr/local/lib64/libstdc++.so.6.0.21  /usr/lib64
+
+cd /usr/lib64
+
+rm -f libstdc++.so.6
+
+ln -s libstdc++.so.6.0.21 libstdc++.so.6
+
+ll libstdc*
+
+</code></pre><h2 id="补充">补充</h2>
+<pre><code>pip3.9 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+
+vim  /data/MiniGPT-4/minigpt4/models/mini_gpt4.py:92                                     │
+│                                                                                                  │
+│    86 │   │   self.llama_tokenizer.pad_token = self.llama_tokenizer.eos_token                    │
+│    87 │   │                                                                                      │
+│    88 │   │   if self.low_resource:                                                              │
+│ ❱  89 │   │   │   self.llama_model = LlamaForCausalLM.from_pretrained(                           │
+│    90 │   │   │   │   llama_model,                                                               │
+│    91 │   │   │   │   torch_dtype=torch.float16,                                                 │
+│    92 │   │   │   │   #load_in_8bit=True, 
+
+
+
+mkdir -p /export/home/.cache/minigpt4
+
+wget https://repo.anaconda.com/archive/Anaconda3-5.3.0-Linux-x86_64.sh
+chmod +x Anaconda3-5.3.0-Linux-x86_64.sh
+./Anaconda3-5.3.0-Linux-x86_64.sh
+vim /root/.bashrc
+export PATH=/root/anaconda3/bin:$PATH
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+conda config --set show_channel_urls yes
+conda env create -f environment.yml
+conda activate minigpt4
+python demo.py --cfg-path eval_configs/minigpt4_eval.yaml
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/09/25</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/centos">centos</a> <a href="/categories/python">python</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

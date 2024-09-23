@@ -1,0 +1,437 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>快速完成一个异构数据同步异常检查功能| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">快速完成一个异构数据同步异常检查功能</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#起因">起因</a></li>
+    <li><a href="#需求">需求</a></li>
+    <li><a href="#解决">解决</a>
+      <ul>
+        <li><a href="#拆解思路">拆解思路</a></li>
+      </ul>
+    </li>
+    <li><a href="#任务1建表">任务1:建表</a>
+      <ul>
+        <li><a href="#任务2配置采集任务">任务2:配置采集任务</a></li>
+        <li><a href="#任务3配置一张报表">任务3:配置一张报表</a></li>
+        <li><a href="#任务4增加报警">任务4:增加报警</a></li>
+      </ul>
+    </li>
+    <li><a href="#小结">小结</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="起因">起因</h2>
+<ul>
+<li>上周我们做的一次Oracle到MySQL迁移，在迁移完成后需要将MySQL数据反向同步到Oracle中，以便于没有迁移干净的原Oracle业务还能提供只读访问</li>
+<li>反向同步用的是OGG，我们在OGG同步层面加了异常报警（但是被DBA给人为禁用了</li>
+<li>除掉同步软件层面的报警外，我们需要一个偏业务层面的，针对表数据的报警和监控</li>
+</ul>
+<h2 id="需求">需求</h2>
+<ul>
+<li>支持各种数据源的同步对比</li>
+<li>支持表的行数对比，最大id对比，表最后更新时间对比</li>
+<li>扩展性好，方便配置</li>
+<li>异常报警</li>
+<li>监控同步状态的页面</li>
+</ul>
+<h2 id="解决">解决</h2>
+<h3 id="拆解思路">拆解思路</h3>
+<ul>
+<li>需要一个建两张表：表1:存放任务配置信息，表2:存放采集到的数据</li>
+<li>需要一个任务：定时（5分钟）去源库和目标库，运行一个SQL,取当前状态并存入到刚才建的history表中</li>
+<li>需要一个页面：展示采集结果，可以方便的查看同步状态和延时</li>
+<li>需要一个报警任务：异常数据时，发送报警</li>
+</ul>
+<h2 id="任务1建表">任务1:建表</h2>
+<pre><code> CREATE TABLE `msync_config` (
+  `sync_name` varchar(50) NOT NULL,
+  `source_linkconnstr` varchar(100) NOT NULL,
+  `target_linkconnstr` varchar(100) NOT NULL,
+  `source_sqlstr` varchar(2000) NOT NULL,
+  `target_sqlstr` varchar(2000) NOT NULL,
+  `alert_count` int NOT NULL DEFAULT '5',
+  `alert_maxid` int NOT NULL DEFAULT '5',
+  `alert_delaysecond` int NOT NULL DEFAULT '60',
+  `alert_userlist` varchar(100) NOT NULL DEFAULT '',
+  `add_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `alert_type` varchar(50) NOT NULL DEFAULT 'count+time' COMMENT 'count,id,time三种组合,+代表and,-代表or'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3  
+
+CREATE TABLE `msync_history` (
+  `addtime` datetime NOT NULL,
+  `sync_name` varchar(50) NOT NULL,
+  `source_count` bigint NOT NULL DEFAULT '0',
+  `target_count` bigint NOT NULL DEFAULT '0',
+  `source_maxid` bigint NOT NULL DEFAULT '0',
+  `target_maxid` bigint NOT NULL DEFAULT '0',
+  `source_maxtime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `target_maxtime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`addtime`,`sync_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+
+</code></pre><h3 id="任务2配置采集任务">任务2:配置采集任务</h3>
+<pre><code>&lt;action result=&quot;allcount,okcount,errcount&quot; type=&quot;sql_loop&quot; &gt;
+   &lt;connstr&gt;link:dboop_db&lt;/connstr&gt;
+  &lt;sqlstr&gt;select sync_name,source_linkconnstr,target_linkconnstr,source_sqlstr,target_sqlstr from msync_config&lt;/sqlstr&gt;
+       
+
+      &lt;action result=&quot;sync_name,source_linkconnstr,target_linkconnstr,source_sqlstr,target_sqlstr&quot; type=&quot;sql_select&quot; &gt;
+        &lt;connstr&gt;link:dboop_db&lt;/connstr&gt;
+        &lt;sqlstr&gt;select sync_name,source_linkconnstr,target_linkconnstr,source_sqlstr,target_sqlstr from msync_config where  sync_name=%s&lt;/sqlstr&gt;
+        &lt;sqlpara&gt;{__0}&lt;/sqlpara&gt;
+      &lt;/action&gt;
+
+
+
+      &lt;!--target--&gt;
+      &lt;action  result=&quot;isok,okcount,errcount,errmess&quot; type=&quot;sql_to_sql&quot;&gt;   
+        &lt;from_server&gt;{target_linkconnstr}&lt;/from_server&gt;  
+        &lt;to_server&gt;link:dboop_db&lt;/to_server&gt;
+        &lt;from_sqlstr&gt;{target_sqlstr}&lt;/from_sqlstr&gt;
+            &lt;to_sqlstr&gt;&lt;![CDATA[
+      insert into msync_history set addtime=%s,sync_name=%s,target_count=%s,target_maxid=%s,target_maxtime=%s
+      ]]&gt;&lt;/to_sqlstr&gt;
+        &lt;to_sqlpara&gt;{addtime}&lt;/to_sqlpara&gt;
+         &lt;to_sqlpara&gt;{sync_name}&lt;/to_sqlpara&gt;
+          &lt;to_sqlpara&gt;{0}&lt;/to_sqlpara&gt;
+          &lt;to_sqlpara&gt;{1}&lt;/to_sqlpara&gt;
+          &lt;to_sqlpara&gt;{2}&lt;/to_sqlpara&gt;
+      &lt;/action&gt;
+
+
+      &lt;!--source--&gt;
+      &lt;action  result=&quot;isok,okcount,errcount,errmess&quot; type=&quot;sql_to_sql&quot;&gt;   
+        &lt;from_server&gt;{source_linkconnstr}&lt;/from_server&gt;  
+        &lt;to_server&gt;link:dboop_db&lt;/to_server&gt;
+          &lt;from_sqlstr&gt;{source_sqlstr}&lt;/from_sqlstr&gt;
+            &lt;to_sqlstr&gt;&lt;![CDATA[
+      insert into msync_history set addtime=%s,sync_name=%s,source_count=%s,source_maxid=%s,source_maxtime=%s
+      on DUPLICATE KEY UPDATE source_count=%s,source_maxid=%s,source_maxtime=%s
+      ;]]&gt;&lt;/to_sqlstr&gt;
+        &lt;to_sqlpara&gt;{addtime}&lt;/to_sqlpara&gt;
+         &lt;to_sqlpara&gt;{sync_name}&lt;/to_sqlpara&gt;
+          &lt;to_sqlpara&gt;{0}&lt;/to_sqlpara&gt;
+          &lt;to_sqlpara&gt;{1}&lt;/to_sqlpara&gt;
+          &lt;to_sqlpara&gt;{2}&lt;/to_sqlpara&gt;
+          &lt;to_sqlpara&gt;{0}&lt;/to_sqlpara&gt;
+         &lt;to_sqlpara&gt;{1}&lt;/to_sqlpara&gt;
+          &lt;to_sqlpara&gt;{2}&lt;/to_sqlpara&gt;
+     
+      &lt;/action&gt;
+
+
+
+&lt;/action&gt;
+
+
+
+</code></pre><ul>
+<li>将此任务设置成每5分钟运行一次</li>
+<li>该任务会分别去目标库和源库执行一段msync_config里配置好的SQL</li>
+<li>将结果存入到msync_history表中</li>
+<li>完成数据采集工作
+<img src="/img/2022auto/2023-12-05-15-40-44.png" alt="采集异构数据任务"></li>
+</ul>
+<h3 id="任务3配置一张报表">任务3:配置一张报表</h3>
+<pre><code> &lt;para&gt;
+  &lt;name&gt;btime&lt;/name&gt;
+  &lt;title&gt;开始时间&lt;/title&gt;
+  &lt;type&gt;datetime&lt;/type&gt;
+  &lt;defaultvalue&gt;getdate()-1d&lt;/defaultvalue&gt;
+   &lt;format&gt;%Y-%m-%d %H:%M:00&lt;/format&gt;
+  &lt;/para&gt;
+
+  
+  &lt;para&gt;
+  &lt;name&gt;etime&lt;/name&gt;
+  &lt;title&gt;结束时间&lt;/title&gt;
+  &lt;type&gt;datetime&lt;/type&gt;
+  &lt;defaultvalue&gt;getdate()-1m&lt;/defaultvalue&gt;
+   &lt;format&gt;%Y-%m-%d 23:59:59&lt;/format&gt;
+  &lt;/para&gt;
+
+
+  &lt;para&gt;
+  &lt;name&gt;syncname&lt;/name&gt;
+  &lt;title&gt;表名&lt;/title&gt;
+  &lt;type&gt;select&lt;/type&gt;
+    &lt;connstr&gt;link:dboop_db&lt;/connstr&gt;
+   &lt;sqlstr&gt;&lt;![CDATA[
+select '' as qavalue,'----ALL----' as qatext union all 
+select  `sync_name`,`sync_name` from msync_config
+]]&gt;
+      &lt;/sqlstr&gt;
+  &lt;defaultvalue&gt;&lt;/defaultvalue&gt;
+  &lt;/para&gt;
+
+
+
+
+&lt;!--每个报表都可以定义多个page用来展示和多个para用来接收用户输入--&gt;
+
+
+ &lt;page&gt;
+    &lt;viewtype&gt;line&lt;/viewtype&gt;
+   &lt;width&gt;1040px&lt;/width&gt;
+   &lt;height&gt;280px&lt;/height&gt;
+     &lt;chart_title&gt;title : {text: '异构数据同步延时监控(单位:行数)',x:'center',y:20},&lt;/chart_title&gt;
+     &lt;chart_datazoom&gt;60&lt;/chart_datazoom&gt;
+              &lt;connstr&gt;link:dboop_db&lt;/connstr&gt;
+              &lt;sqlstr&gt;&lt;![CDATA[
+select 
+date_format(addtime,'%%m-%%d %%H:%%i')  as addtime
+,sync_name,abs(source_count- target_count) as diffcount
+from msync_history where addtime between %s and %s
+and (%s ='' or sync_name=%s)
+order by addtime
+                ]]&gt;
+              &lt;/sqlstr&gt;
+                &lt;sqlpara&gt;#1&lt;/sqlpara&gt;
+    &lt;sqlpara&gt;#2&lt;/sqlpara&gt;
+    &lt;sqlpara&gt;#3&lt;/sqlpara&gt;
+                  &lt;sqlpara&gt;#3&lt;/sqlpara&gt;
+   &lt;tableformat&gt;rowconvert 1 5&lt;/tableformat&gt;
+            &lt;/page&gt;
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            &lt;page&gt;
+              &lt;viewtype&gt;table&lt;/viewtype&gt;
+              &lt;width&gt;980px&lt;/width&gt;
+              &lt;title2&gt;异构数据同步对比明细&lt;/title2&gt;
+              &lt;connstr&gt;link:dboop_db&lt;/connstr&gt;
+              &lt;sqlstr&gt;&lt;![CDATA[
+      select a.addtime,a.sync_name
+ ,concat('&lt;span class=&quot;f_666&quot;&gt;',source_count,'-',target_count,'=&lt;/span&gt;&lt;span class=&quot;',case when diffcount&gt;b.alert_count or diffcount&lt;0 then 'f_red' when diffcount&gt;0 then '' else 'f_green' end ,'&quot;&gt;',diffcount,'&lt;/span&gt;行') as '行数差异_count(*)'
+ ,concat('&lt;span class=&quot;f_666&quot;&gt;',source_maxid,'-',target_maxid,'=&lt;/span&gt;&lt;span class=&quot;',case when diffmaxid&gt;b.alert_maxid  or diffmaxid&lt;0 then 'f_red' when diffmaxid&gt;0 then '' else 'f_green' end ,'&quot;&gt;',diffmaxid,'&lt;/span&gt;') as 'maxid差异_max(id)'
+ ,concat('&lt;span class=&quot;f_666&quot;&gt;',source_time,'-',target_time,'=&lt;/span&gt;&lt;span class=&quot;',case when difftime&gt;b.alert_delaysecond  or difftime&lt;0 then 'f_red' when difftime&gt;0 then '' else 'f_green' end ,'&quot;&gt;',difftime,'&lt;/span&gt;秒') as '最后修改时间差异_max(mdf_time)'
+
+from (
+select addtime,sync_name,source_count,target_count,source_maxid,target_maxid,source_maxtime as source_time,target_maxtime as target_time
+,source_count-target_count as diffcount
+,source_maxid-target_maxid as diffmaxid
+,TIMESTAMPDIFF(second,target_maxtime,source_maxtime) as difftime
+from msync_history  where addtime between %s and %s
+and (%s ='' or sync_name=%s)
+
+) a 
+join msync_config b on a.sync_name=b.sync_name
+
+order by a.addtime desc 
+
+                ]]&gt;
+              &lt;/sqlstr&gt;
+                &lt;sqlpara&gt;#1&lt;/sqlpara&gt;
+    &lt;sqlpara&gt;#2&lt;/sqlpara&gt;
+                  &lt;sqlpara&gt;#3&lt;/sqlpara&gt;
+                  &lt;sqlpara&gt;#3&lt;/sqlpara&gt;
+            &lt;/page&gt;
+            
+
+</code></pre><ul>
+<li>该报表会将收集到的数据用图形和表格的方式展示出来
+<img src="/img/2022auto/2023-12-05-15-43-34.png" alt="异构数据同步对比展示表"></li>
+</ul>
+<h3 id="任务4增加报警">任务4:增加报警</h3>
+<ul>
+<li>这里我们直接在采集任务的底部增加一个action即可</li>
+</ul>
+<pre><code>
+&lt;action  result=&quot;isok,okcount,errcount,errmess&quot; type=&quot;sql_to_sql&quot;&gt;   
+  &lt;from_server&gt;link:********&lt;/from_server&gt;  
+  &lt;to_server&gt;link:********&lt;/to_server&gt;
+    &lt;from_sqlstr&gt;&lt;![CDATA[
+select a.sync_name,
+concat(
+case when diffcount&gt;0 then concat('少',diffcount,'条数据.') else '' end ,
+case when diffmaxid&gt;0 then concat('ID差',diffmaxid,'.') else '' end ,
+case when difftime&gt;0 then concat('修改时间差',difftime,'秒') else '' end) as diffdisplay 
+from (
+select sync_name,source_count,target_count,source_maxid,target_maxid,source_maxtime,target_maxtime
+,source_count-target_count as diffcount
+,source_maxid-target_maxid as diffmaxid
+,source_maxtime-target_maxtime as difftime
+from msync_history  where addtime =%s
+) a 
+join msync_config b on a.sync_name=b.sync_name
+ where
+     ( b.alert_type='count+time' and  (a.diffcount&gt;b.alert_count or a.diffmaxid&gt;b.alert_delaysecond ))
+ or  ( b.alert_type='count-time' and  (a.diffcount&gt;b.alert_count or a.diffmaxid&gt;b.alert_delaysecond ))
+or  ....
+
+
+]]&gt;
+&lt;/from_sqlstr&gt;
+  &lt;from_sqlpara&gt;{addtime}&lt;/from_sqlpara&gt;
+      &lt;to_sqlstr&gt;&lt;![CDATA[insert into alert_log_db
+set altertype='msync',
+idtype='sync_name',
+dbid=%s,
+reciveuser='',
+mess=%s, 
+messdetail=%s,
+errorlevel=5
+]]&gt;&lt;/to_sqlstr&gt;
+    &lt;to_sqlpara&gt;{0}&lt;/to_sqlpara&gt;
+    &lt;to_sqlpara&gt;异构数据同步异常报警{0}:{1}&lt;/to_sqlpara&gt;
+  &lt;to_sqlpara&gt;&lt;![CDATA[
+**异构数据同步异常报警**
+- 表名：{0}
+- 异常：{1}
+- 来源：异构数据采集任务
+- 触发时间:{addtime}
+- 了解[慢SQL详细](view.html?action=v&amp;report_action=v&amp;report_ptname=di10vnxfejhostpkq4z58a2ry6)
+]]&gt;&lt;/to_sqlpara&gt;
+  
+&lt;/action&gt;
+
+
+</code></pre><h2 id="小结">小结</h2>
+<ul>
+<li>这里我们快速的配置了一个任务和报表，完成了异构数据同步过程中从数据层面进行对比的简易功能</li>
+<li>可以和同步软件层的异常报警结合，一起来监控整个同步过程中是否有明显异常</li>
+<li>设计思路时，从源库和目标库分别执行一个SQL,应该出来接近的结果。</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/12/05</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B">自动化流程</a> <a href="/categories/dba">DBA</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

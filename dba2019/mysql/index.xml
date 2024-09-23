@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mysql on dboop.com</title>
+    <link>/categories/mysql/</link>
+    <description>Recent content in mysql on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 08 Dec 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/mysql/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>mysql统计信息</title>
+      <link>/post/2019/12/08/mysql%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF/</link>
+      <pubDate>Sun, 08 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/12/08/mysql%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF/</guid>
+      <description>MySQL统计信息相关的参数： 1.innodb_stats_auto_recalc，MySQL 5.7中默认为开启状态 是否自动触发更新统计信息，仅影响持久化存储的统计信息的表，阈值是变化的数据超过表行数的10%。也就是说，一个表索引统计信息是持久化存储的，并且表中数据变化了超过10%，如果innodb_stats_auto_recalc为ON，就会自动更新统计信息，否则不会自动更新
+2. innodb_stats_on_metadata（是否自动更新统计信息），MySQL 5.7中默认为关闭状态 InnoDB在执show table status 或者访问INFORMATION_SCHEMA.TABLES或者INFORMATION_SCHEMA.STATISTICS 系统表的时候更新持久化统计信息（类似于ANALYZE TABLE），innodb_stats_on_metadata不管打开还是关闭，都不影响持久化存储统计信息
+某个索引的统计信息更新时间参考mysql.innodb_index_stats这个系统表
+select * from mysql.innodb_index_stats where table_name = &#39;info_dboop&#39;;  3. innodb_stats_persistent（持久化统计信息开关），MySQL 5.7中默认为打开，持久化存储统计信息 该选项设置为ON时候，统计信息会持久化存储到磁盘中，而不是存在在内存中，相反，如果是非持久化存储的（存在内存中），相应的统计信息会随着服务器的关闭而丢失。
+4. innodb_stats_persistent_sample_pages （持久化更新统计信息时候索引页的取样页数） 默认是20个page 如果设置的过高(max65535)，那么在更新统计信息的时候，会增加ANALYZE TABLE的执行时间。 MySQL可以在表上指定一个统计信息取样的page个数，并且可以修改表上的统计取样page个数
+-- 创建表的时候指定一个统计取样page数据 create table info_dboop ( id int, username varchar(50) )ENGINE=InnoDB, STATS_PERSISTENT=1, STATS_AUTO_RECALC=1, STATS_SAMPLE_PAGES=25; --修改表的统计取样page数据 ALTER TABLE info_dboop STATS_SAMPLE_PAGES 60  5. innodb_stats_transient_sample_pages（临时性更新统计信息时候索引页的取样页数） 默认值是8 innodb_stats_persistent设置为disable的情况下，也即非持久化明确关闭的时候，innodb_stats_transient_sample_pages才生效，这个值是否生效，要依赖于innodb_stats_on_metadata，而innodb_stats_on_metadata又依赖于innodb_stats_persistent
+6. innodb_stats_sample_pages 已弃用 mysql统计信息更新时机 持久化统计信息在以下情况会被自动更新：  INNODB_STATS_AUTO_RECALC=ON 情况下，表中10%的数据被修改 增加新的索引  非持久化统计信息在以下情况会被自动更新：  距上一次更新统计信息，表1/16的数据被修改 执行ANALYZE TABLE innodb_stats_on_metadata=ON情况下，执SHOW TABLE STATUS, SHOW INDEX, 查询 INFORMATION_SCHEMA下的TABLES, STATISTICS 启用&amp;ndash;auto-rehash功能情况下，使用mysql client登录 表第一次被打开  持久化统计信息  非持久化统计信息的缺点显而易见，数据库重启后如果大量表开始更新统计信息，会对实例造成很大影响，所以目前都会使用持久化统计信息。 持久化统计信息保存在表mysql.</description>
+    </item>
+    
+    <item>
+      <title>mysql中的锁</title>
+      <link>/post/2019/11/14/mysql%E4%B8%AD%E7%9A%84%E9%94%81/</link>
+      <pubDate>Thu, 14 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/11/14/mysql%E4%B8%AD%E7%9A%84%E9%94%81/</guid>
+      <description>开个坑，准备写mysql的锁</description>
+    </item>
+    
+    <item>
+      <title>Innodb_row_lock_waits和Innodb_row_lock_current_waits报警处理</title>
+      <link>/post/2019/09/16/innodb_row_lock_waits%E5%92%8Cinnodb_row_lock_current_waits%E6%8A%A5%E8%AD%A6%E5%A4%84%E7%90%86/</link>
+      <pubDate>Mon, 16 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/09/16/innodb_row_lock_waits%E5%92%8Cinnodb_row_lock_current_waits%E6%8A%A5%E8%AD%A6%E5%A4%84%E7%90%86/</guid>
+      <description>刚才有RD部门负责人在企业微信上问我他们的一个MYSQL实例Innodb_row_lock_waits在报警，这个是什么情况？
+得益于我们把数据库的报警，发送给了RD负责人，每个负责人会对自己业务线的数据库性能比较关心，比DBA还要关心。 通常DBA收到这种row_lock报警只要不是连续的长时间报，一般会忽略。 这也是我们努力做数据库负责人制度的原因。
+回归正题，处理Innodb_row_lock_waits或者Innodb_row_lock_current_waits报警。
+报警判断 首先第一步这不是个严重的报警，如果没有其他并发报警. 但这个报警一般会对业务来说，行数增多，意味着更多的锁等待时长
+行锁的报警规则设置如下： &amp;lt;counter_node&amp;gt;&amp;lt;counter&amp;gt;Innodb_row_lock_waits&amp;lt;/counter&amp;gt;&amp;lt;checkpoint&amp;gt;0,10,30,80,5000&amp;lt;/checkpoint&amp;gt;&amp;lt;weight&amp;gt;1&amp;lt;/weight&amp;gt;&amp;lt;/counter_node&amp;gt;
+报警排查 show engine innodb status \G
+观察结果TRANSACTIONS 这一段：
+TRANSACTIONS
+Trx id counter 581112825 Purge done for trx&amp;rsquo;s n:o &amp;lt; 581112824 undo n:o &amp;lt; 0 state: running but idle History list length 34 LIST OF TRANSACTIONS FOR EACH SESSION: &amp;mdash;TRANSACTION 421991409852768, not started 0 lock struct(s), heap size 1136, 0 row lock(s) &amp;mdash;TRANSACTION 421991409917520, not started 0 lock struct(s), heap size 1136, 0 row lock(s) &amp;mdash;TRANSACTION 421991409914784, not started 0 lock struct(s), heap size 1136, 0 row lock(s) &amp;mdash;TRANSACTION 421991409911136, not started 0 lock struct(s), heap size 1136, 0 row lock(s)</description>
+    </item>
+    
+    <item>
+      <title>记一次主从复制错误处理和修复过程(mysql5.7 gtid)</title>
+      <link>/post/2019/05/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E5%92%8C%E4%BF%AE%E5%A4%8D%E8%BF%87%E7%A8%8Bmysql5.7-gtid/</link>
+      <pubDate>Mon, 27 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/05/27/%E8%AE%B0%E4%B8%80%E6%AC%A1%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E5%92%8C%E4%BF%AE%E5%A4%8D%E8%BF%87%E7%A8%8Bmysql5.7-gtid/</guid>
+      <description>MYSQL的复制会在极端条件下出现主从不一致的问题 原因有很多种,这里记一下比较完整的处理过程 网上的很多处理方法都是基于早期版本的没有GIID环境
+stop slave; SET GLOBAL SQL_SLAVE_SKIP_COUNTER = 1 ; start slave;  这篇会介绍GIID下的复制错误快速恢复和修复过程
+##收到报警 收到报警,一个从节点Slave_SQL_Running状态异常 当时是周末的晚上,看到报警时已经DOWN了10分钟了 联VPN到线上又花了几分钟 上线确认以下信息,确认是有问题
+show slave status \G #得到以下关键信息 Last_SQL_Error_Timestamp: 报错时间 Slave_SQL_Running: 报错进程 Slave_SQL_Running_State: 报错信息 Could not execute Delete_rows event on table \*; Can&#39;t find record in &#39;\*&#39;, Error_code: 1032; handler error HA_ERR_KEY_NOT_FOUND; the event&#39;s master log mysql-bin.002339, end_log_pos 162227594  ##问题已确认,第二步确定影响 因为这个从库已经不同步了,需要保证业务没有影响 show processlist; 发现正常读业务已经被中件间切走了,只有BI的一个业务线因为用了DNS直连没有切走, 比较坑的是这个BI线不确定是谁负责的,但考虑BI应用读脏数据影响不大,就直接把问题交给值班人员让他联系了.(这里提一下,我们只有BI类应用会出现这种问题,业务类的访问已经都对接了具体的人)
+##开始尝试修复复制 这里说的尝试修复是快速的修复问题,不能保证100%成功 使用的方法还是跳过报错的事务,使整个复制进行下去
+show slave status \G #找关键的Slave_SQL_Running_State 列的Error_code 内容 ,这里面是1032 #查系统表找到这个GTID:ed3e8c5d-b102-11e8-9dbc-1418773c97b3:534249277 并跳过它 select LAST_SEEN_TRANSACTION from performance_schema.</description>
+    </item>
+    
+    <item>
+      <title>mysql5.7复制建议</title>
+      <link>/post/2019/05/07/mysql5.7%E5%A4%8D%E5%88%B6%E5%BB%BA%E8%AE%AE/</link>
+      <pubDate>Tue, 07 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/05/07/mysql5.7%E5%A4%8D%E5%88%B6%E5%BB%BA%E8%AE%AE/</guid>
+      <description>关于复制选型  MGR:有条件上MGR的，上MGR,对网络要求较高。 半同步复制：用默认的AFTER_SYNC模式，一般实例都建议使用(重点推荐) 异步复制：对从实例要求延时不高的，日志类的等等可以用  半同步复制 设置：主库执行 install plugin rpl_semi_sync_master soname &#39;semisync_master.so&#39;; SET GLOBAL rpl_semi_sync_master_enabled=1;  设置：备库执行 1：安装slave插件 install plugin rpl_semi_sync_slave soname &#39;semisync_slave.so&#39;; set global slave_parallel_workers=8;  2：启用slave半同步复制 set global rpl_semi_sync_slave_enabled=1; ##启用slave半同步复制，可以写到配置文件中  3：重启slave上的IO线程 如果没有重启，则默认还是异步复制，重启后，slave会在master上注册为半同步复制的slave角色。
+stop slave io_thread; start slave io_thread;  或者：
+stop slave; set global slave_parallel_type=&#39;LOGICAL_CLOCK&#39;; start slave;  状态 show global variables like &amp;lsquo;rpl_semi%&amp;lsquo;; 主上：  rpl_semi_sync_master_enabled：表示主上是否开启半同步复制功能，可以动态修改。可选值：ON\OFF rpl_semi_sync_master_timeout：为了防止半同步复制中主在没有收到S发出的确认发生堵塞，用来设置超时，超过这个时间值没有收到信息，则切换到异步复制，执行操作。默认为10000毫秒，等于10秒，这个参数动态可调，表示主库在某次事务中，如果等待时间超过10秒，那么则降级为异步复制模式，不再等待SLAVE从库。如果主库再次探测到，SLAVE从库恢复了，则会自动再次回到半同步复制模式。可以设置成1000，即1秒。 rpl_semi_sync_master_wait_for_slave_count：控制slave应答的数量，默认是1，表示master接收到几个slave应答后才commit。 rpl_semi_sync_master_wait_no_slave ：当一个事务被提交，但是Master没有Slave连接，这时M不可能收到任何确认信息，但M会在时间限制范围内继续等待。如果没有Slave链接，会切换到异步复制。是否允许master每个事务提交后都要等待slave的接收确认信号。默认为on，每一个事务都会等待。如果为off，则slave追赶上后，也不会开启半同步复制模式，需要手工开启。 rpl_semi_sync_master_wait_point：该参数表示半同步复制的主在哪个点等待从的响应，默认AFTER_SYNC，在得到slave的应答后再commit，可选值AFTER_COMMIT。  从上：  rpl_semi_sync_slave_enabled：表示从上是否开启半同步复制功能，可以动态修改。可选值：ON\OFF  show global status like &amp;lsquo;rpl_semi%&amp;lsquo;;  Rpl_semi_sync_master_clients ：说明支持和注册半同步复制的已连Slave数。 Rpl_semi_sync_master_net_avg_wait_time ：master等待slave回复的平均等待时间，单位毫秒。 Rpl_semi_sync_master_net_wait_time ：master总的等待时间。 Rpl_semi_sync_master_net_waits ：master等待slave回复的的总的等待次数，即半同步复制的总次数，不管失败还是成功，不算半同步失败后的异步复制。 Rpl_semi_sync_master_no_times ：master关闭半同步复制的次数。 Rpl_semi_sync_master_no_tx ：master没有收到slave的回复而提交的次数，可以理解为master等待超时的次数，即半同步模式不成功提交数量。 Rpl_semi_sync_master_status ：ON是活动状态（半同步），OFF是非活动状态（异步），用于表示主服务器使用的是异步复制模式，还是半同步复制模式。 Rpl_semi_sync_slave_status ：Slave上的半同步复制状态，ON表示已经被启用，OFF表示非活动状态。 Rpl_semi_sync_master_tx_avg_wait_time ：master花在每个事务上的平均等待时间。 Rpl_semi_sync_master_tx_wait_time ：master总的等待时间。 Rpl_semi_sync_master_tx_waits ：master等待成功的次数，即master没有等待超时的次数，也就是成功提交的次数 Rpl_semi_sync_master_wait_pos_backtraverse ：master提交后来的先到了，而先来的还没有到的次数。 Rpl_semi_sync_master_wait_sessions ：前有多少个session因为slave的回复而造成等待。 Rpl_semi_sync_master_yes_tx ：master成功接收到slave的回复的次数，即半同步模式成功提交数量。</description>
+    </item>
+    
+    <item>
+      <title>Mysql复制慢原因定位,磁盘IO瓶颈(centos)</title>
+      <link>/post/2019/05/05/mysql%E5%A4%8D%E5%88%B6%E6%85%A2%E5%8E%9F%E5%9B%A0%E5%AE%9A%E4%BD%8D%E7%A3%81%E7%9B%98io%E7%93%B6%E9%A2%88centos/</link>
+      <pubDate>Sun, 05 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/05/05/mysql%E5%A4%8D%E5%88%B6%E6%85%A2%E5%8E%9F%E5%9B%A0%E5%AE%9A%E4%BD%8D%E7%A3%81%E7%9B%98io%E7%93%B6%E9%A2%88centos/</guid>
+      <description>线上一mysql实例报复制延时
+1.查看相关性能监控
+如下图所示,写入量在每秒1500,WQPS在3000左右
+SSH上机器确认下
+2.top 查看和定位下资源等待情况(%Cpu(s): 2.0 us, 0.8 sy, 0.0 ni, 97.0 id, 0.3 wa) 如下图所示 wa在30%以上,明显的IO等待 ,这里的wa是CPU WAIT IO 时间
+3.iostat 查看定位实时更新磁盘工作情况( rkB/s, wkB/s,avgrq-sz,avgqu-sz ,%util)
+如下图所示,sdb这组SSD 写入wkb/s 和 avgrq ,util使用率都比较高 确认IO瓶颈
+4.联系RD业务负责人,确认是导数据引起的.调整复制参数以加快复制速度</description>
+    </item>
+    
+    <item>
+      <title>Mysqlrouter在centos报错open_files_limit1024的限制</title>
+      <link>/post/2019/05/03/mysqlrouter%E5%9C%A8centos%E6%8A%A5%E9%94%99open_files_limit1024%E7%9A%84%E9%99%90%E5%88%B6/</link>
+      <pubDate>Fri, 03 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/05/03/mysqlrouter%E5%9C%A8centos%E6%8A%A5%E9%94%99open_files_limit1024%E7%9A%84%E9%99%90%E5%88%B6/</guid>
+      <description>YUM安装的Mysqlrouter在centos 会有open_files_limit 1024 的限制
+运行一段时间会报 limit 用超的报错.查看限制和解决方法如下
+查看限制 lsof -p 29198 jps ulimit -a lsof | wc -l  centos6需要编辑如下配置文件 vim /etc/init.d/mysqlrouter 增加以下信息 ulimit -HS -n 65535  然后运行如下命令生效。 service mysqlrouter restart
+centos7需要编辑如下配置文件，[Service]下添加以下配置信息 vi /usr/lib/systemd/system/mysqlrouter.service [Service] LimitCORE=infinity LimitNOFILE=65535 LimitNPROC=65535  然后运行如下命令生效。
+systemctl daemon-reload systemctl restart mysqlrouter.service</description>
+    </item>
+    
+    <item>
+      <title>mysql中found_rows函数sql_calc_found_rows的配合</title>
+      <link>/post/2019/05/02/mysql%E4%B8%ADfound_rows%E5%87%BD%E6%95%B0sql_calc_found_rows%E7%9A%84%E9%85%8D%E5%90%88/</link>
+      <pubDate>Thu, 02 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/05/02/mysql%E4%B8%ADfound_rows%E5%87%BD%E6%95%B0sql_calc_found_rows%E7%9A%84%E9%85%8D%E5%90%88/</guid>
+      <description>row_count() 函数一般用于返回被 update, insert, delete,select 实际修改的行数。 配合sql_calc_found_rows,limit 的使用可以实现非常快速的分页功能.
+官方描述:
+ In MySQL 5.6, ROW_COUNT() returns a value as follows: DDL statements: 0. This applies to statements such as CREATE TABLE or DROP TABLE. DML statements other than SELECT: The number of affected rows. This applies to statements such as UPDATE, INSERT, or DELETE (as before), but now also to statements such as ALTER TABLE and LOAD DATA INFILE. SELECT: -1 if the statement returns a result set, or the number of rows “affected” if it does not.</description>
+    </item>
+    
+    <item>
+      <title>mysql:innodb_flush_log_at_trx_commit参数</title>
+      <link>/post/2019/04/01/mysqlinnodb_flush_log_at_trx_commit%E5%8F%82%E6%95%B0/</link>
+      <pubDate>Mon, 01 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/04/01/mysqlinnodb_flush_log_at_trx_commit%E5%8F%82%E6%95%B0/</guid>
+      <description>Mysql：
+innodb_flush_log_at_trx_commit参数 innodb_flush_log_at_trx_commit：是 InnoDB 引擎特有的，ib_logfile的刷新方式（ ib_logfile：记录的是redo log和undo log的信息）
+取值:0/1/2
+innodb_flush_log_at_trx_commit=0 表示每隔一秒把log buffer刷到文件系统中(os buffer)去，并且调用文件系统的“flush”操作将缓存刷新到磁盘上去。也就是说一秒之前的日志都保存在日志缓冲区，也就是内存上，如果机器宕掉，可能丢失1秒的事务数据。
+innodb_flush_log_at_trx_commit=1 表示在每次事务提交的时候，都把log buffer刷到文件系统中(os buffer)去，并且调用文件系统的“flush”操作将缓存刷新到磁盘上去。这样的话，数据库对IO的要求就非常高了，如果底层的硬件提供的IOPS比较差，那么MySQL数据库的并发很快就会由于硬件IO的问题而无法提升。
+innodb_flush_log_at_trx_commit=2 表示在每次事务提交的时候会把log buffer刷到文件系统中去，但并不会立即刷写到磁盘。如果只是MySQL数据库挂掉了，由于文件系统没有问题，那么对应的事务数据并没有丢失。只有在数据库所在的主机操作系统损坏或者突然掉电的情况下，数据库的事务数据可能丢失1秒之类的事务数据。这样的好处，减少了事务数据丢失的概率，而对底层硬件的IO要求也没有那么高(log buffer写到文件系统中，一般只是从log buffer的内存转移的文件系统的内存缓存中，对底层IO没有压力)。
+影响对象 这里共有4个对象,依次是 buffer-pool ,log-buffer, os-cache,binlog-file 只有最后一个binlog-file是磁盘文件 每个事务都会更新buffer-pool里的对象 然后行为: - innodb_flush_log_at_trx_commit=0 每次事务只更新buffer-pool,其他三个对象都需要等每秒种(不能保证完全是1秒) 把buffer-pool的内容写入log-buffer,同时写入os-cache,binlog-file - innodb_flush_log_at_trx_commit=1 每次事务更新buffer-pool ,log-buffer, os-cache,binlog-file 4个对象,且直接FLUSH磁盘数据,所以最慢也最安全 - innodb_flush_log_at_trx_commit=2 每次事务更新buffer-pool,log-buffer,os-cache,比上面少了个flush 文件这一步,FLUSH的进程是每秒钟刷一次.所以比1快比0慢
+性能差异 一般我们简单的估算 innodb_flush_log_at_trx_commit=1能写10000条数据时,innodb_flush_log_at_trx_commit=2能写12000条,innodb_flush_log_at_trx_commit=0 能写16000条 .差不多是1/1.2&amp;frasl;1.6倍性能差异 当然这个数据非常不严谨,只是参考,需要考虑环境差异和sync_binlog参数.
+数据安全  innodb_flush_log_at_trx_commit=0 如果MYSQL进程崩溃,丢失1秒钟事务 innodb_flush_log_at_trx_commit=1 如果同时sync_binlog=1,最多丢失一个事务数据 innodb_flush_log_at_trx_commit=2 如果mysql进程崩溃,系统没挂机器存活,则参考=1,如果是机器挂了或操作系统崩溃,则参考=0  建议 线上建议强制采有innodb_flush_log_at_trx_commit=1</description>
+    </item>
+    
+    <item>
+      <title>Python实现的MYSQL故障检测和转移脚本_设计思路</title>
+      <link>/post/2019/03/12/python%E5%AE%9E%E7%8E%B0%E7%9A%84mysql%E6%95%85%E9%9A%9C%E6%A3%80%E6%B5%8B%E5%92%8C%E8%BD%AC%E7%A7%BB%E8%84%9A%E6%9C%AC_%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF/</link>
+      <pubDate>Tue, 12 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/03/12/python%E5%AE%9E%E7%8E%B0%E7%9A%84mysql%E6%95%85%E9%9A%9C%E6%A3%80%E6%B5%8B%E5%92%8C%E8%BD%AC%E7%A7%BB%E8%84%9A%E6%9C%AC_%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF/</guid>
+      <description>前置条件  1 主 +1备 +N从 启用GTID 主备做双向同步 主备开启半同步 业务连接数据库用自研中件间,中件间里配置的是ip地址 建议从节点的复制从备节点上出发 目标实例上有库:  use dba_mana; CREATE TABLE dba_check_ha ( id int(11) NOT NULL default 0, _timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4; insert into dba_check_ha (id) values(1);  探测流程:  探测各节点状态是否有连接失败的节点 在主节点上确认read_only是FALSE,尝试update dba_check_ha set id=id+1 在所有节点上执行 show global variables like &amp;lsquo;read_only&amp;rsquo; 判断各库设置,如果从 库开了写会报警 如果主节点失败,则失败次数+1(其他节点失败,只会报警) 如果累计失败次数达到要求,检查备节点是否可用, 如果不可用,报严重故障,不做切换 如果备节点可用,则启用切换验证流程  切换验证流程  旧主库设置成只读 判断主库,备库GTID是否一致 如不一致,则循环等待1秒,最多M次(可设置) 如主库已失去连接或主备库GTID一致(2选1),则启用切换流程  切换流程  备库选为新主库,启用写 查找所有符合条件的中件间修改替换成新主库 替换linkset里的adminconnstr(已修复dba平台的上线和其他功能) 替换linknode里的各节点角色 重新加载配置文件 报告切换结果  运行结果:  节点失败和故障会报警(企业微信) 每个实例会在dba_mana.</description>
+    </item>
+    
+    <item>
+      <title>mysql删除大表的危险操作如何化解</title>
+      <link>/post/2019/03/12/mysql%E5%88%A0%E9%99%A4%E5%A4%A7%E8%A1%A8%E7%9A%84%E5%8D%B1%E9%99%A9%E6%93%8D%E4%BD%9C%E5%A6%82%E4%BD%95%E5%8C%96%E8%A7%A3/</link>
+      <pubDate>Tue, 12 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/03/12/mysql%E5%88%A0%E9%99%A4%E5%A4%A7%E8%A1%A8%E7%9A%84%E5%8D%B1%E9%99%A9%E6%93%8D%E4%BD%9C%E5%A6%82%E4%BD%95%E5%8C%96%E8%A7%A3/</guid>
+      <description>mysql作为一个很脆弱的数据库，在删除大表（2G以上）会有严重的性能问题，长时间的堵塞甚至会HANG住整个实例
+整个删除表的流程如下：
+ 数据库接收到一个DROP TABLE 操作 INODB会在tablecache维护一个全局独占锁(此时这张表的操作全部HANG住) 准备元信息变更 向操作系统发起删除文件通知 等操作系统返回（ 这一步如果文件大了，会要花掉很长） 元信息变更完成 释放全局独占锁  DBA在处理这些问题时，不可以直接删除 ，建议走以下流程
+##1.找到具体表对应文件
+ll /data/mysql3306/data/数据库名/表名*  找到表的文件
+##2.对ibd文件创建硬链接
+#ln source target ln /data/mysql3306/data/数据库名/表名.ibd /data/mysql3306/data/数据库名/表名.ibddbaback  (如果有从库，先从所有从库上建这个硬链，再到主库上建这个硬链）
+##3.进入mysql ,DROP 表
+drop table 表名  ##4.去操作系统中删除真正的大物理文件 有两种方式： 这是网上找到一种SHELL脚本（未测试）
+for i in `seq 50 -1 1 ` ;do sleep 2;truncate -s ${i}G /data/mysql3306/data/数据库名/表名.ibddbaback;done rm -rf /data/mysql/mysql_3306/data/db222/t_user.ibd.hdlk  还有一种是前DBA同事写了一个小程序slowrm 可以在DBA站点上下载
+以上流程不可偷懒，否则删大表容易把库和实例整崩了</description>
+    </item>
+    
+    <item>
+      <title>51ak带你看MYSQL5.7源码4：实现SQL黑名单功能</title>
+      <link>/post/2018/04/11/51ak%E5%B8%A6%E4%BD%A0%E7%9C%8Bmysql5.7%E6%BA%90%E7%A0%814%E5%AE%9E%E7%8E%B0sql%E9%BB%91%E5%90%8D%E5%8D%95%E5%8A%9F%E8%83%BD/</link>
+      <pubDate>Wed, 11 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/04/11/51ak%E5%B8%A6%E4%BD%A0%E7%9C%8Bmysql5.7%E6%BA%90%E7%A0%814%E5%AE%9E%E7%8E%B0sql%E9%BB%91%E5%90%8D%E5%8D%95%E5%8A%9F%E8%83%BD/</guid>
+      <description>上一篇我们实现了，屏掉了MYSQL的DELTE语句的执行功能。
+想了想这种改动太暴力了，不够优雅
+现在我们要改变一下思路，做一个MYSQL的黑名单功能。
+什么叫黑名单呢?
+就是说属于屏掉在带黑名单里的关键字的SQL的执行
+举例来说，
+我们发现有个上线故障，导致有大量的SQL在查一个表 SELECT * FROM A WHERE &amp;hellip;
+我们设置个黑名单： SELECT * FROM A
+那么所有这种查询将不执行，直接返回，这对线上服务的快速缓解问题是有很大帮助的。
+现在我们来尝试在源码上定制这个功能
+首先按上一篇文章说的，找到sql_parse.cc 定位 到这个函数 void mysql_parse(THD *thd, Parser_state *parser_state
+通过 这一行
+DBUG_PRINT(&amp;ldquo;mysql_parse&amp;rdquo;, (&amp;ldquo;query: &amp;lsquo;%s&amp;rsquo;&amp;ldquo;, thd-&amp;gt;query().str)); 可以看到执行的SQL文本，现在只需要判断这个文本是否包含指定的字符串就可以了。 所以我们在入口的地方加上判断，如下：
+void mysql_parse(THD *thd, Parser_state *parser_state) { int error MY_ATTRIBUTE((unused)); DBUG_ENTER(&amp;quot;mysql_parse&amp;quot;); DBUG_PRINT(&amp;quot;mysql_parse&amp;quot;, (&amp;quot;query: &#39;%s&#39;&amp;quot;, thd-&amp;gt;query().str)); DBUG_EXECUTE_IF(&amp;quot;parser_debug&amp;quot;, turn_parser_debug_on();); #这里加我们的代码，目的是如果判断SQL文本中有指定字符abc ，直接退出。 std::string str_blacklist=&amp;quot;abc&amp;quot;; std::string sqlstr_dba= thd-&amp;gt;query().str; std::string::size_type idx_blacki = sqlstr_dba.find( str_blacklist ); if ( idx_blacki != std::string::npos ) { DBUG_PRINT(&amp;quot;find blacklist sqlst&amp;quot;,(&amp;quot;query: &#39;%s&#39;&amp;quot;, thd-&amp;gt;query().</description>
+    </item>
+    
+    <item>
+      <title>51ak带你看MYSQL5.7源码3：修改代码实现你的第一个Mysql版本</title>
+      <link>/post/2018/03/23/51ak%E5%B8%A6%E4%BD%A0%E7%9C%8Bmysql5.7%E6%BA%90%E7%A0%813%E4%BF%AE%E6%94%B9%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AAmysql%E7%89%88%E6%9C%AC/</link>
+      <pubDate>Fri, 23 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/03/23/51ak%E5%B8%A6%E4%BD%A0%E7%9C%8Bmysql5.7%E6%BA%90%E7%A0%813%E4%BF%AE%E6%94%B9%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AAmysql%E7%89%88%E6%9C%AC/</guid>
+      <description>经过开发和测试环境部署
+现在到了我们动手的时候了，万事开头难，首先我们实现个小功能
+今天我们准备实现这样一个功能：数据永远也不会被DELETE掉
+当你把这个版本的MYSQL放到线上环境以后，就永远不用担心有人来DELETE你的数据了
+思路很简单：顺腾摸瓜找到Delete所在的FUNC在函数开头就返回一个OK
+问题来了，怎么找到这个函数?
+有两种：一种很有灵性的同学，可能一眼就看到了sql/sql_delete.cc 这个文件 ，猜到是这个文件
+另一种方法就是基础一点，我们顺着这样的代码一层一层找到这里也行。
+dispatch_command |-&amp;gt;mysql_parse |-&amp;gt;mysql_execute_command -&amp;gt;mysql_update/mysql_delete 为了快速上手，我们用第一种方法，直接打开sql/sql_delete.cc 找到这个方法:
+bool Sql_cmd_delete::execute(THD *thd) { DBUG_ASSERT(thd-&amp;gt;lex-&amp;gt;sql_command == SQLCOM_DELETE); LEX *const lex= thd-&amp;gt;lex; SELECT_LEX *const select_lex= lex-&amp;gt;select_lex; SELECT_LEX_UNIT *const unit= lex-&amp;gt;unit; TABLE_LIST *const first_table= select_lex-&amp;gt;get_table_list(); TABLE_LIST *const all_tables= first_table; if (delete_precheck(thd, all_tables)) return true; DBUG_ASSERT(select_lex-&amp;gt;offset_limit == 0); unit-&amp;gt;set_limit(select_lex); /* Push ignore / strict error handler */ Ignore_error_handler ignore_handler; Strict_error_handler strict_handler; if (thd-&amp;gt;lex-&amp;gt;is_ignore()) thd-&amp;gt;push_internal_handler(&amp;amp;ignore_handler); else if (thd-&amp;gt;is_strict_mode()) thd-&amp;gt;push_internal_handler(&amp;amp;strict_handler); /*注:我们要改的就是这里,直接返回一个true,而把真正要执行的地方给注释掉了*/ bool res =true; /*MYSQL_DELETE_START(const_cast&amp;lt;char*&amp;gt;(thd-&amp;gt;query().</description>
+    </item>
+    
+    <item>
+      <title>51ak带你看MYSQL5.7源码2：编译现有的代码</title>
+      <link>/post/2018/03/22/51ak%E5%B8%A6%E4%BD%A0%E7%9C%8Bmysql5.7%E6%BA%90%E7%A0%812%E7%BC%96%E8%AF%91%E7%8E%B0%E6%9C%89%E7%9A%84%E4%BB%A3%E7%A0%81/</link>
+      <pubDate>Thu, 22 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/03/22/51ak%E5%B8%A6%E4%BD%A0%E7%9C%8Bmysql5.7%E6%BA%90%E7%A0%812%E7%BC%96%E8%AF%91%E7%8E%B0%E6%9C%89%E7%9A%84%E4%BB%A3%E7%A0%81/</guid>
+      <description>现在把刚才在VSCODE里看到的源码，安装成服务。
+测试机：CENTOS6 (虚机配置为4c+4g )，
+YUM安装相关组件
+ yum -y install gcc-c++ ncurses-devel cmake make perl gcc autoconf automake zlib libxml libgcrypt libtool bison  执行完成后看一下现有的BOOTST版本 如果有删掉
+root@wjz-3-227 ~]# rpm -qa boost* boost-filesystem-1.41.0-18.el6.x86_64 boost-system-1.41.0-18.el6.x86_64 [root@wjz-3-227 ~]# yum -y remove boost-* Loaded plugins: fastestmirror, refresh-packagekit, security Setting up Remove Process Resolving Dependencies --&amp;gt; Running transaction check  上传我们编辑好的文件到测试机，放在/work目录下
+拷贝安装BOOST
+ root@wjz-3-227 mysql-server]# ll total 108 drwxr-xr-x. 8 root root 4096 Mar 22 2018 boost_1_59_0 -rw-r--r--.</description>
+    </item>
+    
+    <item>
+      <title>51ak带你看MYSQL5.7源码1：main入口函数</title>
+      <link>/post/2018/03/21/51ak%E5%B8%A6%E4%BD%A0%E7%9C%8Bmysql5.7%E6%BA%90%E7%A0%811main%E5%85%A5%E5%8F%A3%E5%87%BD%E6%95%B0/</link>
+      <pubDate>Wed, 21 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/03/21/51ak%E5%B8%A6%E4%BD%A0%E7%9C%8Bmysql5.7%E6%BA%90%E7%A0%811main%E5%85%A5%E5%8F%A3%E5%87%BD%E6%95%B0/</guid>
+      <description>去MYSQL官网下源码：https://dev.mysql.com/downloads/mysql/
+选 SOURCE CODE
+下载解压。选VS code来查看，
+用VS打开发现这些目录 ，根据了解到的目录结构说明，我们关注标红的两个目录，SQL是MYSQL的核心代码 ，STORGE里是各个存储引擎的代码
+打开sql/main.cc 发现只有一个函数，引用了同级目录下的mysqld_main(int argc, char **argv);
+F12跟过去，到了msyqld.cc下的这个过程 ，这里就是整个SERVER进程 的入口
+接下来就一个巨大的代码段，来启动MYSQLD进程
+我按个人的理解加了注释如下：
+#ifdef _WIN32 int win_main(int argc, char **argv) #else int mysqld_main(int argc, char **argv) #endif { /* Perform basic thread library and malloc initialization, to be able to read defaults files and parse options. */ my_progname= argv[0]; /*注: 记下mysql进程名*/ #ifndef _WIN32 #ifdef WITH_PERFSCHEMA_STORAGE_ENGINE pre_initialize_performance_schema(); #endif /*WITH_PERFSCHEMA_STORAGE_ENGINE */ // For windows, my_init() is called from the win specific mysqld_main if (my_init()) // init my_sys library &amp;amp; pthreads { sql_print_error(&amp;quot;my_init() failed.</description>
+    </item>
+    
+    <item>
+      <title>Mysql使用规范文档 20180223版</title>
+      <link>/post/2018/02/23/mysql%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83%E6%96%87%E6%A1%A3-20180223%E7%89%88/</link>
+      <pubDate>Fri, 23 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/02/23/mysql%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83%E6%96%87%E6%A1%A3-20180223%E7%89%88/</guid>
+      <description>强制：不允许在跳板机上/生产服务器上手工连接,查询或更改线上数据
+强制：所有上线脚本必须先在测试环境执行，验证通过以后方可在生产环境执行。
+强制：上线脚本的编码格式统一为UTF-8
+强制：访问数据库需要使用DNS域名，不能直接写IP
+建议：DB名、表名、字段名，都小写,长度建议尽量不超过15
+强制：建表_新建表必须包含自增主键列，主键列不应该被修改；
+强制：建表_MySQL 字符集 utf8mb4 存储引擎innodb
+强制：建表_可能需要建索引的字段，不允许为空 NOT NULL，其他字体内也建议为NOT NULL
+强制：建表_需要为每张表的每个字段添加字段注释（最好是中文）
+强制：建表_不允许有外键
+强制：建表_不允许用enum,set,bit数据类型
+强制：建表_需要为timestamp类型指定默认值
+强制：建表_定义列名时不能包含关键字
+强制：建表_控制单表数据量 单表不超过2000w，建议不超过500w；
+强制：建表_合理分表：限制单库表数量在300以内，除未来可能的分表以外；
+强制：建表_控制列数量，字段少而精，字段数建议在20以内；
+建议：建表_自增列最好是为无符号型
+建议：建表_自增列需兼容不连续空洞出现的可能如1,7,15,23
+建议：建表_少用text/blob varchar的性能会比text高很多；实在避免不了blob，请拆表
+建议：建表_不使用HINT强制使用索引
+强制：SQL_不在数据库做运算 cpu计算务必移至业务层；
+强制：SQL_禁用跨库查询。
+强制：SQL_不允许线上程序做DDL操作
+强制：SQL_select 程序代码中不允许有SELECT *
+强制：SQL_select 程序代码中最多一次SELECT不允许超过5万行记录
+强制：SQL_select 程序代码中单次SELECT 执行时间不能超过5秒，建议不超过200ms
+强制：SQL_删除(delete)，变更（update) 语句不允许不加where条件
+强制：SQL_删除(delete)，变更（update) 语句不使用LIMIT
+强制：SQL_删除(delete)，变更（update) 语句对超过50万行的表 要求WHERE条件一定要用到索引
+强制：SQL_删除(delete)，变更（update) 语句单个影响行数不能超过5千行。
+强制：SQL_删除(delete)，变更（update) ，INSERT 语句在影响了5千行以后，需要SLEEP1秒才能执行下一组。不能并发，不能多线程
+建议：SQL_拒绝3B 拒绝大sql语句：big sql 拒绝大事物：big transaction 拒绝大批量：big batch
+强制：SQL_大语句拆小语句，减少锁时间；一条大sql可以堵死整个库；
+建议：SQL_OR改写为IN() or的效率是n级别； in的消息时log(n)级别；
+建议：SQL_OR改写为UNION，实际上更建议在程序中去做merge，语句尽量保持简单。
+建议：SQL_in的个数建议控制在200以内；
+建议：SQL_limit高效分页limit越大，效率越低 建议用id &amp;gt; $last_selected_id limit 10;</description>
+    </item>
+    
+    <item>
+      <title>关系型数据库是怎么工作的7:数据管理</title>
+      <link>/post/2018/01/11/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%847%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Thu, 11 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/01/11/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%847%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/</guid>
+      <description>目录：
+[TOC]
+正文：
+数据管理器 查询管理器解析优化好SQL后，开始进行执行SQL，需要表和索引中的数据。 它要求数据管理器获取数据，但是有两个问题：
+ 关系数据库使用事务模型。 因此，你做不到随时获取任意数据，因为其他人可能会同时使用/修改数据。 数据检索是数据库中最慢的操作，因此数据管理器必须足够聪明才能获取并将数据保留在内存缓冲区中。 在这一部分中，我们将看到关系数据库如何处理这两个问题。 我不会谈论数据管理器获取数据的方式，因为它不是最重要的。 我们分两部分介绍：缓存管理，事务管理  缓存管理Cache manager 我们知道，数据库的主要瓶颈是磁盘I/O。 为了提高性能，现代数据库使用缓存管理器。
+查询执行程序不是直接从文件系统获取数据，而是向缓存管理器请求数据。 高速缓存管理器具有一个称为缓冲池的内存中高速缓存。 从内存中获取数据极大地加快了数据库的速度。
+很难给出一个数量级，因为它取决于您需要执行的操作： - 顺序访问（例如：全表扫描）与随机访问（例如：按行ID进行访问）， - 读与写 以及数据库使用的磁盘类型： - 7.2k/10k/15k rpm HDD - SSD - RAID 1/5/…
+但我想说内存比磁盘快100到10万倍。
+但是，这导致了另一个问题（与数据库一样……）。 缓存管理器需要在查询执行程序使用它们之前获取内存中的数据； 否则查询管理器必须等待慢速磁盘中的数据。
+ 预读 此问题称为预先读取。 查询执行程序知道所需的数据，因为它知道查询的全部流程，并且知道磁盘上的数据以及统计信息。 按这样的逻辑： - 当查询执行程序正在处理其第一堆数据时 - 它要求缓存管理器(我们简称为CM)预加载第二组数据 - 开始处理第二组数据时 - 它要求CM预加载第三束，并通知CM可以从缓存中清除第一束。 - … CM将所有这些数据存储在其缓冲池中。 为了知道是否仍然需要数据，缓存管理器添加了有关缓存数据的额外信息（称为latch）。
+有时，查询执行程序不知道需要什么数据，或者某些数据库不提供此功能。取而代之的是，他们使用推测性预取（例如：如果查询执行器要求提供数据1,3,5，在不久的将来很可能会要求提供7,9,11）或顺序预读（在这种情况下，CM只是从磁盘加载要求的数据后的下一个连续数据）。
+为了监视预读的工作状况，现代数据库提供了一个称为缓冲区/高速缓存命中率的指标。命中率显示在不需要DISK访问就直接在缓存里找到数据的频率。
+请注意：不良的缓存命中率并不总是意味着缓存无法正常工作。有关更多信息，您可以阅读Oracle文档。 https://docs.oracle.com/database/121/TGDBA/tune_buffer_cache.htm 但是，缓冲区是有限的内存。因此，它需要删除一些数据才能加载新数据。加载和清除缓存在磁盘和网络I/O方面要付出一定的代价。如果您有一个经常执行的查询，不断的加载然后清除该查询使用的数据会很笨拙。为了解决此问题，现代数据库使用缓冲区替换策略。
+缓冲区替换策略 Buffer-Replacement strategies 现代数据库 (至少SQL Server, MySQL, Oracle and DB2)用 LRU算法.</description>
+    </item>
+    
+    <item>
+      <title>关系型数据库是怎么工作的6:SQL查询</title>
+      <link>/post/2018/01/08/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%846sql%E6%9F%A5%E8%AF%A2/</link>
+      <pubDate>Mon, 08 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/01/08/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%846sql%E6%9F%A5%E8%AF%A2/</guid>
+      <description>查询管理器 上图标红的部分就是数据库的能力所在.在这里一个写得不好的(最初的)查询语句会被转换为一个高效的可执行代码.然后执行它,并将执行结果返回给客户端管理器. 这个操作可以分解成: - 首先检查SQL是否有效 - 然后重写这个SQL,去掉一些没用的操作,加上一些预先优化 - 然后优化SQL,提高性能并转化为可执行的数据访问计划 - 然后编译执行计划 - 最后,执行它
+在接下来的部分,我们要讨论的不包含最后两部分(编译和执行),因为他们不重要
+想更好的理解本篇文章的内容,建议你后续阅读以下内容:
+ 有关基于成本的优化的初步研究论文（1979年）：关系数据库管理系统中的访问路径选择。本文只有12页，中等难度。 DB2 9.X如何优化查询 非常好而深入的介绍 PostgreSQL如何优化查询的很好的演示 这是最易于访问的文档，因为它比“让我们看看PostgreSQL使用的算法”更多地是关于“让我们看看PostgreSQL在这些情况下给出的查询计划”。 有关优化的官方SQLite文档:https://www.sqlite.org/optoverview.html。易于阅读，因为SQLite使用简单的规则。而且，这是唯一真正说明其工作原理的官方文档。 关于Oracle 12c中的优化的白皮书 两本关于查询优化的理论课程，来自“数据库系统概念”一书的作者。重点放在磁盘I/O成本方面的读物不错，但在CS方面也需要良好的水平。课程1 课程2 我发现另一门理论课程可以访问，但只侧重于联接运算符和磁盘I/O。 课程3  1.查询解析器 每个SQL语句都会发送到解析器，在该处检查语法是否正确。如果查询中有错误，解析器将拒绝该查询。例如，如果您写的是“SLECT…”而不是“SELECT…”，则故事到此结束。
+更进一步。它还检查关键字是否以正确的顺序使用。例如，SELECT之前的WHERE将被拒绝。
+然后，分析查询中的表和字段。解析器使用数据库的元数据来检查：
+ 表是否存在 表中的字段是否存在 是否可以对字段类型进行操作（例如，不能对整数使用substring函数） 然后，它检查您是否具有读取（或写入）SQL中的表的权限。同样，这些对表的访问权限由您的DBA设置。  在此解析期间，SQL查询将转换为内部表示形式（通常为树）
+如果一切正常，则将内部表示形式发送到查询重写器。
+2.查询重写器 在此步骤中，我们已经有了上一步结果的SQL内部表示。重写器的目的是：
+ 预优化查询 避免不必要的操作 帮助优化器找到最佳解决方案   重写器在sql查询中执行已知规则的清单。如果查询符合规则模式，则将应用该规则并重写查询。以下是（可选）规则的详尽列表：
+ 视图合并：如果您在查询中使用视图，则视图将使用该视图的SQL代码进行转换。 子查询拼合：很难优化子查询，因此重写器将尝试使用子查询修改查询以删除子查询。 例如:  SELECT PERSON.* FROM PERSON WHERE PERSON.person_key IN (SELECT MAILS.person_key FROM MAILS WHERE MAILS.mail LIKE &#39;christophe%&#39;);  将被重写为：</description>
+    </item>
+    
+    <item>
+      <title>关系型数据库是怎么工作的5:基本组件之客户端管理</title>
+      <link>/post/2018/01/02/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%845%E5%9F%BA%E6%9C%AC%E7%BB%84%E4%BB%B6%E4%B9%8B%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Tue, 02 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/01/02/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%845%E5%9F%BA%E6%9C%AC%E7%BB%84%E4%BB%B6%E4%B9%8B%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%AE%A1%E7%90%86/</guid>
+      <description>基本组件(前4节)  引言 时间复杂度 合并排序 数组.树.哈希表  我们刚介绍的是数据库内部的基本原理
+数据库是一个可以轻松访问和修改的**信息的集合*。 但是一堆简单的文件也可以做到这一点。 实际上，最简单的数据库（如SQLite）仅是一堆文件。 但是SQLite是精心设计的一堆文件因为它可以: - 使用事务去确保数据安全和交易连续性 - 快速处理数据,即使是几百万行数据
+通俗来说,数据库可以如下图所示
+在写这部分前,我看了很多书和论文,不同的数据库对基础组件的称呼不同.所以不要关注我是怎么组织数据库理念的,也不要关注我是怎么给这些处理过程命名的.因为这篇文章的需要我做了一些取舍.忽略这些组件的差异;总的思路是将整个数据库系统分成以下几个组件:
+核心组件:  进程管理器 : 很多数据库有个*进程/线程*池需要处理.此外，为了获得纳秒级的性能，某些现代数据库使用自己的线程管理而不是操作系统线程管理。 网络管理器 : 网络I/O是一个关键点，尤其是对于分布式数据库。 这就是为什么某些数据库拥有自己的管理器的原因 文件管理器 : 磁盘I/O是数据库最大(或者说是每一位)的瓶劲.拥有一个自身的文件管理理可以很好的的适配或替代操作系统文件管理器 内存管理器 : 为了避免磁盘I/O需要大量的内存.处理大量的内存你需要一个高效的内存管理器,尤其是你有很多查询同时用到内存的情况下 安全管理器 : 用于管理用户的身份验证和授权 客户端管理器 : 用于管理客户端的连接 &amp;hellip;&amp;hellip;  工具:  备份管理器 : 用于保存和还原数据库。。 恢复管理器 : 崩溃后以一致状态重新启动数据库 监视管理器 : 用于记录数据库的活动并提供监视数据库的工具 后台管理器 : 用于存储元数据（如表的名称和结构），并提供工具来管理数据库，模式，表空间，… &amp;hellip;&amp;hellip;  查询管理器：  查询解析器 ：检查查询是否有效 查询重写器 ：预优化查询 查询优化器 ：优化查询 查询执行器 ：编译并执行查询  数据管理器:  事务处理器 ：处理事务 缓存管理器 ：在使用数据之前先将其放入内存中，然后在将其写入磁盘之前先将其放入内存中 数据访问管理器 ：访问磁盘上的数据  在这篇文章的剩余部分,我将着重讲述一个数据库系统如何用下面三个过程来处理SQL查询的 - 客户端管理器 - 查询管理器 - 数据管理器(这里也会讲恢复管理器)</description>
+    </item>
+    
+    <item>
+      <title>搭建一套完整的Mysql5.7innodbcluster(GroupReplication&#43;mysqlrouter)</title>
+      <link>/post/2017/12/23/%E6%90%AD%E5%BB%BA%E4%B8%80%E5%A5%97%E5%AE%8C%E6%95%B4%E7%9A%84mysql5.7innodbclustergroupreplication-mysqlrouter/</link>
+      <pubDate>Sat, 23 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017/12/23/%E6%90%AD%E5%BB%BA%E4%B8%80%E5%A5%97%E5%AE%8C%E6%95%B4%E7%9A%84mysql5.7innodbclustergroupreplication-mysqlrouter/</guid>
+      <description>先说三个大步骤：
+搭Mysql5.7 Group Replication ,配置成单主模式
+安装Mysqlshell,配innodbcluster
+安装Mysql-router
+第一步：搭Mysql5.7 Group Replication ,配置成单主模式
+为了节省步骤，我们用RPM方式安装
+yum install -y libaio yum install libnuma* -y rpm -qa | grep -i mysql # 这一步找到旧的mysql rpm -e mysql-libs-5.1.73-8.el6_8.x86_64 --nodeps #我测试的实例上只有这个，删了 rpm -ivh mysql-community-common-5.7.20-1.el6.x86_64.rpm rpm -ivh mysql-community-libs-5.7.20-1.el6.x86_64.rpm rpm -ivh mysql-community-devel-5.7.20-1.el6.x86_64.rpm rpm -ivh mysql-community-client-5.7.20-1.el6.x86_64.rpm rpm -ivh mysql-community-libs-compat-5.7.20-1.el6.x86_64.rpm rpm -ivh mysql-community-embedded-5.7.20-1.el6.x86_64.rpm rpm -ivh mysql-community-server-5.7.20-1.el6.x86_64.rpm rpm -qa | grep mysql　#验证  拷贝cnf.和服务文件
+cp mysqld33* /etc/init.d/ cp -r mysql33* /home/wokofo/  配置文件：</description>
+    </item>
+    
+    <item>
+      <title>mysql中sql语句的一些写法技巧</title>
+      <link>/post/2017/10/08/mysql%E4%B8%ADsql%E8%AF%AD%E5%8F%A5%E7%9A%84%E4%B8%80%E4%BA%9B%E5%86%99%E6%B3%95%E6%8A%80%E5%B7%A7/</link>
+      <pubDate>Sun, 08 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017/10/08/mysql%E4%B8%ADsql%E8%AF%AD%E5%8F%A5%E7%9A%84%E4%B8%80%E4%BA%9B%E5%86%99%E6%B3%95%E6%8A%80%E5%B7%A7/</guid>
+      <description>一行转多行  url列以分号分隔，将其一行转化为多行，借助自增长表help_topic 实现。
+select a.dboop_id,dboop_code,tab_name,tabid,refer_dboop, substring_index(substring_index(a.url,&#39;;&#39;,b.help_topic_id+1),&#39;;&#39;,-1) as urls from t_dboop_mapping a join mysql.help_topic b on (length(a.url) - length(replace(a.url,&#39;;&#39;,&#39;&#39;))+1) &amp;gt; b.help_topic_id;  多行转一行  分组后汇总成一行，testid以逗号分隔
+select tabID,group_concat(distinct cast(testid as char(8))) as testid from tab_test group by tabID  COALESCE COALESCE(value,…)是一个可变参函数，可以使用多个参数。
+select coalesce(null,2,3); // Return 2 select coalesce(null,null,3); // Return 3 select coalesce(1,2,3); // Return 1  这个参数使用的场合为：假如某个字段默认是null，你想其返回的不是null，而是比如0或其他值，可以使用这个函数
+作用：接受多个参数，返回第一个不为 NULL 的参数，如果所有参数都为 NULL，此函数返回 NULL；当它使用 2 个参数时，和 IFNULL 函数作用相同。 ## CONCAT_WS() 和 concat()一样，将多个字符串连接成一个字符串，但是可以一次性指定分隔符（concat_ws 就是 concat with separator） `concat_ws(separator, str1, str2, .</description>
+    </item>
+    
+    <item>
+      <title>关系型数据库是怎么工作的4:数组.树.哈希表</title>
+      <link>/post/2017/09/12/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%844%E6%95%B0%E7%BB%84.%E6%A0%91.%E5%93%88%E5%B8%8C%E8%A1%A8/</link>
+      <pubDate>Tue, 12 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017/09/12/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%844%E6%95%B0%E7%BB%84.%E6%A0%91.%E5%93%88%E5%B8%8C%E8%A1%A8/</guid>
+      <description>3.数组.树.哈希表 这一节讲数据结构。很重要，因为它是现代数据库的主心骨。在这一节，我还会介绍数据库索引的概念
+3.1 数组 二维数组是一种最简单的数据结构，一个表可以看作是一个数组，例如：
+这个二维数组是一张行和列组成的表：
+ 每行代表一个主题 这些列描述主题的功能 虽然可以很好地存储和可视化数据，但是当您需要查找特定值时，它会很糟糕。 例如：如果你想找到所有UK工作的人，你只能查找每一行去确定是不是有UK工作的，这将花费你N次操作（N=行数）,这也不太差但这里有更快的办法吗？这就是一会我们要说的&amp;rdquo;树&amp;rdquo;出现了。  Note: 大多数现代数据库都提供高级阵列来高效地存储表，例如堆组织表或索引组织表。 但这并不会改变在一组列上快速搜索特定条件的问题。
+3.2 树和索引 二叉搜索树是一种有特殊属性的二叉树，每个节点中的key必须满足以下条件：
+ 必须大于所有存储在左侧子树中的key 必须小于所有存储在右侧子树中的key  让我们用图看看这个意思
+这棵树有N=15个元素,我们来试试找 208
+ 我从根节点 136 开始. 因为136&amp;lt;208, 我需要在136的右子树上找. 398&amp;gt;208 因此, 我要找398的左子树 250&amp;gt;208 因此, 我要找250的左子树 200&amp;lt;208 因此, 我要找200的右子树. 但 200 并没有右子树, 这个KEY不存在 (因为如果它存在,它只能存在200的右子树上,现在没有)  我们来试试找 40
+ 我从根节点 136 开始. 因为136&amp;gt;40, 我需要在136的左子树上找. 80&amp;gt;40 因此, 我要找80的左子树 40= 40, 节点存在. 我提取出这个节点行id(图上没有显示ID)然后通过行id查找表 知道行ID后，我便知道数据在表上的确切位置，因此可以立即获取它。  最后,两个搜索都花费了*树的高度*次操作,如果你有认真阅读上一节中我们关于合并排序的内容 ,你应该明白这个值是 log(N).所以花费了long(N)次操作.还不错!
+3.3 回顾下我们的问题 但是这个描述非常抽象,让我们回到我们的问题(上一小节中在表中查找UK工作的人). 同样是一棵树,不过这次不再是愚蠢的int型数字,而是一个代表国家的字符串.</description>
+    </item>
+    
+    <item>
+      <title>关系型数据库是怎么工作的3:合并排序</title>
+      <link>/post/2017/09/11/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%843%E5%90%88%E5%B9%B6%E6%8E%92%E5%BA%8F/</link>
+      <pubDate>Mon, 11 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017/09/11/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%843%E5%90%88%E5%B9%B6%E6%8E%92%E5%BA%8F/</guid>
+      <description>2.合并排序 当需要排序一个集合时，你该怎么做？ 什么？ 你调用 sort()方法&amp;hellip;. 好吧，好答案&amp;hellip;但是对一个数据库来说，你需要弄明白这个sort()方法是怎么工作的.
+这里有几种不错的排序算法，所以我这里重点说说这个最重要的算法：合并排序 你可能现在还不明白为啥对数据进行排序这么重要，在这篇文章后面的章节&amp;lt;查询优化&amp;gt;中会交待。 此外，了解合并排序将有助于我们理解后面的一个常用数据库操作：join ,因为它调用了合并排序
+2.1合并 像许多有用的算法一样，合并排序基于一个技巧：将2个大小为N/2的已排序数组合并为N个元素的排序数组仅需要N次操作。 此操作称为合并。
+让我们通过一个简单的例子来说明：
+从上图上你可以看到，要想得到最终的已经排好序的8元素数组，你只需要迭代一次在两个有序的4元素数组中.
+ 比较两个数组的第一个元素(这里要想象一下两个数组都有个游标) 然后把最小的那个数放到8元素数组的第一个位置上 接着把游标顺着移走的数移到下一个位置上 重复1，2，3 动作，直到到达两个数组其中一个的终点。 然后把另一个数组里剩下的元素都放到8元素结果集中 这个排序的前题是原始的4元素数组是已经排序过的，所以你不需要在数组中做&amp;rdquo;go back&amp;rdquo; 操作  现在我们已经明白了合并排序的技巧了，这是我写的合并排序的伪码
+array mergeSort(array a) if(length(a)==1) return a[0]; end if //recursive calls [left_array right_array] := split_into_2_equally_sized_arrays(a); array new_left_array := mergeSort(left_array); array new_right_array := mergeSort(right_array); //merging the 2 small ordered arrays into a big one array result := merge(new_left_array,new_right_array); return result;  合并排序把问题分解成更小的问题，然后这些通过解决小问题，得到初始问题的结果。(这种算法被称为：分而治之). 如果你不明白这种算法，不要着急，我一开始也不太明白，我们来尝试把这个算法拆成两阶段算法：
+ 分隔阶段 把数组分隔成更小的数组 排序阶段 把小的数组合并到一起（用合并）成一个大数组  2.</description>
+    </item>
+    
+    <item>
+      <title>关系型数据库是怎么工作的2:时间复杂度</title>
+      <link>/post/2017/09/10/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%842%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/</link>
+      <pubDate>Sun, 10 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017/09/10/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%842%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/</guid>
+      <description>1 O(1) vs O(n^2) 现如今，很多程序员不关心时间复杂度&amp;hellip;.好吧，他们是对的！
+但当你处理大数据时（我不是说几千个）或者你为了几毫秒的性能在优化，就非常有必要了解这个理论了。刚巧，数据库符合这两种情况！ 不会花费太长时间，只是了解下，这将有助于我们理解后面说的&amp;rdquo;基于成本的优化&amp;rdquo;
+1.1 时间复杂度概念 时间复杂度被用来表达算法处理已知问题所消耗的时长，为了表达这个复杂度，计算机科学家使用数学上的大O符号。 该符号加上算法需要进行多少次操作函数一起使用。
+用下图来说明时间复杂度的差异 O(1) 是静态的 O(log(n)) 保持在一个低复杂度，哪怕有几十亿的数据要处理 O(n^2) 是复杂度最差的
+1.2 时间复杂度举例 当数据量少的时候，O(1) 和 O(n^2) 之间的差异是微不足道的。 比如说，当你需要个算法处理2000条数据时
+ O(1) 算法花费 1 次操作 O(log(n)) 算法花费 7 次操作 O(n) 算法花费 2000 次操作 O(n*log(n)) 算法花费 14000 次操作 O(n^2) 算法花费 4000000 次操作  看起来 O(1) 和 O(n^2) 算法好像差了4000000次倍的操作，但最多只多花了2毫秒，跟你眨一次眼睛一样的时间，现代的CPU进程每秒处理几亿次操作，这就是为什么性能和优化在IT项目中显得不那么重要.
+正如我说的那样，当处理大量数据时，理解时间复杂度的概念还是非常重要的，这次我们试试处理 1000000条数据（一百万行对数据库来说并不多）
+ O(1) 算法花费 1 次操作 O(log(n)) 算法花费 14 次操作 O(n) 算法花费 100万 次操作 O(n*log(n)) 算法花费 140万 次操作 O(n^2) 算法花费 10000亿 次操作  都不用去计算，这个糟糕的O(n^2) 算法足够你去喝杯咖啡了（甚至再来一杯）！如果再100万条数据后面再加一个0，那就足够你睡一小觉了。</description>
+    </item>
+    
+    <item>
+      <title>关系型数据库是怎么工作的1:引言</title>
+      <link>/post/2017/09/09/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%841%E5%BC%95%E8%A8%80/</link>
+      <pubDate>Sat, 09 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017/09/09/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%841%E5%BC%95%E8%A8%80/</guid>
+      <description>本文翻译自一篇法国作者的博客，觉得写得不错， 原文地址：http://coding-geek.com/how-databases-work/
+说起关系型数据库，我总是认为少了点什么。 关系型DB几乎无处不在，有不同类型，从迷你但实用的SQLite到功能强大的Teradata。 但只有少数几个文章谈论这些关系型数据库的工作方式。
+不信，你可以看看Google搜索“关系数据库如何工作”，只有很少的几条结果，且非常简短。 如果你搜索新的流行技术(Big Data, NoSQL or JavaScript),你会发现很多深入解释工作原理的文章
+是不是关系型数据库太老了，以至于在大学课程、研究论文、书本以外的地方解释原理显得无聊。
+作为一个开发者，我不能容忍我不明白的事情发生，而且 ，如果数据库技术已经被用了40年，这里一定有原因。这些年，我花了几百个小时去真正理解这些奇怪的我每天都用的黑盒子， 关系型数据库是非常有趣的因为他们基于有用的可复用的理念上，如果你有兴趣搞懂数据库，但是你没有时间或意愿去深入了解这个很宽泛的主题，那么你会喜欢这篇文章的。
+标题已经说得很清楚了，这篇文章的上的不是为了让大家学会怎么用数据库。所以你应该已经知道怎么写一个简单的JOIN查询和基本的增删改查SQL，否则你可能无法理解这篇文章，这是你唯一需要了解的知识，其他的我来给你们讲解吧。
+这是一篇很长的包括了很多算法和数据结果技术文章,将会花费你很长的时间去阅读，有些概念很难懂，你可以跳过它理解整体的思路。
+为了你更容易理解，本文大约分成三个部分
+ 一些低阶或高阶的数据库理论(1-3节，包含在本篇文章中) 查询优化器进程（第4节） 事务和缓冲池管理（第5节）  以下是目录：
+ 基础知识  1.1 O(1) vs O(n^2)
+ 1.2 合并排序 1.3 数组，树，哈希表  通用概念 客户端管理 SQL查询  4.1 SQL解析 4.2 查询重写 4.3 统计信息 4.4 SQL优化 4.5 SQL执行  数据管理  5.1 缓存管理 5.2 事务管理  总结  在很远很远的远古时期,码农们需要准确知道他们编写的代码是怎么运行的。他们心里知道他们的算法和数据结构，因为他们不能浪费一点点他们那些破电脑的一点点CPU和内存。
+在这个章节，我将带大家回顾这些概念，因为这对弄懂数据库很关键，顺便我还会介绍索引的概念
+本节完成，下一章节我们将讨论：时间复杂度
+本篇文章完整分为7节，当前第1节。以下完整章节：
+ 引言 时间复杂度 合并排序 数组.树.哈希表 客户端管理 SQL查询 数据管理  </description>
+    </item>
+    
+    <item>
+      <title>Mysql简单面试题(应届生)</title>
+      <link>/post/2016/03/18/mysql%E7%AE%80%E5%8D%95%E9%9D%A2%E8%AF%95%E9%A2%98%E5%BA%94%E5%B1%8A%E7%94%9F/</link>
+      <pubDate>Fri, 18 Mar 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2016/03/18/mysql%E7%AE%80%E5%8D%95%E9%9D%A2%E8%AF%95%E9%A2%98%E5%BA%94%E5%B1%8A%E7%94%9F/</guid>
+      <description>1.写出显示当前数据库版本号的SQL
+2.创建一个数据库acorder
+3.创建用户acorder_w，使之可以读写acorder数据库？
+4.创建一innodb表userinfo，字段:userid主键自增/username用户名/nickname中文姓名/createtime创建时间 ,其中username上建索引.
+5.修改表userinfo,增加一个cardno用来存放身份证号,修改createtime列名为firsttime.
+6.使用户acorder_w，只可以在192.168.100.* 网段可以登录并使用acorder数据库.
+7.什么是MySQL多实例，如何配置MySQL多实例?
+8.请解释全备、增备、冷备、热备概念及使用场景.
+9.mysql binlog有几种格式，描述其优缺点.</description>
+    </item>
+    
+    <item>
+      <title>Mysql大批量更新规范文档(批量update/select)</title>
+      <link>/post/2016/02/23/mysql%E5%A4%A7%E6%89%B9%E9%87%8F%E6%9B%B4%E6%96%B0%E8%A7%84%E8%8C%83%E6%96%87%E6%A1%A3%E6%89%B9%E9%87%8Fupdate/select/</link>
+      <pubDate>Tue, 23 Feb 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2016/02/23/mysql%E5%A4%A7%E6%89%B9%E9%87%8F%E6%9B%B4%E6%96%B0%E8%A7%84%E8%8C%83%E6%96%87%E6%A1%A3%E6%89%B9%E9%87%8Fupdate/select/</guid>
+      <description>业务上操作一批数据行，包括定期数据清理（delete）、初始化数据（insert）、 批量数据订正/修复（update）、业务数据导出/查询（select）。以上这些操作 若是涉及的数据量在 1 万行以下，通常没有问题。但超过一定数量级仍采用一个 SQL 进行处理，就会导致数据库出现主从延迟、IO 负载大、数据库响应超时甚至 没有响应的情况。 所以，对于大数据量（1 万行以上）的数据进行操作时，可以采用批量的方式。 原则：批量处理数据；事务大小合适；数据处理要可控。 给 RD 的建议，这些建议都是最安全且高效的，可以保证不影响线上数据库正常 运行，以及主从同步没有延迟，当然具体量值还要视情况而定： 对于 insert/update/delete，每次处理 200 行数据，执行 commit，之后 sleep 1 秒 对于 select，每次查询 1000 行数据，之后 sleep1 秒 下面举几个例子来说明如何来做。 注：例子中都是类 SQL，有些字段不存在，具体 SQL 视表而定，这个不要太较真 儿。 ###例子 1：数据表 iknow_accuse_user_item 要根据字段 accuse_time 清理 3 个月 前的数据 注：accuse_time 必须是索引字段，禁止全表扫描 #####批量删除方法 1：
+begin; delete from iknow_accuse_user_item where accuse_time &amp;lt; ‘3-month-ago’ limit 200; commit; select sleep(1);  重复上面的代码。。。。 #####批量删除方法 2： 首先在备库或者从业务前端获取要删除数据行的主键值，
+select itemid from iknow_accuse_user_item where accuse_time &amp;lt; ‘3-month-ago’ limit 200;  然后根据主键 itemid 进行删除，</description>
+    </item>
+    
+  </channel>
+</rss>

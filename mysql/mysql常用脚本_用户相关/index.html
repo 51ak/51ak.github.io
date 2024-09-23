@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL常用脚本_用户相关| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL常用脚本_用户相关</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#生成随机密码">生成随机密码</a></li>
+    <li><a href="#创建用户及赋权">创建用户及赋权</a>
+      <ul>
+        <li><a href="#mysql56及以前">MySQL5.6及以前</a></li>
+        <li><a href="#mysql57">MySQL5.7+</a></li>
+        <li><a href="#mysql80">MySQL8.0</a></li>
+        <li><a href="#常用语句">常用语句</a></li>
+      </ul>
+    </li>
+    <li><a href="#修改删除-用户">修改/删除 用户</a></li>
+    <li><a href="#查用户">查用户</a></li>
+    <li><a href="#权限管理">权限管理</a></li>
+    <li><a href="#生成用户及权限">生成用户及权限</a>
+      <ul>
+        <li><a href="#mysql56及以前-1">MySQL5.6及以前</a></li>
+        <li><a href="#mysql57-1">MySQL5.7+</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="生成随机密码">生成随机密码</h2>
+<pre><code>select substring(md5(rand()), 1, 15);
+
+
+select left(replace(uuid(),  '-',  '.'),15);
+</code></pre><h2 id="创建用户及赋权">创建用户及赋权</h2>
+<h3 id="mysql56及以前">MySQL5.6及以前</h3>
+<pre><code>grant select on 库名.* to  `用户名`@`主机名` identified by '密码';
+</code></pre><h3 id="mysql57">MySQL5.7+</h3>
+<pre><code>create user `用户名`@`主机名` identified by '密码';
+grant select on 库名.* to  `用户名`@`主机名`;
+</code></pre><h3 id="mysql80">MySQL8.0</h3>
+<pre><code>create user `用户名`@`主机名`identified  with  mysql_native_password by '密码';
+GRANT select on 库名.* TO `用户名`@`主机名`;
+</code></pre><h3 id="常用语句">常用语句</h3>
+<pre><code>-- 创建一个管理员帐号
+create user 'dba'@'%' IDENTIFIED BY  '********';
+GRANT ALL PRIVILEGES ON *.* TO 'dba'@'%'   WITH GRANT OPTION;
+
+-- 创建一个复制帐号
+create user repl@'%' identified  with  mysql_native_password by '********';
+GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO `repl`@`%`;
+
+</code></pre><h2 id="修改删除-用户">修改/删除 用户</h2>
+<pre><code>alter user '用户名'@'主机名' identified with mysql_native_password by '密码';
+
+drop user '用户名'@'主机名';
+</code></pre><h2 id="查用户">查用户</h2>
+<pre><code>select * from user;
+</code></pre><h2 id="权限管理">权限管理</h2>
+<pre><code>show grants for '用户名'@'主机号';
+
+grant 权限 on 数据库名.表名 to '用户名'@'主机号';
+
+revoke 权限 on 数据库名.表名 from '用户名'@'主机号';
+
+常用:
+
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP ON dbtest_owner.* TO `dbtest`@`%`;
+GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO `repl`@`%`;
+
+</code></pre><h2 id="生成用户及权限">生成用户及权限</h2>
+<h3 id="mysql56及以前-1">MySQL5.6及以前</h3>
+<pre><code>mysql  -h127.0.0.1 -P3306 -udba -p{password} --skip-column-names --execute &quot;SELECT CONCAT('SHOW GRANTS FOR ', QUOTE(user), '@', QUOTE(host), ';') FROM mysql.user&quot; | mysqlw  -h127.0.0.1 -P3306 -udba -p{password} --skip-column-names |egrep -v &quot;localhost|127.0.0.1|::1&quot;
+
+</code></pre><h3 id="mysql57-1">MySQL5.7+</h3>
+<pre><code>mysqlpump   -h127.0.0.1 -P3306 -udba -p{password} --set-gtid-purged=off --exclude-databases=% --users
+
+
+mysql   -h127.0.0.1 -P3306 -udba -p{password}  --silent --skip-column-names --execute &quot;SELECT CONCAT('CREATE USER ', QUOTE(user), '@', QUOTE(host),  IF(LENGTH(plugin) &gt; 0, CONCAT(' IDENTIFIED WITH ', plugin, IF(LENGTH(password) &gt; 0, CONCAT(' AS ', QUOTE(password)), '')), IF(LENGTH(password) &gt; 0, CONCAT(' IDENTIFIED BY PASSWORD ', QUOTE(password)), '')), ';') FROM mysql.user&quot;
+
+mysql  -h127.0.0.1 -P3306 -udba -p{password}  --skip-column-names --execute &quot;SELECT CONCAT('SHOW GRANTS FOR ', QUOTE(user), '@', QUOTE(host), ';') FROM mysql.user&quot; | mysql  -h127.0.0.1 -P3306 -udba -p{password} --skip-column-names #| sed -e &quot;s/ IDENTIFIED BY PASSWORD '.*'//&quot;
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2021/04/02</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC">常用脚本</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%9F%BA%E7%A1%80">基础</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

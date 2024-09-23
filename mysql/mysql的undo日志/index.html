@@ -1,0 +1,346 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL的7种日志(三):UndoLog| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL的7种日志(三):UndoLog</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#0前言">0.前言</a></li>
+    <li><a href="#1什么是undolog">1.什么是undolog</a></li>
+    <li><a href="#2undolog的作用">2.undolog的作用</a></li>
+    <li><a href="#3undolog的存储">3.undolog的存储</a>
+      <ul>
+        <li><a href="#31-物理存储位置">3.1 物理存储位置</a></li>
+        <li><a href="#32-物理存储结构">3.2 物理存储结构</a></li>
+      </ul>
+    </li>
+    <li><a href="#4undo-log的工作原理">4.undo log的工作原理</a>
+      <ul>
+        <li><a href="#41-undo-log实现原子性和持久化的原理">4.1 undo log实现原子性和持久化的原理：</a></li>
+        <li><a href="#41-undo-log-实现mvcc">4.1 undo log 实现mvcc</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="0前言">0.前言</h2>
+<p>续：</p>
+<blockquote>
+<p><a href="https://www.dboop.com/mysql/mysql7%E7%A7%8D%E6%97%A5%E5%BF%97/">MySQL的7种日志(一):概况</a></p>
+</blockquote>
+<blockquote>
+<p><a href="https://www.dboop.com/mysql/mysql%E7%9A%84redo%E6%97%A5%E5%BF%97/">MySQL的7种日志(二):RedoLog</a></p>
+</blockquote>
+<h2 id="1什么是undolog">1.什么是undolog</h2>
+<ul>
+<li>undo：撤销或取消，以撤销/回滚操作为目的，返回指定某个状态的操作。</li>
+<li>undolog：数据库事务开始之前，会将要修改的记录存放到 Undo 日志里，当事务回滚时或者数据库崩溃时，可以利用Undo日志，撤销未提交事务对数据库产生的影响。</li>
+<li>undolog在事务开始前产生；事务在提交时，并不会立刻删除undolog，innodb会将该事务对应的 undo log 放入到删除列表中，后面会通过后台线程purge thread进行回收处理。</li>
+<li>undolog属于逻辑日志，记录一个变化过程。例如执行一个delete，undo log会记录一个insert；执行一个update，undo log会记录一个相反的update。</li>
+</ul>
+<h2 id="2undolog的作用">2.undolog的作用</h2>
+<ul>
+<li>实现事务的原子性
+当事务回滚时或者数据库崩溃时，利用Undo日志，撤销未提交事务对数据库产生的影响。事务处理过程中，如果出现了错误或者用户执行了 ROLLBACK 语句，MySQL 可以利用 Undo Log 中的备份将数据恢复到事务开始之前的状态。</li>
+<li>实现多版本并发控制（MVCC）
+Undo Log 在 MySQL InnoDB 存储引擎中用来实现多版本并发控制。事务未提交之前，Undo Log 保存了未提交之前的版本数据，Undo Log 中的数据可作为数据旧版本快照 供其他并发事务进行快照读。（构建read view视图）</li>
+</ul>
+<h2 id="3undolog的存储">3.undolog的存储</h2>
+<h3 id="31-物理存储位置">3.1 物理存储位置</h3>
+<h4 id="找到具体存放的位置">找到具体存放的位置</h4>
+<p>MySQL5.6.3 之前的版本undolog存储在系统共享表空间里，后续的版本推荐存话在单独的文件中</p>
+<pre><code>mysql&gt; show global variables like '%undo%';
++--------------------------+-------------------------+
+| Variable_name            | Value                   |
++--------------------------+-------------------------+
+| innodb_max_undo_log_size | 1073741824              |
+| innodb_undo_directory    | /data/mysql3306/innolog |
+| innodb_undo_log_encrypt  | OFF                     |
+| innodb_undo_log_truncate | ON                      |
+| innodb_undo_tablespaces  | 2                       |
++--------------------------+-------------------------+
+5 rows in set (0.01 sec)
+</code></pre><p>在系统中查看</p>
+<pre><code>ll -h /data/mysql3306/innolog
+total 4.9G
+-rw-r----- 1 mysql mysql 1.0G May 28 15:52 ib_logfile0
+-rw-r----- 1 mysql mysql 1.0G May 28 02:07 ib_logfile1
+-rw-r----- 1 mysql mysql 1.0G May 28 08:11 ib_logfile2
+-rw-r----- 1 mysql mysql 1.0G May 28 15:11 ib_logfile3
+-rw-r----- 1 mysql mysql 491M May 28 15:52 undo_001
+-rw-r----- 1 mysql mysql 411M May 28 15:52 undo_002
+</code></pre><p>其中 undo_001，undo_002 就是undolog</p>
+<h4 id="mysql版本变更带来的undolog变化">MySQL版本变更带来的undolog变化</h4>
+<ul>
+<li>MySQL5.6.3 之前的版本：undolog只能存放在共享表空间里</li>
+<li>MySQL5.6.3 之后的版本：支持将undolog表空间单独剥离出来，但是有两个问题
+<ul>
+<li>这个位置得安装实例时指定，且不能修改</li>
+<li>space id必须从1开始，无法增加或者删除undo tablespace</li>
+</ul>
+</li>
+<li>MySQL5.7 版本：引入期待已久的功能,在线truncate undo tablespace（解决了第一个问题，可以在安装数据库之后更改undo tablespace）</li>
+<li>MySQL8.0 版本：改进undolog
+<ul>
+<li>从8.0.3版本开始，默认undo tablespace的个数从0调整为2，也就是在8.0版本中，独立undo tablespace被默认打开。修改该参数为0会报warning并在未来不再支持；</li>
+<li>无需从space_id 1开始创建undo tablespace，这样解决了In-place upgrade或者物理恢复到一个打开了Undo tablespace的实例所产生的space id冲突。不过依然要求undo tablespace的space id是连续分配的；</li>
+</ul>
+</li>
+</ul>
+<h3 id="32-物理存储结构">3.2 物理存储结构</h3>
+<h4 id="环境说明">环境说明</h4>
+<p>刚才我们已经找到了undolog的具体位置，接下来我们通过分析这个文件来了解undolog的存储结构</p>
+<ul>
+<li>文件1:/data/mysql3306/innolog/undo_001（500M）</li>
+<li>文件2:/data/mysql3306/innolog/undo_002（500M）</li>
+</ul>
+<p>此次分析，我们用到环境是MySQL8.0.24</p>
+<h4 id="解析undo_001文件">解析undo_001文件</h4>
+<p>通过自制的工具，扫描/data/mysql3306/innolog/undo_001 ,解析出文件信息如下</p>
+<pre><code>文件:/data/mysql3306/innolog/undo_001
+解析文件成功，正在分析...
+共有491.0M,16k/页,共有31424页
+ Page(0--&gt;1) 文件空间头:共1页,
+ Page(1--&gt;2) 插入缓冲位图:共1页,
+ Page(2--&gt;3) 文件段inode页:共1页,
+ Page(3--&gt;4) 回滚段-数组页:共1页,
+ Page(4--&gt;88) 系统页:共84页,
+ Page(88--&gt;89) 文件段inode页:共1页,
+ Page(89--&gt;133) 系统页:共44页,
+ Page(133--&gt;174) Undo 日志页:共41页,
+ Page(174--&gt;175) 文件段inode页:共1页,
+ Page(175--&gt;260) Undo 日志页:共85页,
+ Page(260--&gt;261) 文件段inode页:共1页,
+ Page(261--&gt;420) Undo 日志页:共159页,
+ Page(420--&gt;421) 文件段inode页:共1页,
+ Page(421--&gt;16384) Undo 日志页:共15963页,
+ Page(16384--&gt;16385) 扩展说明页:共1页,
+ Page(16385--&gt;16386) 插入缓冲位图:共1页,
+ Page(16386--&gt;23692) Undo 日志页:共7306页,
+ Page(23692--&gt;23744) 新分配的页:共52页,
+ Page(23744--&gt;30592) Undo 日志页:共6848页,
+ Page(30592--&gt;31424) 新分配的页:共832页,
+</code></pre><p><img src="/img/2022/undolog001.png" alt="undolog001"></p>
+<p>这是一个线上系统的真实的undolog真实的物理存储状态。为了便于分析，下面建一个新实例3406，设置undo文件大小为20M,分析文件:/data/mysql3406/innolog/undo_001
+得到结果：</p>
+<pre><code>文件:/data/mysql3406/innolog/undo_001
+解析文件成功，正在分析...
+共有10.0M,16k/页,共有640页
+ Page(0--&gt;1) 文件空间头:共1页,
+ Page(1--&gt;2) 插入缓冲位图:共1页,
+ Page(2--&gt;3) 文件段inode页:共1页,
+ Page(3--&gt;4) 回滚段-数组页:共1页,
+ Page(4--&gt;88) 系统页:共84页,
+ Page(88--&gt;89) 文件段inode页:共1页,
+ Page(89--&gt;133) 系统页:共44页,
+ Page(133--&gt;174) Undo 日志页:共41页,
+ Page(174--&gt;175) 文件段inode页:共1页,
+ Page(175--&gt;260) Undo 日志页:共85页,
+ Page(260--&gt;261) 文件段inode页:共1页,
+ Page(261--&gt;278) Undo 日志页:共17页,
+ Page(278--&gt;640) 新分配的页:共362页,
+</code></pre><p>我们得到一个精简的undolog文件存储示意图，如下，点开第133页，可以看到具体的存储内容，一个字节一个字节的可以看到真实的存储内容（需要对照MySQL源码，如果有时间的话，我可能会undolog的分析工具，如果有时间的话，下次一定写&hellip;)</p>
+<p><img src="/img/2022/undolog002.png" alt="undolog002"></p>
+<h2 id="4undo-log的工作原理">4.undo log的工作原理</h2>
+<ul>
+<li>事务开始后，在更新数据之前，MySQL会提前生成undo log日志</li>
+<li>当事务提交的时候，并不会立即删除undo log
+<ul>
+<li>如果是insert，会立即删除undo log</li>
+<li>如果是update,delete 为了mvcc。undo log日志的删除是通过通过后台purge线程进行回收处理的。</li>
+</ul>
+</li>
+</ul>
+<h3 id="41-undo-log实现原子性和持久化的原理">4.1 undo log实现原子性和持久化的原理：</h3>
+<p>假设有dboop_test1、dboop_test2两张表，分别有两条数据为:1,2。</p>
+<pre><code>begin ;
+update dboop_test1 set A=3 where A=1; 
+update dboop_test2 set B=4 where B=2; 
+...
+commit;
+</code></pre><ul>
+<li>A. 事务开始</li>
+<li>B. 记录A=1到undo log中</li>
+<li>C. 修改A=3</li>
+<li>D. 记录B=2到undo log中</li>
+<li>E. 修改B=4</li>
+<li>F. 将undo log写到磁盘 &mdash;&mdash;-undo log持久化</li>
+<li>G. 将数据写到磁盘 &mdash;&mdash;-数据持久化</li>
+<li>H. 事务提交 &mdash;&mdash;-提交事务</li>
+</ul>
+<p>之所以能同时保证原子性和持久化，是因为以下特点：</p>
+<ul>
+<li>更新数据前记录undo log。</li>
+<li>只要事务成功提交，数据必然已经持久化到磁盘。</li>
+<li>如果没有提交
+<ul>
+<li>如果在G,H之间发生系统崩溃，undo log是完整的，可以用来回滚。</li>
+<li>如果在A - F之间发生系统崩溃，因为数据没有持久化到磁盘，所以磁盘上的数据还是保持在事务开始前的状态。</li>
+</ul>
+</li>
+</ul>
+<h3 id="41-undo-log-实现mvcc">4.1 undo log 实现mvcc</h3>
+<h4 id="事务a修改数据">事务A,修改数据：</h4>
+<pre><code>假定有这样一条数据
+
+select * from dboop_test1
+A,B
+1,2
+
+begin ;
+update  dboop_test1 set B=3 where A=1; 
+select sleep(50000);
+commit;
+</code></pre><h4 id="事务b立即去读">事务B,立即去读：</h4>
+<pre><code>begin ;
+select B from   dboop_test1 where A=1; 
+select sleep(10);
+select B from   dboop_test1 where A=1; 
+select sleep(10);
+select B from   dboop_test1 where A=1; 
+....
+commit;
+
+# 这里读取到的的值始终是B=2
+</code></pre><ul>
+<li>事务A手动开启事务，执行更新操作，首先会把更新命中的数据备份到 Undo Buffer 中</li>
+<li>事务B手动开启事务，执行查询操作，会读取 Undo 日志数据返回，进行快照读</li>
+</ul>
+<h4 id="补充快照读当前读">补充：快照读/当前读</h4>
+<ul>
+<li>刚才的事务A,事务B解释的是mvcc里的一个非常重要的概念:快照读（准备单独写一篇mvcc的原理）</li>
+<li>那如果不想读快照。就要读当前的数据，保证自己读的一定是最新的（而不是别人正在改的），可以称呼为：当前读</li>
+<li>当前读有两种select 可以实现
+<ul>
+<li>select * from dboop_test1 where A=1 for update;</li>
+<li>select * from dboop_test1 where A=1 lock in share mode;</li>
+</ul>
+</li>
+<li></li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/05/28</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/%E6%97%A5%E5%BF%97">日志</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

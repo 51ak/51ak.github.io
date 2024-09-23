@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>51ak带你看MYSQL5.7源码4：实现SQL黑名单功能 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">51ak带你看MYSQL5.7源码4：实现SQL黑名单功能</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+<p>上一篇我们实现了，屏掉了MYSQL的DELTE语句的执行功能。</p>
+
+<p>想了想这种改动太暴力了，不够优雅</p>
+
+<p>现在我们要改变一下思路，做一个MYSQL的黑名单功能。</p>
+
+<p>什么叫黑名单呢?</p>
+
+<p>就是说属于屏掉在带黑名单里的关键字的SQL的执行</p>
+
+<p>举例来说，</p>
+
+<p>我们发现有个上线故障，导致有大量的SQL在查一个表 SELECT * FROM A WHERE &hellip;</p>
+
+<p>我们设置个黑名单： SELECT * FROM A</p>
+
+<p>那么所有这种查询将不执行，直接返回，这对线上服务的快速缓解问题是有很大帮助的。</p>
+
+<p>现在我们来尝试在源码上定制这个功能</p>
+
+<p>首先按上一篇文章说的，找到sql_parse.cc 定位 到这个函数 void mysql_parse(THD *thd, Parser_state *parser_state</p>
+
+<p>通过 这一行</p>
+
+<p>DBUG_PRINT(&ldquo;mysql_parse&rdquo;, (&ldquo;query: &lsquo;%s&rsquo;&ldquo;, thd-&gt;query().str));  可以看到执行的SQL文本，现在只需要判断这个文本是否包含指定的字符串就可以了。
+所以我们在入口的地方加上判断，如下：</p>
+
+<pre><code>void mysql_parse(THD *thd, Parser_state *parser_state)
+{
+  int error MY_ATTRIBUTE((unused));
+  DBUG_ENTER(&quot;mysql_parse&quot;);
+  DBUG_PRINT(&quot;mysql_parse&quot;, (&quot;query: '%s'&quot;, thd-&gt;query().str));
+  
+  DBUG_EXECUTE_IF(&quot;parser_debug&quot;, turn_parser_debug_on(););
+
+  #这里加我们的代码，目的是如果判断SQL文本中有指定字符abc ，直接退出。
+  std::string  str_blacklist=&quot;abc&quot;;
+  std::string  sqlstr_dba= thd-&gt;query().str;
+  std::string::size_type idx_blacki = sqlstr_dba.find( str_blacklist );
+
+  if ( idx_blacki != std::string::npos )
+  {
+     DBUG_PRINT(&quot;find blacklist sqlst&quot;,(&quot;query: '%s'&quot;, thd-&gt;query().str));
+     return ;
+  }
+ #这里结束
+  mysql_reset_thd_for_next_command(thd);
+  lex_start(thd);
+</code></pre>
+
+<p>编译安装，随便 执行个SQL发现没问题，只要带上abc这个字符，立即退出，黑名单功能实现</p>
+
+<p>但是我们不可能每次修改SQL黑名单都要修改一次MSYQL源码，这不现实，所以需要把这个黑名单做成系统变量 variables</p>
+
+<p>这里注意了，一共是两个地方需要修改，全局变量定义放在mysqd.cc中 而变量的值初始化在sys_vars.cc中</p>
+
+<p>打开mysqd.cc 加上</p>
+
+<pre><code>char *opt_black_sqlstr;
+opt_black_sqlstr= NULL;
+在mysqld.h里面加上：
+extern char *opt_black_sqlstr;
+</code></pre>
+
+<p>以下完成了变量的申明
+然后打开sys_vars.cc,加上下面这行初始化代码。</p>
+
+<pre><code>static Sys_var_charptr Sys_black_sqlstr(
+       &quot;black_sqlstr&quot;,
+       &quot;the black list sqlstr --by 51ak &quot;,
+       READ_ONLY GLOBAL_VAR(opt_black_sqlstr), CMD_LINE(REQUIRED_ARG),
+       IN_FS_CHARSET, DEFAULT(0));
+</code></pre>
+
+<p>现在我们完成了增加一个系统变量，也完成了SQL黑名单的判断，把这两个结合起来。执行SQL时如果文本中包含black_sqlstr中的文本，则强行退出执行。</p>
+
+<p>我们去修改mysql_parse.cc</p>
+
+<pre><code>  std::string  str_blacklist=opt_black_sqlstr;
+  std::string  sqlstr_dba= thd-&gt;query().str;
+  std::string::size_type idx_blacki = sqlstr_dba.find( str_blacklist );
+
+  if ( idx_blacki != std::string::npos )
+  {
+     DBUG_PRINT(&quot;find blacklist sqlst&quot;,(&quot;query: '%s'&quot;, thd-&gt;query().str));
+     return ;
+  }
+</code></pre>
+
+<p>接下来编译，安装</p>
+
+<p>修改配置文件 ，默认是/etc/my.cnf</p>
+
+<p>增加一个变量：black_sqlstr=order</p>
+
+<p><img src="/img/mysql17.png" alt="mysql_dev17" /></p>
+
+<p>进入MYSQL，试一下：</p>
+
+<p>复制代码
+#查一下我们设置的变量</p>
+
+<pre><code>mysql\&gt; show global variables like '%black%';
++---------------+-------+
+| Variable_name | Value |
++---------------+-------+
+| black_sqlstr  | order |
++---------------+-------+
+1 row in set (0.02 sec)
+</code></pre>
+
+<pre><code>#尝试触发黑名单
+mysql\&gt; select 'order';
+ERROR 2013 (HY000): Lost connection to MySQL server during query
+
+
+
+#尝试触发黑名单
+mysql\&gt; select * from dba_test.op_log where content like '%order%';
+ERROR 2013 (HY000): Lost connection to MySQL server during query
+
+
+</code></pre>
+
+<p>好，一个SQL黑名单功能 已经完成,</p>
+
+<p>通过这个例子，做了两个层面的修改，定义一个Mysql变量，使用这个变量来完成SQL限定的功能。</p>
+
+<p>大家举一反三，发现更多的利用方式</p>
+
+</main>
+<h2 class="date">发布日期:2018/04/11</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/mysql%E6%BA%90%E7%A0%81">mysql源码</a> <a href="/categories/c">c</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

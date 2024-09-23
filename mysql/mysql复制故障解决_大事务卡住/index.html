@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL复制故障修复_无主键表大事务卡住| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL复制故障修复_无主键表大事务卡住</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#0故障现象">0.故障现象</a></li>
+    <li><a href="#1原因定位">1.原因定位</a></li>
+    <li><a href="#2安全规范">2.安全规范</a></li>
+    <li><a href="#3问题修复">3.问题修复</a></li>
+    <li><a href="#方法一我用的方法就很暴力的在从库上reset-master-再set-跳过这个事务">方法一：我用的方法，就很暴力的在从库上reset master 再set 跳过这个事务</a></li>
+    <li><a href="#方法二法爷用了相对温和的方法模拟一个事务的方法">方法二：法爷用了相对温和的方法，模拟一个事务的方法。</a></li>
+    <li><a href="#方法三波哥用从主节点拉全备还原">方法三：波哥用从主节点拉全备还原</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="0故障现象">0.故障现象</h2>
+<p>生产环境MySQL复制报警，现象</p>
+<ol>
+<li>从库复制延时越来越大,gtid一直停留在固定的地方不变</li>
+<li>从库的relaylog越来越大，1G以上，但是增长不明显。</li>
+<li>从库当前没有业务访问，不存在资源紧张</li>
+<li>主库上最近一段时间没有明显的大批量写入</li>
+</ol>
+<h2 id="1原因定位">1.原因定位</h2>
+<ul>
+<li>从上面的现象卡，基本上可以推断是大事务卡住了，</li>
+<li>我看的时候法爷已经把relaylog解出来了，也很明显的看到有很多的delete。</li>
+<li>根据以上推断我们去主库上查时间点的日志，发现了：</li>
+<li>一个SQL是 delete from t1 where c1=''  删除了65万行数据
+于是问题定位：<strong>生产环境的windows机器上有同事用navicat删除了线上MySQL的数据。</strong></li>
+</ul>
+<p>简单的一个SQL ，但是因为一些原因综合在一起引起了雪崩</p>
+<ul>
+<li>不幸的是：<!-- raw HTML omitted -->这张表是个没主键的表，导致从库追日志进程卡住，无法正常执行<!-- raw HTML omitted --></li>
+<li>幸运的是：<!-- raw HTML omitted -->这些从库没有业务访问，没有造成实际影响<!-- raw HTML omitted --></li>
+</ul>
+<h2 id="2安全规范">2.安全规范</h2>
+<p>首先：生产环境的windows机器安装navicat访问数据库这种行为，肯定是不被允许的，</p>
+<p>但是因为“历史原因”我们依然有少量同学（不超过10人）有这种特殊需求。</p>
+<p>原计划是3月底推动消除的，</p>
+<p>经过此事以后，DBA会加快推进禁止在生产环境安装数据库客户端连接数据库这个规范。</p>
+<p>有时候就是这样，觉得这个地方可能有风险，我们排个期来解决，通常就会没等到期限就先暴出来了</p>
+<blockquote>
+<p>问：为什么我们不用限制账号访问来源的方法？
+答：因为一些原因,加ip限制代价太大，且不利于未来的docker虚拟化。</p>
+</blockquote>
+<h2 id="3问题修复">3.问题修复</h2>
+<p>共有3个从节点，我和另外两个DBA用了三种不同的方式来修复</p>
+<h2 id="方法一我用的方法就很暴力的在从库上reset-master-再set-跳过这个事务">方法一：我用的方法，就很暴力的在从库上reset master 再set 跳过这个事务</h2>
+<pre><code>use db_test;
+truncate table t1;
+stop slave ;
+reset master;
+set @@GLOBAL.GTID_PURGED='59939d78-de2d-11eb-ac46-e43d1a074d20:16020676'
+start slave;
+</code></pre><h2 id="方法二法爷用了相对温和的方法模拟一个事务的方法">方法二：法爷用了相对温和的方法，模拟一个事务的方法。</h2>
+<pre><code>use db_test;
+stop slave;
+SET gtid_next='59939d78-de2d-11eb-ac46-e43d1a074d20:16020676'
+truncate table t1;
+SET  gtid_next='automatic';
+start slave;
+</code></pre><p>我和法爷讨论了一下，相对来说这个是更安全的方法。保证了事务的连续，偷换了一个事务的内容</p>
+<h2 id="方法三波哥用从主节点拉全备还原">方法三：波哥用从主节点拉全备还原</h2>
+<p>跳事务虽然修复了，我们的p节点，还是让波哥从主库拉了一次全备还原</p>
+<p>三个人用了三个方法来解决这个问题，都是正确的路，有快有慢</p>
+<p>问题已修复，接下来就是拉着安全和运维的同事，把生产环境的windows机器 安装数据库客户端这件事干掉。</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/02/18</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/mysql%E5%A4%8D%E5%88%B6">mysql复制</a> <a href="/categories/%E5%A4%A7%E4%BA%8B%E5%8A%A1">大事务</a> <a href="/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86">故障处理</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

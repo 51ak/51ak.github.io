@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>万物不如MySQL_万物皆可Join| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">万物不如MySQL_万物皆可Join</span></h1>
+</div>
+
+
+  <main>
+    <ul>
+<li>
+<p>当前数据库架构越来越复杂</p>
+</li>
+<li>
+<p>数据库MongoDB,Redis,Es,Kafka,Postgresql&hellip;</p>
+</li>
+<li>
+<p>加上传统的关系型数据库（MySQL,Oracle,SQLServer)</p>
+</li>
+<li>
+<p>你是否因为各种数据库的查询语言不同而头晕眼花，到处撞墙！</p>
+</li>
+</ul>
+<p><img src="/img/2022auto/2022-08-25-19-48-50.png" alt="查询语言 <"></p>
+<p><img src="/img/2022auto/2022-08-25-19-40-44.png" alt="查询语言 <"></p>
+<ul>
+<li>你是否各种分库分表后，不同的数据库之前没办法join联合查询而一蹶不振</li>
+</ul>
+<p><img src="/img/2022auto/2022-08-25-20-02-04.png" alt="关联 <"></p>
+<ul>
+<li>你是否业务同学发给你一个excel，让你查这些订单的明细而不知所措，来回倒腾。</li>
+</ul>
+<p><img src="/img/2022auto/2022-08-25-19-53-52.png" alt="excel <"></p>
+<ul>
+<li>你是否在焦急的等待着BI大数据同事帮你把不同数据源的表都抽到一起才能join出想要的数据？</li>
+</ul>
+<p><img src="/img/2022auto/2022-08-25-20-09-43.png" alt="同步慢 <"></p>
+<ul>
+<li>怎么办？怎么办？</li>
+<li>没办法!!!</li>
+<li>拆开的数据库没办法放在一台服务器上</li>
+<li>各种数据库也没办法统一成一种</li>
+<li>大数据部门的同步任务正在走流程</li>
+<li>走完的流程，他们也不能保证数据同步任务不中断</li>
+<li>Excel不是数据库不能用SQL</li>
+<li>怎么办？怎么办？</li>
+<li>这种混乱就没人能治吗？</li>
+<li>不要让这些问题挡住你前进的脚本</li>
+<li>dboop平台的统一查询平台横空出世</li>
+<li>不再区分数据库类型</li>
+<li>所有的数据库种类都支持MySQL语法</li>
+<li>是的，你没有听错</li>
+<li>不管什么类型的数据库</li>
+<li>统统只需要记住MySQL语法了</li>
+<li>Oracle,SQLServer,MongoDB,kafka</li>
+<li>DBA在运维的每一种数据库</li>
+<li>都可以当成MySQL一样使用了</li>
+</ul>
+<p><img src="/img/2022auto/2022-08-25-20-14-27.png" alt="可以当成MySQL <"></p>
+<h3 id="kafka当成mysql">kafka当成MySQL</h3>
+<p><img src="/img/2022auto/2022-08-25-20-34-14.png" alt="kafka"></p>
+<h3 id="mongo当成mysql">Mongo当成MySQL</h3>
+<p><img src="/img/2022auto/2022-08-25-20-42-36.png" alt="Mongo"></p>
+<ul>
+<li>而且这些表都是可以互相join ,union 的</li>
+<li></li>
+</ul>
+<p><img src="/img/2022auto/2022-08-25-20-20-25.png" alt="joinuion"></p>
+<h2 id="现在我们来休验一下这神奇的黑科技">现在我们来休验一下这神奇的黑科技</h2>
+<h3 id="第一步-我们有个这样的excel">第一步 我们有个这样的excel</h3>
+<p><img src="/img/2022auto/2022-08-25-21-05-35.png" alt="excel"></p>
+<h3 id="第二步-把excel上传到平台上">第二步 把excel上传到平台上</h3>
+<p><img src="/img/2022auto/2022-08-25-21-12-01.png" alt="upload"></p>
+<h3 id="第三步-得到一个可以查询的excel文件">第三步 得到一个可以查询的excel文件</h3>
+<p><img src="/img/2022auto/2022-08-25-21-42-12.png" alt="excel可sql"></p>
+<h3 id="第四步-用excel-join-mysql">第四步 用excel join MySQL</h3>
+<p><img src="/img/2022auto/2022-08-25-22-09-08.png" alt="用exceljoin MySQL"></p>
+<h3 id="这就是我们说的">这就是我们说的：</h3>
+<p><img src="/img/2022auto/2022-08-25-20-23-55.png" alt="万物不如MySQL_万物皆可Join"></p>
+<h2 id="几个问题">几个问题</h2>
+<h3 id="问题1查询会不会影响线上业务">问题1:查询会不会影响线上业务</h3>
+<blockquote>
+<p>绑定了dba的高可用架构系统，可以自动路由到专门给bi取数服务的专用只读实例上。不会对线上应用产生影响
+理论上bi抽数进程会和它产生资源抢占，但是因为bi抽数多数是凌晨进行，两个并不冲突</p>
+</blockquote>
+<h3 id="问题2查询的性能怎样">问题2:查询的性能怎样</h3>
+<blockquote>
+<p>快，非常快，普通的单表查询0.几秒就出结果
+即便是跨多服务器的联合查询，由于我们采用了国内外最新研究成果和一些不可描述的算法优化，也达到了匪夷所思的快</p>
+</blockquote>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/08/25</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/oracle">oracle</a> <a href="/categories/dba">DBA</a> <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96">自动化</a> <a href="/categories/mongodb">mongodb</a> <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F">分布式</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

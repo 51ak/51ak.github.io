@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>整理 on Classic</title>
+    <link>/tags/%E6%95%B4%E7%90%86/</link>
+    <description>Recent content in 整理 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 12 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E6%95%B4%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Centos7安装minnconda和常用命令</title>
+      <link>/ops/centos7%E5%AE%89%E8%A3%85minnconda%E5%92%8C%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Thu, 12 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/centos7%E5%AE%89%E8%A3%85minnconda%E5%92%8C%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</guid>
+      <description>下载  官网：https://docs.anaconda.com/miniconda/ 找到下载地方：  这里演示的是x86服务器  mkdir -p ~/miniconda3 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3 rm ~/miniconda3/miniconda.sh 使用 常用命令  验证安装  source ~/miniconda3/bin/activate conda --version  安装包   conda install package_name 例如：conda install numpy
+  安装特定版本的包   conda install package_name=versio 例如：conda install numpy=1.18.1
+  更新包   conda update package_name例如： conda update numpy
+  移除包   conda remove package_name # 例如：conda remove numpy</description>
+    </item>
+    
+    <item>
+      <title>Canal常用配置项整理</title>
+      <link>/ops/canal%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9%E6%95%B4%E7%90%86%E5%92%8C%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86/</link>
+      <pubDate>Sat, 07 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/canal%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9%E6%95%B4%E7%90%86%E5%92%8C%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86/</guid>
+      <description>配置模板 ################################################# # 支持gtid的实例，应该打开了。以前我们默认是false canal.instance.gtidon=true # 源服务器的连接串 canal.instance.master.address=mysql3308.dboop.com:3308 canal.instance.dbUsername=canalreader canal.instance.dbPassword={password} canal.instance.connectionCharset = UTF-8 canal.instance.enableDruid=false # 下面这些项需要留空，有且只有需要丢了数据，重新指定binlog点的时候才配置，别乱写 canal.instance.master.journal.name= canal.instance.master.position= canal.instance.master.timestamp= canal.instance.master.gtid= # 启用或禁用时间序列数据库 (TSDB) 功能，用于存储 Canal 的元数据。 # 这个还挺重要的，强烈建议打开，这个在表结构变更时有用，具体可以看看原理 # 可以不写canal.instance.tsdb.url，默认保存在本地${canal.file.data.dir:../conf}/${canal.instance.destination:}路径下 canal.instance.tsdb.enable=true #canal.instance.tsdb.url=jdbc:mysql://127.0.0.1:3306/canal_tsdb #canal.instance.tsdb.dbUsername=canal #canal.instance.tsdb.dbPassword=canal # 过滤器,perl的正则表达式.用逗号分割，可以写多个 canal.instance.filter.regex=db01\\..*,db02\\..* #canal.instance.filter.black.regex= # 我们往kafka推消息的配置 canal.mq.topic=secCanal3308 canal.mq.partitionsNum=1 #我们用一个区，如果是分区 #canal.mq.partitionsNum=3 #canal.mq.partitionHash=test.table:id^name,.*\\..* # 下面几个如果行里有大json，超过1M有报错时，可以增加maxRequestSize #canal.mq.canalBatchSize = 500 #canal.mq.batchSize = 81920 #canal.mq.partitionsNum=1 #canal.mq.maxRequestSize = 2097152 ################################################# 我们没用到的配置项 # 我们不依赖与canal做这个切换，这里用不着,事实上这几项也确实不好用 # 也有可能是我们没用明白 #canal.instance.standby.address = #canal.instance.standby.journal.name = #canal.instance.standby.position = #canal.instance.standby.timestamp = #canal.</description>
+    </item>
+    
+    <item>
+      <title>Centos7安装cx_Oracle驱动</title>
+      <link>/oracle/centos7%E5%AE%89%E8%A3%85cx_oracle%E9%A9%B1%E5%8A%A8/</link>
+      <pubDate>Tue, 30 Jul 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/centos7%E5%AE%89%E8%A3%85cx_oracle%E9%A9%B1%E5%8A%A8/</guid>
+      <description>安装说明  一台cents7的机器上没有安装过oracle python脚本需要调用远程oracle数据库，需要cx_oracle数据库  python3.9 /data/script/datasec/test.py #产生报错 .... File &amp;quot;/data/script/datasec/newSQL.py&amp;quot;, line 3, in &amp;lt;module&amp;gt; import cx_Oracle ModuleNotFoundError: No module named &#39;cx_Oracle&#39;  这个cx_Oracle驱动非常不好装 以下是安装cx_Oracle的标准步骤  安装Oracle客户端  https://www.oracle.com/database/technologies/instant-client/linux-x86-64-downloads.html 在这个网站找到合适的版本，我下的是11.2版本，不同的系统下不同的版本 选择好后，需要用户名密码登陆 下载和安装   wget &amp;quot;https://download.oracle.com/otn/linux/instantclient/11204/oracle-instantclient11.2-basic-11.2.0.4.0-1.x86_64.rpm&amp;quot; rpm -ivh oracle-instantclient11.2-basic-11.2.0.4.0-1.x86_64.rpm  安装完后，会有个目录：  ll /usr/lib/oracle/11.2/client64/lib/ total 183252 -rw-r--r-- 1 root root 53865194 Aug 25 2013 libclntsh.so.11.1 -rw-r--r-- 1 root root 7996693 Aug 25 2013 libnnz11.so -rw-r--r-- 1 root root 1973074 Aug 25 2013 libocci.</description>
+    </item>
+    
+    <item>
+      <title>一些面试题的合集</title>
+      <link>/book/%E7%BD%91%E4%B8%8A%E7%9C%8B%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E9%9D%A2%E8%AF%95%E9%A2%98%E9%9B%86%E5%90%88/</link>
+      <pubDate>Mon, 08 Jul 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/book/%E7%BD%91%E4%B8%8A%E7%9C%8B%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E9%9D%A2%E8%AF%95%E9%A2%98%E9%9B%86%E5%90%88/</guid>
+      <description>看到一些面试题，试着看了其他行业的一些题目觉得还挺好玩的。上传备份在这里
+ 法律面试题库  法律基础知识及能力倾向测试(新).doc 实质性考核标准.doc  审计面试题库  审计试题答案.doc 审计试题.doc  行政面试题库  秘书笔试题.doc 行政助理（含答案）.doc 行政秘书.doc  销售人员面试题库  1-销售面试题.xls 2-业务面试试题.doc 3-销售面试笔试题目.doc 4-销售人员招聘面试题.doc 5-销售人员标准面试话术.doc 6-外贸面试宝典.doc 7-贸易公司业务助理（市场顾问）面试内容分享.doc 8-慧眼识鹰：销售人才的甄选与诊测技术-龙平-62页.ppt  财务类面试题库  会计试题及答案（三）.doc 会计试题及答案（二）.doc 美的集冷集团财务系统招聘考试试题.doc 财务类案例讨论试题.pdf 会计试题及答案（一）.doc  营销面试题库  物流计划招聘测试题（答案）.doc 业务笔试答案.doc 业务笔试.doc 推广案例题.doc 物流计划招聘测试题(题目）.doc  机电类面试题库  性能设计.doc 电控测试题.doc 注塑模具工艺试题.doc 电器试题答案.doc 平面设计试题答案.doc 性能设计人员基本知识考试题.doc 平面设计试题.doc 结构设计专业试题答案.doc 结构设计专业试题2.doc 性能设计试题答案.doc 技术测评试题.doc 电器试题.doc 电控测试题答案.doc 注塑模具工艺试题答案.doc  IT工程师面试题  SQL面试题目汇总.doc 2012java面试题全攻略.doc NET面试题大全,包括微软、华为、中兴等大企业的面试真题.doc php面试题_百度.doc 软件测试经典面试题.doc IT系统分析员考题 v1-answer.</description>
+    </item>
+    
+    <item>
+      <title>用Python操作Milvus向量数据库的简明教程</title>
+      <link>/ops/%E7%94%A8python%E6%93%8D%E4%BD%9Cmilvus%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/</link>
+      <pubDate>Fri, 24 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E7%94%A8python%E6%93%8D%E4%BD%9Cmilvus%E5%90%91%E9%87%8F%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/</guid>
+      <description>本文介绍如何使用 Python 操作 Milvus 向量数据库，包括创建集合、插入数据、创建索引和执行搜索。Milvus 是一款专为向量查询与检索设计的开源向量数据库，特别适用于 AI 和机器学习场景。
+ 环境准备 安装 Milvus服务端  1.docker 安装  wget https://github.com/milvus-io/milvus/releases/download/v2.2.3/milvus-standalone-docker-compose.yml -O docker-compose.yml docker-compose up -d   脚本 安装    wget https://raw.githubusercontent.com/milvus-io/milvus/master/scripts/standalone_embed.sh bash standalone_embed.sh start 安装 Milvus 客户端 在开始之前，请确保已经在环境中安装了 Milvus 客户端库 pymilvus。你可以使用以下命令进行安装：
+pip install pymilvus 连接 Milvus 首先，我们需要连接到本地的 Milvus 服务。假设 Milvus 服务运行在 127.0.0.1，端口为 19530。
+from pymilvus import connections # 连接到 Milvus 服务 connections.connect(alias=&amp;#34;default&amp;#34;, host=&amp;#39;127.0.0.1&amp;#39;, port=&amp;#39;19530&amp;#39;) 定义集合 Schema 接下来，我们需要定义 Milvus 集合的 schema。假设我们要存储的集合包含一个 ID 字段和一个向量字段，向量维度为 128。</description>
+    </item>
+    
+    <item>
+      <title>MySQL8.0即时在线加字段instant-add-column</title>
+      <link>/mysql/mysql8.0%E5%8D%B3%E6%97%B6%E5%9C%A8%E7%BA%BF%E5%8A%A0%E5%AD%97%E6%AE%B5instant-add-column/</link>
+      <pubDate>Thu, 25 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql8.0%E5%8D%B3%E6%97%B6%E5%9C%A8%E7%BA%BF%E5%8A%A0%E5%AD%97%E6%AE%B5instant-add-column/</guid>
+      <description>原文地址：https://mysqlserverteam.com/mysql-8-0-innodb-now-supports-instant-add-column/
+ 在MySQL 8.0中迁移到新的事务数据字典使我们的这项工作变得容易得多。在MySQL 8.0之前，元数据（数据字典）存储在称为.frm文件的平面文件中， .frm文件是一种不可思议的格式，已近过时很久了。
+该即时加列补丁是由腾讯游戏数据库管理员团队提供的，我们要感谢并感谢腾讯游戏所做的重要而及时的贡献。
+以前有什么问题  MySQL 5.6之前，执行DDL的唯一方法是逐行复制行 (copy) MySQL 5.6是第一个支持INPLACE DDL的版本。(inplace)  INPLACE DDL主要由InnoDB处理，而逐行COPY在服务器层处理    copy和inplace的存在的问题  对于大型表，可能要花费很长时间，尤其是在复制环境中。 磁盘空间需求将增加一倍以上，大小与现有表大致相同。 DDL操作占用资源，并且对CPU，内存和IO提出了很高的要求，这从用户事务中争夺资源。 如果涉及复制，slave要一直要等待到DDL的完成，才能开始同步。  新的instant加字段方式 出现的时间点  MySQL 8.0.12 由腾讯游戏数据库管理员团队提供的instant-add-column被官方集成认可 新的加字段语法,通过指定ALGORITHM=INSTANT来代替原来的加字段方式，SQL如下：  ALTER TABLE table_name [alter_specification], ALGORITHM=INSTANT;  MySQL 8.0.29开始，扩展了对ALTER TABLE … ALGORITHM=INSTANT的支持：用户可以在表的任何位置即时添加列、即时删除列、添加列时评估行大小限制。 MySQL 8.0.29开始，添加列时会检查行大小限制。如果超出限制，则会报错。  优势  INSTANT算法的优势在于，仅在数据字典中进行元数据更改。 更改期间无需获取元数据锁定，也不会修改表中的数据。 速度极快，秒速完成，对业务几乎没有影响 不会产生大量的binlog 不会影响主从同步 不会影响性能  原理  简单的说：只修改了表定义元数据，并没有修改真正的数据 翻译官方的原理是：  我们面临的问题是，在立即添加列后元数据发生更改后，如何解析页面上的物理记录？ 请注意，此处的物理记录是指存储在聚集索引的叶页中的记录。聚簇索引的现有二级索引甚至非叶页（B树的内部节点）都不会受到影响。 InnoDB有两种主要的行格式，即冗余行和紧凑行格式。行格式动态是compact的一个较小变体。压缩及其派生的行格式从冗余行格式中删除了一些元数据，以节省空间。 由于这种“节省空间”的更改，当我们必须对页面上物理行中的数据进行反序列化时，我们总是需要从内部元数据结构中查找元数据。 为了使即时添加列起作用，我们需要为页面上的DYNAMIC和COMPACT行格式的物理记录添加一些元数据。 REDUNDANT行格式不需要此附加元数据，因为列数已存储在物理记录中。 额外的信息与数据字典中的一些元数据一起保留在物理记录中。 这与基于相同腾讯补丁的一些下游黑客的做法非常不同，后者在表空间的模糊和未使用的部分存储类似的元数据。 我们认为，将元数据存储在适当的数据字典表中并使其在事务上保持一致将使其更健壮且更自然。此新的元数据存储在物理记录中。 这个新的元数据包括一个存储在info_bits中的标志。 info_bits中的此新信息用于跟踪是否在第一个即时ADD COLUMN之后创建记录。 我们还使用info_bits跟踪物理记录中的字段/列数。当表经历第一个即时ADD COLUMN时的列数以及新添加的列的所有默认值都存储在数据字典中。 这两条信息存储在数据字典表的se_private_data列中。 有了这些额外的信息，现在可以立即执行ADD COLUMN操作，而无需修改表中的任何行。如果没有即时的ADD COLUMN，则表中的所有行将采用与以前相同的格式。 即时发出ADD COLUMN后，对该表的任何更新都将以新格式写入行。从数据字典中查找默认值（如果有）。 在每个即时ADD COLUMN中，都会分别跟踪新添加的列的默认值。这些列的默认值可以随时更改。因此，在重建或截断表之后，可以丢弃即时列数和默认值，此外，可以像以前一样将表中的行更改为旧格式。 如果该表是分区表，则不同的分区可能具有不同数量的即时列，并且需要不同数量的默认值。 如果某些分区被重建，截断或重新创建，则分区中的行也可以像以前一样更改为旧格式。 使用限制  在了解原理之后，我们来看看 “立刻加列” 的使用限制，就很容易能理解其中的前两项： “instant加列” 的加列位置只能在表的最后，而不能加在其他列之间（MySQL8.</description>
+    </item>
+    
+    <item>
+      <title>OracleGoldenGate运维常用命令</title>
+      <link>/oracle/oraclegoldengate%E8%BF%90%E7%BB%B4%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4ogg/</link>
+      <pubDate>Mon, 08 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oraclegoldengate%E8%BF%90%E7%BB%B4%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4ogg/</guid>
+      <description>常用命令 1. 管理(MGR)进程命令 INFO MANAGER 返回有关管理器端口和进程id的信息。 START MANAGER 开启管理进程 STATUS MANAGER 返回管理进程状态 STOP MANAGER 停止管理进程 2. 采集(EXTRACT)进程命令 ADD EXTRACT 添加一个采集组 ALTER EXTRACT 更改采集组的属性 CLEANUP EXTRACT 删除采集组的运行历史记录 DELETE EXTRACT 删除采集组。 INFO EXTRACT 返回有关采集组的信息。 KILL EXTRACT 强制终止采集组。 LAG EXTRACT 返回有关采集延迟的信息。 REGISTER EXTRACT 向Oracle数据库注册采集组START EXTRACT 启动采集组 STATS EXTRACT 返回处理采集的统计信息。 STATUS EXTRACT 返回采集组的状态 STOP EXTRACT 停止采集组。 FORCEAPPEND 允许data pump在现有的初始加载文件上添加新的跟踪文件 UNREGISTER EXTRACT 从Oracle数据库注销采集组。 3. 回放(Replicat)进程命令 ADD REPLICAT 添加一个复制组 ALTER REPLICAT 更改复制组的属性。 CLEANUP REPLICAT 删除复制组的运行历史。 DELETE REPLICAT 删除一个复制组。 INFO REPLICAT 返回关于复制组的信息。 KILL REPLICAT 强制终止一个复制组。 LAG REPLICAT 返回关于复制延迟的信息。 REGISTER REPLICAT 向Oracle数据库注册一个复制组。 START REPLICAT 启动一个复制组。 STATS REPLICAT 返回处理一个复制组的统计信息。 STATUS REPLICAT 返回一个复制组的状态。 STOP REPLICAT 停止复制组。 4.</description>
+    </item>
+    
+    <item>
+      <title>Oracle处理归档日志archivelog空间报警</title>
+      <link>/oracle/oracle%E5%A4%84%E7%90%86%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97archivelog%E7%A9%BA%E9%97%B4%E6%8A%A5%E8%AD%A6/</link>
+      <pubDate>Fri, 29 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E5%A4%84%E7%90%86%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97archivelog%E7%A9%BA%E9%97%B4%E6%8A%A5%E8%AD%A6/</guid>
+      <description>查看归档日志空间占用率  select * from v$flash_recovery_area_usage; --查看空间占用率 select * from v$recovery_file_dest; --查看归档日志的存放地址; show parameter recovery; --查看归档空间大小 增加表空间大小（磁盘空间足够的话） alter system set db_recovery_file_dest_size=250G; --请归档空间增大到250G 删除过期文件 export ORACLE_SID=****** rman target / crosscheck archivelog all; //查看可以所有的归档文件 delete expired archivelog all; //清空过期的归档文件 delete force noprompt ARCHIVELOG ALL COMPLETED BEFORE &#39;trunc(SYSDATE)-90&#39;; //清除90天前的归档文件 quit </description>
+    </item>
+    
+    <item>
+      <title>安装百度飞浆PaddleSpeech</title>
+      <link>/book/%E5%AE%89%E8%A3%85%E7%99%BE%E5%BA%A6%E9%A3%9E%E6%B5%86paddlespeech/</link>
+      <pubDate>Wed, 22 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/book/%E5%AE%89%E8%A3%85%E7%99%BE%E5%BA%A6%E9%A3%9E%E6%B5%86paddlespeech/</guid>
+      <description>安装  pip3.9 install paddlepaddle -i https://mirror.baidu.com/pypi/simple pip3.9 install pytest-runner -i https://mirror.baidu.com/pypi/simple pip3.9 install paddlespeech -i https://mirror.baidu.com/pypi/simple 报错1:ImportError: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.22&#39; not found  解决：   find / -name &amp;quot;libstdc++.so.6*&amp;quot; #找到一个路径 export LD_LIBRARY_PATH=/root/anaconda3/pkgs/libstdcxx-ng-8.2.0-hdf63c60_1/lib/:$LD_LIBRARY_PATH 报错2: </description>
+    </item>
+    
+    <item>
+      <title>Centos7安装php8.1和composer</title>
+      <link>/ops/centos7%E5%AE%89%E8%A3%85php8.1%E5%92%8Ccomposer/</link>
+      <pubDate>Thu, 16 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/centos7%E5%AE%89%E8%A3%85php8.1%E5%92%8Ccomposer/</guid>
+      <description>设置yum源  yum -y install https://mirrors.tuna.tsinghua.edu.cn/remi/enterprise/remi-release-7.rpm yum -y install yum-utils 安装php8.1  yum -y install php81-php-cli php81-php-common php81-php-devel php81-php-embedded php81-php-fpm php81-php-gd php81-php-mbstring php81-php-mysqlnd php81-php-pdo php81-php-opcache php81-php-xml php81-php-soap php81-php-posix 查看是否安装成功及php配置文件以及对应目录 rpm -qa |grep php81 pm -ql php81-php-fpm 系统配置  ln -sf /opt/remi/php81/root/usr/bin/php* /usr/bin 查看PHP版本 php -v 安装：composer php -r &amp;quot;copy(&#39;https://install.phpcomposer.com/installer&#39;, &#39;composer-setup.php&#39;);&amp;quot; php composer-setup.php cp composer.phar /usr/bin/composer cd /www/wwwroot/www.top580.com/php composer install composer update </description>
+    </item>
+    
+    <item>
+      <title>MySQL组复制GroupReplication参数</title>
+      <link>/mysql/mysql%E7%BB%84%E5%A4%8D%E5%88%B6groupreplication%E5%8F%82%E6%95%B0/</link>
+      <pubDate>Tue, 14 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%BB%84%E5%A4%8D%E5%88%B6groupreplication%E5%8F%82%E6%95%B0/</guid>
+      <description>参数 group_replication_allow_local_disjoint_gtids_join （已弃用）  布尔型，默认值为OFF，MySQL 5.7.17版本引入，5.7.21版本弃用，8.0.4版本中删除。 这是MySQL5.7时代搭MGR集群时经常会用到的参数，设置为开启后，新加节点变得更容易，但是慎用该参数，不正确的使用可能会导致复制组中的数据出现不一致。MySQL8版本中已弃用。 即使该组中缺失一些事务（joiner节点比组中的事务还要多），也允许joiner节点加入该组。   group_replication_allow_local_lower_version_join  布尔型，默认为OFF，MySQL 5.7.17版本引入。 也是新节点加入时使用到的变量，一般不会开启，开启后允许低版本的MySQL节点加入集群 MySQL 8.0.17及其之后的版本在比对版本号时，会考虑次要版本号（例如：MySQL 8.0.17，会将次要版本号17一起进行比较），在MySQL 8.0.16及其之前的版本在比对版本号时，只考虑主要版本号（例如：MySQL 5.7.22，只比对主要版本号5.7）。 将该系统变量设置为ON并不会使低版本的Server与组兼容，但能允许低版本Server加入组，不过没有任何措施来防止低版本Server与组中现有成员的不兼容行为，因此，为了确保低版本Server的正确操作，必须人为确保如下两项措施，如果不能确保这两项措施，则运行低版本的Server可能会碰到错误而导致加入组失败。 * 运行较低版本的Server加入组之前，必须先停止该Server上的任何写操作 * 从运行较低版本的Server加入组的位置开始，停止对组中所有成员的任何写操作   group_replication_auto_increment_increment  整型类型，默认值为7（如果你的组中有更多或更少的组成员，则，可以在组复制启动之前调整好该系统变量的值，以对应你的组中的成员数量），取值范围：1~65535。MySQL 5.7.17版本引入。 注意：该系统变量的值在所有组成员上必须相同 注意：一旦设置将代替系统变量auto_increment_inncrement。且将auto_increment_offset设置为Server id值 自动设置复制组中的每个成员的自增列的步长值，以确保在多主模式的组中，每个组成员的自增列值有序且不重叠。 当成员停止组复制时，普通系统变量auto_increment_inncrement和auto_increment_offset的值将会恢复原状（启动组复制之前的值） 只有当系统变量auto_increment_increment和auto_increment_offset保持默认值时，组复制启动时才会自动做与组复制的适配调整和恢复，如果这两个系统变量的值被设置了非默认值，则组复制不会做自动调整（从MySQL 8.0开始，当组处于单主模式下时，这两个系统变量也不会做自动调整）。所以，对于这两个系统变量的值，要么在组复制下不对其进行手工指定（让其使用默认值），要么就一定要设置正确，否则，在多主模式的主中，很容易造成主键冲突。 系统变量group_replication_auto_increment_increment在组复制运行时无法修改，需要先停止组复制，修改该系统变量的值，然后再启动组复制   group_replication_bootstrap_group  布尔型，默认为OFF，MySQL 5.7 17版本引入。 只在新建集群时第一个启动节点时用，用完就得关，别轻易设置，容易脑裂 指定使用哪个Server来引导组（这里指的是将此系统变量设置为ON的Server）。该系统变量只能在一个Server上设置，并且只能在首次引导组或重新引导整个组时在其中一个Server上设置。当复制组引导成功之后需要及时将该系统变量为OFF来动态关闭（在组所有可能涉及的Server的配置文件中建议统一将此系统变量设置为OFF）。如果在某Server上使用该变量引导复制组之后再在另外一个Server中使用该变量引导复制组，则如果两个Server使用了相同的组名称时，可能会产生人为的脑裂。   group_replication_consistency  注意：这是重要参数,控制事务一致性等级 从MySQL 8.0.14引进 对于绝大多数场景，使用默认的 EVENTUAL 等级就足够 一般我们建议用默认值或Before  1 EVENTUAL  在这个等级下，RO和RW事务执行前，都不会要求等待积压事务先行应用完成。 这是默认等级，也是在引入该选项前的行为。这意味着以下几点： RW事务无需等待，而可能先于其他节点进行外部化（将事务广播到其他节点）。 RO事务可能读取到旧数据。 在Primary节点切换时，新产生的RW事务有可能会因为冲突而回滚。  2 BEFORE_ON_PRIMARY_FAILOVER  当发生Primary节点切换时，在新的Primary上需要先等待把所有来自旧Primary节点的积压事务应用完毕，之后才能正式完成切换，转成ONLINE状态，成为新的Primary节点，继续响应新的事务请求。 这么做可以保证在发生故障转移时，客户端不会查到旧数据，保证了数据一致性，不过客户端上也可能会产生延迟等待。  3 BEFORE  RW事务在应用之前，RO事务在执行之前，都要先等待前面堆积的事务完成。 这可以保证RO事务总能读取到最新事务，但对于RW事务而言，只是等待堆积事务应用完成，但并不要求其他节点上也完成该事务。  4 AFTER  它比BEFORE更近一步，要求RW事务在其他节点上也要等待应用完毕。这样一来，后续的事务在任何节点上就都能获取最新事务数据。 事实上，要慎用该级别及更高以上级别，可能会引发其他问题，可参考这个文章：技术分享 | 为什么MGR一致性模式不推荐AFTER  5 BEFORE_AND_AFTER  一致性级别要求最高，对RO和RW事务都要求同步事务数据。也就是说，RW事务在应用之前，要先等待前面堆积的事务完成，并且还需要等待它的事务变更在其他所有节点上也都应用；RO事务在执行之前，也要先等待前面堆积的事务完成。  group_replication_member_weight  整型类型，默认值为50，取值范围为：0~100。MySQL 5.</description>
+    </item>
+    
+    <item>
+      <title>安装Baichuan2百川智能大模型</title>
+      <link>/ops/%E5%AE%89%E8%A3%85baichuan2%E7%99%BE%E5%B7%9D%E6%99%BA%E8%83%BD%E5%A4%A7%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Mon, 25 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%AE%89%E8%A3%85baichuan2%E7%99%BE%E5%B7%9D%E6%99%BA%E8%83%BD%E5%A4%A7%E6%A8%A1%E5%9E%8B/</guid>
+      <description>下载模型和预安装 git clone https://github.com/baichuan-inc/Baichuan2 python3.9 -V /usr/local/python3.9/bin/python3.9 -m pip install --upgrade pip python3.9 -m venv baichuan2 source baichuan2/bin/activate python -V python3.9 -m pip install --upgrade pip pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/ vim cli_demo.py 运行和报错处理  执行python3.9 cli_demo.py 
+ 报错:urllib3 v2.0 only supports OpenSSL 1.1.1+ ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+, currently the &#39;ssl&#39; module is compiled with &#39;OpenSSL 1.0.2k-fips 26 Jan 2017&#39;. See: https://github.com/urllib3/urllib3/issues/2168 排查：  进python环境  python3.</description>
+    </item>
+    
+    <item>
+      <title>docker安装和常用命令</title>
+      <link>/ops/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</link>
+      <pubDate>Sun, 27 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</guid>
+      <description>安装  centos7 安装  安装需要的软件包  yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的  yum install -y yum-utils device-mapper-persistent-data lvm2 设置yum源 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo 可以查看所有仓库中所有docker版本，并选择特定版本安装  yum list docker-ce --showduplicates | sort -r Loading mirror speeds from cached hostfile Loaded plugins: fastestmirror docker-ce.x86_64 3:24.0.5-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.4-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.3-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.2-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.1-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.0-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.6-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.5-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.4-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.3-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.2-1.el7 docker-ce-stable docker-ce.</description>
+    </item>
+    
+    <item>
+      <title>Oracle增加表审计</title>
+      <link>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1/</link>
+      <pubDate>Wed, 10 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1/</guid>
+      <description>增加表审计 # 查看现在有哪些审计对象 select * from dba_obj_audit_opts; # 开启审计 audit select,update,insert,delete on 用户.表名 by access # 关闭审计 noaudit select,update,insert,delete on 用户.表名 # 查看审计结果 select * from dba_audit_trail 清空审计 sqlplus / as sysdba truncate table sys.aud$; ``</description>
+    </item>
+    
+    <item>
+      <title>postgreSQL的安装和初始化(centos7)</title>
+      <link>/dba/postgresql%E7%9A%84%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3centos7/</link>
+      <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/postgresql%E7%9A%84%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3centos7/</guid>
+      <description>安装 # Install the repository RPM:sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm# Install PostgreSQL:sudo yum install -y postgresql15-server##如果需要安装postgresql15-develwget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/llvm5.0-devel-5.0.1-7.el7.x86_64.rpmwget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/llvm5.0-5.0.1-7.el7.x86_64.rpmwget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/llvm5.0-libs-5.0.1-7.el7.x86_64.rpm yum install -y centos-release-scl-rh llvm5*yum install -y postgresql15-devel# Optionally initialize the database and enable automatic start:sudo /usr/pgsql-15/bin/postgresql-15-setup initdbsudo systemctl enable postgresql-15sudo systemctl start postgresql-15安装extenyum install pgvector_15配置 修改监听 修改监听地址为任意地址  vi /var/lib/pgsql/15/data/postgresql.conf 在第60行处增加   54 #------------------------------------------------------------------------------55 # CONNECTIONS AND AUTHENTICATION56 #------------------------------------------------------------------------------57 58 # - Connection Settings -59 60 listen_addresses = &#39;*&#39;61 #listen_addresses = &#39;localhost&#39; # what IP address(es) to listen on;62 # comma-separated list of addresses;63 # defaults to &#39;localhost&#39;; use &#39;*&#39; for all允许所有IP访问  vi /var/lib/pgsql/15/data/pg_hba.</description>
+    </item>
+    
+    <item>
+      <title>Linux服务器如何科学的访问国外的google,git,pypi等站点</title>
+      <link>/ops/linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A6%82%E4%BD%95%E7%A7%91%E5%AD%A6%E7%9A%84%E8%AE%BF%E9%97%AE%E5%9B%BD%E5%A4%96%E7%9A%84googlegitpypi%E7%AD%89%E7%AB%99%E7%82%B9/</link>
+      <pubDate>Wed, 19 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A6%82%E4%BD%95%E7%A7%91%E5%AD%A6%E7%9A%84%E8%AE%BF%E9%97%AE%E5%9B%BD%E5%A4%96%E7%9A%84googlegitpypi%E7%AD%89%E7%AB%99%E7%82%B9/</guid>
+      <description>目的  当我们在Linux服务器上配置环境时（需要pip yum git wget go get ）经常会遇到外网资源受限 各种依赖关系非常乱，版本对不上，资源下不了。 国内的镜像站版本不全等等 非常影响工作效率和成果。 此时需要用科学的方式将这些开发资源快速配置好 以下是步骤 安装配置本地v2ray 需要使用时启v2ray,source代理 用完停v2ray,恢复正常环境  下载运行脚本 bash &amp;lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+#!/usr/bin/env bash # shellcheck disable=SC2268 # The files installed by the script conform to the Filesystem Hierarchy Standard: # https://wiki.linuxfoundation.org/lsb/fhs # The URL of the script project is: # https://github.com/v2fly/fhs-install-v2ray # The URL of the script is: # https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh # If the script executes incorrectly, go to: # https://github.</description>
+    </item>
+    
+    <item>
+      <title>安装MiniGPT-4</title>
+      <link>/ops/%E5%AE%89%E8%A3%85minigpt-4/</link>
+      <pubDate>Tue, 18 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%AE%89%E8%A3%85minigpt-4/</guid>
+      <description>克隆项目 # 安装 git-lfs curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | sudo bash yum install git-lfs git clone https://github.com/Vision-CAIR/MiniGPT-4.git git clone https://huggingface.co/lmsys/vicuna-13b-delta-v0 mv vicuna-13b-delta-v0 /data/MiniGPT-4/vicuna_weights 安装补丁 cd /data/MiniGPT-4/ cd ckp/ #https://drive.google.com/file/d/1a4zLvaiDBr-36pasffmgpvH5P7CKmpze/view #https://drive.google.com/u/0/uc?id=1a4zLvaiDBr-36pasffmgpvH5P7CKmpze&amp;amp;export=download wget https://doc-0s-08-docs.googleusercontent.com/docs/securesc/dbq4d7c2ha9354fqj5612le3gl157ov5/pcnbepjp7icjk54rrfgio602v738i398/1681803150000/09448752369347632296/09178445193473466964/1a4zLvaiDBr-36pasffmgpvH5P7CKmpze?e=download&amp;amp;ax=ALy03A4aDltm3f1TddEAJesIj7YsB_KKlm56C61-M72rzjuPpluLCR3UOUv28FXMkNc3q5s ## 修改配置 vim /data/MiniGPT-4/eval_configs/minigpt4_eval.yaml ckpt: &#39;/data/MiniGPT-4/ckp/&#39; vim /data/MiniGPT-4/minigpt4/configs/models/minigpt4.yaml llama_model: &amp;quot;/data/MiniGPT-4/vicuna_weights/&amp;quot; 安装依赖 pip3.9 install omegaconf #1681803684 yum install xz-devel -y yum install python-backports-lzma -y pip3.9 install backports.lzma yum install python-backports-lzma -y yum install -y xz-devel mesa-libGL python-backports-lzma vim /usr/local/python3.9/lib/python3.9/lzma.py pip3.9 install iopath pip3.</description>
+    </item>
+    
+    <item>
+      <title>Centos7安装nvidia显卡驱动</title>
+      <link>/ops/centos7%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</link>
+      <pubDate>Mon, 17 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/centos7%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</guid>
+      <description>1.安装依赖
+yum -y install epel-release yum -y install gcc binutils wget yum -y install kernel-devel 2.禁用Nouveau
+检查是否开启Nouveau lsmod | grep nouveau 注意：无信息输出表示已被禁用无需在操作以下步骤； echo -e &amp;quot;blacklist nouveau\noptions nouveau modeset=0&amp;quot; &amp;gt; /etc/modprobe.d/blacklist.conf mv /boot/initramfs-$(uname -r).img /boot/initramfs-$(uname -r).img.bak dracut /boot/initramfs-$(uname -r).img $(uname -r) reboot lsmod | grep nouveau 注意：无任何信息输出表示禁用成功； 3.检查驱动
+rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm yum -y install https://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm yum -y install nvidia-detect nvidia-detect -v # 本来应该显示 This device requires the current.... # 结果显卡太老，显示 Probing for supported NVIDIA devices.</description>
+    </item>
+    
+    <item>
+      <title>HDD、SSD、SAS、SATA、PCIE、NVME</title>
+      <link>/dba/hddssdsassatapcienvme/</link>
+      <pubDate>Tue, 10 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/hddssdsassatapcienvme/</guid>
+      <description>我的习惯   先说当我接到采购需求的时候,我通常会跟运维同事说我要选购下面的磁盘
+  pcie ssd 偶尔会强调要更高性能接口的ssd
+  ssd盘 大部分时候数据库都需要ssd
+  sas盘 这时候的意思是采购sas接口的硬盘,一般用来存放日志类的数据
+  sata盘 这是用来存放数据冷备份时候才用的盘
+  这是我的习惯事实上提法非常不标准,但是好像负责采购的和运维的同事也都能听得懂.事实上服务器硬盘
+  按存储介质分类:HDD盘,SSD盘
+  按接口标准分类:IDE,SATA,SAS,PCIE
+   下面的内容从多个网上的文章里整理而来,加了些个人看法
+ 硬盘接口 IDE接口 (已淘汰)  IDE接口，又叫ATA接口、PATA接口、并口。 最早是在1986年由康柏、西部数据等几家公司共同开发。 数据线长得是一条像布条的东西，传输数据慢， 由三部分组成：电源接口、跳线接口（用于区别主盘和从盘）、数据接口。  SCSI接口 (淘汰)  早此年IDE接口应用于PC，对应的服务器的接口是SCSI接口。 SCSI1:最早于1986年提出的,最大传输速率为5MB/s，支持7个设备。 SCSI2:Fast SCSI,1994年,10MB/s（10MHz,最大7个设备)。 SCSI2:Wide SCSI,1996年,20MB/s (10MHz,最大15个设备)。 SCSI3:1995年将总线频率大大地提高，并降低信号的干扰。  SATA接口 (还有不少)  SATA接口,又叫串口硬盘 2003年出现的，可以算是最为主流的硬盘接口形态。由于存在时间很长，SATA接口兼容性极强，几乎所有种类的主板都有SATA接口。 市面上固态硬盘SATA接口在性能标准上，一般采用SATA Ⅲ标准，理论最高速度为6Gbps。 大部分基于SATA接口的固态硬盘的读取性能正常会在500MB/S以上。 SATA数据接口（7针）电源接口（15针） 在SATA接口的基础上，后面又衍生出了两款产品。  SATA接口衍生:mSATA接口 (已淘汰)  mSATA接口是早期为了适应于超极本这类超薄设备而基于SATA开发的。可以看作SATA接口的mini版。 物理形态上有两种尺寸：全高（30mm50mm）和半高（30mm25mm）。  SATA接口衍生:SATA-e接口 (已淘汰)  SATA + PCI-Express的混合体，理论带宽达10Gbps，比SATA3.</description>
+    </item>
+    
+    <item>
+      <title>服务器过保日期批量查询python</title>
+      <link>/ops/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E4%BF%9D%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2python%E8%84%9A%E6%9C%AC/</link>
+      <pubDate>Sat, 09 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E4%BF%9D%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2python%E8%84%9A%E6%9C%AC/</guid>
+      <description>浪潮服务器过保查询  import json import urllib import requests # def chenck_hardware_info(sn): url = &#39;https://www.inspur.com/eportal/ui&#39; sn_file = &amp;quot;/tm/sn.text&amp;quot; def request_datatime(sn): params = { &amp;quot;struts.portlet.action&amp;quot;: &amp;quot;/portlet/download-front!serverConfig.action&amp;quot;, &amp;quot;sn&amp;quot;: sn, &amp;quot;src&amp;quot;: &amp;quot;inspur&amp;quot;, &amp;quot;language&amp;quot;: &amp;quot;CN&amp;quot;, &amp;quot;pageId&amp;quot;: &amp;quot;2317460&amp;quot;, &amp;quot;moduleId&amp;quot;: &amp;quot;82efecfc33da48b4a66567cb3dcbe5f3&amp;quot; } headers = { &amp;quot;Referer&amp;quot;: &amp;quot;https://www.inspur.com/eportal/ui?pageId=2317460&amp;quot;, &amp;quot;Cookie&amp;quot;: &amp;quot;JSESSIONID=****; ........(这里写cookie地址)&amp;quot; } r = requests.post(url, headers=headers, params=urllib.parse.urlencode(params)) resp = r.text[1:len(r.text)-1] resp = json.loads(resp) #print(resp[&#39;Date&#39;]) return resp[&#39;warranty1&#39;] def post_info(sn): r1 = request_datatime(sn) url = &amp;quot;http://cmdbbackend.dev.tujia.com/api/inventoryitem/sn/update/life&amp;quot; headers = { &amp;quot;OPS-Token&amp;quot;:&amp;quot;IHmioqYhb0XgBAsEiHeK_guibinw&amp;quot;, &amp;quot;Content-Type&amp;quot;:&amp;quot;application/json&amp;quot; } data = [{ &amp;quot;serialNo&amp;quot;: sn, &amp;quot;contractPeriod&amp;quot;: r1 }] r = requests.</description>
+    </item>
+    
+    <item>
+      <title>MacOS里的grep,sed,awk等命令不好用怎么办</title>
+      <link>/ops/macos%E9%87%8C%E7%9A%84grepawksed%E7%AD%89%E5%91%BD%E4%BB%A4%E4%B8%8D%E5%A5%BD%E7%94%A8%E6%80%8E%E4%B9%88%E5%8A%9E/</link>
+      <pubDate>Tue, 27 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/macos%E9%87%8C%E7%9A%84grepawksed%E7%AD%89%E5%91%BD%E4%BB%A4%E4%B8%8D%E5%A5%BD%E7%94%A8%E6%80%8E%E4%B9%88%E5%8A%9E/</guid>
+      <description>问题  工作用的电脑是mac 经常发现linux上常用的sed,grep命令用不起来，各种报错 后来查了一下发现mac里的sed和linux的不是一个版本的软件   Mac OS X uses BSD sed and not GNU sed. When you use a GNU sed extension with Mac OS X sed, you get different results, or failures. Classically, sed does not support numeric offsets, forwards or backwards. You&amp;rsquo;ll need to revise your script to work on Mac OS X.
+ 解决 使用以下命令安装GNU命令套件： brew install coreutils 使用以下命令安装gnu-sed： brew install gnu-sed --with-default-names 以上命令安装的gnu套件的命令都是带有g前缀的  gcat &amp;ndash;&amp;gt; linux里的cat gsed &amp;ndash;&amp;gt; linux里的sed ggrep &amp;ndash;&amp;gt; linux里的grep gawk &amp;ndash;&amp;gt; linux里的awk &amp;hellip;  如果想直接代替，不输入g前缀则 vim .</description>
+    </item>
+    
+    <item>
+      <title>git常用命令整理</title>
+      <link>/ops/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</link>
+      <pubDate>Thu, 25 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</guid>
+      <description>重新初始化，删掉历史版本记录  1、创建并切换到lastest_branch分支 git checkout --orphan latest_branch 2、添加所有文件 git add -A 3、提交更改 git commit -am &amp;quot;删除历史版本记录，初始化仓库&amp;quot; 4、删除分支 git branch -D master 5、将当前分支重命名 git branch -m master 6、强制更新存储库 git push -f origin master 新建 Git 仓库 # 把当前目录变更成一个 Git 仓库 $ git init # 新建一个目录，将其初始化为 Git 仓库 $ git init [project-name] # 克隆远程仓库 $ git clone [url] Git 配置信息 # 显示当前的 Git 配置 $ git config --list # 编辑 Git 配置文件 $ git config -e [--global] # 设置提交代码时的用户信息 $ git config [--global] user.</description>
+    </item>
+    
+    <item>
+      <title>数据库团队DBA的OKR和KPI指标</title>
+      <link>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9B%A2%E9%98%9Fdba%E7%9A%84okr%E5%92%8Ckpi%E6%8C%87%E6%A0%87/</link>
+      <pubDate>Thu, 10 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9B%A2%E9%98%9Fdba%E7%9A%84okr%E5%92%8Ckpi%E6%8C%87%E6%A0%87/</guid>
+      <description>数据库团队的OKR（目标关键结果）可能包括：  数据存储容量优化：通过数据库管理和数据存储优化技术，提高数据存储的效率和容量。 数据安全性提升：通过数据库安全技术和安全控制，保护数据的安全性。 数据恢复能力提高：通过数据备份和恢复技术，提高数据恢复的效率和能力。 数据库性能优化：通过数据库性能调优和技术优化，提高数据库的性能。 数据查询效率提高：通过数据查询优化技术，提高数据查询的效率。 数据可视化开发：通过数据可视化技术，提高数据的可读性和可视性。 数据分析能力提高：通过数据分析技术，提高数据分析的效率和能力。 数据处理效率提高：通过数据处理优化技术，提高数据处理的效率。 数据交换效率提高：通过数据交换优化技术，提高数据交换的效率。 数据管理流程改进：通过对数据管理流程的优化和改进，提高数据管理的效率和质量。 团队技能培训：通过为团队提供技能培训，提高团队的专业水平和能力。 协同工作效率提高：通过改进团队间的协同工作，提高团队的协同工作效率。  这些OKR可能根据公司的具体情况进行调整和定制，以适应公司的特殊需求。
+数据库团队有哪些可量化的KPI指标 数据库团队可以使用以下可量化的指标来评估其进展和成果：
+ 数据库响应时间：测量数据库对请求的响应时间，以评估数据库的性能。 数据库可用性：通过计算数据库在一段时间内的可用率，评估数据库的可用性。 数据库容量：通过监控数据库的容量使用情况，评估数据库的容量需求。 数据完整性：通过测量数据的完整性，评估数据的质量。 数据备份和恢复：通过测量数据备份和恢复的时间和准确性，评估数据的安全性。 团队效率：通过测量团队完成任务的效率，评估团队的工作效率。 研发团队满意度：通过调查研发对数据库团队的满意程度，评估团队的服务质量。  这些指标可以帮助数据库团队评估其OKR的实现情况，并对团队的工作进行评估和改进。</description>
+    </item>
+    
+    <item>
+      <title>SQLServer联机重建或组织索引</title>
+      <link>/sqlserver/sqlserver%E8%81%94%E6%9C%BA%E9%87%8D%E5%BB%BA%E6%88%96%E7%BB%84%E7%BB%87%E7%B4%A2%E5%BC%95/</link>
+      <pubDate>Fri, 21 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/sqlserver/sqlserver%E8%81%94%E6%9C%BA%E9%87%8D%E5%BB%BA%E6%88%96%E7%BB%84%E7%BB%87%E7%B4%A2%E5%BC%95/</guid>
+      <description>索引维护 联机重建或组织索引 CREATE procedure [pr_auto_indexdefrag_online] as begin set nocount on declare @Db_name nvarchar(256) ,@SchemaName nvarchar(256) ,@TableName Nvarchar(256) ,@IndexName Nvarchar(512) ,@PctFrag decimal ,@Defrag nvarchar(max) if exists(select 1 from sys.objects where object_id =object_id(N&#39;#tmp&#39;)) Drop table #tmp; if exists(select 1 from sys.objects where object_id =object_id(N&#39;#tmp_sub&#39;)) Drop table #tmp_sub; create table #tmp_sub(database_id int,dbname nvarchar(32),tablename nvarchar(128),index_type_desc nvarchar(128)) create table #tmp(database_id int,dbname nvarchar(256),tablename nvarchar(256),indexname nvarchar(256),type_desc nvarchar(128),schemaname nvarchar(256),avgfragment decimal) ------找出 text、ntext、image、varchar(max)、nvarchar(max)、varbinary(max)、xml 或大型 CLR 类型的列 exec sp_MSforeachdb &#39;insert into #tmp_sub(database_id,dbname,tablename,index_type_desc) select distinct c.</description>
+    </item>
+    
+    <item>
+      <title>SQLServer清除执行计划缓存</title>
+      <link>/sqlserver/sqlserver%E6%B8%85%E9%99%A4%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E7%BC%93%E5%AD%98/</link>
+      <pubDate>Wed, 05 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/sqlserver/sqlserver%E6%B8%85%E9%99%A4%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E7%BC%93%E5%AD%98/</guid>
+      <description>清除执行计划缓存  DBCC FREEPROCCACHE --清除执行计划缓存 查看执行缓存 	select * from sys.dm_exec_cached_plans 如何利用好执行计划缓存    使用存储过程，或者 sp_executesql 的方式调用会被重复使用的语句，而不要直接用 ad-hoc 语句或者 dynamic SQL 。    在语句里引用对象（表、视图、存储过程等），到带上它的 schema 名字，而不光是对象自己的名字。    将 数据库 Parameterization 属性设置成 Forced   这个属性是开启数据库强制参数化。也就是说，对于在这个数据库下运行的大部分语句，SQL Server 都会先参数化，再运行。如果应用经常用 adhoc 的方式调用一样的语句，强制参数化可能会有所帮助    统计信息更新   统计信息手工或者自动更新后，对和它有关的执行计划都不再能重用，而会产生重编译。    Create Procedure &amp;hellip; with Recompile 选项 和 Exce &amp;hellip; with Recomplie 选项 在重建或者调用存储过程的时候使用 &amp;ldquo;with Recomplie&amp;rdquo;，会强制 Sql Server 在调用这个存储过程的时候，永远都要先编译，再运行。    用户使用了 sp_recomplie    用户在调用语句的时候，使用了 &amp;ldquo;Keep Plan&amp;rdquo; 或者 &amp;ldquo;KeepFixed Plan&amp;rdquo; 这样的查询提示    定时任务  注意对一些复杂的存储过程，定时清理一下（凌晨）  </description>
+    </item>
+    
+    <item>
+      <title>SQLServer索引相关的DMV</title>
+      <link>/sqlserver/sqlserver%E7%B4%A2%E5%BC%95%E7%9B%B8%E5%85%B3%E7%9A%84dmv/</link>
+      <pubDate>Tue, 04 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/sqlserver/sqlserver%E7%B4%A2%E5%BC%95%E7%9B%B8%E5%85%B3%E7%9A%84dmv/</guid>
+      <description>动态管理视图：   sys.dm_db_missing_index_details –返回关于缺失索引的详细信息。
+  sys.dm_db_missing_index_group_stats - 返回缺失索引组的摘要信息
+  sys.dm_db_missing_index_groups – 返回一个具体组的缺失索引的信息。
+  sys.dm_db_missing_index_columns(index_handle) – 返回在一个索引中缺失的数据库表列的信息。这是一个函数，它要求传递index_handle。
+  和大多数动态管理视图的跟踪统计数据一样，当SQL Server实例重启，这些数据被完全清除时，
+  　1.被大量更新，却很少被使用的索引 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED SELECT DB_NAME() AS DatabaseName , SCHEMA_NAME(o.Schema_ID) AS SchemaName , OBJECT_NAME(s.[object_id]) AS TableName , i.name AS IndexName , s.user_updates , s.system_seeks + s.system_scans + s.system_lookups AS [System usage] INTO #TempUnusedIndexes FROM sys.dm_db_index_usage_stats s INNER JOIN sys.indexes i ON s.</description>
+    </item>
+    
+    <item>
+      <title>Oracle新建A用户默认访问B用户的表和视图</title>
+      <link>/oracle/oracle%E6%96%B0%E5%BB%BAa%E7%94%A8%E6%88%B7%E9%BB%98%E8%AE%A4%E8%AE%BF%E9%97%AEb%E7%94%A8%E6%88%B7%E7%9A%84%E8%A1%A8%E5%92%8C%E8%A7%86%E5%9B%BE/</link>
+      <pubDate>Mon, 03 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E6%96%B0%E5%BB%BAa%E7%94%A8%E6%88%B7%E9%BB%98%E8%AE%A4%E8%AE%BF%E9%97%AEb%E7%94%A8%E6%88%B7%E7%9A%84%E8%A1%A8%E5%92%8C%E8%A7%86%E5%9B%BE/</guid>
+      <description>原因  在oracle 中schema与用户是一一对应的关系 A用户默认访问的是Aschema下的表 业务需求建立用户A可以查询B用户建立的表；会报错：表和视图不存在 以下是解决方法  方案一：改写SQL  A用户查询时带上B用户的schema  select * from A.table 方案二：手动指定current_schema  临时修改A用户的schema，执行下面SQL事件  alter session set current_schema=B; select * from table; 方案三：触发器  增加A用户的登录trigger  create or replace trigger {triggername} after logon on A.schema begin execute immediate &#39;alter session set current_schema=B&#39;; 方案四：增加同义词  增加A用户的同义词  # 用管理账号执行 grant create synonym to A # 用A账号执行 CREATE SYNONYM TEST FOR B.TEST; .... #把所有的表和视图都加上 总结  方法1.</description>
+    </item>
+    
+    <item>
+      <title>SQLServer的资源等待</title>
+      <link>/sqlserver/sqlserver%E7%9A%84%E8%B5%84%E6%BA%90%E7%AD%89%E5%BE%85/</link>
+      <pubDate>Mon, 03 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/sqlserver/sqlserver%E7%9A%84%E8%B5%84%E6%BA%90%E7%AD%89%E5%BE%85/</guid>
+      <description>清除执行计划缓存 DBCC SQLPERF (&#39;sys.dm_os_wait_stats&#39;, CLEAR);  开始重新统计  统计SQL  select a.[RowNum] ,a.[WaitType] ,a.[Wait_S]-b.[Wait_S] as [Wait_S] ,a.[Resource_S]-b.[Resource_S] as [Resource_S] ,a.[Signal_S]-b.[Signal_S] as [Signal_S] ,a.[WaitCount]-b.[WaitCount] as [WaitCount] ,a.[Percentage]-b.[Percentage] as [Percentage] ,a.[AvgWait_S]-b.[AvgWait_S] as [AvgWait_S] ,a.[AvgRes_S]-b.[AvgRes_S] as [AvgRes_S] ,a.[AvgSig_S]-b.[AvgSig_S] as [AvgSig_S] from ( SELECT [RowNum] ,[WaitType] ,[Wait_S] ,[Resource_S] ,[Signal_S] ,[WaitCount] ,[Percentage] ,[AvgWait_S] ,[AvgRes_S] ,[AvgSig_S] FROM [system].[dbo].[dba_WaitType_log] where addtime=&#39;2015-03-26 17:04:04.683&#39; ) a left join ( SELECT [RowNum] ,[WaitType] ,[Wait_S] ,[Resource_S] ,[Signal_S] ,[WaitCount] ,[Percentage] ,[AvgWait_S] ,[AvgRes_S] ,[AvgSig_S] FROM [system].</description>
+    </item>
+    
+    <item>
+      <title>SQLServer移动ALWASYON副本文件的方法和脚本</title>
+      <link>/sqlserver/sqlserver%E7%A7%BB%E5%8A%A8alwasyon%E5%89%AF%E6%9C%AC%E6%96%87%E4%BB%B6%E7%9A%84%E6%96%B9%E6%B3%95%E5%92%8C%E8%84%9A%E6%9C%AC/</link>
+      <pubDate>Sun, 02 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/sqlserver/sqlserver%E7%A7%BB%E5%8A%A8alwasyon%E5%89%AF%E6%9C%AC%E6%96%87%E4%BB%B6%E7%9A%84%E6%96%B9%E6%B3%95%E5%92%8C%E8%84%9A%E6%9C%AC/</guid>
+      <description>1.暂停ALWAYSON数据传送 ALTER DATABASE [db1] SET HADR SUSPEND; ALTER DATABASE [db2] SET HADR SUSPEND; ALTER DATABASE [db3] SET HADR SUSPEND; 2.生成脚本：  SELECT database_id, (sum(size)*8/1024/1024) as usedGb FROM sys.master_files WHERE database_id in ( select database_id from sys.databases where NAME NOT IN (&#39;....&#39;) ) AND physical_name LIKE &#39;E:\%&#39; group by database_id order by 2 desc 3.生成脚本2 SELECT name , physical_name AS CurrentLocation , state_desc,(size*8/1024/1024) as usedGb ,&#39;ALTER DATABASE [&#39;+DB_NAME(database_id)+&#39;] MODIFY FILE ( NAME = &#39;+name+&#39; , FILENAME = &#39;&#39;&#39;+REPLACE(physical_name,&#39;D:\&#39;,&#39;F:\&#39;)+&#39;&#39;&#39; )&#39; FROM sys.</description>
+    </item>
+    
+  </channel>
+</rss>

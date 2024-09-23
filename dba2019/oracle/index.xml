@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>oracle on dboop.com</title>
+    <link>/categories/oracle/</link>
+    <description>Recent content in oracle on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 19 Nov 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/oracle/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>oracle审计相关:audit日志和安全策略</title>
+      <link>/post/2017/11/19/oracle%E5%AE%A1%E8%AE%A1%E7%9B%B8%E5%85%B3audit%E6%97%A5%E5%BF%97%E5%92%8C%E5%AE%89%E5%85%A8%E7%AD%96%E7%95%A5/</link>
+      <pubDate>Sun, 19 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017/11/19/oracle%E5%AE%A1%E8%AE%A1%E7%9B%B8%E5%85%B3audit%E6%97%A5%E5%BF%97%E5%92%8C%E5%AE%89%E5%85%A8%E7%AD%96%E7%95%A5/</guid>
+      <description>开启审计日志 1.查询当前审计日志开启状态 show parameter audit;
+show parameter audit; NAME TYPE VALUE ------------------------------------ ----------- ------------------------------ audit_file_dest string /app/oracle/******/adum p audit_sys_operations boolean TRUE audit_syslog_level string audit_trail string DB   audit_sys_operations 应为True audit_trail 的value值为NONE表示不开启； audit_trail 的value值为FALSE表示不开启； audit_trail 的value值为DB表示开启； audit_trail 的value值为TURE表示开启；  2.开启审计日志 alter system set audit_sys_operations=TRUE scope=spfile;
+需重启
+3.关闭审计功能 conn /as sysdba show parameter audit alter system set audit_trail = none scope=spfile;  密码策略 1.创建profile create profile DEFAULTE limit sessions_per_user unlimited cpu_per_session unlimited cpu_per_call unlimited connect_time unlimited ;  这里分两类：</description>
+    </item>
+    
+  </channel>
+</rss>

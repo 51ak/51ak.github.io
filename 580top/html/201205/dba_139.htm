@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySQL数据库语句更新</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="用于操作数据库的sql一般分为两种，一种是查询语句，也就是我们所说的select语句，另外一种就是更新语句，也叫做数据操作语句。言外之意，就是对数据进行修改。在标准的sql中有3个语句，它们是insert、update以及delete。在mysql中又多了一个replace语句，因此，本文以mysql为背景来讨论如何使有sql中的更新语句。<br/>一、insert和replace<brMySQL数据库语句更新" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化">性能与优化</a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlzhishi/l_14_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>MySQL数据库语句更新</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   　　用于操作数据库的SQL一般分为两种，一种是查询语句，也就是我们所说的SELECT语句，另外一种就是更新语句，也叫做数据操作语句。言外之意，就是对数据进行修改。在标准的SQL中有3个语句，它们是INSERT、UPDATE以及DELETE。在MySQL中又多了一个REPLACE语句，因此，本文以MySQL为背景来讨论如何使有SQL中的更新语句。<br />　　一、INSERT和REPLACE<br />　　INSERT和REPLACE语句的功能都是向表中插入新的数据。这两条语句的语法类似。它们的主要区别是如何处理重复的数据。<br />　　1. INSERT的一般用法<br />　　MySQL中的INSERT语句和标准的INSERT不太一样，在标准的SQL语句中，一次插入一条记录的INSERT语句只有一种形式。<br />　　INSERT INTO tablename(列名&amp;hellip;) VALUES(列值);<br />　　而在MySQL中还有另外一种形式。<br />　　INSERT INTO tablename SET column_name1 = value1, column_name2 = value2，…;<br />　　第一种方法将列名和列值分开了，在使用时，列名必须和列值的数一致。如下面的语句向users表中插入了一条记录：<br />　　INSERT INTO users(id, name, age) VALUES(123, '姚明', 25);<br />　　第二种方法允许列名和列值成对出现和使用，如下面的语句将产生中样的效果。<br />　　INSERT INTO users SET id = 123, name = '姚明', age = 25;<br />　　如果使用了SET方式，必须至少为一列赋值。如果某一个字段使用了省缺值（如默认或自增值），这两种方法都可以省略这些字段。如id字段上使用了自增值，上面两条语句可以写成如下形式：<br />　　INSERT INTO users (name, age) VALUES('姚明',25);<br />　　INSERT INTO uses SET name = '姚明', age = 25;<br />　　MySQL在VALUES上也做了些变化。如果VALUES中什么都不写，那MySQL将使用表中每一列的默认值来插入新记录。<br />　　INSERT INTO users () VALUES();<br />　　如果表名后什么都不写，就表示向表中所有的字段赋值。使用这种方式，不仅在VALUES中的值要和列数一致，而且顺序不能颠倒。 INSERT INTO users VALUES(123, '姚明', 25);<br />　　如果将INSERT语句写成如下形式MySQL将会报错。<br />　　INSERT INTO users VALUES('姚明',25);<br />　　2. 使用INSERT插入多条记录<br />　　看到这个标题也许大家会问，这有什么好说的，调用多次INSERT语句不就可以插入多条记录了吗！但使用这种方法要增加服务器的负荷，因为，执行每一次 SQL服务器都要同样对SQL进行分析、优化等操作。幸好MySQL提供了另一种解决方案，就是使用一条INSERT语句来插入多条记录。这并不是标准的 SQL语法，因此只能在MySQL中使用。<br />　　INSERT INTO users(name, age)　　VALUES('姚明', 25), ('比尔.盖茨', 50), ('火星人', 600);<br />　　上面的INSERT 语句向users表中连续插入了3条记录。值得注意的是，上面的INSERT语句中的VALUES后必须每一条记录的值放到一对(…)中，中间使用","分割。假设有一个表table1<br />　　CREATE TABLE table1(n INT)；<br />　　如果要向table1中插入5条记录，下面写法是错误的：<br />　　INSERT INTO table1 (i) VALUES(1,2,3,4,5);<br />　　MySQL将会抛出下面的错误<br />　　ERROR 1136: Column count doesn't match value count at row 1<br />　　而正确的写法应该是这样：<br />　　INSERT INTO t able1(i) VALUES(1),(2),(3),(4),(5);<br />　　当然，这种写法也可以省略列名，这样每一对括号里的值的数目必须一致，而且这个数目必须和列数一致。如：<br />　　INSERT INTO t able1 VALUES(1),(2),(3),(4),(5);<br />&nbsp;<br />　　3. REPLACE语句<br />　　我们在使用数据库时可能会经常遇到这种情况。如果一个表在一个字段上建立了唯一索引，当我们再向这个表中使用已经存在的键值插入一条记录，那将会抛出一个主键冲突的错误。当然，我们可能想用新记录的值来覆盖原来的记录值。如果使用传统的做法，必须先使用DELETE语句删除原先的记录，然后再使用 INSERT插入新的记录。而在MySQL中为我们提供了一种新的解决方案，这就是REPLACE语句。使用REPLACE插入一条记录时，如果不重复， REPLACE就和INSERT的功能一样，如果有重复记录，REPLACE就使用新记录的值来替换原来的记录值。<br />　　使用REPLACE的最大好处就是可以将DELETE和INSERT合二为一，形成一个原子操作。这样就可以不必考虑在同时使用DELETE和INSERT时添加事务等复杂操作了。<br />　　在使用REPLACE时，表中必须有唯一索引，而且这个索引所在的字段不能允许空值，否则REPLACE就和INSERT完全一样的。<br />　　在执行REPLACE后，系统返回了所影响的行数，如果返回1，说明在表中并没有重复的记录，如果返回2，说明有一条重复记录，系统自动先调用了 DELETE删除这条记录，然后再记录用INSERT来插入这条记录。如果返回的值大于2，那说明有多个唯一索引，有多条记录被删除和插入。<br />　　REPLACE的语法和INSERT非常的相似，如下面的REPLACE语句是插入或更新一条记录。<br />　　REPLACE INTO users (id,name,age) VALUES(123, '赵本山', 50);　　　插入多条记录：<br />　　REPLACE INTO users(id, name, age)　　VALUES(123, '赵本山', 50), (134,'Mary',15);<br />　　REPLACE也可以使用SET语句<br />　　REPLACE INTO users SET id = 123, name = '赵本山', age = 50;<br />　　上面曾提到REPLACE可能影响3条以上的记录，这是因为在表中有超过一个的唯一索引。在这种情况下，REPLACE将考虑每一个唯一索引，并对每一个索引对应的重复记录都删除，然后插入这条新记录。假设有一个table1表，有3个字段a, b, c。它们都有一个唯一索引。<br />CREATE TABLE table1(a INT NOT NULL UNIQUE,b INT NOT NULL UNIQUE,c INT NOT NULL UNIQUE);<br />　　假设table1中已经有了3条记录<br />　　a b c　　1 1 1　　2 2 2　　3 3 3<br />　　下面我们使用REPLACE语句向table1中插入一条记录。<br />　　REPLACE INTO table1(a, b, c) VALUES(1,2,3);<br />　　返回的结果如下<br />　　Query OK, 4 rows affected (0.00 sec)<br />　　在table1中的记录如下<br />　　a b c　　1 2 3<br />　　我们可以看到，REPLACE将原先的3条记录都删除了，然后将（1, 2, 3）插入。<br />&nbsp;<br />　　二、UPDATE<br />　　UPDATE的功能是更新表中的数据。这的语法和INSERT的第二种用法相似。必须提供表名以及SET表达式，在后面可以加WHERE以限制更新的记录范围。<br />　　UPDATE table_anem SET column_name1 = value1, column_name2 = value2, ...<br />　　WHERE ... ;<br />　　如下面的语句将users表中id等于123的记录的age改为24<br />　　UPDATE users SET age = 24 WHERE id = 123;<br />　　同样，可以使用UPDATE更新多个字段的值 UPDATE users SET age = 24, name = 'Mike' WHERE id = 123;<br />　　上面的UPDATE语句通过WHERE指定一个条件，否则，UPDATE将更新表中的所有记录的值。<br />　　在使用UPDATE更新记录时，如果被更新的字段的类型和所赋的值不匹配时，MySQL将这个值转换为相应类型的值。如果这个字段是数值类型，而且所赋值超过了这个数据类型的最大范围，那么MySQL就将这个值转换为这个范围最大或最小值。如果字符串太长，MySQL就将多余的字符串截去。如果设置非空字段为空，那么将这个字段设置为它们的默认值，数字的默认值是0，字符串的默认值是空串（不是null，是""）。　　　有两种情况UPDATE不会对影响表中的数据。<br />　　1. 当WHERE中的条件在表中没有记录和它匹配时。<br />　　2. 当我们将同样的值赋给某个字段时，如将字段abc赋为'123'，而abc的原值就是'123'。<br />　　和INSERT、REPLACE一样，UPDATE也返回所更新的记录数。但这些记录数并不包括满足WHERE条件的，但却未被更新的记录。如下同的UPDATE语句就未更新任何记录。<br />　　UPDATE users SET age = 30 WHERE id = 12;　　Query OK, 0 rows affected (0.00 sec)<br />　　需要注意的时，如果一个字段的类型是TIMESTAMP，那么这个字段在其它字段更新时自动更新。<br />　　在有些时候我们需要得到UPDATE所选择的行数，而不是被更新的行数。我们可以通过一些API来达到这个目的。如MySQL提供的C API提供了一个选项可以得到你想要的记录数。而MySQL的JDBC驱动得到的默认记录数也是匹配的记录数。<br />　　UPDATE和REPLACE基本类似，但是它们之间有两点不同。<br />　　1. UPDATE在没有匹配记录时什么都不做，而REPLACE在有重复记录时更新，在没有重复记录时插入。<br />　　2. UPDATE可以选择性地更新记录的一部分字段。而REPLACE在发现有重复记录时就将这条记录彻底删除，再插入新的记录。也就是说，将所有的字段都更新了。<br />　　三、DELETE和TRUNCATE TABLE<br />　　在MySQL中有两种方法可以删除数据，一种是DELETE语句，另一种是TRUNCATE TABLE语句。DELETE语句可以通过WHERE对要删除的记录进行选择。而使用TRUNCATE TABLE将删除表中的所有记录。因此，DELETE语句更灵活。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

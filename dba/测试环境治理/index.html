@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>测试环境治理数据库相关部分| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">测试环境治理数据库相关部分</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#测试环境的数据库的不同阶段需求">测试环境的数据库的不同阶段需求</a></li>
+    <li><a href="#多套测试环境的数据结构同步">多套测试环境的数据结构同步</a>
+      <ul>
+        <li><a href="#测试云环境">测试云环境</a></li>
+        <li><a href="#独立部署的测试环境">独立部署的测试环境</a></li>
+      </ul>
+    </li>
+    <li><a href="#造数据问题">造数据问题</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <ul>
+<li>下午邀请了去哪儿网的测试同学来公司分享</li>
+<li>介绍了去哪儿网的测试环境3.0版本</li>
+<li>1.0是固定环境(实体)</li>
+<li>2.0是noah平台(测试云平台)</li>
+<li>3.0是软路由平台</li>
+<li>这里面的代际变更和功能点这里不多做介绍</li>
+<li>我想总结和对比的是测试环境治理时的数据库部分</li>
+</ul>
+<h2 id="测试环境的数据库的不同阶段需求">测试环境的数据库的不同阶段需求</h2>
+<ul>
+<li>1.业务量小的时候，一套测试环境就可以了(&lt;10人研发:test)</li>
+<li>2.继续发展,需要把测试环境和开发环境分离出来(10-30人研发:test,dev)</li>
+<li>3.业务继续壮大,研发人员开始出现金个分组,需要多套测试环境(30-100人研发团队:test1,test2,dev)</li>
+<li>4.业务继续壮大,研发人员开始出现金个分组,需要多套测试环境(100-500人研发团队:test1,test2,test3&hellip;,dev,preprod)</li>
+<li>5.业务继续壮大,研发人员分事业部，需要云环境(500+研发团队:测试云环境)</li>
+</ul>
+<h2 id="多套测试环境的数据结构同步">多套测试环境的数据结构同步</h2>
+<ul>
+<li>这里要分两种情况来区别处理</li>
+<li>如果是测试云环境，需要有个基准环境出来，过程中有大量的自动化运维参与</li>
+<li>如果是独立部署的测试环境,需要手动同步</li>
+</ul>
+<h3 id="测试云环境">测试云环境</h3>
+<ul>
+<li>以生产库为最终标准</li>
+<li>定义一个基准环境，基准环境的数据库结构会实时跟线上同步</li>
+<li>生产环境的上线将会自动应用到基准环境</li>
+<li>其他环境的数据结构会和基准环境对齐</li>
+<li>在一个固定的时间点，自动或手动的强制和基准环境对齐</li>
+<li>允许非基准环境下的数据库结构和基准环境不一致</li>
+<li>非基准环境造的数据和变更会随着环境一起销毁</li>
+<li>非基准环境可以随时销毁，重新从基准环境拉一套出来</li>
+<li>基准环境的数据维护是件很重要的事</li>
+</ul>
+<h3 id="独立部署的测试环境">独立部署的测试环境</h3>
+<ul>
+<li>在非云状态的固定的独立部署的一套或多套测试环境</li>
+<li>基准环境就是生产环境</li>
+<li>数据库表结构会和生产环境对齐</li>
+<li>每个固定的时间点所有测试环境都会和生产环境对比表结构和其他对象</li>
+<li>发送出来异常报告</li>
+<li>是否修复需要测试或研发人员自行决定是否对齐</li>
+<li>SQL上线时可以选择多环境上线，一段脚本在多个环境同时执行</li>
+<li>参见：<a href="https://www.dboop.com/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%9A%E7%8E%AF%E5%A2%83sql%E4%B8%8A%E7%BA%BF/">数据库多环境SQL上线</a>。</li>
+</ul>
+<h2 id="造数据问题">造数据问题</h2>
+<ul>
+<li>测试环境的数据谁来造？</li>
+<li>字典类的基础数据从线上同步（允许定时同步）</li>
+<li>客户,订单类数据尽可能的由测试人员随机生成</li>
+<li>部分数据允许按一定规则从线上同步回来（需要脱敏）</li>
+<li>测试环境的数据也会有完整的防误删和备份策略</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/10/19</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/sql%E4%B8%8A%E7%BA%BF">SQL上线</a> <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B">自动化流程</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

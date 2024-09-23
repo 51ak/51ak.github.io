@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>数据库备份管理制度| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">数据库备份管理制度</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#备份策略">备份策略</a></li>
+    <li><a href="#备份周期">备份周期</a></li>
+    <li><a href="#备份脚本源机">备份脚本（源机）</a></li>
+    <li><a href="#传输脚本辅备份机">传输脚本（辅备份机）</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="备份策略">备份策略</h2>
+<ul>
+<li>数据库备库节点上启用定时任务，每天0:10～6:10 全备（或增备)文件 至本地sas盘，每个实例压缩成一个备份文件。</li>
+<li>生成的备份文件调用接口上传状态并断点续传止主备份备机</li>
+<li>数据库备份在本地sas盘上保留1-3天的备份文件</li>
+<li>辅备份机在0点-22点保持当天的备份文件夹和主备份机的同步</li>
+<li>主备份机每天22:00 将当天的接收到的备份文件移至 yyyyMMdd 目录下</li>
+<li>所有备份机每天23:00删除30天以上的过期备份文件
+<ul>
+<li>每个月的第一次数据库全备，永不过期删除（例如：如果db每天一次全备，则每月的1号备份永久保留）</li>
+</ul>
+</li>
+</ul>
+<h2 id="备份周期">备份周期</h2>
+<ul>
+<li>MySQL：每天1次全备，15分钟同步一次binlog日志，全备和日志保留30天</li>
+<li>Oracle:每周1次全备,其余天数增备，实时保存日志，备份和日志保留30天</li>
+<li>MongoDB:每天1次全备，全备保留30天</li>
+</ul>
+<h2 id="备份脚本源机">备份脚本（源机）</h2>
+<pre><code></code></pre><h2 id="传输脚本辅备份机">传输脚本（辅备份机）</h2>
+<pre><code></code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2021/09/23</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/dba">DBA</a> <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96">自动化</a> <a href="/categories/%E5%AE%89%E5%85%A8">安全</a> <a href="/categories/%E8%BF%90%E7%BB%B4">运维</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

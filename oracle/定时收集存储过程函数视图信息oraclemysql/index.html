@@ -1,0 +1,329 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>定时收集存储过程函数视图信息入库(Oracle,MySQL)| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">定时收集存储过程函数视图信息入库(Oracle,MySQL)</span></h1>
+</div>
+
+
+  <main>
+    <h2 id="需求">需求</h2>
+<p>下午接到运维转来的一个权限申请流程：大数据部门研发要求开通保垒机权限。以方便在保垒机上安装SQL客户端去查看存储过程和视图的内容</p>
+<p>保垒机直连数据库查询，这种不可控的方式，早在去年我就把这个历史问题给禁止掉了，没想到现在还有人要求开通</p>
+<p>经过沟通得知，对方想查看Oracle数据库里的一些老的存储过程的代码。而DBA平台上只有表结构相关的数据字典，没有存储过程和视图的数据字典</p>
+<p>所以，别慌，不就这点需求吗，马上就可以加上。</p>
+<blockquote>
+<p>为什么DBA平台上的数据字典不包括存储过程和视图？
+因为存储过程/函数/视图  也是被我禁掉的，研发人员上线不可以写存储过程和视图。
+所以就没想过要在DBA运维平台上做这块功能</p>
+</blockquote>
+<p>但是因为</p>
+<ul>
+<li>历史原因，以前的Oracle数据库上已经存在很多的视图和存储过程</li>
+<li>第三方原因，公司采购的一些第三方服务和软件，带了存储过程和视图
+这些被禁止使用的数据库对象，也需要做统一维护</li>
+</ul>
+<h2 id="拆解">拆解</h2>
+<ul>
+<li>这些数据库对象的信息用定时任务收集线上的表结构到本地，存为两份</li>
+<li>一份入库，做为快照信息，展示给用户。</li>
+<li>一份落本地文件，上传到git，用git做版本管理</li>
+</ul>
+<blockquote>
+<p>为什么不在用户请求查看某个数据库对象的信息时，实时查询给用户？</p>
+<ul>
+<li>1.因为历史原因，我们有的库有几万个数据库对象，当用户选择一个库时，list列表加载很慢，所以一开始设计的时候，我们做了快照</li>
+<li>2.一份快照，还可以用作数据库对象的git版本管理</li>
+</ul>
+</blockquote>
+<h2 id="建表">建表</h2>
+<p>在dboop库中建表</p>
+<pre><code>
+CREATE TABLE `info_objects` (
+  `objectid` int NOT NULL AUTO_INCREMENT,
+  `dbid` int NOT NULL DEFAULT '0',
+  `TABLE_SCHEMA` varchar(64) NOT NULL DEFAULT '',
+  `object_name` varchar(255) NOT NULL DEFAULT '',
+  `object_type` varchar(64) NOT NULL DEFAULT '',
+  `object_text` longtext,
+  `cstatus` smallint NOT NULL DEFAULT '1',
+  `dba_freshtime` datetime NOT NULL DEFAULT '1990-01-01 00:00:00',
+  PRIMARY KEY (`objectid`),
+  UNIQUE KEY `idx_infoobjects_id` (`dbid`,`object_name`,`object_type`),
+  KEY `idx_info_objects_time` (`dba_freshtime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 
+
+</code></pre><h2 id="实现数据字典收集入库">实现数据字典收集入库</h2>
+<h3 id="建oracle采集任务">建Oracle采集任务</h3>
+<pre><code> &lt;!--抓存储过程和函数等信息 --&gt; 
+&lt;action result=&quot;isok,okcount,errcount,errmess&quot; type=&quot;sql_to_sql&quot;&gt;
+&lt;from_server&gt;linkdb:{dbid}&lt;/from_server&gt;
+  &lt;isadmin&gt;1&lt;/isadmin&gt;
+&lt;to_server&gt;link:dboop&lt;/to_server&gt; 
+  &lt;from_formatstr&gt;maxrow:9999999&lt;/from_formatstr&gt;
+&lt;from_sqlstr&gt;
+  SELECT name,type,RTRIM(XMLAGG(XMLELEMENT(E,text,'^^').EXTRACT('//text()') ORDER BY line).GetClobVal(),'^^')  as textstr 
+  FROM sys.dba_source where owner=:0 and type  not in ('TRIGGER')  group by name,type
+  &lt;/from_sqlstr&gt;
+  &lt;from_sqlpara&gt;{dbname}&lt;/from_sqlpara&gt;
+    &lt;to_sqlstr&gt;insert into info_objects(dbid,TABLE_SCHEMA,object_name,object_type,object_text,cstatus,dba_freshtime)
+      values(%s,%s,%s,%s,%s,1,%s)
+         on duplicate key update  
+      object_text=%s,cstatus=2,dba_freshtime=%s       
+    &lt;/to_sqlstr&gt;
+&lt;to_sqlpara&gt;{dbid}&lt;/to_sqlpara&gt;
+  &lt;to_sqlpara&gt;{dbname}&lt;/to_sqlpara&gt;
+&lt;to_sqlpara&gt;{0}&lt;/to_sqlpara&gt;
+&lt;to_sqlpara&gt;{1}&lt;/to_sqlpara&gt;
+&lt;to_sqlpara&gt;{2}&lt;/to_sqlpara&gt;
+&lt;to_sqlpara&gt;{tasktime}&lt;/to_sqlpara&gt;
+&lt;to_sqlpara&gt;{2}&lt;/to_sqlpara&gt;
+&lt;to_sqlpara&gt;{tasktime}&lt;/to_sqlpara&gt;
+&lt;/action&gt;     
+
+  
+  
+ &lt;!--抓视图等信息 --&gt; 
+&lt;action result=&quot;isok,okcount,errcount,errmess&quot; type=&quot;sql_to_sql&quot;&gt;
+&lt;from_server&gt;linkdb:{dbid}&lt;/from_server&gt;
+  &lt;isadmin&gt;1&lt;/isadmin&gt;
+&lt;to_server&gt;link:dboop&lt;/to_server&gt; 
+  &lt;from_formatstr&gt;maxrow:9999999&lt;/from_formatstr&gt;
+&lt;from_sqlstr&gt;
+  SELECT view_name,'view',text as textstr 
+  FROM sys.dba_views where OWNER=:0
+union all 
+select mview_name,'mview' ,query
+from dba_mviews  where  OWNER = :0  
+  &lt;/from_sqlstr&gt;
+  &lt;from_sqlpara&gt;{dbname}&lt;/from_sqlpara&gt;
+    &lt;to_sqlstr&gt;insert into info_objects(dbid,TABLE_SCHEMA,object_name,object_type,object_text,cstatus,dba_freshtime)
+      values(%s,%s,%s,%s,%s,1,%s)
+         on duplicate key update  
+      object_text=%s,cstatus=2,dba_freshtime=%s       
+    &lt;/to_sqlstr&gt;
+&lt;to_sqlpara&gt;{dbid}&lt;/to_sqlpara&gt;
+  &lt;to_sqlpara&gt;{dbname}&lt;/to_sqlpara&gt;
+&lt;to_sqlpara&gt;{0}&lt;/to_sqlpara&gt;
+&lt;to_sqlpara&gt;{1}&lt;/to_sqlpara&gt;
+&lt;to_sqlpara&gt;{2}&lt;/to_sqlpara&gt;
+&lt;to_sqlpara&gt;{tasktime}&lt;/to_sqlpara&gt;
+&lt;to_sqlpara&gt;{2}&lt;/to_sqlpara&gt;
+&lt;to_sqlpara&gt;{tasktime}&lt;/to_sqlpara&gt;
+&lt;/action&gt;     
+  
+</code></pre><h3 id="建mysql采集任务">建MySQL采集任务</h3>
+<p>MySQL因为我们线上没有历史问题，不存在视图和存储过程，所以还是没必要</p>
+<p>如果要建的话，
+从下面的这两张表里读</p>
+<pre><code># MySQL8.0:
+ select ROUTINE_SCHEMA,ROUTINE_NAME,ROUTINE_TYPE,ROUTINE_DEFINITION,CREATED from information_schema.ROUTINES where ROUTINE_SCHEMA='库名';
+
+
+  select TABLE_NAME as object_name,'view' as object_type,VIEW_DEFINITION from information_schema.views where TABLE_SCHEMA='';
+
+# MySQL5.7及以前存储过程和funcation定义不是在ROUTINES 表中，记得是存在 mysql.proc表中
+</code></pre><p>定时任务会将需要的信息写入info_object表中</p>
+<h2 id="补充报表">补充报表</h2>
+<p>在原有的数据字典报表中，增加2个page，分别用来展示</p>
+<ul>
+<li>存储过程/函数</li>
+<li>视图</li>
+</ul>
+<pre><code>
+
+&lt;page&gt;
+  &lt;viewtype&gt;table&lt;/viewtype&gt;
+  &lt;connstr&gt;link:dboop&lt;/connstr&gt;
+  &lt;title&gt;存储过程和函数&lt;/title&gt;
+  &lt;tableheader&gt;
+  &lt;![CDATA[
+    &lt;tr&gt;
+&lt;th style=&quot;width:80px;&quot;&gt;&lt;h3&gt;DbName&lt;/h3&gt;&lt;/th&gt;
+&lt;th style=&quot;width:74px;&quot;&gt;&lt;h3&gt;类型&lt;/h3&gt;&lt;/th&gt;
+&lt;th style=&quot;width:230px;&quot;&gt;&lt;h3&gt;对象名&lt;/h3&gt;&lt;/th&gt;
+&lt;th style=&quot;width:640px;&quot;&gt;&lt;h3&gt;SQLSTR&lt;/h3&gt;&lt;/th&gt;
+&lt;/tr&gt;
+                ]]&gt;
+  &lt;/tableheader&gt;
+  &lt;sqlstr&gt;&lt;![CDATA[
+select a.TABLE_SCHEMA AS DbName,
+object_type,
+concat('&lt;a href=&quot;view.html?action=v&amp;report_action=v&amp;report_ptname=dxlnj0t7vfwuq8oyksp3ha2em9&amp;dbid=',dbid,'&amp;id=',objectid,'&quot;&gt;',object_name,'&lt;/a&gt;')
+as object_name
+,concat('',replace(replace(replace(replace(left(object_text,140),'^',''),'&lt;',''),'&gt;','') ,object_name,''),'..') as SQLSTR
+
+from info_objects a 
+where a.dbid=%s  and object_type in ('FUNCTION','PROCEDURE')
+order by a.object_name 
+                ]]&gt;
+  &lt;/sqlstr&gt;
+  &lt;sqlpara&gt;#1&lt;/sqlpara&gt;
+  &lt;width&gt;1024px&lt;/width&gt;
+
+&lt;/page&gt;
+
+
+
+
+&lt;page&gt;
+  &lt;viewtype&gt;table&lt;/viewtype&gt;
+  &lt;connstr&gt;link:dboop&lt;/connstr&gt;
+  &lt;title&gt;视图&lt;/title&gt;
+  &lt;tableheader&gt;
+  &lt;![CDATA[
+    &lt;tr&gt;
+&lt;th style=&quot;width:80px;&quot;&gt;&lt;h3&gt;DbName&lt;/h3&gt;&lt;/th&gt;
+&lt;th style=&quot;width:74px;&quot;&gt;&lt;h3&gt;类型&lt;/h3&gt;&lt;/th&gt;
+&lt;th style=&quot;width:230px;&quot;&gt;&lt;h3&gt;对象名&lt;/h3&gt;&lt;/th&gt;
+&lt;th style=&quot;width:640px;&quot;&gt;&lt;h3&gt;SQLSTR&lt;/h3&gt;&lt;/th&gt;
+&lt;/tr&gt;
+                ]]&gt;
+  &lt;/tableheader&gt;
+  &lt;sqlstr&gt;&lt;![CDATA[
+select a.TABLE_SCHEMA AS DbName,
+object_type,
+concat('&lt;a href=&quot;view.html?action=v&amp;report_action=v&amp;report_ptname=dxlnj0t7vfwuq8oyksp3ha2em9&amp;dbid=',dbid,'&amp;id=',objectid,'&quot;&gt;',object_name,'&lt;/a&gt;')
+as object_name
+,concat('',replace(replace(replace(left(object_text,120),'^',''),'&lt;',''),'&gt;',''),'..') as SQLSTR
+
+from info_objects a
+where a.dbid=%s  and object_type in ('view','mview')
+order by a.object_name 
+                ]]&gt;
+  &lt;/sqlstr&gt;
+  &lt;sqlpara&gt;#1&lt;/sqlpara&gt;
+  &lt;width&gt;1024px&lt;/width&gt;
+
+&lt;/page&gt;
+
+</code></pre><h2 id="效果一数据字典用户展示页">效果一：数据字典用户展示页</h2>
+<p>指定用户查询数字典时，可以获得存储过程和函数的列表和详细定义</p>
+<p><img src="/img/2022/procview001.png" alt="数据字典用户展示页"></p>
+<h2 id="效果二数据字典git版本管理页">效果二：数据字典git版本管理页</h2>
+<p><img src="/img/2022/procview002.png" alt="数据字典git版本管理页"></p>
+<p>非常快速的解决了用户查数据库对象信息的问题</p>
+<p>只需要几步简单的xml配置，就可以完成</p>
+<p>非常的简单</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/08/04</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/oracle">oracle</a> <a href="/categories/%E8%BF%90%E7%BB%B4sql">运维SQL</a> <a href="/categories/mysql">MySQL</a> <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96">自动化</a> <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B">自动化流程</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

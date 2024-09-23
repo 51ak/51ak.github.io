@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>用Python操作Milvus向量数据库的简明教程| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">用Python操作Milvus向量数据库的简明教程</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#环境准备">环境准备</a>
+      <ul>
+        <li><a href="#安装-milvus服务端">安装 Milvus服务端</a></li>
+        <li><a href="#安装-milvus-客户端">安装 Milvus 客户端</a></li>
+      </ul>
+    </li>
+    <li><a href="#连接-milvus">连接 Milvus</a></li>
+    <li><a href="#定义集合-schema">定义集合 Schema</a></li>
+    <li><a href="#创建集合">创建集合</a></li>
+    <li><a href="#插入数据">插入数据</a></li>
+    <li><a href="#创建索引">创建索引</a></li>
+    <li><a href="#加载数据到内存">加载数据到内存</a></li>
+    <li><a href="#执行搜索">执行搜索</a></li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <blockquote>
+<p>本文介绍如何使用 Python 操作 Milvus 向量数据库，包括创建集合、插入数据、创建索引和执行搜索。Milvus 是一款专为向量查询与检索设计的开源向量数据库，特别适用于 AI 和机器学习场景。</p>
+</blockquote>
+<h2 id="环境准备">环境准备</h2>
+<h3 id="安装-milvus服务端">安装 Milvus服务端</h3>
+<ul>
+<li>1.docker 安装</li>
+</ul>
+<pre><code>wget https://github.com/milvus-io/milvus/releases/download/v2.2.3/milvus-standalone-docker-compose.yml -O docker-compose.yml
+
+docker-compose up -d
+
+</code></pre><ul>
+<li>
+<ol start="2">
+<li>脚本 安装</li>
+</ol>
+</li>
+</ul>
+<pre><code>wget https://raw.githubusercontent.com/milvus-io/milvus/master/scripts/standalone_embed.sh
+bash standalone_embed.sh start
+
+</code></pre><h3 id="安装-milvus-客户端">安装 Milvus 客户端</h3>
+<p>在开始之前，请确保已经在环境中安装了 Milvus 客户端库 <code>pymilvus</code>。你可以使用以下命令进行安装：</p>
+<pre><code>pip install pymilvus
+</code></pre><h2 id="连接-milvus">连接 Milvus</h2>
+<p>首先，我们需要连接到本地的 Milvus 服务。假设 Milvus 服务运行在 <code>127.0.0.1</code>，端口为 <code>19530</code>。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pymilvus <span style="color:#f92672">import</span> connections
+
+<span style="color:#75715e"># 连接到 Milvus 服务</span>
+connections<span style="color:#f92672">.</span>connect(alias<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;default&#34;</span>, host<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;127.0.0.1&#39;</span>, port<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;19530&#39;</span>)
+</code></pre></div><h2 id="定义集合-schema">定义集合 Schema</h2>
+<p>接下来，我们需要定义 Milvus 集合的 schema。假设我们要存储的集合包含一个 ID 字段和一个向量字段，向量维度为 128。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pymilvus <span style="color:#f92672">import</span> FieldSchema, CollectionSchema, DataType
+
+<span style="color:#75715e"># 定义字段</span>
+fields <span style="color:#f92672">=</span> [
+    FieldSchema(name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;id&#34;</span>, dtype<span style="color:#f92672">=</span>DataType<span style="color:#f92672">.</span>INT64, is_primary<span style="color:#f92672">=</span>True, auto_id<span style="color:#f92672">=</span>True),
+    FieldSchema(name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;vector&#34;</span>, dtype<span style="color:#f92672">=</span>DataType<span style="color:#f92672">.</span>FLOAT_VECTOR, dim<span style="color:#f92672">=</span><span style="color:#ae81ff">128</span>)
+]
+
+<span style="color:#75715e"># 定义集合 Schema</span>
+schema <span style="color:#f92672">=</span> CollectionSchema(fields, <span style="color:#e6db74">&#34;example collection&#34;</span>)
+</code></pre></div><h2 id="创建集合">创建集合</h2>
+<p>使用定义好的 schema 创建一个名为 <code>example_collection</code> 的集合。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> pymilvus <span style="color:#f92672">import</span> Collection
+
+<span style="color:#75715e"># 创建集合</span>
+collection <span style="color:#f92672">=</span> Collection(<span style="color:#e6db74">&#34;example_collection&#34;</span>, schema, consistency_level<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Strong&#34;</span>)
+</code></pre></div><h2 id="插入数据">插入数据</h2>
+<p>我们可以生成一些随机的向量数据并将其插入到集合中。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> numpy <span style="color:#f92672">as</span> np
+
+<span style="color:#75715e"># 生成随机数据</span>
+num_entities <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>
+vectors <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>random((num_entities, <span style="color:#ae81ff">128</span>))<span style="color:#f92672">.</span>tolist()
+
+<span style="color:#75715e"># 插入数据</span>
+entities <span style="color:#f92672">=</span> [
+    vectors,
+]
+collection<span style="color:#f92672">.</span>insert(entities)
+</code></pre></div><p>插入数据后，调用 <code>flush</code> 方法将数据持久化到磁盘。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># 持久化数据</span>
+collection<span style="color:#f92672">.</span>flush()
+</code></pre></div><h2 id="创建索引">创建索引</h2>
+<p>为了提高查询性能，我们需要为向量字段创建索引。下面的代码展示了如何创建 IVF_FLAT 类型的索引。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># 定义索引参数</span>
+index_params <span style="color:#f92672">=</span> {
+    <span style="color:#e6db74">&#34;index_type&#34;</span>: <span style="color:#e6db74">&#34;IVF_FLAT&#34;</span>,
+    <span style="color:#e6db74">&#34;metric_type&#34;</span>: <span style="color:#e6db74">&#34;L2&#34;</span>,
+    <span style="color:#e6db74">&#34;params&#34;</span>: {<span style="color:#e6db74">&#34;nlist&#34;</span>: <span style="color:#ae81ff">128</span>}
+}
+
+<span style="color:#75715e"># 创建索引</span>
+collection<span style="color:#f92672">.</span>create_index(field_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;vector&#34;</span>, index_params<span style="color:#f92672">=</span>index_params)
+</code></pre></div><h2 id="加载数据到内存">加载数据到内存</h2>
+<p>在进行检索之前，需要将数据加载到内存中。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># 加载数据到内存</span>
+collection<span style="color:#f92672">.</span>load()
+</code></pre></div><h2 id="执行搜索">执行搜索</h2>
+<p>最后，我们可以使用一个查询向量在集合中进行搜索，并输出前 10 个最相似的结果。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># 定义搜索参数</span>
+search_params <span style="color:#f92672">=</span> {
+    <span style="color:#e6db74">&#34;metric_type&#34;</span>: <span style="color:#e6db74">&#34;L2&#34;</span>,
+    <span style="color:#e6db74">&#34;params&#34;</span>: {<span style="color:#e6db74">&#34;nprobe&#34;</span>: <span style="color:#ae81ff">10</span>}
+}
+
+<span style="color:#75715e"># 随机选择一个查询向量</span>
+query_vector <span style="color:#f92672">=</span> [vectors[<span style="color:#ae81ff">0</span>]]  <span style="color:#75715e"># 使用插入数据中的第一个向量</span>
+
+<span style="color:#75715e"># 执行搜索</span>
+results <span style="color:#f92672">=</span> collection<span style="color:#f92672">.</span>search(query_vector, <span style="color:#e6db74">&#34;vector&#34;</span>, search_params, limit<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>)
+<span style="color:#66d9ef">for</span> result <span style="color:#f92672">in</span> results[<span style="color:#ae81ff">0</span>]:
+    <span style="color:#66d9ef">print</span>(f<span style="color:#e6db74">&#34;ID: {result.id}, Distance: {result.distance}&#34;</span>)
+</code></pre></div><h2 id="总结">总结</h2>
+<p>本文介绍了如何使用 Python 操作 Milvus 向量数据库的基本步骤，包括连接 Milvus、定义集合、插入数据、创建索引和执行搜索。通过 Milvus，您可以高效地存储、索引和检索海量向量数据，为 AI 和机器学习应用提供强大的支持。</p>
+<p>参考 <a href="https://milvus.io/docs">Milvus 官方文档</a></p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2024/05/24</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/python">python</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

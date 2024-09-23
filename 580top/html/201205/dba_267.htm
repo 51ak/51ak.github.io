@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>PHP连接Access数据库实例教程</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="当客户网站是&nbsp;asp+access平台如何移植到php平台呢？首先我们要解决的是php连接access数据库问题，在不改变数据库的情况下，php如何与access数据库建立连接？php提供多种连接数据库解决方案，在此详解如何使用phpadodb、pdo、odbc与access数据库建立连接的代码实例。准备工作一、使用phpadodb连接access数据库1、首先你需要安装phpPHP连接Access数据库实例教程" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a href="../othersql/l_19_1.htm" class="hover"　title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../nosql/l_20_1.htm" title="NoSQL">NoSQL</a>|</li><li><a  href="../sysbase/l_21_1.htm" title="Sybase">Sybase</a>|</li><li><a  href="../db2/l_22_1.htm" title="DB2">DB2</a>|</li><li><a  href="../access/l_23_1.htm" title="Access"><span class="zc_666">Access</span></a>|</li><li><a  href="../infomix/l_24_1.htm" title="Informix">Informix</a>|</li><li><a  href="../sqlsql/l_25_1.htm" title="其他">其他</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../othersql/l_19_1.htm">其他数据库</a>&nbsp;&gt;&nbsp;<a href="../access/l_23_1.htm">Access</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>PHP连接Access数据库实例教程</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   当客户网站是&nbsp;ASP+ACCESS平台如何移植到PHP平台呢？首先我们要解决的是PHP连接<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库问题，在不改变数据库的情况下，PHP如何与<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库建立连接？　　PHP提供多种连接数据库解决方案，在此详解如何使用PHP ADOdb、PDO、ODBC与<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库建立连接的代码实例。准备工作一、使用PHP ADOdb连接<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库1、首先你需要安装PHP ADOdb类库。2、使用PHP ADOdb连接<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库代码如下&nbsp; &lt;?&nbsp;&nbsp;&nbsp; include('adodb5/adodb.inc.php');&nbsp;&nbsp;&nbsp; $db =&amp; ADONewConnection('access');&nbsp;&nbsp;&nbsp; $dsn = "Driver={Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a> Driver (*.mdb)};Dbq=".realpath("access.mdb").";Uid=;Pwd=;";&nbsp;&nbsp;&nbsp; $db-&gt;Connect($dsn);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $rs = $db-&gt;Execute('select&nbsp;* from&nbsp;web');&nbsp;&nbsp;&nbsp; print "&lt;pre&gt;";&nbsp;&nbsp;&nbsp; print_r($rs-&gt;GetRows());&nbsp;&nbsp;&nbsp; print "&lt;/pre&gt;";?&gt;说明：与使用PHP ADOdb与<a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a>数据库建立连接类似，首先把ADOdb类库包含进来，然后调用ADONewConnection、Connect、Execute与<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库建立连接并执行查询操作。二、使用PHP PDO连接<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库　　PDO功能需PHP5以上支持，在使用PDO之前你必须确保安装了PDO功能，如何配置安装PDO呢？　　只要在PHP.INI配置文件中找到extension_dir，使之指向扩展库目录地址，同时去除你想要使用的PDO驱动DLL之前的分号 (;)，重启Apache，PDO就算安装好了。这里由于我们使用PDO连接<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库，所以至少确保 php_pdo.dll，php_pdo_odbc.dll能支持。　　使用PDO连接<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库代码实例&nbsp;&nbsp;&nbsp;&nbsp;&lt;?&nbsp;&nbsp;&nbsp; $db = new PDO("odbc:driver={microsoft access driver (*.mdb)};dbq=".realpath("access.mdb")) or die("Connect Error");&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $rs = $db-&gt;query('select * from&nbsp;web');&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; print "&lt;pre&gt;";&nbsp;&nbsp;&nbsp; print_r($rs-&gt;fetchAll());&nbsp;&nbsp;&nbsp; print "&lt;/pre&gt;";?&gt;说明：首先初始化PDO对象，建立PHP与<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库之间的连接，然后通过PDO query函数执行查询操作。三、使用ODBC连接<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库　　使用ODBC连接<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库代码实例&nbsp;&nbsp;&nbsp;&nbsp;&lt;?&nbsp;&nbsp;&nbsp; $dsn = "DRIVER=Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a> Driver (*.mdb);dbq=".realpath("access.mdb");&nbsp;&nbsp;&nbsp; $conn = @odbc_connect($dsn,"","",SQL_CUR_USE_ODBC ) or die ("Connect Error!");&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $sql&nbsp;= "select * from&nbsp;web";&nbsp;&nbsp;&nbsp; $rs = @odbc_do($conn,$sql);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while(odbc_fetch_row($rs)){&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; echo "网站名称：".odbc_result($rs,"webname");&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; echo "&lt;br/&gt;网站地址：".odbc_result($rs,"website");&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp; odbc_close($conn);?&gt;说明：首先使用odbc_connect连接access数据库，前三个参数分别为：$DSN，数据库用户名，密码，第四个参数设置为SQL_CUR_USE_ODBC主要是为了避免连接<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库发生意外错误；然后使用odbc_do执行查询操作，并调用odbc_fetch_row、odbc_result输出查询内容，最后使用odbc_close关闭<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库连接。　　至此使用PHP ADOdb、PDO、ODBC连接<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库并进行操作的代码实例就介绍完了，通过上述实例，我们可以看到其实PHP连接<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库的方法大同小异，使用哪种方法取决于PHP环境的配置情况。
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL的行格式(Compact、Redundant、Dynamic和Compressed)| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL的行格式(Compact、Redundant、Dynamic和Compressed)</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#行格式在哪里看怎么修改行格式">行格式在哪里看，怎么修改行格式</a>
+      <ul>
+        <li><a href="#查看">查看</a></li>
+        <li><a href="#修改">修改</a></li>
+        <li><a href="#查看当前默认的row_format">查看当前默认的row_format</a></li>
+      </ul>
+    </li>
+    <li><a href="#代入开发者来思考怎么存储一条数据">代入开发者来思考怎么存储一条数据</a></li>
+    <li><a href="#真实的compact行格式">真实的compact行格式</a>
+      <ul>
+        <li><a href="#图compact格式">图:compact格式</a></li>
+        <li><a href="#对照真实的数据">对照真实的数据</a></li>
+        <li><a href="#第一部分变长字段长度列表">第一部分：变长字段长度列表</a></li>
+        <li><a href="#第二部分null值列表">第二部分：NULL值列表</a></li>
+        <li><a href="#第三部分记录头信息重要">第三部分：记录头信息（重要）</a></li>
+        <li><a href="#第四部分记录的真实数据">第四部分：记录的真实数据</a></li>
+      </ul>
+    </li>
+    <li><a href="#compact行格式和dynamiccompressed的区别">compact行格式和dynamic，compressed的区别</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="前言">前言</h2>
+<ul>
+<li>MySQL的默认存储引擎innodb是按16k大小的page来组织存储数据的</li>
+<li>MySQL的*.ibd 数据文件，大小一定是能被16kB整除的</li>
+<li>在逻辑上innodb是按btree来组织数据存储的</li>
+<li>针对每一行具体的数据，共有4种存储方式可供选择：Compact、Redundant、Dynamic和Compressed</li>
+<li>其中：Redundant 已经被淘汰了，不建议使用</li>
+<li>Compact/Dynamic/Compressed 用的是同一个原理，只在细节上有点变化，不影响其实现逻辑</li>
+<li>所以我们说行格式的时候，就可以从compact格式来分析，后两种是compact格式的变种</li>
+</ul>
+<blockquote>
+<p>以下原理部分，都只说compact行格式。(?因为compact是基础，后两种都是基于它衍生出来的)</p>
+</blockquote>
+<h2 id="行格式在哪里看怎么修改行格式">行格式在哪里看，怎么修改行格式</h2>
+<h3 id="查看">查看</h3>
+<pre><code>mysql&gt; show table status like '%dbooptest%' \G
+*************************** 1. row ***************************
+           Name: dbooptest
+         Engine: InnoDB
+        Version: 10
+     Row_format: Dynamic
+           Rows: 9
+ Avg_row_length: 1820
+    Data_length: 16384
+Max_data_length: 0
+   Index_length: 0
+      Data_free: 0
+ Auto_increment: NULL
+    Create_time: 2020-06-10 20:22:49
+    Update_time: 2020-06-10 20:22:49
+     Check_time: NULL
+      Collation: utf8mb4_unicode_ci
+       Checksum: NULL
+ Create_options: 
+        Comment: 测试
+1 row in set (0.00 sec)
+</code></pre><h3 id="修改">修改</h3>
+<pre><code>CREATE TABLE dbooptest (id int ....) ROW_FORMAT=Compact;
+    
+ALTER TABLE 表名 ROW_FORMAT=Compressed; #注意不要在轻易在线上环境修改行格式,基本上等同于：作死！
+
+</code></pre><h3 id="查看当前默认的row_format">查看当前默认的row_format</h3>
+<pre><code>mysql&gt; show global variables like 'innodb_default_row_format';
++---------------------------+---------+
+| Variable_name             | Value   |
++---------------------------+---------+
+| innodb_default_row_format | dynamic |
++---------------------------+---------+
+1 row in set (0.00 sec)
+
+</code></pre><h2 id="代入开发者来思考怎么存储一条数据">代入开发者来思考怎么存储一条数据</h2>
+<p>理解compact格式的时候，你可以尝试代入Innnodb存储引擎的开发人员，怎么极限压缩存储空间。</p>
+<blockquote>
+<p>假定有这样一张表,</p>
+</blockquote>
+<pre><code>create table dbooptest(
+id int unsigned  not null primary key ,
+username varchar(20) not null default '',
+userdesc varchar(255)
+) ENGINE=InnoDB  COMMENT='测试表' ;
+
+
+# insert 一条记录
+insert into dbooptest (id,username,userdesc) values (1,'51ak',null);
+
+</code></pre><p>我们来思考如何减少存储空间</p>
+<ul>
+<li>直接用类似json的方式存？ <code>{id:1,username:&quot;51ak&quot;,userdesc:null}</code>
+<ul>
+<li>显然，这里面的列名肯定是重的</li>
+<li>真实的存储2进制是：<code>011110110110100101100100001110100011000100101100011101010111001101100101011100100110111001100001011011010110010100111010001000100011010100110001011000010110101100100010001011000111010101110011011001010111001001100100011001010111001101100011001110100110111001110101011011000110110001111101</code></li>
+</ul>
+</li>
+<li>把列名去掉，表结构和数据分开存储，这样每一行就不用存列名 <code>{1,&quot;51ak&quot;,null}</code>
+<ul>
+<li>还不错，这里明显节约了空间，但是用什么符号分隔？要不要引号限定符？能不能不要分隔符？</li>
+</ul>
+</li>
+<li>进一步优化，直接把数据挨个无缝的连起来存储:<code>151ak</code>
+<ul>
+<li>以这条数据举例</li>
+<li>第一步compact格式根据数据字典，知道id列是个int型，所以用4个固定字节来存放，用了4个字节</li>
+<li>第二步username是varchar变长字符，直接存放51ak，并且，在头部位置起个列表记下这个变长字符串&quot;51ak&quot;的长度为4 ，用了4+1个字节</li>
+<li>第三步userdesc是null值，不存储任何内容，但是还需要在头部位置放置一个列表，标识第三列是null</li>
+</ul>
+</li>
+<li>再加上一些必须的行信息头（用于事务和系统要求）就行成了一条完整的行记录</li>
+</ul>
+<p>是不是很极限？</p>
+<h2 id="真实的compact行格式">真实的compact行格式</h2>
+<p>如上所说，我们知道compact格式真实的存储方式如下图所示</p>
+<h3 id="图compact格式">图:compact格式</h3>
+<p><img src="/img/2020/compact01.png" alt="innodb_compact01"></p>
+<h3 id="对照真实的数据">对照真实的数据</h3>
+<p><img src="/img/2020/compact03.png" alt="innodb_compact01"></p>
+<h3 id="第一部分变长字段长度列表">第一部分：变长字段长度列表</h3>
+<p>变长的数据类型，varchar，VARBINARY(M)、各种TEXT类型，各种BLOB，这些都是变长类型。因为他们存储多少字节数据是不确定的，所以存储数据的时候，得把他们占用的字节数存起来。
+所以这些变长字段占用需要记录它占用的字节数</p>
+<p>在Compact行格式中</p>
+<ul>
+<li>把所有变长字段的真实数据占用的字节长度都存放在记录的开头部位，从而形成一个变长字段长度列表，</li>
+<li>各变长字段数据占用的字节数按照列的顺序<!-- raw HTML omitted -->逆序存放<!-- raw HTML omitted -->！</li>
+<li>变长字段长度列表中只存储值为 非NULL 的列内容占用的长度，值为 NULL 的列的长度是不储存的 。</li>
+<li>只有变长的字符串需要存储长度，固定长度的如int,datetime&hellip;都不需要存储</li>
+<li>如果列字义长度（例如：varchar(100) 在utf8格式的时候定义长度是100*3=300）超过255就用两个字节来存储每个长度</li>
+</ul>
+<h3 id="第二部分null值列表">第二部分：NULL值列表</h3>
+<ul>
+<li>某些列可能存储NULL值，如果把这些NULL值都放到记录的真实数据中存储会很占地方，所以Compact行格式把这些值为NULL的列统一管理起来，存储到NULL值列表中</li>
+<li>二进制位按照列的顺序逆序排列，所以第一个列和最后一个二进制位对应。</li>
+<li>MySQL规定NULL值列表必须用整数个字节的位表示，如果使用的二进制位个数不是整数个字节，则在字节的高位补0。</li>
+</ul>
+<h3 id="第三部分记录头信息重要">第三部分：记录头信息（重要）</h3>
+<p>它是由固定的5个字节组成。5个字节也就是40个二进制位，不同的位代表不同的意思，如图：</p>
+<p>这些二进制位代表的详细信息如下表：</p>
+<h4 id="图compact格式下的记录头信息">图:compact格式下的记录头信息</h4>
+<p><img src="/img/2020/compact02.png" alt="innodb_compact02"></p>
+<h4 id="对照真实的记录头信息">对照真实的记录头信息</h4>
+<p><img src="/img/2020/compact04.png" alt="innodb_compact04"></p>
+<h4 id="记录头各位置的意义">记录头各位置的意义</h4>
+<ul>
+<li>delete_mask	1	标记该记录是否被删除</li>
+<li>min_rec_mask	1	B+树的每层非叶子节点中的最小记录都会添加该标记</li>
+<li>n_owned	4	表示当前记录拥有的记录数</li>
+<li>heap_no	13	表示当前记录在记录堆的位置信息</li>
+<li>record_type	3	表示当前记录的类型，0表示普通记录，1表示B+树非叶子节点记录，2表示最小记录，3表示最大记录</li>
+<li>next_record	16	表示下一条记录的相对位置</li>
+</ul>
+<h3 id="第四部分记录的真实数据">第四部分：记录的真实数据</h3>
+<h4 id="数据的隐藏列-重要">数据的隐藏列 （重要）：</h4>
+<p>mysql会给每个记录添加一些隐藏列，</p>
+<ul>
+<li>DB_ROW_ID		字节数不固定,唯一标识一条记录，如果没定义主键，则是系统生成所6个字节的行ID，如果定义了主键，这里是主键，长度按主键的大小</li>
+<li>DB_TRX_ID		6字节	事务ID</li>
+<li>DB_ROLL_PTR	7字节	回滚指针</li>
+</ul>
+<p>这里的DB_TRX_ID和DB_ROLL_PTR 非常非常重要，是事务的核心知识点。</p>
+<h4 id="数据">数据：</h4>
+<p>最后才是正实的数据，这时候反而简单了</p>
+<ul>
+<li>数据按顺序存储，不需要记录数据长度（头部有列表）如果null就忽略。</li>
+<li>compact行格式和Dynamic，Compressed两个变种格式的区别也就在这里体现出来了</li>
+</ul>
+<h2 id="compact行格式和dynamiccompressed的区别">compact行格式和dynamic，compressed的区别</h2>
+<p>接上一节的最后一句话，当数据存储时，真实数据超过了768个字节（这里有个称呼：行溢出）</p>
+<ul>
+<li>compact行格式，会把超过768字节的部分，存储到其他页面中</li>
+<li>dynamic行格式，会把所有字节都存储到其他页面，只保留一个指针。</li>
+<li>compressed行格式，会把所有字节都存储到其他页面同时压缩它，只保留一个指针。</li>
+</ul>
+<p>以上就是Innodb的行格式了，一方面需要思考MySQL是怎么做到尽可能少的利用空间把数据存储清楚。</p>
+<p>更重要的是</p>
+<ul>
+<li>在脑海里形成MySQL用page来管理数据，每一个Page里如何真实存储的概念</li>
+<li>关注【第三部分信息头】/【每四部分中的数据的隐藏列】 这两个地方在理解事务/Mvcc里非常重要</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2020/06/18</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/innodb">innodb</a> <a href="/categories/%E5%8E%9F%E7%90%86">原理</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>oracle 10分析索引的碎片</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="oracle&nbsp;10g先建立个统计表createtablet_analyz_monitor_index(&nbsp;&nbsp;f_index_name&nbsp;&nbsp;varchar2(50),&nbsp;&nbsp;f_del_lf_rowsnumber,&nbsp;&nbsp;f_lf_rows&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number,&noracle 10分析索引的碎片" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a href="../Oracle/l_7_1.htm" class="hover"　title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../Oraclezhishi/l_8_1.htm" title="Oracle基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../Oracleha/l_9_1.htm" title="Oracle高可用性和HA">高可用性和HA</a>|</li><li><a  href="../Oracleyouhua/l_10_1.htm" title="Oracle性能与优化">性能与优化</a>|</li><li><a  href="../Oracleguzhang/l_11_1.htm" title="Oracle故障与解决">故障与解决</a>|</li><li><a  href="../Oraclebi/l_12_1.htm" title="Oracle商业应用">Oracle商业应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../Oracle/l_7_1.htm">Oracle</a>&nbsp;&gt;&nbsp;<a href="../Oraclezhishi/l_8_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>oracle 10分析索引的碎片</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   <a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>&nbsp;10g先建立个统计表create table T_ANALYZ_MONITOR_INDEX(&nbsp;&nbsp;F_INDEX_NAME&nbsp;&nbsp;VARCHAR2(50),&nbsp;&nbsp;F_DEL_LF_ROWS NUMBER,&nbsp;&nbsp;F_LF_ROWS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NUMBER,&nbsp;&nbsp;F_RATE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NUMBER(4,2),&nbsp;&nbsp;F_MONITOR_DATE DATE default sysdate not null);再建个历史表create table t_analyz_index_stats as select * from index_stats做个分析过程&nbsp;&nbsp;查出表并且 分析 插入历史表 统计删除比率到 统计表create or replace procedure P_ANALYZ_DAY_INDEX_SATAS is&nbsp;&nbsp;&nbsp;&nbsp;v_sql varchar2(100);Begin&nbsp;&nbsp;for a in (Select INDEX_NAME&nbsp;&nbsp;&nbsp;From User_Indexes&nbsp;&nbsp;Where index_type&lt;&gt;'LOB') loop&nbsp;&nbsp;&nbsp;&nbsp;v_sql := ' analyze index ' || a.index_name || ' validate structure';&nbsp;&nbsp;&nbsp;&nbsp;execute immediate v_sql;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Insert Into T_ANALYZ_INDEX_STATS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Select * From Index_Stats;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;insert into T_ANALYZ_MONITOR_INDEX(F_INDEX_NAME, F_DEL_LF_ROWS, F_LF_ROWS, F_RATE)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;select name,del_lf_rows,lf_rows, round(del_lf_rows * 100 / decode((lf_rows + del_lf_rows),0,1), 2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from index_stats;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End loop;&nbsp;&nbsp;&nbsp;&nbsp;end;&nbsp;注意所查到的索引是在同个用户名下的
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

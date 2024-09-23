@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>php连接Access数据库的方法</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="虽然不是一个类但先放这儿吧<br/>最近想把一个asp的网站改成php的,无奈空间不支持mysql数据库,只好用access数据库了,但以前都是用的php+mysql,php+access数据库编程还真没有做过.感谢党,感谢cctv,感谢搜索引擎,这不找到一编不错的文章,特转过来和大家分享.<br/>在php中连接access有如下3种方式。<br/>（1）创建系统数据源，用php提供的odphp连接Access数据库的方法" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a href="../othersql/l_19_1.htm" class="hover"　title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../nosql/l_20_1.htm" title="NoSQL">NoSQL</a>|</li><li><a  href="../sysbase/l_21_1.htm" title="Sybase">Sybase</a>|</li><li><a  href="../db2/l_22_1.htm" title="DB2">DB2</a>|</li><li><a  href="../access/l_23_1.htm" title="Access"><span class="zc_666">Access</span></a>|</li><li><a  href="../infomix/l_24_1.htm" title="Informix">Informix</a>|</li><li><a  href="../sqlsql/l_25_1.htm" title="其他">其他</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../othersql/l_19_1.htm">其他数据库</a>&nbsp;&gt;&nbsp;<a href="../access/l_23_1.htm">Access</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>php连接Access数据库的方法</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   虽然不是一个类但先放这儿吧<br />最近想把一个asp的网站改成php的,无奈空间不支持<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>数据库,只好用access数据库了,但以前都是用的php+<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>,php+access数据库编程还真没有做过.感谢党,感谢cctv,感谢搜索引擎,这不找到一编不错的文章,特转过来和大家分享.<br />在PHP中连接<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>有如下3种方式。<br />（1）创建系统数据源，用PHP提供的ODBC函数即可。<br />（2）同样可以使用PHP的ODBC函数，但不创建数据源。开放数据库连接（Open DateBase Conection，ODBC）是Windows Open Server（开放服务）API（WOSA）产品之一。一个数据源是对数据库的一个命名连接。对于应用程序要连接的不同类型的数据库，都需要一个ODBC 驱动程序。ODBC API主要是为客户/服务器的RDBMS使用设计的，但是ODBC驱动程序也可以用于连接桌面数据库文件、工作表和平面文件。ODBC使用 Odbcinst.dll库来设置和清除数据源。Odbcad32.exe是一个用于建立ODBC数据源的独立的32位可执行应用程序，在控制面板中有其对应的图标Control Panel。php程序员站<br />ODBC驱动管理程序为数据源打开ODBC驱动程序并将 SQL语句传送给驱动程序。在客户/服务器RDBMS处理完一个select查询后，ODBC驱动程序将值返回给应用程序。当执行一个insert、 update或delete语句时，驱动程序返回查询所影响的行数。<br />下面介绍PHP使用ODBC连接<a href="../../html/access/l_23_1.htm" title="Access" >Access</a> 数据库的方法。用$connstr="DRIVER= Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a> Driver (*.mdb)来设置数据驱动，函数realpath()用来取得数据库的相对路径。利用该方法连接<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库主要应用到PHP的 odbc_connect()函数，该函数声明如下：<br />以下为引用的内容：resourse odbc_connect( string dsn, string user, string password [, int cursor_type])dsn：系统dsn名称<br />user：数据库服务器某用户名。php程序员站<br />password：数据库服务器某用户密码。 php程序员站<br />cursor_type：游标类型。<br />代码如下：<br />以下为引用的内容：$connstr="DRIVER=Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a> Driver (*.mdb);DBQ=".realpath("bookinfo.mdb");<br />$connid=odbc_connect($connstr,"","",SQL_CUR_USE_ODBC );<br />（3）使用微软的ADODB数据库驱动。ActiveX Data Objects（ADO）是Microsoft开放数据库应用程序的数据库访问技术。它被设计用来同新的数据访问层OLE DB Provider一起协同工作，提供通用数据访问（Universal Date <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>）。OLE DB是一个低层的数据访问接口，用它可以访问各种数据源，包括传统的关系型数据库、电子邮件系统及自定义的商业对象。ADO技术大大简化了OLE DB的操作，因为ADO封装了OLE DB程序中使用的大量COM接口，所以ADO是一种高层的访问技术。<br />ADO技术基于通用对象模型（COM），它提供了多种语言的访问技术。PHP是通过预先定义类COM来使用ADO方法操纵<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库的。该类详细说明如下：<br />以下为引用的内容：string com::com( string module_name [, string server_name [, int codepage]])module_name：被请求组件的名字或class-id。<br />server_name：DCOM服务器的名字。Codepage：指定用于将PHP字符串转换成UNICODE字符串的代码页，反之亦然。该参数的取值有CP_ACP、CP_MACCP、CP_OEMCP、CP_SYMBOL、CP_THREAD_ACP、CP_UTF7和CP_UTF8。PHP利用com类并使用ADO方法访问数据库的代码如下：<br />以下为引用的内容：$conn = new com("ADODB.Connection");$connstr = "DRIVER={Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a> Driver (*.mdb)}; DBQ=" . realpath("bookinfo.mdb ");<br />$conn-&gt;Open($connstr);<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>从零写一个兼容MySQL/Oracle的Proxy中件间（三）:MySQL协议捕获和转发| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">从零写一个兼容MySQL/Oracle的Proxy中件间（三）:MySQL协议捕获和转发</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1过去的两天我们实现了以下功能">1.过去的两天我们实现了以下功能]</a></li>
+    <li><a href="#步骤一中件间可以同时支持mysql和oracle">步骤一：中件间可以同时支持MySQL和Oracle</a></li>
+    <li><a href="#步骤二实现sqlpipemysql-方法">步骤二：实现sqlPipeMySQL 方法</a></li>
+    <li><a href="#步骤三执行测试脚本">步骤三：执行测试脚本</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <p>续：
+<a href="https://www.dboop.com/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B41/">从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》</a>
+<a href="https://www.dboop.com/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B42/">从零写一个兼容MySQL/Oracle的Proxy中件间（二）:SQL捕获和改写</a></p>
+<h2 id="1过去的两天我们实现了以下功能">1.过去的两天我们实现了以下功能]</h2>
+<!-- raw HTML omitted -->
+<ul>
+<li>Oracle登录捕获：捕获了Oracle通信协议中的用户登录包</li>
+<li>Oracle用户解析：抓到了用户传用户名和密码的内容（密码是加密串）</li>
+<li>SQL请求包：同时通过对比，确定了用户发送SQL请求的通信包</li>
+<li>OracleSQL日志：分析这些包，把SQL语句拿出来，记到日志里。</li>
+<li>OracleSQL改写：用户发起的SQL 经过中间层改写到了服务端收到的是另一个SQL执行返回结果。</li>
+</ul>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<ul>
+<li>MySQL兼容：增加配置文件，使中件间可以支持两种数据库</li>
+<li>MySQL协议解析：将经过proxy的MySQL包里的SQL语句解析出来，记录到日志</li>
+</ul>
+<!-- raw HTML omitted -->
+<p>开始动手：</p>
+<h2 id="步骤一中件间可以同时支持mysql和oracle">步骤一：中件间可以同时支持MySQL和Oracle</h2>
+<p>中件间的配置应该放在哪，理论上是想放在MySQL或zk里，当配置有变更的时候，中件间获得变更，但这个实现有点麻烦，可能得写好久，就先一个本地的配置文件</p>
+<p>准备一个配置文件</p>
+<pre><code>proxy]
+proxytype = mysql
+bind = 0.0.0.0:1106
+server = 10.26.*.*:3307
+isssl = false
+iscatchquery = true
+iscatchlogin = false
+maxsquerysize = 4096
+
+
+[proxybak]
+#proxytype = oracle
+#bind = 0.0.0.0:1106
+#server = 10.26.*.*:1521
+#isssl = false
+#iscatchquery = true
+#iscatchlogin = false
+#maxsquerylsize = 4096
+</code></pre><p>然后在通信进程中收到包时处理</p>
+<pre><code>func (t *Proxy) pipeSend(dstCon, srcCon *Conn, chSend chan int64) {
+  defer pipeClose(dstCon)
+  switch ProxyType {
+  case &quot;mysql&quot;:
+    log.Printf(&quot;mysql:sqlPipeMySQL\n&quot;)
+    sqlPipeMySQL(srcCon, dstCon)
+  case &quot;oracle&quot;:
+    log.Printf(&quot;oracle:sqlPipeOracle\n&quot;)
+    sqlPipeOracle(srcCon, dstCon)
+  }
+  chSend &lt;- 0
+}
+</code></pre><h2 id="步骤二实现sqlpipemysql-方法">步骤二：实现sqlPipeMySQL 方法</h2>
+<p>因为MySQL开源的原因，解析的方法往上到处都是，copy了一个过来。重点是包的第4个字节，当buffer[4]=3的时候，这个就是sql语句。</p>
+<pre><code>func sqlPipeMySQL(src, dst *Conn) {
+  buffer := make([]byte, Bsize)
+  client_ip, _ := ipPortFromNetAddr(src.conn.RemoteAddr().String())
+  server_ip, _ := ipPortFromNetAddr(dst.conn.RemoteAddr().String())
+
+  defer src.Close()
+  for {
+    n, err := src.Read(buffer)
+    if err != nil {
+      return
+    }
+    if n &gt;= 5 {
+      switch buffer[4] {
+      case 1:
+        log.Printf(&quot;抓到:%s--&gt;%s:%s\n&quot;, client_ip, server_ip, &quot;quit&quot;)
+      case 4:
+        log.Printf(&quot;抓到:%s--&gt;%s:%s\n&quot;, client_ip, server_ip, &quot;show databases&quot;)
+      case 84:
+        log.Printf(&quot;抓到:%s--&gt;%s:%s\n&quot;, client_ip, server_ip, &quot;conn prepare&quot;)
+      case 133:
+        log.Printf(&quot;抓到:%s--&gt;%s:%s\n&quot;, client_ip, server_ip, &quot;user connect&quot;)
+      case 3:
+        //SQL 语句
+        log.Printf(&quot;抓到:%s--&gt;%s:%s\n&quot;, client_ip, server_ip, removeNewLine(sqlInit(string(buffer[5:n]))))
+      default:
+        log.Printf(&quot;抓到:%s--&gt;%s:buffer4:%v\n&quot;, client_ip, server_ip, buffer[4])
+      }
+    }
+    _, err = dst.Write(buffer[0:n])
+    if err != nil {
+      return
+    }
+  }
+
+
+</code></pre><p>再写个测试脚本：</p>
+<pre><code>#!/usr/bin/env python
+## coding: utf-8
+import cx_Oracle
+import MySQLdb
+
+
+def test_mysql():
+    conn = MySQLdb.connect(&quot;127.0.0.1&quot;,port=1106,user=&quot;dboopreader&quot;,passwd= &quot;dbooppassword&quot;, db=&quot;test&quot;)
+    print(&quot;连接成功&quot;)
+    curs = conn.cursor()
+    sql = 'select 1 '
+    curs.execute(sql)
+    for result in curs:
+        print(f&quot;执行sql[ select 1 ]返回{str(result)}&quot;)
+    sql = 'select 5 '
+    curs.execute(sql)
+    for result in curs:
+        print(f&quot;执行sql[ select 5 ]返回{str(result)}&quot;)
+    curs.close()
+    conn.close()
+    print(&quot;连接关闭&quot;)
+
+def test_oracle():
+    conn = cx_Oracle.connect('dboopreader/dbooppassword@127.0.0.1:1106/tlionrdb')
+    print(&quot;连接成功&quot;)
+    curs = conn.cursor()
+    sql = 'select 1 from dual'
+    curs.execute(sql)
+    for result in curs:
+        print(f&quot;执行sql[ select 1 from dual ]返回{str(result)}&quot;)
+    sql = 'select 5 from dual'
+    curs.execute(sql)
+    for result in curs:
+        print(f&quot;执行sql[ select 5 from dual ]返回{str(result)}&quot;)
+    curs.close()
+    conn.close()
+    print(&quot;连接关闭&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    test_mysql()
+    #test_oracle()
+
+</code></pre><h2 id="步骤三执行测试脚本">步骤三：执行测试脚本</h2>
+<pre><code> ## python3.9 script/test.py
+连接成功
+执行sql[ select 1 ]返回(1,)
+执行sql[ select 5 ]返回(5,)
+连接关闭
+</code></pre><p>同时服务端收到日志</p>
+<pre><code>2022/01/10 18:54:38 抓到:127.0.0.1--&gt;10.26.*.*:buffer4:141
+2022/01/10 18:54:38 抓到:127.0.0.1--&gt;10.26.*.*:buffer4:48
+2022/01/10 18:54:38 抓到:127.0.0.1--&gt;10.26.*.*:set autocommit=0
+2022/01/10 18:54:38 抓到:127.0.0.1--&gt;10.26.*.*:select 1 
+2022/01/10 18:54:38 抓到:127.0.0.1--&gt;10.26.*.*:select 5 
+2022/01/10 18:54:38 抓到:127.0.0.1--&gt;10.26.*.*:quit
+</code></pre><p>至此MySQL协议的 抓取/分析/转发 就做完了，跟Oracle的盲猜，MySQL的功能实现容易太多。</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/01/10</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/oracle">oracle</a> <a href="/categories/proxy">proxy</a> <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A3%E7%90%86">数据库代理</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

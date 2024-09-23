@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>精品 on Classic</title>
+    <link>/tags/%E7%B2%BE%E5%93%81/</link>
+    <description>Recent content in 精品 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 10 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E7%B2%BE%E5%93%81/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL的7种日志(五):SlowLog</title>
+      <link>/mysql/mysql%E7%9A%84slowlog%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Tue, 10 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84slowlog%E6%97%A5%E5%BF%97/</guid>
+      <description>0.前言 续：
+ MySQL的7种日志(一):概况 MySQL的7种日志(二):RedoLog MySQL的7种日志(三):UndoLog MySQL的7种日志(四):BinLog MySQL的7种日志(五):SlowLog  1.什么是Slowlog  数据库执行一个SQL时，如果超过了设定值(比如说500毫秒),数据库将此SQL和相关信息记录到日志中，这个日志就是SLowlog，我们也称为慢日志 slowLog的开启，是为了定位和发现慢SQL用的。这一点跟前几篇文章里的redbolog,undolog,binlog等日志不一样  SlowLog的超时时间long_query_time  这个需要特别注意，并不是我们通常理解的一个SQL从开始执行到执行完用了多长时间 事实上MySQL判断一个sql是否要被记到slowlog中，是这样的逻辑： 假设我们设置了超过500毫秒的SQL是慢SQl要记下来，MySQL会这样处理 实际SQL执行消耗的时间- 锁等待消耗时间 如果这个时间&amp;gt;=500毫秒，则记下SlowLog否则不记 这就相当于说开车起点到终点的时间如果超过30分钟就很慢了 但我们说的30分钟不包括路上堵车和等红绿灯的时间  # @long_query_time ：我们设置了慢日志记录时间 # sqltime ：mysql判断一个sql的执行用时 # cur_utime ：这条sql从开始执行到结束，实际消耗的时间 # utime_after_lock：锁等待消耗时间 sqltime = cur_utim- utime_after_lock if sqltime&amp;gt;=@long_query_time: recordIt() #写入慢日志 else: pass 2.MySQL慢日志的常用操作 开启  修改my.cnf  [mysqld] slow_query_log = 1 slow_query_log_file = /data/mysql3306/mysql-slow.log #指定了慢查询日志的输出文件路径； long_query_time = 1 # 超过多长时间（秒）的SQL 被记录 修改  慢日志的几个项都可以在线联机修改的  set global long_query_time=0.</description>
+    </item>
+    
+    <item>
+      <title>不要再让时间溜走了，让AI来管理你的时间！</title>
+      <link>/dba/%E7%94%A8ai%E5%B8%AE%E4%BD%A0%E5%9B%9E%E7%AD%94%E6%97%B6%E9%97%B4%E9%83%BD%E5%8E%BB%E5%93%AA%E5%84%BF%E4%BA%86%E7%9A%84%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E7%94%A8ai%E5%B8%AE%E4%BD%A0%E5%9B%9E%E7%AD%94%E6%97%B6%E9%97%B4%E9%83%BD%E5%8E%BB%E5%93%AA%E5%84%BF%E4%BA%86%E7%9A%84%E9%97%AE%E9%A2%98/</guid>
+      <description>问题  如果你不知道工作时间都去哪了 或写工作周报/OKR时不知从何下手 这时候可以每天花5分钟写个工作记录 用现在最流行的AI技术帮你分类一下 或许可以帮助到你  效果  你可以看到最近一段时间的工作时间分配 也可以看到汇总的工作安排 还可以结合考勤表/OKR表进行对比  需要做的工作  每天花5分钟，写几行工作记录 每个工作记录写一行，可以加个时间 0.5h(0.5小时) 起步 可以自己写工作分类项和okr类别，也可以让AI帮你归类（我用的是chatGPT做分类）  AI分类原理  这里用的是chatGPT 将最近的50条已经分好类的工作项，当作Prompt塞给chatGPT 然后要求AI返回这个工作项的分类 prompt如下：  work_prompt=f&amp;quot;&amp;quot;&amp;quot;&amp;quot;工作内容&amp;quot;和[工作分类]的对应关系如下:{contentstr}请在以下分类中:{typestr}为 &amp;quot; %s &amp;quot; 选择一个分类&amp;quot;&amp;quot;&amp;quot;得到的报表  我们说每天的，每个人的工作内容，是无规律的：信息 当我们人为的把它按一定的格式录入下来以后，这些信息收集起来就成了：数据 有了数据，可以用各种维度的展开，对比，这时候可以做：报表 可以有很多种维度，这个月的和上个月的表 可以用A的工作和B的比 最重要的是，它会让你的工作内容变得可回溯  为什么起这个标题？  这个标题也是ai帮我生成的  </description>
+    </item>
+    
+    <item>
+      <title>MySQL的7种日志(四):BinLog</title>
+      <link>/mysql/mysql%E7%9A%84binlog%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Tue, 27 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84binlog%E6%97%A5%E5%BF%97/</guid>
+      <description>0.前言 续：
+ MySQL的7种日志(一):概况 MySQL的7种日志(二):RedoLog MySQL的7种日志(三):UndoLog MySQL的7种日志(四):BinLog  1.什么是binlog  又名:MySQL归档日志,MySQL二进制日志 记录所有数据库表结构变更（DDL例如CREATE、ALTER TABLE…）以及表数据修改（DMLINSERT、UPDATE、DELETE …）的所有操作。 默认情况下，二进制日志并不是在每次写的时候同步到磁盘。因此，当数据库所在地操作系统发生宕机时，可能会有最后一部分数据没有写入二进制日志文件中，这会给恢复和复制带来问题。  2.binlog的作用  时间点的恢复：某些数据的恢复需要二进制日志，例如，在一个数据库全备文件恢复后，用户可通过二进制日志进行即时点（point-in-time）恢复。 主从复制：通过复制和执行二进制日志使一台远程的 Mysql 数据库（一般称为 slave）与一台 MySQL 数据库（一般称为 master）进行实时同步。 变更审计：用户可以通过二进制日志中的信息来进行审计，回溯是否对数据库的修改。 误操作回滚：当误修改(ins/upd/del)发生时,可以用binlog解析出修改前后的语句,用于快速回滚 异构数据同步：通过解析binlog,可以将MySQL的变更通知到异构数据源(kafka,es,mongo,redis,mq&amp;hellip;) 事务存储引擎的崩溃恢复。MySQL采用事务的两阶段提交协议。当 MySQL 系统发生崩溃时，事务在存储引擎内部的状态可能为 prepared 和 commit 两种。对于 prepared 状态的事务，是进行提交操作还是进行回滚操作，这时需要参考 binlog：如果事务在 binlog 中存在，那么将其提交；如果不在 binlog 中存在，那么将其回滚，这样就保证了数据在主库和从库之间的一致性。  3.binlog 和 redolog 区别  适用对象不同： binlog 是 MySQL 的 Server 层实现的，所有引擎都可以使用 redolog 是 InnoDB 引擎特有的 写入内容不同：  binlog 有 3 种格式类型，分别是 STATEMENT（默认格式）、ROW、 MIXED，区别如下： STATEMENT：语句 ROW：记录行数据最终被修改成什么样了 MIXED：包含了 STATEMENT 和 ROW 模式，它会根据不同的情况自动使用 ROW 模式和 STATEMENT 模式； redolog 是物理日志，记录的是在某个数据页做了什么修改，比如对 XXX 表空间中的 YYY 数据页 ZZZ 偏移量的地方做了AAA 更新；   写入方式不同： binlog 是可以追加写入的。“追加写” 是指 binlog 文件写到一定大小后会切换到下一个，并不会覆盖以前的日志 redolog 是循环写的，空间固定会被用完 作用不同  4.</description>
+    </item>
+    
+    <item>
+      <title>mongodb性能监控指标详细解释</title>
+      <link>/dba/mongodb%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E6%8C%87%E6%A0%87%E8%AF%A6%E7%BB%86%E8%A7%A3%E9%87%8A/</link>
+      <pubDate>Thu, 08 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/mongodb%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E6%8C%87%E6%A0%87%E8%AF%A6%E7%BB%86%E8%A7%A3%E9%87%8A/</guid>
+      <description>常用监控项及说明 当我们监控mongodb实例时，大约有300多项的监控指标，通常我们可以关注以下的20项指标就够了
+   监控项 说明     mongodb_memory 内存占用（MiB）   mongodb_mongod_op_latencies_latency_total 累计操作耗时（毫秒）   mongodb_mongod_op_latencies_ops_total 累计操作次数   mongodb_op_counters_total 累计接收的操作请求次数（即使操作不成功也会增加）   mongodb_connections 连接数   mongodb_mongod_metrics_cursor_open 打开游标数量   mongodb_mongod_metrics_document_total 累计文档操作次数   mongodb_mongod_global_lock_current_queue 当前排队等待获取锁的操作个数   mongodb_mongod_metrics_query_executor_total 查询和查询计划评估过程扫描的（索引或文档）条目总数   mongodb_asserts_total 累计断言错误次数   mongodb_mongod_metrics_get_last_error_wtime_num_total 累计getLastError操作数量   mongodb_mongod_wiredtiger_cache_bytes 当前缓存数据大小（byte）   mongodb_mongod_wiredtiger_cache_bytes_total 写入或读取的缓存数据大小（byte）   mongodb_mongod_wiredtiger_cache_pages 当前缓存页数量   mongodb_mongod_wiredtiger_cache_evicted_total 累计缓存移除页数量   mongodb_extra_info_page_faults_total 累计缺页中断次数   mongodb_ss_network_bytesOut 累计发送网络流量（byte）   mongodb_ss_network_bytesIn 累计接收网络流量（byte）   mongodb_mongod_replset_member_replication_lag 副本集成员主从延迟（秒）    mongodb_memory  mongodb_memory 指标表示 MongoDB 数据库实例使用的内存量。这个指标可以帮助监控系统管理员查看 MongoDB 的内存使用情况，并对系统的内存进行优化。 resident 和virtual resident 指的是进程在物理内存中占用的空间，即进程实际使用的物理内存。 virtual 指的是进程在虚拟内存中占用的空间，即进程所占用的总内存，包括物理内存和交换空间。 通常来说，如果 resident 值很大，说明进程实际使用的物理内存很多，这可能表示系统的内存不足，或者进程的内存使用不合理。如果 virtual 值很大，说明进程占用的总内存很多，这可能表示进程在使用较多的交换空间，或者系统的总内存不足。 总之，resident 和 virtual 指标可以帮助你了解进程对内存的使用情况，从而为进行性能优化提供重要的参考信息。 获取代码：  例：mongodb_memory{job=&amp;quot;mongodb&amp;quot;, service=&amp;quot;mongodb&amp;quot;, team=&amp;quot;dba&amp;quot;, type=&amp;quot;resident&amp;quot;}34957mongodb_memory{job=&amp;quot;mongodb&amp;quot;, service=&amp;quot;mongodb&amp;quot;, team=&amp;quot;dba&amp;quot;, type=&amp;quot;virtual&amp;quot;}49537mongodb_mongod_op_latencies_latency_total   mongodb_mongod_op_latencies_latency_total 指标中的 read、write、command、transactions 分别表示 MongoDB 数据库实例中的不同操作类型的平均响应时间。</description>
+    </item>
+    
+    <item>
+      <title>Redis的缓存一致性/缓存溢出/缓存雪崩/缓存穿透/缓存击穿</title>
+      <link>/dba/redis%E7%BC%93%E5%AD%98-%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7%E6%BA%A2%E5%87%BA%E9%9B%AA%E5%B4%A9%E7%A9%BF%E9%80%8F%E5%87%BB%E7%A9%BF/</link>
+      <pubDate>Fri, 11 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/redis%E7%BC%93%E5%AD%98-%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7%E6%BA%A2%E5%87%BA%E9%9B%AA%E5%B4%A9%E7%A9%BF%E9%80%8F%E5%87%BB%E7%A9%BF/</guid>
+      <description>尝试用一个例子来描述高并发系统下的缓存设计，一边举例子一边描述和解决以下问题。
+ 为什么要用缓存? 缓存一致性问题? 缓存溢出问题? 缓存雪崩问题? 缓存穿透问题? 缓存击穿问题?  问题：  假设我们有5000万条商品信息存储在数据库中，现在这些信息要展示给用户看，我们需要做什么？
+ 答案1:直连数据库  代码中直接访问数据库，读取数据，展示给用户看，这个方法可以吗？ 答案是：访问量少的时候可以，系统访问量大了就崩了。 事实上大多数的内部系统和ToB业务，访问量不大，直接用数据库就解决问题了 如果业务访问量上来了，这时候频繁访问数据库，就会造成很明显的瓶颈。 这也是大多数“古典“网站和系统，用户访问一多就崩溃的原因 在设计系统的时候没有考虑：高访问量，高并发 一般认为预计访问量有超过2000次/秒，直连数据库的方案就不太建议了 为了避免数据库被打崩，我们就需要考虑在数据库和代码层之间加上一个缓存 有很多种缓存，下面以用得最多的Redis来举例子  答案2:加缓存（例如Redis)  现在我们用了Redis在数据库和业务之间做缓冲 需要访问一个商品的时候  1.业务传过来一个商品id 2.在redis中查找是否有这个id的信息，有就直接返回 3.如果redis中没有找到，去数据库里读取，读取到了信息存入redis，并返回给用户   因为多了一层redis，程序性能得到了极大的优化 访问变快了（纯内存的redis比MySQL要快很多） 不会因为大量的访问被堵死了（单节点的Redis可负担的简单QPS大约是10万，MySQL大约是0.4万） 现在系统的瓶颈解决了，那么接着往下想 如果此时数据库的信息被更新了，Redis中的缓存信息怎么办？ 可能有同学认为，数据库更新了，也把Redis信息同步更新/或删除了不就行了 事实上你细想一下，就没那么简单了 这就是引出了一个问题：缓存一致性问题  缓存一致性问题  当修改一条商品信息，MySQL和Redis缓存都需要修改，两者之间会有先后顺序，可能导致数据不一致。
+  当我们需要修改商品时，需要考虑3个问题：  1.先更新缓存还是先更新数据库？ 2.更新缓存的时候,是更新(update)缓存，还是删除(delete)缓存？ 3.怎么更新缓存保证一致性？    1、先更新缓存还是先更新数据库？  如果先更新缓存，写数据库失败，则缓存为最新数据，数据库为旧数据，缓存为脏数据。 之后其他查询马上进来就会拿到这个数据，但是这个数据在数据库中是不存在的。 数据库中不存在的数据缓存并返回给客户端是没有意义的。 所以不能先更新缓存。只能是：DB First  2、更新缓存的时候,是更新(update)缓存，还是删除(delete)缓存？  这里推荐是修改商品的时候，直接删除(delete)缓存 原因是update缓存通常比delete缓存需要更多的资源 为了得到一条商品的完整信息，可能会join几张表得到一个json，组装起来set到redis中的代价，会比直接del一个rediskey要大得多 而在一个高并发系统中，我们要尽可能的保证整个修改是尽可能快的完成(代价是一次缓存失效)  3.</description>
+    </item>
+    
+    <item>
+      <title>万物不如MySQL_万物皆可Join</title>
+      <link>/dba/%E4%B8%87%E7%89%A9%E7%9A%86%E5%8F%AFsql/</link>
+      <pubDate>Thu, 25 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E4%B8%87%E7%89%A9%E7%9A%86%E5%8F%AFsql/</guid>
+      <description>当前数据库架构越来越复杂
+  数据库MongoDB,Redis,Es,Kafka,Postgresql&amp;hellip;
+  加上传统的关系型数据库（MySQL,Oracle,SQLServer)
+  你是否因为各种数据库的查询语言不同而头晕眼花，到处撞墙！
+   你是否各种分库分表后，不同的数据库之前没办法join联合查询而一蹶不振   你是否业务同学发给你一个excel，让你查这些订单的明细而不知所措，来回倒腾。   你是否在焦急的等待着BI大数据同事帮你把不同数据源的表都抽到一起才能join出想要的数据？   怎么办？怎么办？ 没办法!!! 拆开的数据库没办法放在一台服务器上 各种数据库也没办法统一成一种 大数据部门的同步任务正在走流程 走完的流程，他们也不能保证数据同步任务不中断 Excel不是数据库不能用SQL 怎么办？怎么办？ 这种混乱就没人能治吗？ 不要让这些问题挡住你前进的脚本 dboop平台的统一查询平台横空出世 不再区分数据库类型 所有的数据库种类都支持MySQL语法 是的，你没有听错 不管什么类型的数据库 统统只需要记住MySQL语法了 Oracle,SQLServer,MongoDB,kafka DBA在运维的每一种数据库 都可以当成MySQL一样使用了  kafka当成MySQL Mongo当成MySQL  而且这些表都是可以互相join ,union 的   现在我们来休验一下这神奇的黑科技 第一步 我们有个这样的excel 第二步 把excel上传到平台上 第三步 得到一个可以查询的excel文件 第四步 用excel join MySQL 这就是我们说的： 几个问题 问题1:查询会不会影响线上业务  绑定了dba的高可用架构系统，可以自动路由到专门给bi取数服务的专用只读实例上。不会对线上应用产生影响 理论上bi抽数进程会和它产生资源抢占，但是因为bi抽数多数是凌晨进行，两个并不冲突
+ 问题2:查询的性能怎样  快，非常快，普通的单表查询0.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的事务隔离和MVCC</title>
+      <link>/mysql/mysql%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%92%8Cmvcc/</link>
+      <pubDate>Thu, 28 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%92%8Cmvcc/</guid>
+      <description>0.前言:为什么要写这篇文章？ 事务隔离和mvcc的重要性 不同于很多MySQL的原理，只需要DBA掌握，事务对于研发人员也是必须掌握的知识点和原理。并发程度越高，数据库里的锁和事务越明显，越重要。所以：数据库事务和mvcc是研发和DBA都要熟练掌握的另一方面的原因是现有的资料对mvcc写得不够直观 现有的对mvcc原理的讲解停留在画图阶段，我觉得光画图还不够，要实打实的一个字节一个字节的看MySQL真实的数据文件是怎么实现的。利用自研的MySQL数据文件分析工具（ 参考：innodb存储格式 )。可以很直观的把mvcc实现的底层逻辑给展示出来。
+ 以下两篇文章，可以协助你更好的理解本章节的内容
+  MySQL行格式(compact,redundant,dynamic,compressed) ) MySQ事务id:trx_id )  环境准备  MySQL版本:8.0.22 事务隔离级别:REPEATABLE-READ (默认隔离级别)  建一张表dboopuser并insert几条数据 drop table dboopuser; create table dboopuser( userid int unsigned not null primary key , age smallint unsigned not null default 0, username varchar(20) not null default &#39;&#39;, userimg varchar(255) not null default &#39;&#39; ) ENGINE=InnoDB COMMENT=&#39;测试user表--用于mvcc测试20220727&#39; ; insert into dboopuser(userid,age,username,userimg) values(9527,25,&#39;cccccccccc&#39;,&#39;http://www.dboop.com/img/user/2002_innodbtrx_527.jpg&#39;); insert into dboopuser(userid,age,username,userimg) values(9528,15,&#39;dddddddddddddd&#39;,&#39;http://www.dboop.com/img/user/2002_innodbtrx_528.jpg&#39;); insert into dboopuser(userid,age,username,userimg) values(9529,25,&#39;eeeeeeeeeeeeeeeee&#39;,&#39;http://www.</description>
+    </item>
+    
+    <item>
+      <title>show engine innodb status 工具化实现</title>
+      <link>/mysql/mysql%E7%9A%84showinnodbstatus/</link>
+      <pubDate>Wed, 06 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84showinnodbstatus/</guid>
+      <description>为什么要写这个工具 当MySQL出现性能问题时，DBA经常得去innodb status ，
+但是innodb status的输出信息非常丰富也很复杂。滚了几个屏幕的指标，像这样的得翻好几页，几百行的结果。
+ 哪些是重要的指标 指标具体代表什么意思 指标的值是否正常  非常考验DBA的眼力。
+考虑到以上的不方便，写了个小脚本把这些指标提取出来，并将指标对应的中文意思和合理取值范围做了详细的备注。
+实现思路  当用户选中MySQL实例，并点击show engine innnodb statutus按钮时 后台进程去该实例执行 show engine innnodb statutus 语句 返回结果做正则筛选，将各种指标和值保存在一个字典中 提前准备好一个指标的字典，字典里记了该值的中文说明和取值范围（取值范围这个还没做好） 两个字典一合并，输出一个分好类的可视化结果  指标提取和定义 脚本内容是定义了一个数据字典去翻译这些指标
+{ &amp;quot;background_thread&amp;quot;:(&amp;quot;后台进程:除掉用户请求的活动会话，MySQL后台进程也会定时的进行一系列工作。&amp;quot;,[(&amp;quot;master_thread_loops_active&amp;quot;,&amp;quot;&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;后台master线程avtive执行次数合计值&amp;lt;/b&amp;gt;,后台master线程的每次循环时会选择一种状态来执行(active、shutdown、idle),active次数/idle次数 比值越高，代表系统的写操作越繁忙。&amp;quot;), (&amp;quot;master_thread_loops_idle&amp;quot;,&amp;quot;&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;后台master线程idle执行次数合计值&amp;lt;/b&amp;gt;,和上一个指标连起来看,idle次数越高，代表系统的写操作越少。所以该指标值越大，系统写资源越充足&amp;quot;), (&amp;quot;master_thread_log_flush_and_writes&amp;quot;,&amp;quot;Bytes&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;后台master线程刷新redo日志&amp;lt;/b&amp;gt;,定期刷新redo日志，和参数innodb_flush_log_at_timeout控制刷新时间&amp;quot;) ] ) ,&amp;quot;bufferpool_memory&amp;quot;:(&amp;quot;缓冲池:有关已读和已写页面的统计信息。可以从这些数字中获得缓冲池的使用情况。&amp;quot;,[ (&amp;quot;total_large_memory_allocated&amp;quot;,&amp;quot;Bytes&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;分配给InnoDB Buffer Pool的总内存&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;dictionary_memory_allocated&amp;quot;,&amp;quot;Bytes&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;分配给InnoDB数据字典的内存&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;buffer_pool_size&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;分配给IBP的内存，单位pages&amp;lt;/b&amp;gt;,每页16k&amp;quot;) ,(&amp;quot;buffer_pool_hit&amp;quot;,&amp;quot;/1000&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool命中率&amp;lt;/b&amp;gt;每1000次请求有*次命中buffer pool,非常重要&amp;quot;) ,(&amp;quot;free_buffers&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool Free List 总大小，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;database_pages&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool LRU List 总大小，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;old_database_pages&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool old LRU 总大小，单位pages(冷端)&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;modified_db_pages&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool中脏页的数量，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pending_reads&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;等待读入Buffer Pool的页数量，单位pages&amp;lt;/b&amp;gt;,理论上不应该有等待队列&amp;quot;) ,(&amp;quot;pending_writes_lru&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;LRU中buffer中等待被刷的脏页数，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pending_writes_flush_list&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在checkpoint期间要刷新的缓冲池页数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pending_writes_single_page&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在缓冲池中写入挂起的独立页的数目&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_made_young&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;热点页数&amp;lt;/b&amp;gt;,在缓冲池LRU list中年轻的总页数(移动新页面到sublist的头部)&amp;quot;) ,(&amp;quot;pages_made_not_young&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;old sublist中的page数，冷端的page数&amp;lt;/b&amp;gt;,在缓冲池LRU列表中不年轻的页面总数(保留旧页面在sublist中，不改变)&amp;quot;) ,(&amp;quot;pages_made_young_per_sec&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒LRU链中被young的page数&amp;lt;/b&amp;gt;,oungs/s度量标准仅用于old pages，基于对page的访问次数，而不是页的数量。对页进行多次访问都会被计算。如果见到非常低的值，可能需要减小延迟或增加old page LRU list 的比例。增大后，页面需要更长的时间才会移动到尾部，这就增加了再次访问page，从而使他们made young的可能性增大&amp;quot;) ,(&amp;quot;pages_made_non_young_per_sec&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒LRU链中未被young的page数&amp;lt;/b&amp;gt;，可以一定程度上看出库的繁忙程度和命中率,Not young，如果在执行大表扫描时未看到较高的non-young和non-youngs/s，请增加innodb_old_blocks_time。&amp;quot;) ,(&amp;quot;pages_read&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool中读取的page总数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_created&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在bufferpool中创建的page数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_written&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool写入的page数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_read_per_sec&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool中读取的page数/秒&amp;lt;/b&amp;gt;, 比较重要，代表库的繁忙程度&amp;quot;) ,(&amp;quot;pages_created_per_sec&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在bufferpool中创建的page数/秒&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_written_per_sec&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool写入的page数/秒&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_read_ahead&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒平均预读操作次数&amp;lt;/b&amp;gt;k&amp;quot;) ,(&amp;quot;evicted_without_access&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒驱逐的page数&amp;lt;/b&amp;gt;k&amp;quot;) ,(&amp;quot;random_read_ahead&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒钟随机预读操作的次数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;lrn_len&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;LRU的长度&amp;lt;/b&amp;gt;&amp;quot;) ] ) .</description>
+    </item>
+    
+    <item>
+      <title>图数据库nebula性能监控</title>
+      <link>/dba/nebula%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7/</link>
+      <pubDate>Thu, 23 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/nebula%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7/</guid>
+      <description>目的 nebulaGraph官方自带的Nebula Dashboard 监控工具里的监控指标和筛选粒度已经足够丰富。但基于以下原因，还是在此基础上自己做了层监控
+ 缺少关键指标的定义，对除DBA以外的用户不友好。我们希望把性能数据让研发同学也能看到 缺少一个对所有服务器的横向对比和集中展示Dashboard 与我们现有的DBA监控不在一个平台，需要多平台切换使用 没有性能指标评分，同样的指标，没有给出是否合格的标准和提示 官方已经提供了可以直接读取性能数据的接口 http://%s/stats，在些基础上二次开发监控的难度会很低，预估开发工作量1pd ,实际开发工作量1.5pd  1.指标筛选 官方提供的性能接口里有几百项指标，我们从graph,storage,rockdb 三个层面，筛选了60几个重点的，需要关注的指标，筛选的依据是
+ 是否能从指标定位到资源或性能问题（响应时间等） 是否在排查问题出现时，有助于定位异常（命令次数，qps等) 是否有类似的指标已经存在。  最终，挑选了以下指标 2.编写收集代码（Python） 这部分因为有官方接口，所以直接请求就可以了
+for nodeid,nodehost in grpahlist: dict_result=self.get_nebula_stats(nodehost) #入库 dict_result def get_nebula_stats(self,nodehost) dict_result={} urlstr=&amp;#39;http://%s/stats?format=json&amp;#39;%(nodehost,) mlist=self.get_urldata(urlstr) for dictc in mlist: for k,v in dictc.items(): if k in dict_graph: keyname=dict_graph[k][0] dict_result[keyname]=v return dict_result 3.性能评价 这是非常重要的一步，沿用我在2005年做的数据库性能模型的方法（参考：https://github.com/51ak/DatabaseRating/）
+ 对我们的每一项指标，我们需要对其取值范围进行判断，给其打分：优，良，中，劣。 标记为:weight 对每一项指标，对其权重做标记（0-5）,标记为：height 由weight和height计算出这个实例的健康程度 但是我们的nebula服务只有一个集群，不需要太细化，所以我们只做了weight标记  做weight标记的逻辑是定义如下的一个区间列表
+dict_graph={ &amp;#34;num_active_queries.sum.60&amp;#34;:(&amp;#34;num_active_queries&amp;#34;,(-4,5,10,50,1000000)), &amp;#34;num_active_sessions.sum.60&amp;#34;:(&amp;#34;num_active_sessions&amp;#34;,(-4,5,10,50,1000000)), &amp;#34;num_opened_sessions.rate.60&amp;#34;:(&amp;#34;num_opened_sessions&amp;#34;,(-4,100,500,10000,10000000)), &amp;#34;num_queries.rate.60&amp;#34;:(&amp;#34;num_queries_rate&amp;#34;,(-4,100,500,10000,10000000)), &amp;#34;num_queries.sum.60&amp;#34;:(&amp;#34;num_queries_sum&amp;#34;,(-4,5000,50000,900000,100000000)), &amp;#34;num_sentences.rate.60&amp;#34;:(&amp;#34;num_sentences_rate&amp;#34;,(-4,100,500,10000,10000000)), &amp;#34;num_sentences.sum.60&amp;#34;:(&amp;#34;num_sentences_sum&amp;#34;,(-4,5000,50000,900000,100000000)), &amp;#34;query_latency_us.</description>
+    </item>
+    
+    <item>
+      <title>图数据库nebula实时慢日志收集和展示</title>
+      <link>/dba/nebula%E6%85%A2%E6%9F%A5%E8%AF%A2%E7%9B%91%E6%8E%A7/</link>
+      <pubDate>Fri, 17 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/nebula%E6%85%A2%E6%9F%A5%E8%AF%A2%E7%9B%91%E6%8E%A7/</guid>
+      <description>目的 因为我们的图数据库从neo4j社区版转到nebula graph方向。最近在项目压测的时候，一开始很平稳，运行一段时间后，NQL会越来越慢，发现性能巨差。nebula经常卡死，表现为：
+ nebula-storaged.service和nebula-graphd.service服务经常挂掉。 业务侧反馈执行什么NQL都很慢 nebula show query里发现有大量（300-500个）running的进程。平时很快的NQL也卡在那  系统资源
+ 内存紧张 ，大量的虚拟内存被占用 io,cpu也较高  在做了一些参数调优后，发现状态有所缓解，但是一段时间后，还是会慢慢卡死，从现象上推测是有一种或几种慢NQL多次执行后，把系统资源消耗完了，导致大面积的堵塞。所以面临的需求还是要有个慢查询排查工具。
+参考上一次做oracle慢日志收集展示的方法， https://www.dboop.com/oracle/oracle%E6%80%8E%E6%A0%B7%E5%AE%9E%E6%97%B6%E6%94%B6%E9%9B%86%E5%B1%95%E7%A4%BA%E6%85%A2%E6%9F%A5%E8%AF%A2/
+变化的是：
+ 因为nebula的集群就一个，不需要做oracle慢日志的大表套小表，数担据量不大就建了一张monitor_nebula_slow表存放数据. nebula抓到的慢查询里的NQL是没有去参数化的，需要自己做去参数化，把相同类型的NQL，标识为同一个md5id   1.建一张表，每隔1分钟（时间可调，但我们的场景1分钟足够了） CREATE TABLE `monitor_nebula_slow` (`logid` int unsigned NOT NULL AUTO_INCREMENT,`SessionID` varchar(50) NOT NULL DEFAULT &#39;&#39;,`ExecutionPlanID` varchar(50) NOT NULL DEFAULT &#39;&#39;,`User` varchar(50) NOT NULL DEFAULT &#39;&#39;,`Host` varchar(50) NOT NULL DEFAULT &#39;&#39;,`StartTime` datetime DEFAULT NULL,`DurationInUSec` int unsigned NOT NULL DEFAULT &#39;0&#39;,`Status` varchar(50) NOT NULL DEFAULT &#39;&#39;,`Query` varchar(5000) NOT NULL DEFAULT &#39;&#39;,`_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,`md5id` varchar(64) NOT NULL DEFAULT &#39;&#39;,PRIMARY KEY (`logid`),KEY `ix_monitor_nebula_slow` (`_timestamp`)) ENGINE=InnoDB AUTO_INCREMENT=13231 DEFAULT CHARSET=utf8mb32.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的7种日志(三):UndoLog</title>
+      <link>/mysql/mysql%E7%9A%84undo%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Sat, 28 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84undo%E6%97%A5%E5%BF%97/</guid>
+      <description>0.前言 续：
+ MySQL的7种日志(一):概况
+  MySQL的7种日志(二):RedoLog
+ 1.什么是undolog  undo：撤销或取消，以撤销/回滚操作为目的，返回指定某个状态的操作。 undolog：数据库事务开始之前，会将要修改的记录存放到 Undo 日志里，当事务回滚时或者数据库崩溃时，可以利用Undo日志，撤销未提交事务对数据库产生的影响。 undolog在事务开始前产生；事务在提交时，并不会立刻删除undolog，innodb会将该事务对应的 undo log 放入到删除列表中，后面会通过后台线程purge thread进行回收处理。 undolog属于逻辑日志，记录一个变化过程。例如执行一个delete，undo log会记录一个insert；执行一个update，undo log会记录一个相反的update。  2.undolog的作用  实现事务的原子性 当事务回滚时或者数据库崩溃时，利用Undo日志，撤销未提交事务对数据库产生的影响。事务处理过程中，如果出现了错误或者用户执行了 ROLLBACK 语句，MySQL 可以利用 Undo Log 中的备份将数据恢复到事务开始之前的状态。 实现多版本并发控制（MVCC） Undo Log 在 MySQL InnoDB 存储引擎中用来实现多版本并发控制。事务未提交之前，Undo Log 保存了未提交之前的版本数据，Undo Log 中的数据可作为数据旧版本快照 供其他并发事务进行快照读。（构建read view视图）  3.undolog的存储 3.1 物理存储位置 找到具体存放的位置 MySQL5.6.3 之前的版本undolog存储在系统共享表空间里，后续的版本推荐存话在单独的文件中
+mysql&amp;gt; show global variables like &#39;%undo%&#39;; +--------------------------+-------------------------+ | Variable_name | Value | +--------------------------+-------------------------+ | innodb_max_undo_log_size | 1073741824 | | innodb_undo_directory | /data/mysql3306/innolog | | innodb_undo_log_encrypt | OFF | | innodb_undo_log_truncate | ON | | innodb_undo_tablespaces | 2 | +--------------------------+-------------------------+ 5 rows in set (0.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的7种日志(二):RedoLog</title>
+      <link>/mysql/mysql%E7%9A%84redo%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Fri, 13 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84redo%E6%97%A5%E5%BF%97/</guid>
+      <description>0.前言 续上一篇： MySQL的7种日志(一):概况
+上一篇我准备写MySQL日志还是2个月前的事，这两个月里生活发生了天翻地覆的变化，都没时间更新。
+昨天跟朋友聊天立了flag说今天要续写一篇
+于是中午吃饭时在纸上画了一个流程图。来介绍下MySQL里的RedoLog
+1.几个问题 redolog和binlog一样记录的是数据修改后的记录。区别是什么，存在的意义是什么？  如果不要redolog，直接修改数据行不行？ 答：可以，但是随机读写性能差 先写redolog还是先改数据？答：先写内存里的数据，再写redolog，再写binlog，再写磁盘里的数据 先写redolog还是先写binlog? 答：先写redolog,再写binlog 如果写完redolog，还没来得写binlog时就停电了,怎么办？答：修改不要了，从undolog中回滚数据 如果写完redolog,binlog时还没来得数据落盘就停电了,怎么办？答：重做redolog，提交数据。修改有效  redolog和undolog的关系  答：redolog用来恢复丢失数据（恢复到最后一次提交位置）也称之为前滚操作，undolog是用来回滚到之前的版本，称之为回滚操作  relaylog的作用  答：redolog是用来做崩溃恢复使用的，这种崩溃恢复不需要我们人为的参与，MySQL自己内部自己实现了这种崩溃恢复的功能，我们只管享受这种功能给我们带来的服务即可，这种服务给我们的感受就是：MySQL数据库异常宕机的时候，重启服务之后，数据库中之前提交的记录都不会丢失数据仍然可以正常恢复，不管这种提交的记录是否已经更到具体的表所对应的磁盘page也中。  2.修改数据的流程  当我们要更新一条数据时，比如有一条SQL update userinfo set name=&#39;dboop&#39; where name=&#39;张三&#39;; 最直接的方法：从磁盘上找到对应的数据库文件，把它修改完存放到磁盘中。  方法是可以的，很多简单的程序修改文件也是用的方法，但是性能差。   而数据库中一般会有以下几种方式来写入数据修改  按页组织数据，一些关联近的数据存放在一个页中，MySQL中默认一页是16k 读取和修改数据都是需要先把页加载到内存中,MySQL是放到innodb_buffer_pool中 先改内存，再合适的时候再写入磁盘 先改日志再改数据 日志也是先写内存中的日志buffer，再合适的时候刷入磁盘    下图是简化版的一个数据修改，真实的流程比这复杂很多，这里的数据修改不只是update，按页组织的insert/update/delete操作都是对页修改
+3.Redolog在数据库意外崩溃时的作用 当故障发生时，数据库意外当机，有部分内存中已修改的页（脏页）没来得及刷新到磁盘里。
+在写入redo log时，会顺便记录XID，即当前事务id。在写入binlog时，也会写入XID。
+如果在写入redo log之前崩溃，那么此时redo log与binlog中都没有，是一致的情况，崩溃也无所谓。
+如果在写入redo log prepare阶段后立马崩溃，之后会在崩恢复时，由于redo log没有被标记为commit。于是拿着redo log中的XID去binlog中查找，此时肯定是找不到的，那么执行回滚操作。
+如果在写入binlog后立马崩溃，在恢复时，由redo log中的XID可以找到对应的binlog，这个时候直接提交即可。
+总的来说，在崩溃恢复后，只要redo log不是处于commit阶段，那么就拿着redo log中的XID去binlog中寻找，找得到就提交，否则就回滚。
+在这样的机制下，两阶段提交能在崩溃恢复时，能够对提交中断的事务进行补偿，来确保redo log与binlog的数据一致性
+4.Redolog的刷盘 4.</description>
+    </item>
+    
+    <item>
+      <title>Oracle实时慢日志收集和展示</title>
+      <link>/oracle/oracle%E6%80%8E%E6%A0%B7%E5%AE%9E%E6%97%B6%E6%94%B6%E9%9B%86%E5%B1%95%E7%A4%BA%E6%85%A2%E6%9F%A5%E8%AF%A2/</link>
+      <pubDate>Fri, 11 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E6%80%8E%E6%A0%B7%E5%AE%9E%E6%97%B6%E6%94%B6%E9%9B%86%E5%B1%95%E7%A4%BA%E6%85%A2%E6%9F%A5%E8%AF%A2/</guid>
+      <description>Oracle怎样实时收集展示慢查询？ 当网上搜相关问题或问一个身边的OracleDBA ，通常会有两种类型的答案
+ 看awr报告 扔过来一段SQL脚本。   类似于MySQL的慢日志方案：Slowlog--logstash--&amp;gt;es--&amp;gt;MySQL--&amp;gt;web页
+但Oracle没有现成的slowlog可以用。
+ 所以我们先后采用尝试了以下三种方法。
+方法一：定时收集awr报告 我们去年和黄老师一起尝试了定时生成awr报告，获取topSQL入库后，再收集展示的方法，这个方案需要对OracleAWR的缓存表理解得很深入，黄老师哼哼哧哧花了一个月时间，最终完成了统一收集，并通过web页展示，但总体效果不好。 主要缺点在于
+ 不能做到实时，甚至不能准实时（取决于多长时间生成一次awr报告） 只能每个实例取topSQL 方案呆板且不理性 总结：实现难度大，效果差  方法二：Oracle中间件记录慢查询 去年年底的时候我们在写一个Oracle中件间，业务访问Oracle数据库需要连接到Proxy上，然后在Proxy上记录查询日志，这种方法理论上是完全可以的，但是当我去尝试去实现这个功能的时候发现很困难，因为我们采用了端口中转的方式，可以抓到客户端和服务端的通信包，但是不能对应上这些通信包的对应关系。这就导致计算SQL执行时间这一步没法实现。 然后我们架构组也在做jdbc层的中件间，这个是100%可以轻松实现的，但只适用于java程序，对于非java代码访问数据库就无能为力了 总结：收集得很准，但开发工作量大，需要很长的时间
+方法三：定时直接读取正在执行的SQL 这个方案是我们年前做了一个Oracle长时间无响应SQL的报警功能（超过60秒没执行完的SQL会发钉钉报警），然后一次故障处理时，法爷说这个功能改一下刚好可以做慢查询收集整理。
+于是我们快速的试了下这个方案（代价很小，花了半个小时就完成了，任务配置和报表展示）
+ 新建存放慢SQL信息的表一个字典表/一个慢SQL表（5分钟） 配置一个每分钟去所有Oracle实例上收集的任务（15分钟） 配合已有CMDB信息，完成慢SQL和研发负责人的对应，写一个SQL （5分钟） 用这个SQL配置出来一张可展示的报表，设置成全体研发可见（5分钟） 总结：零开发工作，只要建个表，配置一个定时job和报表，就可以完成，效果不错  得到这样的一张这样的：实时展示Oracle慢查询的报表 &amp;ndash; done</description>
+    </item>
+    
+    <item>
+      <title>分布式一致性协议:raft协议</title>
+      <link>/dba/raft%E5%8D%8F%E8%AE%AE/</link>
+      <pubDate>Mon, 24 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/raft%E5%8D%8F%E8%AE%AE/</guid>
+      <description>关于raft的起源和历史  raft协议是一种分布式强一致性协议  为什么要有一致性？  1.数据不能存在单个节点（主机）上，否则可能出现单点故障 2.多个节点（主机）需要保证具有相同的数据。   都有哪些一致性协议（算法）  Paxos ：强一致性，由Lamport出品，例如：腾讯的PhxSQL，阿里的OceanBase数据库 Raft ：强一致性，由Paxos改进而来，例如：redis的sentinel,etcd数据库 用的是raft协议 ZAB ：强一致性，由Paxos改进而来，例如：ZooKeeper Gossip协议：弱一致性或者叫最终一致性，例如：rediscluster协议     2014年，由斯坦福大学Diego的一篇200多页的博士论文《CONSENSUS: BRIDGING THEORY AND PRACTICE》提出的一种全新的一致性协议。英文好的可以去看看。网上也有好多翻译成中文的 虽然核心协议上基本都是师继Paxos协议，基于多数派的协议。但是 Raft 一致性协议的贡献在于，定义了可易于实现的一致性协议的事实标准。模块化拆分以及设计简化。使分布式协议更加容易理解和实现  名词一： 复制状态机(Replicated state machines)  为了简化和便于理解，raft协议提出了复制状态机的概念，将集群中的节点都当成一个复制状态机，每个状态机只有三种状态。 复制状态机(Replicated state machines) ： 将集群中的每个服务器看做一个状态机, 它们接收外部的指令, 进行状态的改变, 所谓保持分布式一致性即是保证集群中所有状态机的状态一致性。 在任何时候，每个服务器都处于以下三种状态中的一种: 领导人(leader): 处理所有客户端的交互，日志复制同步，任何时候最多有一个领导人 跟随者(follower): 完全被动（不发出RPC，响应传入的RPC） 候选人(candidate): 用于选举新领导者 我们用图来解释这三种状态的变化关系  名词二： 任期和选举 为了判断过时的信息，过时的leader，raft协议提出了任期(term)的概念
+ 时序被分割为多个领导者任期 每个任期最多1个领导者 有些任期没有领导者（如：上图上的第2个阶段选举失败，但是任期值还是会加1） 每个服务器维护当前任期的值  1.什么时候开始选举  一个正常运行的系统，领导者必须不断的发送心跳（AppendEntries RPC）以保持其领导者的地位 如果在electionTimeout时间内（一般是100-300ms)，跟随都未收到RPC: 跟随者假设领导者已经崩溃，开始新的选举  2.</description>
+    </item>
+    
+    <item>
+      <title>从零写一个兼容MySQL/Oracle的Proxy中件间（四）:性能测试和改进</title>
+      <link>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B44/</link>
+      <pubDate>Tue, 18 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B44/</guid>
+      <description>续： 从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》 从零写一个兼容MySQL/Oracle的Proxy中件间（二）:SQL捕获和改写 从零写一个兼容MySQL/Oracle的Proxy中件间（三）:MySQL协议捕获和转发
+1.过去的三个文章我们实现了以下功能]  Oracle登录捕获：捕获了Oracle通信协议中的用户登录包 Oracle用户解析：抓到了用户传用户名和密码的内容（密码是加密串） SQL请求包：同时通过对比，确定了用户发送SQL请求的通信包 OracleSQL日志：分析这些包，把SQL语句拿出来，记到日志里。 OracleSQL改写：用户发起的SQL 经过中间层改写到了服务端收到的是另一个SQL执行返回结果。 MySQL兼容：增加配置文件，使中间件可以支持两种数据库 MySQL协议解析：将经过proxy的MySQL包里的SQL语句解析出来，记录到日志  在没更新的这几天里我又偷偷完成了配置变更等小功能。现在中件间其实已经在理论上可以发布使用了
+在投入使用前，在测试环境对这个半成品的中件间做了些基准测试。
+在测试环境上生成了5张表，每张表200万行数据，对其进行直连和proxy模式压测。
+以下是测试报告： 结论是：加了Proxy，性能下降了14% ，在情理之中，一般的SQL中间层因为多了层中转，响应时间会降低20ms左右。tps/qps在不做连接池的情况下会下降10%。 分析性能下降的原因：
+因为在proxy存把经过的网络包都拆开来分析其中的内容，且把SQL语句存在日志里，这些步骤是比较费资源和时间的。
+为了提升Proxy性能，降低中间层的性能影响，我们加了个配置参数
+cat /data/proxy/conf/proxy3308.cnf [basic] logfile = /data/proxy/log/3308.log daemon = true [proxy] proxytype = mysql bind = 0.0.0.0:3308 server = 127.0.0.2:3308 isssl = false iscatchquery = false #增加是否“拆包” false时，Proxy进入高性能模式 iscatchlogin = false maxsquerylsize = 16384 当 iscatchquery=false时，Proxy进入高性能模式
+if Iscatchquery { #只有iscatchquery为true时才解析包。 switch ProxyType { case &amp;quot;mysql&amp;quot;: log.Printf(&amp;quot;mysql:sqlPipeMySQL\n&amp;quot;) sqlPipeMySQL(srcCon, dstCon) case &amp;quot;oracle&amp;quot;: log.</description>
+    </item>
+    
+    <item>
+      <title>从零写一个兼容MySQL/Oracle的Proxy中件间（三）:MySQL协议捕获和转发</title>
+      <link>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B43/</link>
+      <pubDate>Mon, 10 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B43/</guid>
+      <description>续： 从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》 从零写一个兼容MySQL/Oracle的Proxy中件间（二）:SQL捕获和改写
+1.过去的两天我们实现了以下功能]  Oracle登录捕获：捕获了Oracle通信协议中的用户登录包 Oracle用户解析：抓到了用户传用户名和密码的内容（密码是加密串） SQL请求包：同时通过对比，确定了用户发送SQL请求的通信包 OracleSQL日志：分析这些包，把SQL语句拿出来，记到日志里。 OracleSQL改写：用户发起的SQL 经过中间层改写到了服务端收到的是另一个SQL执行返回结果。   MySQL兼容：增加配置文件，使中件间可以支持两种数据库 MySQL协议解析：将经过proxy的MySQL包里的SQL语句解析出来，记录到日志  开始动手：
+步骤一：中件间可以同时支持MySQL和Oracle 中件间的配置应该放在哪，理论上是想放在MySQL或zk里，当配置有变更的时候，中件间获得变更，但这个实现有点麻烦，可能得写好久，就先一个本地的配置文件
+准备一个配置文件
+proxy] proxytype = mysql bind = 0.0.0.0:1106 server = 10.26.*.*:3307 isssl = false iscatchquery = true iscatchlogin = false maxsquerysize = 4096 [proxybak] #proxytype = oracle #bind = 0.0.0.0:1106 #server = 10.26.*.*:1521 #isssl = false #iscatchquery = true #iscatchlogin = false #maxsquerylsize = 4096 然后在通信进程中收到包时处理
+func (t *Proxy) pipeSend(dstCon, srcCon *Conn, chSend chan int64) { defer pipeClose(dstCon) switch ProxyType { case &amp;quot;mysql&amp;quot;: log.</description>
+    </item>
+    
+    <item>
+      <title>从零写一个兼容MySQL/Oracle的Proxy中件间（二）:SQL捕获和改写</title>
+      <link>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B42/</link>
+      <pubDate>Thu, 06 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B42/</guid>
+      <description>续上一篇： 从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》
+0.前言 昨天的文字里写开发这个中间件的原由和要解决的问题，有朋友留言
+网上有现成的开源中间件为啥不用。
+ 答：网上有很多MySQL的中件间，Oralce目前还没有可以免费使用的中件间. 这可能就是开源和闭源的差别。
+ Oracle自带的功能已经可以实现想要的功能（高可用/审计日志）
+ 答：
+ Oracle官方的高可用方案RAC，无疑是非常非常非常优秀的,但我们现有的硬件不支持做跨机房RAC,以及我们迁移时需要proxy中间层来降低业务中断时间。 Oracle的审计日志太笨重/不支持慢日志/不支持SQL黑名单。   1.昨天我们实现了以下功能]  捕获了Oracle通信协议中的用户登录包 抓到了用户传用户名和密码的内容（密码是加密串） 同时通过对比，确定了用户发送SQL请求的通信包   SQL日志：分析这些包，把SQL语句拿出来，记到日志里。 SQL改写：用户发起的SQL 经过中间层改写到了服务端收到的是另一个SQL执行返回结果。  开始动手：
+步骤一：从Oracle通信包中分解出SQL语句 已知有以下两种head的包是在传递SQL
+0x1 0xf 0x0 0x0 0x6 0x0 0x0 0x0 0x0 0x0 0x11 0x6b 0x4 0xa5 0x10 0x0 0x0 0x35 0x1c 0x0 0x0 0x1 0x0 0x0 0x0 0x3 0x5e 0x5 0x61 0x80 0x0 0x0 0x0 0x0 0x0 0x0 0xfe 0xff 0xff 0xff 0x1 0x0 0x0 0x0 0x6 0x0 0x0 0x0 0x0 0x0 0x3 0x5e 0x6 0x61 0x80 0x0 0x0 0x0 0x0 0x0 0x0 0xfe 0xff 0xff 0xff 0xff 0xff 0xff 0xff 0x24 0x0 0x0 0x0 0xfe 0xff 0xff 0xff 0xff 0xff 0xff 1.</description>
+    </item>
+    
+    <item>
+      <title>从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》</title>
+      <link>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B41/</link>
+      <pubDate>Wed, 05 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B41/</guid>
+      <description>0.前言 MySQL由于开源的原因，有各式各样的中件间Proxy ，极大的丰富了做高可用或迁移的方案，习惯了MySQL生态圈的灵活和便利，Oracle官方不开源代码和协议，没有中间件proxy，显得很笨重。
+比如以下的方案就会很不好办：
+ 实时抓取Oralce的访问SQL日志 慢日志捕获和收集 高可用中件间Proxy在故障时自动切换 SQL访问黑名单。  基于以上的一些困难，打算自己从头写一个兼容MySQL/Oracle的中件间，希望从中件间层同时支持两种数据库。方便我们做数据库的高可用管理和从Oracle到MySQL的迁移。
+这个计划是在年前的2021年最后一次组内会议上提出来的构想。元旦放假期间我就一直在想这事怎么搞
+问题的难点在于：Oracle的client/server端通信没有文档的说明，没人能说清楚Oracle是怎么交互的。
+这两天用最原始的方法抓包，一个包一个包的去看，找到包的规律，分析它的通信协议。竟然发现这个方法可行
+1.步骤 1.写一个Python脚本去连接（192.168.1.1:1521）上的Oracle  #!/usr/bin/env python ## coding: utf-8 import cx_Oracle conn = cx_Oracle.connect(&#39;dboopreader/dbooppassword@192.168.1.1:1521/testdb&#39;) print(&amp;quot;连接成功&amp;quot;) conn.close() print(&amp;quot;连接关闭&amp;quot;) 通过wireshark抓包，发现一次简单的连接，有38个通信包。
+2.捕获这些包，发现它的规律 挨个点开这些包，发现了一些有用的信息，然后发现wireshark的包看起来不方便， 本地模拟一个端口1522端口，劫持这些请求，打印出来，得到如下这种的tcp包
+抓到:127.0.0.1到192.168.1.1的包 二进制展示如下: 0.0x7 0xaf 0x0 0x0 0x6 0x0 0x0 0x0 0x0 0x0 0x2 0x54 0x3 0x54 0x3 0x3 0x2a 0x6 0x1 0x1 20.0x1 0x6f 0x1 0x1 0xc 0x1 0x1 0x1 0x1 0x1 0x1 0x1 0x7f 0xff 0x3 0xe 0x3 0x3 0x1 0x1 40.</description>
+    </item>
+    
+    <item>
+      <title>孤岛备份机和勒索病毒</title>
+      <link>/dba/%E5%AD%A4%E5%B2%9B%E5%A4%87%E4%BB%BD%E6%9C%BA%E5%92%8C%E5%8B%92%E7%B4%A2%E7%97%85%E6%AF%92/</link>
+      <pubDate>Wed, 22 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E5%AD%A4%E5%B2%9B%E5%A4%87%E4%BB%BD%E6%9C%BA%E5%92%8C%E5%8B%92%E7%B4%A2%E7%97%85%E6%AF%92/</guid>
+      <description>勒索病毒 什么是勒索病毒？  勒索病毒就是那种中毒后 加密你的文件（通常是aes加密算法) 提示你去支付一些电子货币才能解开文件的一种病毒 通常是要求支付一定数量的比特币 像下面这种  怎么写一个勒索病毒？  如果让我写一个简单的勒索病毒 我可能会这样写 0.像指定的服务器（控制机）请求一个aes公钥 1.用这个公钥挨个给本地文件加密  1.1 遍历本地所有文件 1.2 给每个文件头加上一个特殊标记（不用多，10来个字节就行） 1.3 挨个用公钥加密所有文件   2.提示用户文件加密了，要求给钱 3.如果收到钱了就给他一个解密的代码 4.解密代码这样写  4.1 遍历本地所有文件 4.2 判断是否有特殊标记 4.3 如果有，则是加密文件 4.4 用私钥去解开这个文件   当然真实的勒索病毒会更加严谨，我只是描述一下思路 我也从来没写过  中了勒索病毒怎么办？  不差钱方案：给钱，然后寄希望于对方的人品。 运气好方案：这是个常见的普通勒索病毒，网上有很多的工具可以尝试解一下 报警：造成重大损失的可以公开报警，交给安全部门处理，当然这个破案的难度有点大，数据可能还是找不回来 补救方案：用备份来救命。  如果有备份，可以恢复文件，那这时候就基本上可以依靠本身的备份体系来恢复大部分损失（还是会有不可挽回的损失）    勒索病毒和备份体系的攻防  聪明的勒索病毒会攻击备份体系 1.本机备份：中了勒索病毒以后，本机备份几乎是99%也会中毒，几乎没啥用了 2.异机备份：如果是个人电脑中毒，很难会感染到备份机，但是如果是机房里的服务器中毒了，那么病毒极有可能会感染备份机。 3.异机房备份：同异机备份，主要还是一个服务器内网环境。 如何防止勒索病毒攻击备份体系呢？ 这就是我们接下来下说的孤岛备份机方案  孤岛备份机 什么是孤岛备份机？  它是一个特殊的备份机 1.它不和普通的服务器连网 2.本地不开任何端口，任何其他服务器不能请求它的任何服务 3.只和指定的一台机器直连（通常这台机器是个普通的备份机） 4.它只以视为“这台普通备份机”的备份机 5.它会定时拉取普通备份机上的指定目录 6.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的锁:innodb锁粒度详解</title>
+      <link>/mysql/mysql%E9%94%81_innodb%E9%94%81%E7%B2%92%E5%BA%A6/</link>
+      <pubDate>Sat, 13 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E9%94%81_innodb%E9%94%81%E7%B2%92%E5%BA%A6/</guid>
+      <description>锁定义 lock_rec_not_gap锁  Record Locks
+ A record lock is a lock on an index record. For example, SELECT c1 FROM t WHERE c1 = 10 FOR UPDATE; prevents any other transaction from inserting, updating, or deleting rows where the value of t.c1 is 10. Record locks always lock index records, even if a table is defined with no indexes. For such cases, InnoDB creates a hidden clustered index and uses this index for record locking.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的innodb中Next-Key锁的解析</title>
+      <link>/dba/innodb_lock_2020/</link>
+      <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/innodb_lock_2020/</guid>
+      <description>去年的某个时候，一个朋友在微信上问我MySQL间隙锁的案例，当时正在赶一个项目，没来得及看那个CASE，后来找不到了。昨天看到这篇jahfer写的博客: https://jahfer.com/posts/innodb-locks/ 觉得在介绍Next-Key锁的这方面很有创意的使用了自制的动画（非常简陋的动画 没啥用，我换成了截图做标记了)，不管是创意还是内容都值得一看
+   作者:jahfer 翻译:51ak   &amp;ndash;翻译全文如下：
+最近，我在调试MySQL高并发问题时有机会深入理解了InnoDB的锁定机制，这篇文章是我学习innodb锁行为的一个总结。
+0.概念介绍 InnoDB只有几个锁定概念,但是它们的使用和行为取决于当前连接正在使用的事务隔离级别
+ …the isolation level is the setting that fine-tunes the balance between performance and reliability, consistency, and reproducibility of results when multiple transactions are making changes and performing queries at the same time. 引自MySQL官方文档 https://dev.mysql.com/doc/refman/5.7/en/innodb-transaction-isolation-levels.html
+ InnoDB一共有4种隔离级别（按最严格到最宽松的顺序）
+ SERIALIZABLE 序列化 REPEATABLE READ (default) 可重复读 READ COMMITTED 读已提交 READ UNCOMMITTED 读未提交  每种隔离级别下的锁行为差异非常大，而我们现在只分析前两种隔离级别（SERIALIZABLE，REPEATABLE READ),首先让我们创建一个book 表。</description>
+    </item>
+    
+    <item>
+      <title>MySQL的drop/truncate Table影响分析和最佳实践</title>
+      <link>/dba/droptable/</link>
+      <pubDate>Thu, 26 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/droptable/</guid>
+      <description>0.前言 MySQL上直接Drop张大表,会有什么影响，能否直接写个 drop table ; 或者 truncate table ; 甚至是delete * from 如果这张表足够大，比如1亿行记录，drop 的时间需要多久，期间我的MySQL是否能正常访问？
+首先明确一点，现在讨论的是要删掉的大表一定是没人访问的表，否则如果这张表仍然还有被高频的访问，你敢直接删那基本上就是茅坑里点灯，找死！ 如果MySQL版本是5.5.23以下，直接DROP一张大表，也是守着茅坑睡觉，离死不远。 好，现在明确了这张表肯定没人访问了，你的MySQL版本也足够新，并不表示你就远离了茅坑，但如果这张表足够大，仍然有被崩到的风险。
+大表：我们定义为5000万行以上，或者单表文件大于100G
+我们要讨论的是innodb存储引擎,myisam等存储引擎，DROP 表又快又安全
+1.drop table 的风险和避免方法 Drop table 要做的主要有3件事：  把硬盘上的这个文件删了 把内存中的这个库已经加载加来的Page删了，腾出空间 把MySQL元数据字典中这张表关联信息删了  可能会引起的风险有3种：  MySQL长时间阻塞其他事务执行，大量请求堆积，实例假死。(锁) 磁盘IO被短时间大量占用，数据库性能明显下降(IO) 内存里的page大量置换，引起线程阻塞，实例假死（内存)  解决和避免的方法3种：  io占用的问题，对这个表建一个硬链，使Drop table 表的时候并没有真的去磁盘上删那个巨大的ibd文件，事后再用truncate的方式慢慢的删除这个文件，如果是SSD盘和卡,drop table后再直接rm文件也没问题 内存和IO占用的问题，升级MySQL版本   MySQL 5.5.23 引入了 lazy drop table 来优化改进了drop 操作影响(改进，改进，并没有说完全消除!!!拐杖敲黑板3次)
+  MySQL5.7.8 拆分了AHI共用一个全局的锁结构 btr_search_latch
+  MySQL8.0 解决了truncate table 的风险
+   道路千万行，低峰第一条。选择低峰时间段，找个夜深人静，月黑风高的时候是更好的选择。  2.</description>
+    </item>
+    
+  </channel>
+</rss>

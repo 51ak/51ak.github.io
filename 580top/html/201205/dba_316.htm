@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Oracle SQL语句大全</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="orderby排序asc升序(默认)desc降序select*froms_emporderbydept_id,salarydesc部门号升序，工资降序关键字distinct也会触发排序操作。select*fromemployeeorderby1;//按第一字段排序null被认为无穷大。orderby可以跟别名。selecttable_namefromOracle SQL语句大全" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a href="../Oracle/l_7_1.htm" class="hover"　title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../Oraclezhishi/l_8_1.htm" title="Oracle基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../Oracleha/l_9_1.htm" title="Oracle高可用性和HA">高可用性和HA</a>|</li><li><a  href="../Oracleyouhua/l_10_1.htm" title="Oracle性能与优化">性能与优化</a>|</li><li><a  href="../Oracleguzhang/l_11_1.htm" title="Oracle故障与解决">故障与解决</a>|</li><li><a  href="../Oraclebi/l_12_1.htm" title="Oracle商业应用">Oracle商业应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../Oracle/l_7_1.htm">Oracle</a>&nbsp;&gt;&nbsp;<a href="../Oraclezhishi/l_8_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>Oracle SQL语句大全</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   ORDER BY 排序ASC 升序(默认)DESC 降序select * from s_emp order by dept_id , salary desc部门号升序，工资降序关键字distinct也会触发排序操作。select * from employee order by 1; //按第一字段排序NULL被认为无穷大。order by 可以跟别名。select table_name from user_tables where table_name='S_EMP'; 查某个具体表名时，表名的字符串必须要为大写或者采用 upper(table_name)select * from user_talbes where table_name like ‘s\_%’ escape ‘\’;使用转义字符对关键字进行转义。concat 连接字符串 select concat(first_name , last_name) from s_emp;等效于||substr 求子串 select substr('tarenasd0603' ,1,6) from dual; (取前六个字符) select substr('tarenasd0603',-2) from dual; (取后两个字符)length 求字符长度select length('zhonghua') from dual;from dual的意思虚表（dual）是<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>提供的最小的工作表，它仅包含一行一列。对于虚表（dual）来说，其中的列往往是不相关的或无关紧要的。&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如：查询当前的系统日期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SQL&gt;&nbsp;&nbsp;&nbsp;select&nbsp;&nbsp;&nbsp;sysdate&nbsp;&nbsp;&nbsp;from&nbsp;&nbsp;&nbsp;dual;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SYSDATE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-------------------&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2004/04/28&nbsp;&nbsp;&nbsp;08:49:41round 函数(四舍五入) select round(45.935, 2) from dual; 不带参数时默认为0位小数trunc 函数(截取，不管后面的数字) select trunc(45.995, 1) from dual;组函数group by 分组子句 对分组后的子句进行过滤还可以用having 条件 对分组后的条件进行过滤 where 是对记录进行过滤有佣金人数的百分比select count( commission_pct )count(*) from s_emp;select count(dept_id) from s_emp;select count(distinct dept_id) from s_emp;//区分相同的dept_id求各个部门的平均工资：group by 子句也会触发排序select dept_id , avg(salary) aa from s_emp group by dept_id order by aa ; //对平均工资排序select dept_id , avg(salary) aa from s_emp group by dept_id;哪些部门的平均工资比2000高:select dept_id, avg(salary) aa from s_emp group by (dept_id) having avg(salary)&gt;2000;除了42部门以外的部门的平均工资:select dept_id , avg(salary) from s_emp group by (dept_id ) having dept_id!=42;select dept_id , avg(salary) from s_emp where dept_id!=42 group by (dept_id ) ;(此种sql效率要高，先过滤) 再计算）where 单行函数。having 组函数。每个员工所在的部门和部门所在的地区select first_name , s_dept.name, s_region.name from s_emp, s_dept, s_region wheres_emp.dept_id=s_dept.id and s_dept.region_id=s_region.id;等价于select first_name,d.name,r.namefrom s_emp e,s_dept d,s_region rwhere e.dept_id=d.id and d.region_id=r.id;
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

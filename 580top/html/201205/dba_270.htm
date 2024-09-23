@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>优化Microsoft Access提高速度</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="摘要<br/>这篇文章介绍了在设计、编写和实现microsoftaccess数据库应用程序时为保证拥有最高速度而需要注意的几点。<br/><br/>介绍<br/>作为一名数据库程序员，你的主要任务是让你的用户能快速地选择、管理和访问他们所需要的信息。其他的工作几乎都是一成不变的，只要你的数据库应用程序执行速度越快，你的程序效率越高。这篇文章的目的就是突出各种不同的技巧和优化Microsoft Access提高速度" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a href="../othersql/l_19_1.htm" class="hover"　title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../nosql/l_20_1.htm" title="NoSQL">NoSQL</a>|</li><li><a  href="../sysbase/l_21_1.htm" title="Sybase">Sybase</a>|</li><li><a  href="../db2/l_22_1.htm" title="DB2">DB2</a>|</li><li><a  href="../access/l_23_1.htm" title="Access"><span class="zc_666">Access</span></a>|</li><li><a  href="../infomix/l_24_1.htm" title="Informix">Informix</a>|</li><li><a  href="../sqlsql/l_25_1.htm" title="其他">其他</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../othersql/l_19_1.htm">其他数据库</a>&nbsp;&gt;&nbsp;<a href="../access/l_23_1.htm">Access</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>优化Microsoft Access提高速度</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   　　摘要<br />　　这篇文章介绍了在设计、编写和实现Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a> 数据库应用程序时为保证拥有最高速度而需要注意的几点。<br /><br />　　介绍<br />　　作为一名数据库程序员，你的主要任务是让你的用户能快速地选择、管理和访问他们所需要的信息。<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>的工作几乎都是一成不变的，只要你的数据库应用程序执行速度越快，你的程序效率越高。这篇文章的目的就是突出各种不同的技巧和策略，通过优化程序来提高速度，让你的Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a> 数据库应用程序的效率更高，这样也可以帮助你完成作为一名数据库开发者的主要使命。<br /><br />　　硬件<br />　　瞄准速度问题的根本<br />　　为了提高你的数据库程序的速度，自然而然地你会想到去注意影响速度最基本的几个部分，我们将从处理这几个部分着手。在你力图提高你的数据库程序性能的时候，你的程序所运行的硬件平台将是唯一的决定因素。显而易见，实现优化的第一条原则应该是较快的硬件=较快的数据库　比籆PU和RAM是这个等式的核心所在。相信你一定注意到Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a> 所声明的，要达到一个令人满意的性能，至少需要8MB的RAM和一个80486的CPU。一般情况下，用户注意到这一点是理所应当的，但我却见过许多用户为他们的Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a> 的执行速度而感到沮丧，当我问及他们使用什么机器运行此程序时，他们告诉我是一台80386，并且是在运行一台服务器上的一个MSACCESS.EXE。所以，在相信你的用户通过下面的方法固然能提高其程序性能的同时，始终需要强调的仍然是，在Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a> 执行过程中，硬件才是关键的问题。<br /><br />　　有效的磁盘访问<br />假定已经有了一个令人满意的硬件配置，下面让我们讨论一下如何才能提高Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a> 在此平台上的运行速度。就这个问题，对你的数据库程序而言，影响其性能的第二位因素就是磁盘访问了。在执行过程中，对物理磁盘的访问总是一个速度的瓶颈（与访问存储在 RAM中的数据相比较而言），所以，你应该尽量减少对磁盘的访问。然而，由于你的应用程序总是要和一些磁盘或<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>一些物理设备打交道，所以，你的目标应该是保证所有的磁盘访问都尽可能有效。要实现这一点，方法是经常整理你的磁盘数据碎片，整理你的数据库所在的磁盘驱动器以及所有你执行你的数据库程序时要涉及的磁盘驱动器，而且你还应提醒你的用户定期清理磁盘碎片，以此保证磁盘访问一直有效。这将最大程度地减少在对物理磁盘进行读写而花费的时间，尽管这些读写是不可避免的，同时优化了整个体系的性能。<br /><br />　　使RAM最大化/对磁盘访问的频率最小化<br />　　下一个主题是使你的数据库程序与物理磁盘驱动器打交道的频率最小。要做到这一点关键是尽可能多的释放RAM空间给你的应用程序使用。要实现这一点，你需要做到以下几点：<br /><br />　　增加最大缓冲区的尺寸<br />　　首先涉及到你对最大缓冲区尺寸的设置。最大缓冲区的尺寸指的是Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>作为内部存储空间而保留的RAM的数目。存储空间越大，用户需求的数据能在RAM中找到可能性越大，同时减少了对物理磁盘的访问频率。Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a> 需要的最小缓冲区是512KB，如果你的硬件系统有多于4MB的RAM，那么你就可以为Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a> 多分配一些供其使用（这样也增加了系统的性能）。要做到这一点，只需要在MSACCESS.INI（在你的windows目录下）文件中增加对最大缓冲区的设置，使用你的文本编辑器，例如记事本，在此文件中找到 [Option] 段，在其中加这样一句话：<br /><br />　　MaxBufferSize = xxxxx<br /><br />　　这其中的xxxxx即是为你的应用程序对存储空间分配而作的新设置(例如，设置MaxBufferSize=2048将为Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>分配2MB的缓冲区空间)。那么，你究竟应该分配多少才算合适呢？除了“尽可能多”，<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>的还真难说。你需要手动地调节这个设置，同时需要试着让你的硬件都能提供以下条件：1）不能妨碍用户同时正在运行的程序，2）不会影响其自身底层操作系统的运行效率（你可能会在程序启动时想通过.INI文件查看一下Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>自身的配置，因此，任何对MSACCESS.INI文件的修改都将只能在下一次Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>启动时才能奏效，而对现在正在运行的Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>程序没有任何的影响）。<br /><br /><br /><br />　　避免装载Wizards<br /><br />为了释放更多的内存以供Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>使用，另一个你可以采取的步骤是：如果你不使用Wizards，那么就不要装载它。你可以打开MSACCESS.INI文件，找到[libraries]部分，在“wizards.mdb=ro”这一句之前加一个分号，这样就避免了自动加载Wizards。这样做将能够释放315B的RAM提供给Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>以作己用，这样做的好处不仅在于提高了运行时间的性能，同时使每个应用程序平均减少了大约10秒的安装时间。<br /><br /><br /><br />　　解除墙纸/背景位图<br /><br />　　解除标准windows墙纸背景可以释放RAM中任何一处25K到350K的空间。解除复杂的位图将释放更多的内存空间。<br />创建永久交换文件<br /><br />　　创建一个永久交换文件（相对于临时文件而言）将增加你额外的性能。关于这一点，你可以求助于关于这方面的帮助文档，它将指导你在运行数据库应用程序的机器上创建这一文件。<br /><br />　　到现在为止，我们已经解决了有关硬件平台、最大的磁盘访问效率的问题，并且为你的应用程序增加了有效的RAM存储空间，接下来让我们转向优化应用程序本身。<br /><br />　　Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>自身特点<br />　　压缩、压缩<br />　　要保证经常性的压缩你的程序代码。当你在开发和使用Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库时，你要经常性地增加和删除数据、代码等等。现在的问题是Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>并不能有效地释放已分配的但被删除的对象空间，这将意味着即使你删除了一个对象，而这个对象仍然在你的数据库中占据空间。压缩数据库将迫使Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>真正删除这些对象并回收其占据的空间，从而使得你的数据库尽量小但却更有效。我曾把逐字逐句查询的平均时间减少了30%——50%，而做到这一点仅仅是通过去压缩那些由于经常使用又缺乏压缩而变得过度膨胀的数据库程序，因此，在运行程序的过程中，不要忽视压缩过程的重要性。正如你要定期清除硬盘数据碎片一样，你和你的用户也应当定期压缩数据库来保证它始终最有效地运行。<br /><br />　　只用代码<br />　　你可能希望通过宏操作来搭建一个应用程序的模型，一旦你开始优化你的程序的最终性能，一定要把所有的宏重新写成代码。这主要是因为Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>代码要比宏运行得快的多。但遗憾的是有三个宏操作你不能将他们改写成代码，这三个宏是Autokeys、Autoexec和Addmenu操作，这三个宏在Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>中没有相应的等价类，因此你只能被迫使用他们。不过，你可以克服Autoexec的限制，只需要定义Autoexec为调用你的<a href="../../html/access/l_23_1.htm" title="Access" >Access</a> Basic Autoexec函数。<br /><br />　　优化数据类型声明<br />当你在你的代码中声明数据类型时，你应该试着尽可能精确。因为若是一个变量的类型（如果没有特别声明，缺省为可变类型）非常灵活自由的话，那么这种类型同时也将是最浪费内存的一种类型。这样一来，如果你知道check Balance这个变量不需要超过4位小数精度的话，那么就把它定义成确定类型而不是可变类型。对你的过程函数的定义同样也可以如此操作（比如说，把函数PostCredit()声明为整形，而不是Function PostCredit()）。请注意这样一个事实，如果你估计一个变量将会被处理成一个空值，那么你需要去把它定义成一个可变类型而不是一个确定的严格的数据类型，否则你会得到一个错误信息。同样地，要注意整形除法和浮点除法之间的差别。<br /><br /><br />　　经常使用From/Report变量<br />在你的程序中，你需要保证你能提前解决尽可能多的查询工作。这意味着什么呢？举个例子来说明：如果你想在代码中查阅一个名为[NetPrice]的文本框，你可以使用这样一条语句：<br />Mytemprariable=Forms![Customer Invoice]![Net price]<br />对于这条指令，Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>首先在Forms对象里搜索名为[Customer Invoice]的表，一旦它找到这张表，Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>接下来寻找名为[NetPrice]的控制，并进行正确的操作。从这个例子可以看出，Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>经过两次查询最终确定我们指定的控制。如果你想在同一程序（函数或者子函数）中再次查询[Customer Invoice]表中任一控制，你可以删除可能会在下次出现的多余语句，而只使用如下语句：<br />　　Dim F as form<br />　　Set F = Forms![Customer Invoice]<br />　　现在，你的Form变量将自动指向Form[Customer Invoice]，允许Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a> 避免每次在你需要查找[Customer Invoice]表中任一对象时，都要把数据库的Form对象中全部搜索一次。为了查阅控制[NetPrice]，你只需要简单地使用下面的语句：<br />Mytempvariable=F![NetPrice]<br />你也可以对Report对象作相同的操作（比如，set R=Reports![MyReport]）。当你在一个函数中仅仅只对一个Form或Report访问一次，你可能在速度性能方面得不到什么太大得好处，但是一旦你开始在同一个Form或Report中进行的访问操作超过一次，你将会看到明显的时间减少。于是，通过使Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>避免作多余的查阅，你将大大地提高你程序的速度。<br /><br />　　在可以应用的地方使用windows函数<br />无论何时，只要相关，总是可以用一个windows函数调用来代替<a href="../../html/access/l_23_1.htm" title="Access" >Access</a> Basic代码执行同一个操作。这样你将节省开发时间，因为windows函数调用是已经完成编码并经过优化，同时也因为它们是用C语言编写的（机器可执行），而<a href="../../html/access/l_23_1.htm" title="Access" >Access</a> Basic代码则要被编译成P代码形式，同时需要在执行时一行一行地解释。一个最普通的例子是custom.ini设置。你可以使用<a href="../../html/access/l_23_1.htm" title="Access" >Access</a> Basic文件函数去得到一个自由文件指针，打开文件，读/写文件，然后关闭它。但是如果你完全可以简单地使用GetPrivateProfileString和WritePrivateProfileString函数来实现，它们既快且已经编码优化随手可用，你为什么还要自寻烦恼呢？（参考：“Enhanced Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>: Using the Win16 API”）<br /><br />你的Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库应用程序运行速度越快，你就能更好地完成你的任务，也就是向你的用户提供最有效的选择、管理、发送他们的数据的能力。我真诚希望以上这些小技巧能协助你达到这个目标。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

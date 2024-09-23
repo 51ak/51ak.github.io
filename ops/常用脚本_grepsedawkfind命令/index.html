@@ -1,0 +1,605 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>常用脚本_grep,sed,awk,find命令| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">常用脚本_grep,sed,awk,find命令</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#grep">grep</a></li>
+    <li><a href="#sed">sed</a></li>
+    <li><a href="#awk">awk</a></li>
+    <li><a href="#find">find</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="grep">grep</h2>
+<pre><code>##zcat 是用于查看压缩的文件 
+##gzip 套件包含许多可以 “在原地” 处理压缩文件的实用程序。zcat、zgrep、zless、zdiff 等实用程序的作用分别与 cat、grep、less 和 diff 相同，但是它们操作压缩的文件。
+zcat web.log.gz | grep aqzt.com | head
+ 
+###Grep 'OR' 或操作
+grep &quot;pattern1\|pattern2&quot; file.txt
+grep -E &quot;pattern1|pattern2&quot; file.txt
+grep -e pattern1 -e pattern2 file.txt
+egrep &quot;pattern1|pattern2&quot; file.txt
+
+awk '/pattern1|pattern2/' file.txt
+sed -e '/pattern1/b' -e '/pattern2/b' -e d file.txt
+
+#找出文件（filename）中包含123或者包含abc的行
+grep -E '123|abc' filename 
+#用egrep同样可以实现
+egrep '123|abc' filename 
+#awk 的实现方式
+awk '/123|abc/' filename 
+
+###Grep 'AND'  与操作
+grep -E 'pattern1.*pattern2' file.txt # in that order
+grep -E 'pattern1.*pattern2|pattern2.*pattern1' file.txt # in any order
+grep 'pattern1' file.txt | grep 'pattern2' # in any order
+
+awk '/pattern1.*pattern2/' file.txt # in that order
+awk '/pattern1/ &amp;&amp; /pattern2/' file.txt # in any order
+sed '/pattern1.*pattern2/!d' file.txt # in that order
+sed '/pattern1/!d; /pattern2/!d' file.txt # in any order
+
+#显示既匹配 pattern1 又匹配 pattern2 的行。
+grep pattern1 files | grep pattern2 
+
+###Grep 'NOT' 
+grep -v 'pattern1' file.txt
+awk '!/pattern1/' file.txt
+sed -n '/pattern1/!p' file.txt
+
+##删除两个文件相同部分
+grep -v -f file1 file2 &amp;&amp; grep -v -f file2 file1 
+
+##计算并集
+sort -u a.txt b.txt
+
+##计算交集
+grep -F -f a.txt b.txt | sort | uniq
+
+##计算差集
+grep -F -v -f b.txt a.txt | sort | uniq
+
+sort a b b | uniq -u  
+#a b 排序，两个的交集出现次就是2 了，a b b 再排序。b里面的次数，最少是2了，交集里面的是3
+然后再uniq -u 取出现一次的，就是想要的结果了
+
+##删除两个文件相同部分  实用comm
+comm -3 file1 file2
+
+##删除两个文件相同部分  使用awk
+awk '{print NR, $0}' file1 file2 |sort -k2|uniq -u -f 1|sort -k1|awk '{print $2}'
+##或者：
+awk '{print $0}' file1 file2 |sort|uniq -u
+
+##其他操作
+#不区分大小写地搜索。默认情况区分大小写，
+grep -i pattern files 
+#只列出匹配的文件名，
+grep -l pattern files 
+#列出不匹配的文件名，
+grep -L pattern files 
+#只匹配整个单词，而不是字符串的一部分（如匹配‘magic’，而不是‘magical’），
+grep -w pattern files 
+#匹配的上下文分别显示[number]行，
+grep -C number pattern files 
+
+#grep -A ：显示匹配行和之后的几行
+#-A -B -C 后面都跟阿拉伯数字，-A是显示匹配后和它后面的n行。-B是显示匹配行和它前面的n行。-C是匹配行和它前后各n行。总体来说，-C覆盖面最大。
+grep -A 5 wikipedia files.txt
+
+
+
+
+</code></pre><h2 id="sed">sed</h2>
+<pre><code>##查文件从32994到34871行内容
+sed -n '32994,34871p'  config_file
+
+##删除文件从32994到34871行内容
+sed '32994,34871 d' config_file
+
+##替换文件中performance_schema改为performance_schema_bak
+sed -i &quot;s/performance_schema/performance_schema_bak/g&quot; config_file
+
+##sed去除注释行
+sed -i -c -e '/^#/d' config_file
+
+##sed去除空行
+sed -i -c -e '/^$/d' config_file
+
+##sed去空行和注释行
+sed -i -c -e '/^$/d;/^#/' config_file
+
+##在某字符串下面一行增加一字符串
+sed -i '/fastcgi_path_info/a\fastcgi_param ENV_VAR_MY test;' test*.conf
+
+#假设处理的文本为test.file
+#在每行的头添加字符，比如&quot;HEAD&quot;，命令如下：
+sed 's/^/HEAD&amp;/g' test.file
+
+#在每行的行尾添加字符，比如“TAIL”，命令如下：
+sed 's/$/&amp;TAIL/g' test.file
+
+##替换某些后缀文件中的字符
+sed -i &quot;s/text_to_replace/replacement/g&quot; `find . -type f -name &lt;filename&gt;`
+sed -i &quot;s/10.0.0.75/10.0.0.76/g&quot; `find . -type f -name &quot;*.properties&quot;`
+sed -i &quot;s/10.0.0.18/10.0.0.17/g&quot; `find . -type f -name &quot;*.properties&quot;`
+sed -i &quot;s/10.0.0.16/10.0.0.17/g&quot; `find . -type f -name &quot;*.php&quot;`
+sed -i &quot;s/d12/111222/g&quot; `find . -type f -name &quot;*.properties&quot;`
+
+#sed删除文件倒数10行
+#把文件倒序
+sed -i '1!G;$!h;$!d' filename  
+#删除10行
+sed -i '1,10d' filename     
+#把文件倒序回来  
+sed -i '1!G;$!h;$!d' filename  
+
+nl file | tail -n 10 | awk 'NR == 1 '{print $1}' 
+
+awk 'BEGIN{CMD=&quot;wc -l file&quot;;CMD|getline i}NR&lt;=(i-10)' file
+sed -n ':a;1,10!{P;N;D;};N;ba' file
+
+
+
+</code></pre><h2 id="awk">awk</h2>
+<pre><code>
+##按第六列  重复的删除，并保留一行
+awk '!arr[$6]++' file
+
+##按第2列和第三  重复的删除，并保留一行
+awk '!arr[$2$3]++'  test.log
+awk '!arr[$2_$3]++'  test.log
+
+##提取两个文件第一列相同的行
+awk -F',' 'NR==FNR{a[$1]=$0;next}NR&gt;FNR{if($1 in a)print $0&quot;\n&quot;a[$1]}' 1.log 2.log
+
+awk 'NR==FNR{a[$1]++}NR&gt;FNR&amp;&amp;a[$1]&gt;1' 111.txt 111.txt
+
+awk 'a[$1]++==1' 
+
+cat 111.txt | awk -F '[:|]' '{print $2}' &gt; 111.txt
+
+##awk 按某个位置的字符分隔的方法
+awk -F &quot;:&quot; '{ for(i=1;i&lt;=3;i++) printf(&quot;%s:&quot;,$i)}'
+awk -F':' '{print $1 &quot;:&quot; $2 &quot;:&quot; $3; print $4}'
+awk -F':' '{print $1 &quot;:&quot; $2 &quot;:&quot; $3; for(i=1;i&lt;=3;i++)$i=&quot;&quot;; print}'
+
+##awk打印用户和密码
+cat test.log  |awk -F '[ ]+' '{print $1 &quot;   &quot; $2}'
+
+##排序显示重复项目
+cat test.log |awk -F '[ ]+' '{print $1}'| sort | uniq -c | sort -nr
+
+#awk -F '\t'来表示分隔符，比如
+awk -F '\t' '{print $1}' file1.txt 
+
+##多个空格分隔的方法
+awk -F '[ ]+' '{print $9}'
+ls -lh /etc/sysconfig/network-scripts/ifcfg-* | awk -F '[ ]+' '{print $9}'
+
+##指定分隔符既可以为空格，又可以为冒号，那么处理将会变得简单。可以使用正则表达式来指定多个分隔符，格式为 -F'[空格:]+' 如下
+awk -F'[ :]+' '{print $NF&quot;\t&quot;$(NF-2)}'  file1.txt 
+
+
+1、awk '/101/'    file      显示文件file中包含101的匹配行。 
+   awk '/101/,/105/'  file 
+   awk '$1 == 5'    file 
+   awk '$1 == &quot;CT&quot;'    file    注意必须带双引号 
+   awk '$1 * $2 &gt;100 '   file  
+   awk '$2 &gt;5 &amp;&amp; $2&lt;=15'  file
+
+
+2、awk '{print NR,NF,$1,$NF,}' file     显示文件file的当前记录号、域数和每一行的第一个和最后一个域。 
+   awk '/101/ {print $1,$2 + 10}' file       显示文件file的匹配行的第一、二个域加10。 
+   awk '/101/ {print $1$2}'  file 
+   awk '/101/ {print $1 $2}' file       显示文件file的匹配行的第一、二个域，但显示时域中间没有分隔符。
+
+
+3、df | awk '$4&gt;1000000 '         通过管道符获得输入，如：显示第4个域满足条件的行。
+
+
+4、awk -F &quot;|&quot; '{print $1}'   file         按照新的分隔符“|”进行操作。 
+   awk  'BEGIN { FS=&quot;[: \t|]&quot; } 
+   {print $1,$2,$3}'       file         通过设置输入分隔符（FS=&quot;[: \t|]&quot;）修改输入分隔符。 
+
+   Sep=&quot;|&quot; 
+   awk -F $Sep '{print $1}'  file   按照环境变量Sep的值做为分隔符。    
+   awk -F '[ :\t|]' '{print $1}' file   按照正则表达式的值做为分隔符，这里代表空格、:、TAB、|同时做为分隔符。 
+   awk -F '[][]'    '{print $1}' file   按照正则表达式的值做为分隔符，这里代表[、]
+
+
+5、awk -f awkfile    file         通过文件awkfile的内容依次进行控制。 
+   cat awkfile 
+/101/{print &quot;\047 Hello! \047&quot;}    --遇到匹配行以后打印 ' Hello! '.  \047代表单引号。 
+{print $1,$2}                      --因为没有模式控制，打印每一行的前两个域。
+
+
+6、awk '$1 ~ /101/ {print $1}' file         显示文件中第一个域匹配101的行（记录）。
+
+
+7、awk   'BEGIN { OFS=&quot;%&quot;} 
+   {print $1,$2}'  file           通过设置输出分隔符（OFS=&quot;%&quot;）修改输出格式。
+
+
+8、awk   'BEGIN { max=100 ;print &quot;max=&quot; max}             BEGIN 表示在处理任意行之前进行的操作。 
+   {max=($1 &gt;max ?$1:max); print $1,&quot;Now max is &quot;max}' file           取得文件第一个域的最大值。 
+   （表达式1?表达式2:表达式3 相当于： 
+   if (表达式1) 
+       表达式2 
+   else 
+       表达式3 
+   awk '{print ($1&gt;4 ? &quot;high &quot;$1: &quot;low &quot;$1)}' file 
+
+
+9、awk '$1 * $2 &gt;100 {print $1}' file         显示文件中第一个域匹配101的行（记录）。
+
+
+10、awk '{$1 == 'Chi' {$3 = 'China'; print}' file        找到匹配行后先将第3个域替换后再显示该行（记录）。 
+    awk '{$7 %= 3; print $7}'  file           将第7域被3除，并将余数赋给第7域再打印。
+
+
+11、awk '/tom/ {wage=$2+$3; printf wage}' file          找到匹配行后为变量wage赋值并打印该变量。
+
+
+12、awk '/tom/ {count++;}  
+         END {print &quot;tom was found &quot;count&quot; times&quot;}' file            END表示在所有输入行处理完后进行处理。
+
+
+13、awk 'gsub(/\$/,&quot;&quot;);gsub(/,/,&quot;&quot;); cost+=$4; 
+         END {print &quot;The total is $&quot; cost&gt;&quot;filename&quot;}'    file             gsub函数用空串替换$和,再将结果输出到filename中。 
+    1 2 3 $1,200.00 
+    1 2 3 $2,300.00 
+    1 2 3 $4,000.00 
+
+    awk '{gsub(/\$/,&quot;&quot;);gsub(/,/,&quot;&quot;); 
+    if ($4&gt;1000&amp;&amp;$4&lt;2000) c1+=$4; 
+    else if ($4&gt;2000&amp;&amp;$4&lt;3000) c2+=$4; 
+    else if ($4&gt;3000&amp;&amp;$4&lt;4000) c3+=$4; 
+    else c4+=$4; } 
+    END {printf  &quot;c1=[%d];c2=[%d];c3=[%d];c4=[%d]\n&quot;,c1,c2,c3,c4}&quot;' file 
+    通过if和else if完成条件语句 
+
+    awk '{gsub(/\$/,&quot;&quot;);gsub(/,/,&quot;&quot;); 
+    if ($4&gt;3000&amp;&amp;$4&lt;4000) exit; 
+    else c4+=$4; } 
+    END {printf  &quot;c1=[%d];c2=[%d];c3=[%d];c4=[%d]\n&quot;,c1,c2,c3,c4}&quot;' file 
+    通过exit在某条件时退出，但是仍执行END操作。 
+    awk '{gsub(/\$/,&quot;&quot;);gsub(/,/,&quot;&quot;); 
+    if ($4&gt;3000) next; 
+    else c4+=$4; } 
+    END {printf  &quot;c4=[%d]\n&quot;,c4}&quot;' file 
+    通过next在某条件时跳过该行，对下一行执行操作。 
+
+
+14、awk '{ print FILENAME,$0 }' file1 file2 file3&gt;fileall              把file1、file2、file3的文件内容全部写到fileall中，格式为 
+    打印文件并前置文件名。
+
+
+15、awk ' $1!=previous { close(previous); previous=$1 }    
+    {print substr($0,index($0,&quot; &quot;) +1)&gt;$1}' fileall           把合并后的文件重新分拆为3个文件。并与原文件一致。
+
+
+16、awk 'BEGIN {&quot;date&quot;|getline d; print d}'         通过管道把date的执行结果送给getline，并赋给变量d，然后打印。 
+
+
+17、awk 'BEGIN {system(&quot;echo \&quot;Input your name:\\c\&quot;&quot;); getline d;print &quot;\nYour name is&quot;,d,&quot;\b!\n&quot;}' 
+    通过getline命令交互输入name，并显示出来。 
+    awk 'BEGIN {FS=&quot;:&quot;; while(getline&lt; &quot;/etc/passwd&quot; &gt;0) { if($1~&quot;050[0-9]_&quot;) print $1}}' 
+    打印/etc/passwd文件中用户名包含050x_的用户名。 
+
+18、awk '{ i=1;while(i&lt;NF) {print NF,$i;i++}}' file 通过while语句实现循环。 
+    awk '{ for(i=1;i&lt;NF;i++) {print NF,$i}}'   file 通过for语句实现循环。     
+    type file|awk -F &quot;/&quot; ' 
+    { for(i=1;i&lt;NF;i++) 
+    { if(i==NF-1) { printf &quot;%s&quot;,$i } 
+    else { printf &quot;%s/&quot;,$i } }}'               显示一个文件的全路径。 
+    用for和if显示日期 
+    awk  'BEGIN { 
+for(j=1;j&lt;=12;j++) 
+{ flag=0; 
+  printf &quot;\n%d月份\n&quot;,j; 
+        for(i=1;i&lt;=31;i++) 
+        { 
+        if (j==2&amp;&amp;i&gt;28) flag=1; 
+        if ((j==4||j==6||j==9||j==11)&amp;&amp;i&gt;30) flag=1; 
+        if (flag==0) {printf &quot;%02d%02d &quot;,j,i} 
+        } 
+} 
+}'
+
+</code></pre><h2 id="find">find</h2>
+<pre><code>
+
+#find . {-atime/-ctime/-mtime/-amin/-cmin/-mmin} [-/+]num
+#atime：访问时间（access time），指的是文件最后被读取的时间，可以使用touch命令更改为当前时间；
+#ctime：变更时间（change time），指的是文件本身最后被变更的时间，变更动作可以使chmod、chgrp、mv等等；
+#mtime：修改时间（modify time），指的是文件内容最后被修改的时间，修改动作可以使echo重定向、vi等等；
+
+#第一个参数，.，代表当前目录，如果是其他目录，可以输入绝对目录和相对目录位置；
+#第二个参数分两部分，前面字母a、c、m分别代表访问、变更、修改，后面time为日期，min为分钟，注意只能以这两个作为单位；
+#第三个参数为量，其中不带符号表示符合该数量的，带-表示符合该数量以后的，带+表示符合该数量以前的。
+
+#找/data目录下一小时之前文件删除
+find /data -mmin +60 -exec rm -f {} \;
+
+#在当前目录下查找以april开始的文件
+find   -name april*
+#在当前目录下查找以april开始的文件，并把结果输出到file中
+find   -name   april*   fprint file       
+#查找以ap或may开头的文件 
+find   -name ap* -o -name may*   
+#在/mnt下查找名称为tom.txt且文件系统类型为vfat的文件
+find   /mnt   -name tom.txt   -ftype vfat   
+#在/mnt下查找名称为tom.txt且文件系统类型不为vfat的文件
+find   /mnt   -name t.txt ! -ftype vfat   
+#在/tmp下查找名为wa开头且类型为符号链接的文件
+find   /tmp   -name wa* -type l  
+#在/home下查最近两天内改动过的文件          
+find   /home   -mtime   -2           
+#查1天之内被存取过的文件      
+find /home    -atime -1       
+#在/home下查60分钟前改动过的文件           
+find /home -mmin    +60       
+#查最近30分钟前被存取过的文件           
+find /home   -amin   +30              
+#在/home下查更新时间比tmp.txt近的文件或目录    
+find /home   -newer   tmp.txt             
+#在/home下查存取时间比tmp.txt近的文件或目录
+find /home   -anewer   tmp.txt       
+#列出文件或目录被改动过之后，在2日内被存取过的文件或目录     
+find   /home   -used   -2          
+#列出/home目录内属于用户cnscn的文件或目录        
+find   /home   -user cnscn           
+#列出/home目录内用户的识别码大于501的文件或目录     
+find   /home   -uid   +501    
+#列出/home内组为cnscn的文件或目录              
+find   /home   -group   cnscn   
+#列出/home内组id为501的文件或目录           
+find   /home   -gid 501          
+#列出/home内不属于本地用户的文件或目录        
+find   /home   -nouser                 
+#列出/home内不属于本地组的文件或目录   
+find   /home   -nogroup                  
+#列出/home内的tmp.txt 查时深度最多为3层 
+find   /home    -name tmp.txt    -maxdepth   4   
+#从第2层开始查
+find   /home   -name tmp.txt   -mindepth   3   
+#查找大小为0的文件或空目录
+find   /home   -empty     
+#查大于512k的文件                      
+find   /home   -size   +512k    
+#查小于512k的文件
+find   /home   -size   -512k          
+#查硬连接数大于2的文件或目录     
+find   /home   -links   +2       
+#查权限为700的文件或目录         
+find   /home   -perm   0700       
+#查/tmp 的tmp.txt并查看
+find   /tmp   -name tmp.txt   -exec cat {} \;
+#查/tmp 的tmp.txt并删除
+find   /tmp   -name   tmp.txt   -ok   rm {} \;
+# 查找在系统中最后10分钟访问的文件
+find    /   -amin    -10     
+# 查找在系统中最后48小时访问的文件
+find    /   -atime   -2        
+# 查找在系统中为空的文件或者文件夹
+find    /   -empty             
+# 查找在系统中属于 groupcat的文件
+find    /   -group   cat       
+# 查找在系统中最后5分钟里修改过的文件 
+find    /   -mmin   -5         
+#查找在系统中最后24小时里修改过的文件
+find    /   -mtime   -1       
+#查找在系统中属于作废用户的文件
+find    /   -nouser         
+#查找在系统中属于FRED这个用户的文件  
+find    /   -user    fred     
+#查当前目录下的所有普通文件
+find . -type f -exec ls -l {} \; 
+##在/logs目录中查找更改时间在5日以前的文件并删除它们：
+find logs -type f -mtime +5 -exec   -ok   rm {} \;
+
+
+##匹配字符串，找出存在字符串文件
+find /data -name &quot;*.php&quot; -type f -print0|xargs -0 egrep &quot;(phpspy|c99sh|milw0rm|eval\(base64_decode|spider_bc)&quot;|awk -F: '{print $1}'|sort|uniq
+find /data -name &quot;*.php&quot; -type f -print0|xargs -0 egrep &quot;aaa&quot;|awk -F: '{print $1}'|sort|uniq
+find . -name &quot;*.php&quot; -type f -print0| xargs -0 egrep  &quot;aaa|bbb&quot;| egrep &quot;aaa&quot;
+
+find . -name &quot;*.php&quot; | xargs grep &quot;aaa&quot;
+
+##cd  /var/cache/yum找*.rpm移动到一个文件夹
+find  . -name  &quot;*.rpm&quot; -exec cp {} /root/111 \;
+
+##找到*.log日志全部删除
+find . -name *.log | xargs rm
+find . -name *.rpm | xargs rm
+find /data/file1 -name .svn -print0 | xargs -0 rm -r -f
+find /data/file1 -name .git -print0 | xargs -0 rm -r -f
+
+#删除5天之前的日志
+find /data/nginx/log/ -ctime +5 -exec rm -f {} \;
+find /data/logs -ctime +5 -exec rm -f {} \;
+find /data/logs -name &quot;localhost_access_log*.txt&quot; -type f -mtime +5 -print -exec rm -f {} \;
+find /data/zookeeper/logs -name &quot;log.*&quot; -type f -mtime +5 -print -exec rm -f {} \;
+
+##删除目录下所有的 .svn 隐藏子目录
+find . -name .svn -print0 | xargs -0 rm -r -f
+find /data/file1 -name .svn -print0 | xargs -0 rm -r -f
+find /data/file1 -name .git -print0 | xargs -0 rm -r -f
+find . -name .svn -print0 | xargs -0 rm -r -f
+find . -name .git -print0 | xargs -0 rm -r -f
+
+
+##找出 n 天前的文件
+find /temp/ -type f -mtime +n -print
+
+##注：/temp/ 指出寻找/temp/目录下的文件
+##-type f 指出找系统普通文件，不包含目录文件
+##-mtime +n 指出找 n*24 小时前的文件
+##-print 将找出的文件打印出来
+
+##如：找出 7 天前的文件
+find /temp/ -type f -mtime +7 -print
+##找出 3 天前的文件
+find /temp/ -type f -mtime +3 -print
+
+##找出并删除 7 天前的文件
+find /temp/ -type f -mtime +7 -print -exec rm -f {} \;
+find /temp/ &quot;ut*.log&quot; -type f -mtime +7 -print -exec rm -f {} \;
+
+##注：-exec 指出要执行后面的系统命令
+##rm -f 删除找出的文件
+##{} 只有该符号能跟在命令后面
+##\ 结束符
+
+##也可以使用 xargs 代替 -exec
+find /temp/ -type f -mtime +7 -print | xargs rm -f
+
+##find命令用途举例：
+##如：
+##查找/var下最大的前10个文件：
+find /var -type f -ls | sort -k 7 -r -n | head -10
+
+##查找/var/log/下大于5GB的文件：
+find /var/log/ -type f -size +5120M -exec ls -lh {} \;
+
+##找出今天的所有文件并将它们拷贝到另一个目录：
+find /home/me/files -ctime 0 -print -exec cp {} /mnt/backup/{} \;
+
+##找出所有一周前的临时文件并删除：
+find /temp/ -mtime +7-type f | xargs /bin/rm -f
+
+##查找所有的mp3文件，并修改所有的大写字母为小写字母：
+find /home/me/music/ -type f -name *.mp3 -exec rename ‘y/[A-Z]/[a-z]/’ ‘{}’ \;
+
+
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2021/07/07</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/linux">linux</a> <a href="/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC">常用脚本</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%9F%BA%E7%A1%80">基础</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

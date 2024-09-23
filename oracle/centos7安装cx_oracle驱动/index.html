@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Centos7安装cx_Oracle驱动| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Centos7安装cx_Oracle驱动</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装说明">安装说明</a></li>
+    <li><a href="#安装oracle客户端">安装Oracle客户端</a></li>
+    <li><a href="#安装oracle的sdk">安装Oracle的SDK</a></li>
+    <li><a href="#安装cx_oracle">安装cx_oracle</a></li>
+    <li><a href="#cx_oracle配置">cx_oracle配置</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="安装说明">安装说明</h2>
+<ul>
+<li>一台cents7的机器上没有安装过oracle</li>
+<li>python脚本需要调用远程oracle数据库，需要cx_oracle数据库</li>
+</ul>
+<pre><code>python3.9 /data/script/datasec/test.py 
+#产生报错
+....
+  File &quot;/data/script/datasec/newSQL.py&quot;, line 3, in &lt;module&gt;
+    import cx_Oracle
+ModuleNotFoundError: No module named 'cx_Oracle'
+
+</code></pre><ul>
+<li>这个cx_Oracle驱动非常不好装</li>
+<li>以下是安装cx_Oracle的标准步骤</li>
+</ul>
+<h2 id="安装oracle客户端">安装Oracle客户端</h2>
+<ul>
+<li><a href="https://www.oracle.com/database/technologies/instant-client/linux-x86-64-downloads.html">https://www.oracle.com/database/technologies/instant-client/linux-x86-64-downloads.html</a></li>
+<li>在这个网站找到合适的版本，我下的是11.2版本，不同的系统下不同的版本</li>
+<li>选择好后，需要用户名密码登陆</li>
+<li>下载和安装</li>
+</ul>
+<pre><code> wget &quot;https://download.oracle.com/otn/linux/instantclient/11204/oracle-instantclient11.2-basic-11.2.0.4.0-1.x86_64.rpm&quot;
+
+
+rpm -ivh oracle-instantclient11.2-basic-11.2.0.4.0-1.x86_64.rpm 
+
+
+</code></pre><ul>
+<li>安装完后，会有个目录：</li>
+</ul>
+<pre><code>ll /usr/lib/oracle/11.2/client64/lib/
+total 183252
+-rw-r--r-- 1 root root  53865194 Aug 25  2013 libclntsh.so.11.1
+-rw-r--r-- 1 root root   7996693 Aug 25  2013 libnnz11.so
+-rw-r--r-- 1 root root   1973074 Aug 25  2013 libocci.so.11.1
+-rw-r--r-- 1 root root 118738042 Aug 25  2013 libociei.so
+-rw-r--r-- 1 root root    164942 Aug 25  2013 libocijdbc11.so
+-rw-r--r-- 1 root root   2091135 Aug 25  2013 ojdbc5.jar
+-rw-r--r-- 1 root root   2739616 Aug 25  2013 ojdbc6.jar
+-rw-r--r-- 1 root root     66779 Aug 25  2013 xstreams.jar
+
+</code></pre><ul>
+<li>添加一个软链</li>
+</ul>
+<pre><code>cd /usr/lib/oracle/11.2/client64/lib/
+
+$ ln -s libclntsh.so.11.1 libclntsh.so
+</code></pre><ul>
+<li>验证完毕，oracle客户端安装好了</li>
+<li>记住<code>/usr/lib/oracle/11.2/client64/lib/</code>这个目录，后面还要用到</li>
+</ul>
+<h2 id="安装oracle的sdk">安装Oracle的SDK</h2>
+<ul>
+<li>还是刚才的oracle下载页里，往下拉一屏，找到sdk的下载项，这次我们下载zip格式就行</li>
+</ul>
+<pre><code>wget https://download.oracle.com/otn/linux/instantclient/11204/instantclient-sdk-linux.x64-11.2.0.4.0.zip
+
+unzip instantclient-sdk-linux.x64-11.2.0.4.0.zip 
+Archive:  instantclient-sdk-linux.x64-11.2.0.4.0.zip
+   creating: instantclient_11_2/sdk/
+   creating: instantclient_11_2/sdk/include/
+  inflating: instantclient_11_2/sdk/include/occi.h  
+  inflating: instantclient_11_2/sdk/include/occiCommon.h  
+  inflating: instantclient_11_2/sdk/include/occiControl.h  
+  inflating: instantclient_11_2/sdk/include/occiData.h  
+  inflating: instantclient_11_2/sdk/include/occiObjects.h  
+  inflating: instantclient_11_2/sdk/include/occiAQ.h  
+  inflating: instantclient_11_2/sdk/include/oci.h  
+  inflating: instantclient_11_2/sdk/include/oci1.h  
+  inflating: instantclient_11_2/sdk/include/oci8dp.h  
+  inflating: instantclient_11_2/sdk/include/ociap.h  
+  inflating: instantclient_11_2/sdk/include/ociapr.h  
+  inflating: instantclient_11_2/sdk/include/ocidef.h  
+  inflating: instantclient_11_2/sdk/include/ocidem.h  
+  inflating: instantclient_11_2/sdk/include/ocidfn.h  
+  inflating: instantclient_11_2/sdk/include/ociextp.h  
+  inflating: instantclient_11_2/sdk/include/ocikpr.h  
+  inflating: instantclient_11_2/sdk/include/ocixmldb.h  
+  inflating: instantclient_11_2/sdk/include/ocixstream.h  
+  inflating: instantclient_11_2/sdk/include/odci.h  
+  inflating: instantclient_11_2/sdk/include/oratypes.h  
+  inflating: instantclient_11_2/sdk/include/ori.h  
+  inflating: instantclient_11_2/sdk/include/orid.h  
+  inflating: instantclient_11_2/sdk/include/orl.h  
+  inflating: instantclient_11_2/sdk/include/oro.h  
+  inflating: instantclient_11_2/sdk/include/ort.h  
+  inflating: instantclient_11_2/sdk/include/xa.h  
+  inflating: instantclient_11_2/sdk/include/nzt.h  
+  inflating: instantclient_11_2/sdk/include/nzerror.h  
+  inflating: instantclient_11_2/sdk/include/ldap.h  
+   creating: instantclient_11_2/sdk/demo/
+  inflating: instantclient_11_2/sdk/demo/demo.mk  
+  inflating: instantclient_11_2/sdk/demo/cdemo81.c  
+  inflating: instantclient_11_2/sdk/demo/occidemo.sql  
+  inflating: instantclient_11_2/sdk/demo/occidemod.sql  
+  inflating: instantclient_11_2/sdk/demo/occidml.cpp  
+  inflating: instantclient_11_2/sdk/demo/occiobj.cpp  
+  inflating: instantclient_11_2/sdk/demo/occiobj.typ  
+  inflating: instantclient_11_2/sdk/SDK_README  
+ extracting: instantclient_11_2/sdk/ottclasses.zip  
+  inflating: instantclient_11_2/sdk/ott  
+
+</code></pre><ul>
+<li>将解压出来的<code>instantclient_11_2/sdk</code>copy到刚才安装客户端后出来的文件夹中</li>
+</ul>
+<pre><code>cp -r sdk /usr/lib/oracle/11.2/client64/lib/
+
+ll /usr/lib/oracle/11.2/client64/lib/
+total 183252
+-rw-r--r-- 1 root root  53865194 Aug 25  2013 libclntsh.so.11.1
+-rw-r--r-- 1 root root   7996693 Aug 25  2013 libnnz11.so
+-rw-r--r-- 1 root root   1973074 Aug 25  2013 libocci.so.11.1
+-rw-r--r-- 1 root root 118738042 Aug 25  2013 libociei.so
+-rw-r--r-- 1 root root    164942 Aug 25  2013 libocijdbc11.so
+-rw-r--r-- 1 root root   2091135 Aug 25  2013 ojdbc5.jar
+-rw-r--r-- 1 root root   2739616 Aug 25  2013 ojdbc6.jar
+drwxr-xr-x 4 root root        84 Aug 25  2013 sdk
+-rw-r--r-- 1 root root     66779 Aug 25  2013 xstreams.jar
+
+</code></pre><ul>
+<li>这步没有安装，准确的说是下载解压Oracle_sdk文件,不需要验证</li>
+</ul>
+<h2 id="安装cx_oracle">安装cx_oracle</h2>
+<pre><code>export ORACLE_HOME=/usr/lib/oracle/11.2/client64/lib
+ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME
+pip3.9 install cx_Oracle
+Looking in indexes: https://pypi.tuna.tsinghua.edu.cn/simple
+Collecting cx_Oracle
+  Downloading https://pypi.tuna.tsinghua.edu.cn/packages/63/23/d495b40eb7950e8c4d3a8f22a92552b5d173b92479c60ad7f9355ad51666/cx_Oracle-8.3.0-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl (888 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 888.2/888.2 kB 9.9 MB/s eta 0:00:00
+Installing collected packages: cx_Oracle
+Successfully installed cx_Oracle-8.3.0
+
+</code></pre><ul>
+<li>验证,不报错就成功了：</li>
+</ul>
+<pre><code>$ python3.9
+
+$ import cx_Oracle
+
+</code></pre><h2 id="cx_oracle配置">cx_oracle配置</h2>
+<ul>
+<li>安装好了cx_oracle，还没完</li>
+<li>要做以下配置</li>
+</ul>
+<pre><code># cat /etc/ld.so.conf.d/oracle.conf
+cat: /etc/ld.so.conf.d/oracle.conf: No such file or directory
+
+# echo  /usr/lib/oracle/11.2/client64/lib  &gt; /etc/ld.so.conf.d/oracle.conf
+
+# ldconfig
+
+</code></pre><ul>
+<li>完成</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2024/07/30</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/centos">centos</a> <a href="/categories/oracle">oracle</a> <a href="/categories/python">python</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

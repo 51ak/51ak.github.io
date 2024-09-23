@@ -1,0 +1,424 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>分布式一致性协议:raft协议| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">分布式一致性协议:raft协议</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#关于raft的起源和历史">关于raft的起源和历史</a></li>
+    <li><a href="#名词一-复制状态机replicated-state-machines">名词一： 复制状态机(Replicated state machines)</a></li>
+    <li><a href="#名词二--任期和选举">名词二：  任期和选举</a>
+      <ul>
+        <li><a href="#1什么时候开始选举">1.什么时候开始选举</a></li>
+        <li><a href="#2选举和投票">2.选举和投票</a></li>
+      </ul>
+    </li>
+    <li><a href="#名词三-日志log与日志复制log-replication">名词三： 日志(log)与日志复制(log replication)</a>
+      <ul>
+        <li><a href="#复制状态机">复制状态机</a></li>
+        <li><a href="#log-entry"> log entry</a></li>
+      </ul>
+    </li>
+    <li><a href="#安全性领导者变更">安全性：领导者变更</a>
+      <ul>
+        <li><a href="#挑选最好的领导者">挑选最好的领导者</a></li>
+        <li><a href="#平衡旧领导者neutralizing-old-leader">平衡旧领导者（Neutralizing Old Leader）</a></li>
+      </ul>
+    </li>
+    <li><a href="#问题">问题</a>
+      <ul>
+        <li><a href="#1如何判断一个请求是否已被commit">1.如何判断一个请求是否已被commit？</a></li>
+        <li><a href="#续上一个问题如果一个请求在leader向客户端返回成功之前leader刚好挂掉那这个请求是否丢失">续上一个问题，如果一个请求在leader向客户端返回成功之前，leader刚好挂掉，那这个请求是否丢失？</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="关于raft的起源和历史">关于raft的起源和历史</h2>
+<ul>
+<li>raft协议是一种分布式强一致性协议
+<ul>
+<li>为什么要有一致性？
+<ul>
+<li>1.数据不能存在单个节点（主机）上，否则可能出现单点故障</li>
+<li>2.多个节点（主机）需要保证具有相同的数据。</li>
+</ul>
+</li>
+<li>都有哪些一致性协议（算法）
+<ul>
+<li>Paxos ：强一致性，由Lamport出品，例如：腾讯的PhxSQL，阿里的OceanBase数据库</li>
+<li>Raft ：强一致性，由Paxos改进而来，例如：redis的sentinel,etcd数据库 用的是raft协议</li>
+<li>ZAB ：强一致性，由Paxos改进而来，例如：ZooKeeper</li>
+<li>Gossip协议：弱一致性或者叫最终一致性，例如：rediscluster协议</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>2014年，由斯坦福大学Diego的一篇200多页的博士论文《CONSENSUS: BRIDGING THEORY AND PRACTICE》提出的一种全新的一致性协议。英文好的可以去看看。网上也有好多翻译成中文的</li>
+<li>虽然核心协议上基本都是师继Paxos协议，基于多数派的协议。但是 Raft 一致性协议的贡献在于，定义了可易于实现的一致性协议的事实标准。模块化拆分以及设计简化。使分布式协议更加容易理解和实现</li>
+</ul>
+<h2 id="名词一-复制状态机replicated-state-machines">名词一： 复制状态机(Replicated state machines)</h2>
+<ul>
+<li>为了简化和便于理解，raft协议提出了复制状态机的概念，将集群中的节点都当成一个复制状态机，每个状态机只有三种状态。</li>
+<li>复制状态机(Replicated state machines) ： 将集群中的每个服务器看做一个状态机, 它们接收外部的指令, 进行状态的改变, 
+所谓保持分布式一致性即是保证集群中所有状态机的状态一致性。</li>
+<li>在任何时候，每个服务器都处于以下三种状态中的一种:</li>
+<li>领导人(leader): 处理所有客户端的交互，日志复制同步，任何时候最多有一个领导人</li>
+<li>跟随者(follower): 完全被动（不发出RPC，响应传入的RPC）</li>
+<li>候选人(candidate): 用于选举新领导者</li>
+<li>我们用图来解释这三种状态的变化关系</li>
+</ul>
+<p><img src="/img/2022/raft01.png" alt="raft复制状态机" title="raft复制状态机"></p>
+<h2 id="名词二--任期和选举">名词二：  任期和选举</h2>
+<p><img src="/img/2022/raft02.png" alt="raft协议：任期" title="raft协议：任期"></p>
+<p>为了判断过时的信息，过时的leader，raft协议提出了任期(term)的概念</p>
+<ul>
+<li>时序被分割为多个领导者任期</li>
+<li>每个任期最多1个领导者</li>
+<li>有些任期没有领导者（如：上图上的第2个阶段选举失败，但是任期值还是会加1）</li>
+<li>每个服务器维护当前任期的值</li>
+</ul>
+<h3 id="1什么时候开始选举">1.什么时候开始选举</h3>
+<ul>
+<li>一个正常运行的系统，领导者必须不断的发送心跳（AppendEntries RPC）以保持其领导者的地位</li>
+<li>如果在electionTimeout时间内（一般是100-300ms)，跟随都未收到RPC:</li>
+<li>跟随者假设领导者已经崩溃，开始新的选举</li>
+</ul>
+<h3 id="2选举和投票">2.选举和投票</h3>
+<h4 id="21-跟随者发起选举要进行以下的4个动作">2.1 跟随者发起选举，要进行以下的4个动作</h4>
+<ul>
+<li>增加当前任期号</li>
+<li>转换到候选者状态</li>
+<li>投票给自己</li>
+<li>发送RequestVote RPC调用给所有其他服务器，重试，直至满足以下条件之一
+<ul>
+<li>条件一：接收大多数服务器的投票，成为领导者(leader)</li>
+<li>条件二：期间收到来自于有效领导者leader的信息，成为跟随者(follower)</li>
+<li>条件三：没有人赢得选举（选举超时），增加当前任期号，重新开始新的选举</li>
+</ul>
+</li>
+</ul>
+<h4 id="22注意项">2.2注意项</h4>
+<ul>
+<li>每台服务器的等待超时时间是随机的，尽量避免同时发起投票请求</li>
+<li>每台服务器在每个任期只投一次票</li>
+<li>一定要有一个节点获得多数票，否则重新选举</li>
+<li>选举有两个重要的属性：安全（Safety）和可用（Liveness）</li>
+</ul>
+<h5 id="221-安全safety">2.2.1 安全（Safety）</h5>
+<p>安全（Safety） 指的是必须最多只有一个候选者可以在某一任期内赢得领导者地位。Raft 可以保证这件事。每台服务器只给一个候选者投票，一旦它投出选票，它就会拒绝来自其他候选者的任何请求。服务器并不关心它的票到底投给了哪台服务器。为了实现这种机制，服务器需要保证将自己的投票信息存储到磁盘，这样就能在服务器崩溃之后也能恢复到之前的状态。否则就会出现服务器已经作出投票，并在崩溃重启后，在同一任期内将票又投给了另外一个不同服务器的情况。因为每台服务器只能进行一次投票，而且每个候选者都必须获得多数票，也就可以发现，不可能出现两个候选者同时获胜的情况。</p>
+<p>比方说有三台服务器在某一任期内进行选举，另外两台服务器显然无法获得多数票。不过后面会介绍不同任期间会出现不同候选者获胜的情况，但在某一确定的任期内，只有一个候选者可以被选举为领导者。</p>
+<h5 id="222-可用liveness">2.2.2 可用（Liveness）</h5>
+<p>需要保证一定有获胜者，这样系统不会永远处于没有领导者的状态。问题在于理论上，会反复出现分票的情况，多个候选者在同一任期内同时开始进行选举，这样就会导致分票，在超时之后，又进行新一轮的选举又再次出现分票，所以从理论上说这样的状态可以无限循环下去。Raft 需要分散出现超时的间隔，每台服务器都会随机的计算下次超时的间隔时间，这个时间间隔在 [T, 2T] 之间。 T 代表着选举超时的时间，即服务器可能出现超时的最短时间。通过将超时时间分散，可以降低两台服务器同时开始选举的机率，先启动的那台有足够的时间向其他所有服务器发起请求，并在其他服务器参与竞争之前就完成选举这个过程。当这个超时间隔时间远大于广播投票请求的时间时，这个策略会变得更为有效。这里的广播时间指的是，一台服务器与其他所有服务器通信所需的时间。</p>
+<h2 id="名词三-日志log与日志复制log-replication">名词三： 日志(log)与日志复制(log replication)</h2>
+<p>现在我们已经完整的知道了选举流程，集群中已经稳定的有个leader节点，开始对外提供服务，所有读写请求都发送到leader，leader来调度这些并发请求的顺序，并且保证leader与followers状态的一致性。事实上raft中的做法是，将这些请求以及执行顺序告知followers。leader和followers以相同的顺序来执行这些请求，保证状态一致。</p>
+<h3 id="复制状态机">复制状态机</h3>
+<p>再让我们回到名词一：复制状态机我们在这一节里似乎只说了状态机，没有说清楚复制是做啥用的。何为复制状态机？</p>
+<blockquote>
+<p>If two identical, deterministic processes begin in the same state and get the same inputs in the same order, they will produce the same output and end in the same state.</p>
+</blockquote>
+<p>简单来说：<!-- raw HTML omitted -->相同的初识状态 + 相同的输入 = 相同的结束状态<!-- raw HTML omitted -->。</p>
+<p>引文中有一个很重要的词deterministic，就是说不同节点要以相同且确定性的函数来处理输入，而不要引入一下不确定的值，比如本地时间等。如何保证所有节点 get the same inputs in the same order，使用replicated log是一个很不错的注意，log具有持久化、保序的特点，是大多数分布式系统的基石。</p>
+<h3 id="log-entry"> log entry</h3>
+<p>因此，可以这么说，在raft中，leader将客户端请求（command）封装到一个个log entry，将这些log entries复制（replicate）到所有follower节点，然后大家按相同顺序应用（apply）log entry中的command，则状态肯定是一致的。</p>
+<p>下图形象展示了这种log-based replicated state machine</p>
+<p><img src="/img/2022/raft04.png" alt="raft协议：状态机" title="raft协议：状态机"></p>
+<h4 id="请求完整流程">请求完整流程</h4>
+<p>  当系统（leader）收到一个来自客户端的写请求，到返回给客户端，整个过程从leader的视角来看会经历以下步骤：</p>
+<ul>
+<li>leader append log entry</li>
+<li>leader issue AppendEntries RPC in parallel</li>
+<li>leader wait for majority response</li>
+<li>leader apply entry to state machine</li>
+<li>leader reply to client</li>
+<li>leader notify follower apply log</li>
+</ul>
+<p>可以看到日志的提交过程有点类似两阶段提交(2PC)，不过与2PC的区别在于，leader只需要大多数（majority）节点的回复即可，这样只要超过一半节点处于工作状态则系统就是可用的，而2PC需要所有节点回复OK才能提交，否则要回滚。</p>
+<h4 id="log的组成">log的组成</h4>
+<p><img src="/img/2022/raft05.png" alt="raft协议：log" title="raft协议:log 和log entry"></p>
+<p>  logs由顺序编号的log entry组成 ，每个log entry除了包含command，还包含产生该log entry时的leader term。从上图可以看到，五个节点的日志并不完全一致，raft算法为了保证高可用，并不是强一致性，而是最终一致性（CAP理论：一致性（C）-&gt;在分布式系统中的所有数据备份，在同一时刻是否同样的值），leader会不断尝试给follower发log entries，直到所有节点的log entries都相同。</p>
+<h4 id="log提交的流程">log提交的流程</h4>
+<p><img src="/img/2022/raft03.png" alt="raft协议：log流程" title="raft协议:log流程"></p>
+<p>  在上面的流程中，leader只需要日志被复制到大多数节点即可向客户端返回，一旦向客户端返回成功消息，那么系统就必须保证log（其实是log所包含的command）在任何异常的情况下都不会发生回滚。这里有两个词：commit（committed），apply(applied)，前者是指日志被复制到了大多数节点后日志的状态；而后者则是节点将日志应用到状态机，真正影响到节点状态。</p>
+<blockquote>
+<p>The leader decides when it is safe to apply a log entry to the state machines; such an entry is called committed. Raft guarantees that committed entries are durable and will eventually be executed by all of the available state machines. A log entry is committed once the leader that created the entry has replicated it on a majority of the servers</p>
+</blockquote>
+<h4 id="日志一致性">日志一致性</h4>
+<p>如果不同服务器上的日志条目具有相同的索引（index）和任期号（term），那么:</p>
+<ul>
+<li>它们存储相同的命令</li>
+<li>所有前面的条目中的日志都是相同的</li>
+</ul>
+<h4 id="日志安全性">日志安全性</h4>
+<p>如果某个leader发现某条log entry已经被提交，则这条entry必须存在于所有后续的leader中。
+为了实现这一点，raft算法规定：</p>
+<ol>
+<li>leaders永远不会修改自己log中的entries，只能添加；这条性质叫AppendOnlyProperty,即leader只能添加日志，但不能修改日志；这意味着leaders中log entries永远不会被修改；</li>
+<li>只有leaders中的log才能被提交；言外之意是，某条日志即使过半server都存在了，但在leader中不存在，也是不能被提交的；</li>
+<li>entries在被提交给state machine执行之前，必须已被提交；即只有已被提交的日志才能被执行；
+某个日志已被提交  -&gt;  这条日志必定在后续leader中存在
+为了实现这个安全性目标，raft算法规定：</li>
+</ol>
+<ul>
+<li>对leader election增加约束条件：如果某个server的log中缺少某个已提交日志，则不允许这个server当leader；(<!-- raw HTML omitted -->我们将在下一节《挑选最好的领导者》中了解为什么可以这么做？<!-- raw HTML omitted -->)</li>
+<li>必须改变对committed的定义：前面说的已过半即是committed，这是不够的；有时候我们必须延迟committed，直到我们认为安全了才能committed；所谓的安全，就是说我们认为能够保证后续leader有这条日志；如何保证这个延迟呢</li>
+</ul>
+<p><img src="/img/2022/raft10.png" alt="raft协议：日志安全性" title="raft协议:日志安全性"></p>
+<h5 id="如图所示在集群遇到leader不断切换的时候">如图所示，在集群遇到leader不断切换的时候：</h5>
+<ul>
+<li>s1产生的@2日志，还没来得及得传输到大多数就挂掉。</li>
+<li>接下来s5从选举中获胜，产生了@3日志后马上又挂掉</li>
+<li>s2(或者s1)又从选举中获胜，写了@4日志，并将上一个任期的@2日志传输到s3节点后，此时关键点来了
+<ul>
+<li>如果不做要求，那么会产生以下问题</li>
+<li>此时s1,s2,s3 都有上一任期@2的日志，（多数节点确认）但是此时不可以commit。因为如果此时commit会（请往下看）</li>
+</ul>
+</li>
+<li>s2又挂了，s5又从选举中获胜(s3,s4,s5三票），并且尝试将@3的日志覆盖s2，s3的日志，那么刚才commit的日志就丢了，这是不能允许的，所以上一步骤不能commit.</li>
+</ul>
+<p>为了保证raft的commit的记录一定不会消失，我们必须还要修改已有的提交规则！
+<!-- raw HTML omitted -->leader必须看到至少一条来自leader term（即leader的current term）的日志也存在于大多数的server上；<!-- raw HTML omitted -->
+即当新leader看到某条来自之前term的日志已经存在于大多数server上时，它不能再认为这条日志是committed了，必须等到来自其自身term的第一条日志也存在于大多数server上，才能认为之前term的那条日志是committed的；这其实相当于一种leader change场景下的延迟commitment吧，或者换种思路，相当于将上一个term时期的日志的commitment与当前term时期的commitment绑定在了一起。</p>
+<h4 id="appendentries-一致性检查">AppendEntries 一致性检查</h4>
+<ul>
+<li>每一个AppendEntries RPC调用包含：
+<ol>
+<li>新创建的新日志条目</li>
+<li>前序条目的下标位置索引以及任期号</li>
+</ol>
+</li>
+<li>追随者必须包含匹配的条目; 否则它拒绝请求</li>
+<li>实现归纳步骤，确保一致性</li>
+<li></li>
+</ul>
+<p><img src="/img/2022/raft06.png" alt="raft协议：一致性检查" title="raft协议:一致性检查"></p>
+<h2 id="安全性领导者变更">安全性：领导者变更</h2>
+<p>介绍完上面的名词和各种规范约束后，我们已经知道选举/状态机/日志是如何保证raft协议中的数据安全性了，现在开始尝试理解一下比较难以掌握的情况：领导者变更</p>
+<blockquote>
+<p>当发生领导者变更时，raft协议如何保证数据的安全性</p>
+</blockquote>
+<p>新领导者任期开始时:</p>
+<ul>
+<li>在新的领导者被选出之前，不会有任何特别的操作</li>
+<li>始终认为领导者的日志总是正确的</li>
+<li>领导者从不覆盖它们日志中的条目。</li>
+<li>只有领导者日志中的条目才能提交</li>
+<li>新领导者会覆盖follower的条目（如果有不一致的情况）</li>
+<li>最终会使跟随者的日志与领导者的日志相同</li>
+</ul>
+<p><img src="/img/2022/raft07.png" alt="raft协议：领导者变更" title="raft协议:领导者变更"></p>
+<p>如上图，followers的log有哪些与leader可能不同的情况呢：</p>
+<ol>
+<li>missing entries：即follower的log与leader相比缺少某些entries，如图中的a/b/e follower；</li>
+<li>extraneous entries：即follower的log与leader相比多出某些entries，如图中的c/d/f follower;</li>
+</ol>
+<p>leader为了保证follower的log与之相同，必须：</p>
+<ol>
+<li>删除follower中的多余entries；</li>
+<li>用自己的entries填充follower中的缺失entries；</li>
+</ol>
+<p>为了恢复log一致性，leader为集群中所有follower都保存一个状态变量，即nextIndex：</p>
+<ol>
+<li>nextIndex是leader准备向某个follower发送的下一个log entry的index；</li>
+<li>当leader刚刚即位后，nextIndex的初始值是（1+leader&rsquo;s last index）；</li>
+</ol>
+<p>如图举例：</p>
+<p><img src="/img/2022/raft08.png" alt="raft协议：领导者变更2" title="raft协议:领导者变更2"></p>
+<ul>
+<li>新leader即位后，立即发出的请求很可能是heartbeat（心跳请求）,心跳请求跟普通的AppendEntries RPC是一样的，只是不带新values而已，但心跳请求仍然可以进行一致性检查；</li>
+<li>某个server成为term7时期的新leader，其log中的最后一条是entry10，所以这个leader会将所有follower的nextIndex都设为11；</li>
+<li>follower收到AppendEntries RPC请求的时候，会进行log一致性检查，有不一致情况就会被检查出来；</li>
+<li>当leader试图与集群中的follower通讯时候，会带上nextIndex前面的一个entry的index和term</li>
+<li>节点响应
+<ul>
+<li>当这个请求（可能是心跳也可能是普通的AppendEntries ）到达follower a时，follower会拿这个index和term（这里就是(10,6）)与自己的log相比较；很显然，follower a中没有与之相匹配的；所以follower a会直接拒绝这个请求！</li>
+<li>当leader看到请求被拒绝时，其动作非常简单：只需将nextIndex-1，再次尝试。</li>
+<li>如此往复，再失败，nextIndex再减1，再重试；直到nextIndex=5，此时leader会带上（4,4）这个entry，follower a发现能与之匹配，所以接收；一旦follower a接受，则最终后续所有的missing entry都会被添加上；</li>
+<li>follower b的情况也类似，当nextIndex=11时，一致性检查会失败；每次失败leader都会将nextIndex-1，然后重试；直到nextIndex=4，才会成功；最终follower b中的log也会被重新填充上；</li>
+</ul>
+</li>
+</ul>
+<h3 id="挑选最好的领导者">挑选最好的领导者</h3>
+<p>我们已经知道leader决定一切，leader不会修改自己的日志，如果旧leader挂掉，新leader会要求其他follower接受它的日志，覆盖掉不一致的地方。所以如何挑选最好的领导者，就变得很重要。</p>
+<p><img src="/img/2022/raft09.png" alt="raft协议：挑选最好的领导者" title="raft协议:挑选最好的领导者"></p>
+<p>举个例子，如图：
+S1是term2时期的leader，刚把日志4复制到S2、S3成功，立马宣布日志4已安全（即在大多数server中都有，已被committed），立即在状态机上执行日志4；这意味着日志4是已提交的，后续的leader中必须包含这条entry，我们怎么确保呢？</p>
+<p>设想，此时S1突然网络不通，需要重新选举leader，我们逐个分析：</p>
+<ul>
+<li>S5绝不可能成为leader，因为其他server都处于term2，它还在term1，即其他server的lastTerm更大，会直接拒绝给它投票；</li>
+<li>S4处于term2，但它若想成为leader，还需要至少2台server给它投票，而它最多只能得到S5的投票；因为其他server也都处于term2，但是log更长，即lastIndex更大，所以都会拒绝投票；因此S4加上自身最多得2票，也不可能成为leader；</li>
+<li>S2和S3都可能成为leader，例如收到来自S4、S5的投票；显然，</li>
+<li>S1也可能成为leader；（如果它网络又恢复了）</li>
+</ul>
+<p>综合以上，<strong>可能成为leader的server都含有日志4</strong> ，即新的term3时期的leader必定含有日志4；换言之，最终新leader必定含有已committed的entry；</p>
+<h3 id="平衡旧领导者neutralizing-old-leader">平衡旧领导者（Neutralizing Old Leader）</h3>
+<p>被罢免的领导者可能并不是真的死了，它可能是暂时与网络断开连接，但此时其他服务器选出新的领导者
+如果网络恢复旧的领导者重新连接，尝试提交日志条目，如何防止集群脑裂？</p>
+<blockquote>
+<p>任期（term)，回顾一下名词二，任期在这里可以防止旧领导者提交日志</p>
+</blockquote>
+<pre><code> 为了判断过时的信息，过时的leader，raft协议提出了任期(term)的概念
+- 时序被分割为多个领导者任期
+- 每个任期最多1个领导者
+- 有些任期没有领导者（如：上图上的第2个阶段选举失败，但是任期值还是会加1）
+- 每个服务器维护当前任期的值
+</code></pre><ul>
+<li>每个RPC都包含发送者(leader)的任期</li>
+<li>如果发送者的任期较旧，则RPC被拒绝，发送者将恢复为跟随者并更新其任期</li>
+<li>如果接收者的任期较旧，则会恢复为跟随者，更新其任期，然后正常处理RPC</li>
+<li>leader选举会更新大多数服务器的任期</li>
+<li>从而被罢免的服务器无法提交新的日志条目，且发现任期较旧，主动变为跟随者</li>
+</ul>
+<h2 id="问题">问题</h2>
+<p>通过两个问题，回顾一下raft协议的关键点。</p>
+<h3 id="1如何判断一个请求是否已被commit">1.如何判断一个请求是否已被commit？</h3>
+<ul>
+<li>用户发起时</li>
+<li>leader写入日志</li>
+<li>leader向follower发送日志</li>
+<li>多数follower确认收到</li>
+<li>leader写入commit日志</li>
+<li>leader向客户端返回执行成功
+答： 多数follower确认收到</li>
+</ul>
+<h3 id="续上一个问题如果一个请求在leader向客户端返回成功之前leader刚好挂掉那这个请求是否丢失">续上一个问题，如果一个请求在leader向客户端返回成功之前，leader刚好挂掉，那这个请求是否丢失？</h3>
+<p>答：这个请求不会丢失。分情况说明，假如请求了一个<code>set dboop=51ak</code> 这条命令</p>
+<ol>
+<li>如果这个请求产生的日志没产生，那么集群中没有这条记录。客户端发现执行命令一直得不到反馈，会不停的重试，直到新leader产生，响应这个请求，写入成功</li>
+<li>如果leader已写入日志，但还发送到其他节点，旧leader挂掉后，情况同1</li>
+<li>如果leader已经将日志发送给follower，因为日志是顺序传输的，那么将会在选举中产生一个日志最新的节点会成为leader一定会包含这个日志，此时数据已经写入成功，但是客户端没有收到执行成功的命令，还会再次在新Leader上执行<code>set dboop=51ak</code> 这条命令。这就会导致这条命令执行了2次，造成数据错误。所以raft协议
+<ol>
+<li>要求客户端<strong>为每个command生成一个唯一id，并在发送command时候带上该id</strong></li>
+<li>当leader记录command时，会将command的id也记录到log entry中；</li>
+<li>在leader接受command之前，会先检查log中是否有带该id的entry；</li>
+<li>leader一旦发现log中已有该id的entry，则会忽略这个new command，并将old command的结果返回给client（如果此时old command还没执行完，会等待其完成再返回）；</li>
+<li>因此，只要client不crash，我们就能实现exactly-once语义，即每个command只会被执行一次。这也是我们希望系统具有的，被叫做linearize ability。</li>
+</ol>
+</li>
+</ol>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/01/24</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/raft">raft</a> <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F">分布式</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

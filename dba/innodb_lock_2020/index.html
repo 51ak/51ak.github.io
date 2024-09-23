@@ -1,0 +1,467 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL的innodb中Next-Key锁的解析| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL的innodb中Next-Key锁的解析</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#0概念介绍">0.概念介绍</a></li>
+    <li><a href="#1innodb锁类型">1.InnoDB锁类型</a></li>
+    <li><a href="#2next-key锁">2.Next-Key锁</a>
+      <ul>
+        <li><a href="#21-记录锁-record-locks">2.1 记录锁 Record Locks</a></li>
+        <li><a href="#21-间隙锁-gap-locks">2.1 间隙锁 Gap Locks</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-事务隔离级别-序列化-serializable">3 事务隔离级别: 序列化 SERIALIZABLE</a></li>
+    <li><a href="#4-事务隔离级别-可重复读-repeatable-read">4 事务隔离级别: 可重复读 REPEATABLE READ</a>
+      <ul>
+        <li><a href="#41-主键或唯一索引上的锁">4.1 主键或唯一索引上的锁</a></li>
+        <li><a href="#42-非唯一聚集索引上的锁">4.2 非唯一聚集索引上的锁</a></li>
+      </ul>
+    </li>
+    <li><a href="#结论">结论</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <blockquote>
+<p>去年的某个时候，一个朋友在微信上问我MySQL间隙锁的案例，当时正在赶一个项目，没来得及看那个CASE，后来找不到了。昨天看到这篇jahfer写的博客:
+<a href="https://jahfer.com/posts/innodb-locks/">https://jahfer.com/posts/innodb-locks/</a>
+觉得在介绍Next-Key锁的这方面很有创意的使用了自制的动画（非常简陋的动画 没啥用，我换成了截图做标记了)，不管是创意还是内容都值得一看</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>作者:jahfer</li>
+<li>翻译:51ak</li>
+</ul>
+</blockquote>
+<p>&ndash;翻译全文如下：</p>
+<p><em>最近，我在调试MySQL高并发问题时有机会深入理解了InnoDB的锁定机制，这篇文章是我学习innodb锁行为的一个总结。</em></p>
+<h2 id="0概念介绍">0.概念介绍</h2>
+<p>InnoDB只有几个锁定概念,但是它们的使用和行为取决于当前连接正在使用的事务隔离级别</p>
+<blockquote>
+<p>…the isolation level is the setting that fine-tunes the balance between performance and reliability, consistency, and reproducibility of results when multiple transactions are making changes and performing queries at the same time. 引自MySQL官方文档  <a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-transaction-isolation-levels.html">https://dev.mysql.com/doc/refman/5.7/en/innodb-transaction-isolation-levels.html</a></p>
+</blockquote>
+<p>InnoDB一共有4种隔离级别（按最严格到最宽松的顺序）</p>
+<ul>
+<li>SERIALIZABLE 序列化</li>
+<li>REPEATABLE READ (default) 可重复读</li>
+<li>READ COMMITTED 读已提交</li>
+<li>READ UNCOMMITTED 读未提交</li>
+</ul>
+<p>每种隔离级别下的锁行为差异非常大，而我们现在只分析前两种隔离级别（SERIALIZABLE，REPEATABLE READ),首先让我们创建一个<code>book</code> 表。</p>
+<pre><code>CREATE TABLE `books` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `author_id` bigint(20) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `borrowed` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `idx_books_on_author_id` (`author_id`)
+);
+
+INSERT INTO `books` (`author_id`, `title`)
+VALUES
+  (101, &quot;The Pragmatic Programmer&quot;),
+  (102, &quot;Clean Code&quot;),
+  (102, &quot;The Clean Coder&quot;),
+  (104, &quot;Ruby Under a Microscope&quot;);
+</code></pre><p>这张表像这样</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th style="text-align:center">author_id</th>
+<th style="text-align:center">title</th>
+<th style="text-align:right">borrowed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td style="text-align:center">101</td>
+<td style="text-align:center">The Pragmatic Programmer</td>
+<td style="text-align:right">FALSE</td>
+</tr>
+<tr>
+<td>2</td>
+<td style="text-align:center">102</td>
+<td style="text-align:center">Clean Code</td>
+<td style="text-align:right">FALSE</td>
+</tr>
+<tr>
+<td>3</td>
+<td style="text-align:center">102</td>
+<td style="text-align:center">The Clean Coder</td>
+<td style="text-align:right">FALSE</td>
+</tr>
+<tr>
+<td>4</td>
+<td style="text-align:center">104</td>
+<td style="text-align:center">Ruby Under a Microscope</td>
+<td style="text-align:right">FALSE</td>
+</tr>
+</tbody>
+</table>
+<h2 id="1innodb锁类型">1.InnoDB锁类型</h2>
+<p>在深入研究细节之前，我们应该从一个重要的概念开始，这个概念适用于我们将在本文中介绍的所有锁。InnoDB锁可以分为“共享”的和“排它”的</p>
+<blockquote>
+<ul>
+<li>共享（S）锁允许持有该锁的事务select行。</li>
+<li>排它（X）锁允许持有该锁的事务update或delete行。</li>
+<li>MySQL官文档 《14.7.1 InnoDB的锁定》https://dev.mysql.com/doc/refman/5.7/en/innodb-locking.html#innodb-shared-exclusive-locks</li>
+</ul>
+</blockquote>
+<p>就像它们的名字所暗示的那样，共享锁可以由多个并发事务持有，因为它们只能读取该行。如果想执行写操作，就必须获得一个排它锁，而且每次只能由一个事务持有。当其他事务持有共享锁时，也不能加上排它锁，这就是InnoDB保证事务持有共享锁期间数据不会被改动的方法。</p>
+<p>共享(S)锁只需要在索引树上（不一定是主键索引)锁定用到的行数，这是因为读只要求在这个请求中找到的行数上是可以重复读的。
+相对的，排它（X)锁需要在受影响的记录的PrimaryKEY上加锁，这将影响所有相关的二级索引。</p>
+<h2 id="2next-key锁">2.Next-Key锁</h2>
+<p>这篇文章主要是想讲一种锁类型:<strong>Next-Key</strong>锁。不多废话，一个Next-Key锁事实上是两种锁的组合：记录锁(record lock)和间隙锁(gap lock)。</p>
+<h3 id="21-记录锁-record-locks">2.1 记录锁 Record Locks</h3>
+<p>记录锁是InnoDB里最简单的一种锁，它锁定索引上的指定行。
+例如：如果我们不想事务进行时别人更新我们用到的行，我们可以请求一个共享的读锁：</p>
+<pre><code>-- 开启一个事务
+BEGIN;
+-- 执行一个读
+SELECT *
+FROM `books`
+-- 显示的声明要持有一个共享(S) 锁
+WHERE `id` = 2 LOCK IN SHARE MODE;
+
+</code></pre><p>现在我们去查查<code>performance_schema.metadata_locks</code> 表, 将会看到一个共享读锁(SHARED_READ lock):</p>
+<pre><code>mysql&gt; SELECT OBJECT_NAME, LOCK_TYPE, LOCK_DURATION, LOCK_STATUS
+    -&gt; FROM performance_schema.metadata_locks
+    -&gt; WHERE OBJECT_NAME=&quot;books&quot;;
++-------------+-------------+---------------+-------------+
+| OBJECT_NAME | LOCK_TYPE   | LOCK_DURATION | LOCK_STATUS |
++-------------+-------------+---------------+-------------+
+| books       | SHARED_READ | TRANSACTION   | GRANTED     |
++-------------+-------------+---------------+-------------+
+1 row in set (0.00 sec)
+
+</code></pre><p>多个事务都可以持有这个锁，持有这个锁能保证没有其他连接更新WHERE id=2这本书。直到锁被释放（事务COMMIT 或者 ROLLBACK.)</p>
+<p>看完了怎么为读请求申请一个锁，现在再看看怎样申请一个写请求的锁：</p>
+<pre><code>-- 开启一个事务
+BEGIN;
+-- 执行一个读
+SELECT *
+FROM `books`
+-- 显示的声明要持有一个排它(X) 锁
+WHERE `id` = 2 FOR UPDATE;
+
+</code></pre><p>这个查询和上面的稍微有点不同，这里我们为 id=2这行记录申请了一个排它锁,意味着其他任务连接想获得这行记录的锁都要等我们这个事务进行完。因为我们给InnoDB发信号说我们要UPDATE这行记录(SQL中我们用了 <code>select ... from 表 for update </code>)，如果其他事务想更新就会产生脏数据。</p>
+<pre><code>mysql&gt; SELECT OBJECT_NAME, LOCK_TYPE, LOCK_DURATION, LOCK_STATUS
+    -&gt; FROM performance_schema.metadata_locks
+    -&gt; WHERE OBJECT_NAME=&quot;books&quot;;
++-------------+--------------+---------------+-------------+
+| OBJECT_NAME | LOCK_TYPE    | LOCK_DURATION | LOCK_STATUS |
++-------------+--------------+---------------+-------------+
+| books       | SHARED_WRITE | TRANSACTION   | GRANTED     |
++-------------+--------------+---------------+-------------+
+</code></pre><p>这里我们看到了一个<code>SHARED_WRITE </code>锁，跟上面的<code>SHARED_READ</code>不一样。需要注意的是它们同时ShARED锁，但是实际上不同的，在这里我们获得的是一个WRITE锁，这个锁实际上是也确实是排它(X)锁。为了避免说到更多的细节，这篇文章里我们不打算详细说SHARED_WRITE (IX) vs. SHARED_READ (IS) 锁的区别了，如果你好奇的话可以看这篇官方文档：https://dev.mysql.com/doc/refman/5.7/en/innodb-locking.html#innodb-intention-locks</p>
+<h3 id="21-间隙锁-gap-locks">2.1 间隙锁 Gap Locks</h3>
+<p>间隙锁是锁定索引树上的一段范围的锁。InnoDB使用这种锁定类型来确保一组选定的记录与周围的记录保持它们之间的关系。如果持有间隙锁，其他SQL语句不可以在此范围内INSERT，UPDATE或者DELETE，间隙锁可以加在表的聚集索引也可以加在聚集索引上。</p>
+<p>要理解间隙锁，我们需要了解InnoDB如何存储其索引记录。使用innodb_ruby(译者注ruby大神写的一套分析INNODB存储内容的工具)，我们可以在索引idx_books_on_author_id上分析我们的记录</p>
+<pre><code>$ innodb_space -s ./data/ibdata1 -T test/books -I idx_books_on_author_id index-recurse
+
+ROOT NODE #4: 4 records, 84 bytes
+  RECORD: (author_id=101) → (id=1)
+  RECORD: (author_id=102) → (id=2)
+  RECORD: (author_id=102) → (id=3)
+  RECORD: (author_id=104) → (id=4)
+</code></pre><p>InnoDB能够锁定任何两个相邻记录之间的空间。现在我们看看InnoDB在事务内部可以使用的所有可能的间隙锁：</p>
+<ol>
+<li>(-无穷大, (101 → 1)]</li>
+<li>((101 → 1), (102 → 2)]</li>
+<li>((102 → 2), (102 → 3)]</li>
+<li>((102 → 3), (104 → 4)]</li>
+<li>((104 → 4), +无穷大)</li>
+</ol>
+<p>来,凑近点,我们看看第3个范围<code>3. ((102 → 2), (102 → 3)]</code></p>
+<p>这里我用了逗号分隔符号,意思是左侧的102-&gt;2不包含的右侧的102-&gt;3是包含在范围里的,(大于和小于等于).</p>
+<p>现在我们持有了这个间隙锁,任何其他的连接尝试想在这个范围内(author_id &gt;= 102 and an 2 &lt; id &lt;= 3.)执行INSERT, UPDATE or DELETE 都需要等我们.</p>
+<p><img src="https://www.dboop.com/img/gap_lock_01.png" alt="Gaplocks" title="Gap locks"></p>
+<p>在深入理解了这些锁概念以后,让我们看看这些锁在实际查询中的使用方式</p>
+<h2 id="3-事务隔离级别-序列化-serializable">3 事务隔离级别: 序列化 SERIALIZABLE</h2>
+<p>对于在SERIALIZABLE事务隔离级别执行的SQL语句，必须锁定查询到的每个记录，以确保其他连接不可以修改正在select的记录.这是最严格的隔离级别，它的锁定确保可以安全地对并发事务进行重新排序，而不会相互影响。</p>
+<blockquote>
+<p>For SERIALIZABLE level, the search sets shared next-key locks on the index records it encounters. ~摘自My官方文档 <a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-locks-set.html">14.7.3 Locks Set by Different SQL Statements in InnoDB</a></p>
+</blockquote>
+<p>如果SELECT查询使用的是唯一索引（例如PRIMARY KEY），则无需使用间隙锁，因为它可以保证它仅影响这一条记录。</p>
+<blockquote>
+<p>However, only an index record lock is required for statements that lock rows using a unique index to search for a unique row. ~摘自My官方文档 <a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-locks-set.html">14.7.3 Locks Set by Different SQL Statements in InnoDB</a></p>
+</blockquote>
+<h2 id="4-事务隔离级别-可重复读-repeatable-read">4 事务隔离级别: 可重复读 REPEATABLE READ</h2>
+<p>通常我们的应用程序并不需要SERIALIZABLE这么强的约束(代价太大)，因此InnoDB使用的默认事务隔离级别为REPEATABLE READ。事务在REPEATABLE READ任何时间执行select，结果都像是它们是在与此事务中的第一次读取相同的时间点（“快照”）。这样就可以在一个事务中的不同时间点对数据库进行一致的查看，而不会遇到“幻像读”：在后续读取中出现或消失的记录。</p>
+<p>InnoDB唯一无法使用快照记录的情景是当它SELECT的数据是为了UPDATE或DELETE。在这个情况下，InnoDB必须从数据库中读取最新版本，以防止它意外地针对过时的值进行操作。尽管我们不需要锁定查询时遇到的每条记录（如SERIALIZABLE读取操作一样），但我们必须防止其他连接修改对我们当前连接的查询产生影响。</p>
+<p>分情况来说:</p>
+<h3 id="41-主键或唯一索引上的锁">4.1 主键或唯一索引上的锁</h3>
+<p>最简单的锁是主键上的查询</p>
+<pre><code>-- 开启一个事务
+BEGIN;
+
+-- 执行一个SQL
+UPDATE `books`
+SET `borrowed` = TRUE
+WHERE `id` = 3;
+
+</code></pre><p>在REPEATABLE READ隔离级别下，Innodb确保此更新可重复读取的；因为它会阻止其他任何语句影响结果。虽然对这个事务来说是开放的，没有其他连接可以INSERT，UPDATE或者DELETE这条记录的值 。</p>
+<p>当使用唯一索引（例如表的主键）时，InnoDB不需要在所选记录的左侧或右侧加间隔锁，因为可以确保查询匹配的值与所有其他值都不相同。在此示例中，我们只需要在匹配行上有一个记录锁，以防止其他事务在此事务打开时更新或删除它。</p>
+<p><img src="https://www.dboop.com/img/primarykey_recordlock.png" alt="primarykeyrecordlock" title="primary key recordlock"></p>
+<p>让我们保持上面的事务一直打开，再开启一下事务执行以下SQL将会一直等待</p>
+<pre><code>UPDATE `books`
+SET `borrowed` = TRUE
+WHERE `id` = 3;
+-- this waits until the first transaction exits,
+-- as `id = 3` conflicts with the existing lock
+</code></pre><p>作为对比，我们可以很轻松的插入或修改一条不相关的记录</p>
+<pre><code>INSERT INTO `books` (`author_id`, `id`, `title`)
+VALUES (103, 5, &quot;Database Internals&quot;);
+-- success! `id = 5` doesn’t conflict with our UPDATE
+</code></pre><p>InnoDB时，偏向于使用唯一值（例如上面SQL的id）。在以下情况下，InnoDB确定记录是唯一的：</p>
+<ol>
+<li>该纪录select的是PRIMARY KEY，或&hellip;</li>
+<li>该记录select的是UNIQUE索引，select字段时所有字段都在索引上</li>
+</ol>
+<p>因为PRIMARY KEY值本质上必然是唯一的。如果用于搜索的索引符合“唯一”的条件，则无需使用间隙锁定。这是因为InnoDB可以确定不会插入任何可能冲突的值</p>
+<h3 id="42-非唯一聚集索引上的锁">4.2 非唯一聚集索引上的锁</h3>
+<p>如果该语句正在select不能保证唯一的记录，则它必须使用间隙锁来确保可以重复执行这个SQL都返回相同结果（于是就可以REPEATABLE READ）。这是 <code>next-key</code> 锁定的作用</p>
+<blockquote>
+<p>If one session has a shared or exclusive lock on record R in an index, another session cannot insert a new index record in the gap immediately before R in the index order.  ~摘自My官方文档 <a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-locking.html#innodb-next-key-locks">14.7.1 InnoDB Locking</a></p>
+</blockquote>
+<p>我们再回过头来看看我们一开始创建的表。现在的样子</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th style="text-align:center">author_id</th>
+<th style="text-align:center">title</th>
+<th style="text-align:right">borrowed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td style="text-align:center">101</td>
+<td style="text-align:center">The Pragmatic Programmer</td>
+<td style="text-align:right">FALSE</td>
+</tr>
+<tr>
+<td>2</td>
+<td style="text-align:center">102</td>
+<td style="text-align:center">Clean Code</td>
+<td style="text-align:right">FALSE</td>
+</tr>
+<tr>
+<td>3</td>
+<td style="text-align:center">102</td>
+<td style="text-align:center">The Clean Coder</td>
+<td style="text-align:right">FALSE</td>
+</tr>
+<tr>
+<td>4</td>
+<td style="text-align:center">104</td>
+<td style="text-align:center">Ruby Under a Microscope</td>
+<td style="text-align:right">FALSE</td>
+</tr>
+<tr>
+<td>5</td>
+<td style="text-align:center">103</td>
+<td style="text-align:center">Database Internals</td>
+<td style="text-align:right">FALSE</td>
+</tr>
+</tbody>
+</table>
+<pre><code>$ innodb_space -s ./data/ibdata1 -T test/books -I idx_books_on_author_id index-recurse
+
+ROOT NODE #4: 5 records, 105 bytes
+  RECORD: (author_id=101) → (id=1)
+  RECORD: (author_id=102) → (id=2)
+  RECORD: (author_id=102) → (id=3)
+  RECORD: (author_id=103) → (id=5)
+  RECORD: (author_id=104) → (id=4)
+</code></pre><p>现在，我们可以执行一条UPDATE语句，我们观察该语句在idx_books_on_author_id索引上的锁定行为</p>
+<pre><code>-- open transaction
+BEGIN;
+-- issue statement
+UPDATE `books`
+SET `borrowed` = TRUE
+-- select record by a non-unique value as
+-- idx_books_on_author_id is not a UNIQUE index
+WHERE `author_id` = 103;
+
+</code></pre><p>由于使用了非唯一值（WHERE author_id = 103）select了一条记录，因此InnoDB必须获得两个锁：</p>
+<ol>
+<li>聚集索引上的记录锁，其中id = 5（这是记录的主键，因为它的author_id = 103）</li>
+<li>idx_books_on_author_id索引树上的 next-key锁。where author_id = 103 如下图所示
+<img src="https://www.dboop.com/img/nextkeylock.png" alt="nextkeylock" title="nextkeylock"></li>
+</ol>
+<p>InnoDB必须确保在打开此事务时不会插入任何其他可能满足此搜索结果的记录。为此，InnoDB在记录的两边加上间隙锁。如果您还记得有关“Next-key”的部分，您可能会记得Next-key锁实际上由两种锁类型组成：记录锁(record locks)和间隙锁(Gap locks)。</p>
+<p>在这个示例中，将使用3个锁idx_books_on_author_id来产生<code>next-key</code>锁：</p>
+<ol>
+<li>一个记录锁：(author_id=103) → (id=5)</li>
+<li>一个间隙锁：当前记录103|5 到最近的最小值102|3 这个范围</li>
+<li>一个间隙锁：当前记录103|5 到最近的最大值104|4 这个范围</li>
+</ol>
+<p>非常重要的是要理解 ，InnoDB只需要锁定锁定行周围的间隙，下面这样的SQL就被阻塞住了</p>
+<pre><code>INSERT INTO `books` (`author_id`, `id`, `title`)
+VALUES (102, 6, &quot;Clean Architecture&quot;);
+-- (author_id=102) → (id=6) 触发了我们上面提的3个锁的第2个
+
+</code></pre><p>然后这个SQL不会和我们的锁产生冲突。因为它是104|6</p>
+<pre><code>INSERT INTO `books` (`author_id`, `id`, `title`)
+VALUES (104, 6, &quot;Clean Architecture&quot;);
+-- (author_id=104) → (id=6) falls outside
+-- of our gap lock range
+
+</code></pre><p>在这个案例中，MySQL并没有严格锁定author_id值的范围（本来是102– 104），而是索引中author_id和的PRIMARY KEY的组合范围。</p>
+<p>使用索引两端的值时，会出现特别令人惊讶的情况。当在索引的第一条或最后一条记录上获取<code>next-key</code>锁且搜索不符合唯一性标准时，InnoDB必须将所有值锁定为正或负无穷大，以确保没有其他记录与该记录在表中的位置重叠。</p>
+<blockquote>
+<p>For the last interval, the next-key lock locks the gap above the largest value in the index and the “supremum” pseudo-record having a value higher than any value actually in the index.  ~摘自My官方文档 <a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-locking.html#innodb-next-key-locks">14.7.1 InnoDB Locking</a></p>
+</blockquote>
+<p>让我们回到我们的表,打开一个新的事务看看实际效果：</p>
+<pre><code>-- 开启一个事务
+BEGIN;
+-- 执行一个SQL
+UPDATE `books`
+SET `borrowed` = TRUE
+WHERE `author_id` = 104;
+
+--注意这里用到了最大的author_id 104
+</code></pre><p><img src="https://www.dboop.com/img/netxtkeylock2.png" alt="netxtkeylock2" title="netxtkeylock2"></p>
+<p>在这种情况下，<code>next-key</code>锁拥有独占的写访问idx_books_on_author_id从(author_id=103) → (id=5)一路到无穷大！</p>
+<p>因为author_id索引中没有&gt;104的记录，InnoDB需要将GAP加到无穷大上，顼在这个事务会阻止所有包含author_id&gt;104的INSERT.我的天啊 OOPS!</p>
+<pre><code>INSERT INTO `books` (`author_id`, `title`)
+VALUES (153, &quot;A Series of Unfortunate Events&quot;);
+-- oh no! 这个SQL被上面的事务 104 &lt; 153 &lt; +Infinity GAP锁阻塞了
+
+</code></pre><p>这可能是一个特别令人讨厌的问题，因为在索引的尾部进行插入并不罕见。只要您确定要通过唯一索引或主键进行SELECT，就不必担心这种类型的锁争用。</p>
+<h2 id="结论">结论</h2>
+<p>希望您发现对InnoDB锁定机制的这种探索很有趣！如果您正在寻找InnoDB锁定的更广泛或更详尽的概述，我强烈建议您看看 Bill Karwin撰写的《InnoDB Locking with Stick Figures》。</p>
+<p>如果您喜欢这些文字，那么我有一个更新很慢的博客系列，我试图在MySQL之前构建一个无锁的，忽略缓存的B树作为快速缓存。我不能保证您会对这系列的文章都满意，但是您可能只是和我一起学习了一些东西。</p>
+<p>** 51ak 翻译于 2021年01月05日**</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">jahfer</h4>
+<h4 class="date">2021/01/05</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/innodb">innodb</a> <a href="/categories/%E9%94%81">锁</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E7%BF%BB%E8%AF%91">翻译</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

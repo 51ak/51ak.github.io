@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>常用脚本_scp和rsync| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">常用脚本_scp和rsync</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#scp">scp</a>
+      <ul>
+        <li><a href="#从本地复制到远程">从本地复制到远程</a></li>
+        <li><a href="#从远程复制到本地">从远程复制到本地</a></li>
+      </ul>
+    </li>
+    <li><a href="#rsync">rsync</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="scp">scp</h2>
+<h3 id="从本地复制到远程">从本地复制到远程</h3>
+<p>在本地服务器上将/data/mysqlbackup目录下所有的文件传输到服务器10.0.0.2的/data/mysqlbackup目录下，命令为：</p>
+<p>scp -r /data/mysqlbackup <a href="mailto:root@10.0.0.2">root@10.0.0.2</a>:/data/mysqlbackup</p>
+<h3 id="从远程复制到本地">从远程复制到本地</h3>
+<p>在本地服务器上操作，将服务器10.0.0.2上/data/mysqlbackup/目录下所有的文件全部复制到本地的/root目录下，命令为：
+scp -r <a href="mailto:root@10.0.0.2">root@10.0.0.2</a>:/data/mysqlbackup /root</p>
+<h2 id="rsync">rsync</h2>
+<pre><code>
+time=$(date '+%Y-%m-%d-%H-test1_binlog.0001')
+time1=$(date '+%Y-%m-%d-%H-test2_binlog.0001')
+#cp /data/mysqlbackup/log/test1_binlog.0001 /data/mysqlbackup/log/$time
+#cp /data/mysqlbackup/log/test2_binlog.0001 /data/mysqlbackup/log/$time1
+/usr/bin/rsync -av --bwlimit=10000 /data/mysqlbackup/log/test1_binlog.0001 /data/mysqlbackup/log/$time
+/usr/bin/rsync -av --bwlimit=10000  /data/mysqlbackup/log/test2_binlog.0001 /data/mysqlbackup/log/$time1
+cat /dev/null &gt; /data/mysqlbackup/log/test1_binlog.0001
+cat /dev/null &gt; /data/mysqlbackup/log/test2_binlog.0001
+find /data/mysqlbackup/log/ -ctime +5 -exec rm -f {} \;
+
+##剪切参考，IO速度限制的cp和mv(限速1024 KB/s)
+##cp: rsync --bwlimit=1024 {src} {dest}
+##mv: rsync --bwlimit=1024 --remove-source-files {src} {dest}
+
+
+##使用ssh方式rsync，不用服务端，简单方便，SSH需要认证，就不用每次输入密码
+#ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa -q -b 2048 -C &quot;root@test&quot;
+#cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
+#chmod 600 ~/.ssh/authorized_keys
+
+rsync -av --exclude=.gitlab-ci.yml --exclude=log --exclude=logs --delete /root/test 192.168.1.119:/root/test1
+
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2021/05/15</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/linux">linux</a> <a href="/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC">常用脚本</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%9F%BA%E7%A1%80">基础</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

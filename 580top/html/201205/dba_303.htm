@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Oracle10安装apex3.2步骤</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="1.安装oracle10，我安装的是release10.1.0.2.0，可以在安装时建库，也可以安装后通过dbca创建一个简单数据库<br/>2.安装companion光盘中的第三项，oracledatabase10gcompanionproducts10.2.0.1.0，和数据库安装在不同的目录下<br/>3.下载apex3.2，解压缩<br/>4.先安装数据库，Oracle10安装apex3.2步骤" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a href="../Oracle/l_7_1.htm" class="hover"　title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../Oraclezhishi/l_8_1.htm" title="Oracle基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../Oracleha/l_9_1.htm" title="Oracle高可用性和HA">高可用性和HA</a>|</li><li><a  href="../Oracleyouhua/l_10_1.htm" title="Oracle性能与优化">性能与优化</a>|</li><li><a  href="../Oracleguzhang/l_11_1.htm" title="Oracle故障与解决">故障与解决</a>|</li><li><a  href="../Oraclebi/l_12_1.htm" title="Oracle商业应用">Oracle商业应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../Oracle/l_7_1.htm">Oracle</a>&nbsp;&gt;&nbsp;<a href="../Oraclezhishi/l_8_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>Oracle10安装apex3.2步骤</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   1.安装<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>10，我安装的是Release 10.1.0.2.0，可以在安装时建库，也可以安装后通过dbca创建一个简单数据库<br />　　2.安装companion光盘中的第三项，<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a> database 10g companion products 10.2.0.1.0，和数据库安装在不同的目录下<br />　　3.下载apex 3.2，解压缩<br />　　4.先安装数据库，后安装httpserver的话，环境变量可能会有点问题，可以先置一下环境变量<br />set <a href="../../html/Oracle/l_7_1.htm" title="ORACLE" >ORACLE</a>_HOME=D:\<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>set&nbsp;J2EE_HOME=%<a href="../../html/Oracle/l_7_1.htm" title="ORACLE" >ORACLE</a>_HOME%\j2ee\homeset <a href="../../html/Oracle/l_7_1.htm" title="ORACLE" >ORACLE</a>_SID=billset PATH=%<a href="../../html/Oracle/l_7_1.htm" title="ORACLE" >ORACLE</a>_HOME%\jdk\bin;%<a href="../../html/Oracle/l_7_1.htm" title="ORACLE" >ORACLE</a>_HOME%\bin;%PATH%set LD_LIBRARY_PATH=%<a href="../../html/Oracle/l_7_1.htm" title="ORACLE" >ORACLE</a>_HOME%\lib;%<a href="../../html/Oracle/l_7_1.htm" title="ORACLE" >ORACLE</a>_HOME%\ctx\lib&nbsp;　　路径要根据安装实际情况修改<br />　　4.进入apex目录，以sys登录sqlplus，执行 @apexins SYSAUX SYSAUX TEMP /i/<br />　　SYSAUX SYSAUX TEMP 是指定的三项表空间，/i/是指定的图片的虚拟路径<br />　　以前版本的命令参数是 @apexins PASSWD SYSAUX SYSAUX TEMP /i/，3.2版做了修改，passwd用@apxchpwd.sql单独修改。<br />　　5.安装完成后把apex下的images目录拷贝到httpserv下的\Apache\Apache目录下<br />　　6.配制httpserv下的Apache\modplsql\conf\dads.conf，典型的配制如下#<br /># ============================================================================# mod_plsql DAD Configuration File&nbsp;# ============================================================================# 1. Please refer to dads.README for a description of this file&nbsp;# ============================================================================Alias /i/ "D:/<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>http/Apache/Apache/images/" ##图片虚拟路径和实际路径AddType text/xml&nbsp;xblAddType text/x-component htc&lt;Location /pls/apex&gt;Order deny,allowPlsqlDocumentPath docsAllowOverride&nbsp;NonePlsqlDocumentProcedure wwv_flow_file_manager.process_downloadPlsqlDatabaseConnectString localhost:1521:bill ServiceNameFormat ##数据库sidPlsqlNLSLanguage "SIMPLIFIED CHINESE_CHINA.AL32UTF8"PlsqlAuthenticationMode BasicSetHandler pls_handlerPlsqlDocumentTablename wwv_flow_file_objects$PlsqlDatabaseUsername APEX_PUBLIC_USERPlsqlDefaultPage apexPlsqlDatabasePassword <a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a> ##数据库APEX_PUBLIC_USER用户密码Allow from all&lt;/Location&gt;&nbsp;　　7.在可以访问之前还有些要做的<br />　　（1）lstrctl启动监听<br />　　（2）数据库APEX_PUBLIC_USER用户解锁<br />　　（3）修改APEX_PUBLIC_USER用户密码和配制文件一致8.启动httpserv，可以访问了http://localhost：7777/pls/apex<br />　　8.启动httpserv，可以访问了<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

@@ -1,0 +1,757 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL的drop/truncate Table影响分析和最佳实践| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL的drop/truncate Table影响分析和最佳实践</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#0前言">0.前言</a></li>
+    <li><a href="#1drop-table-的风险和避免方法">1.drop table 的风险和避免方法</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#2一组drop表的测试">2.一组drop表的测试</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#3什么是mysql的lazy-drop-table">3.什么是MySQL的lazy drop table</a>
+      <ul>
+        <li><a href="#名词储备">名词储备</a></li>
+        <li><a href="#什么是lazy-drop">什么是lazy drop</a></li>
+      </ul>
+    </li>
+    <li><a href="#4drop-table时innodb-buffer-pool的处理">4.drop table时innodb buffer pool的处理</a>
+      <ul>
+        <li></li>
+        <li><a href="#第二个测试的小结">第二个测试的小结</a></li>
+      </ul>
+    </li>
+    <li><a href="#drop-table-和truncate-table的风险对比">drop table 和truncate table的风险对比</a></li>
+    <li><a href="#pt-online-schema-change-在改表以后的删表是否有风险">pt-online-schema-change 在改表以后的删表是否有风险</a></li>
+    <li><a href="#源码解读">源码解读</a>
+      <ul>
+        <li><a href="#1入口函数mysql_rm_table">1.入口函数:mysql_rm_table</a></li>
+        <li><a href="#2mysql_rm_table_no_locks">2.mysql_rm_table_no_locks</a></li>
+        <li><a href="#3ha_delete_table---ha_innobasedelete_table">3.ha_delete_table &ndash;&gt;ha_innobase::delete_table</a></li>
+        <li><a href="#4row_drop_table_for_mysql-一个625行的大函数">4.row_drop_table_for_mysql 一个625行的大函数</a></li>
+        <li><a href="#5buf_lru_flush_or_remove_pages--buf_lru_drop_page_hash_for_tablespace">5.buf_LRU_flush_or_remove_pages&ndash;&gt;buf_LRU_drop_page_hash_for_tablespace</a></li>
+        <li><a href="#drop-table源码小结">drop table源码小结</a></li>
+      </ul>
+    </li>
+    <li><a href="#小结">小结</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="0前言">0.前言</h2>
+<p>MySQL上直接Drop张大表,会有什么影响，能否直接写个 drop table ; 或者 truncate table ; 甚至是delete * from 
+如果这张表足够大，比如1亿行记录，drop 的时间需要多久，期间我的MySQL是否能正常访问？</p>
+<p>首先明确一点，现在讨论的是要删掉的大表一定是没人访问的表，否则如果这张表仍然还有被高频的访问，你敢直接删那基本上就是茅坑里点灯，找死！
+如果MySQL版本是5.5.23以下，直接DROP一张大表，也是守着茅坑睡觉，离死不远。
+好，现在明确了这张表肯定没人访问了，你的MySQL版本也足够新，并不表示你就远离了茅坑，但如果这张表足够大，仍然有被崩到的风险。</p>
+<p><em>大表：我们定义为5000万行以上，或者单表文件大于100G</em></p>
+<p><em>我们要讨论的是<strong>innodb存储引擎</strong>,myisam等存储引擎，DROP 表又快又安全</em></p>
+<h2 id="1drop-table-的风险和避免方法">1.drop table 的风险和避免方法</h2>
+<h4 id="drop-table-要做的主要有3件事">Drop table 要做的主要有3件事：</h4>
+<ol>
+<li>把硬盘上的这个文件删了</li>
+<li>把内存中的这个库已经加载加来的Page删了，腾出空间</li>
+<li>把MySQL元数据字典中这张表关联信息删了</li>
+</ol>
+<h4 id="可能会引起的风险有3种">可能会引起的风险有3种：</h4>
+<ol>
+<li>MySQL长时间阻塞其他事务执行，大量请求堆积，实例假死。(锁)</li>
+<li>磁盘IO被短时间大量占用，数据库性能明显下降(IO)</li>
+<li>内存里的page大量置换，引起线程阻塞，实例假死（内存)</li>
+</ol>
+<h4 id="解决和避免的方法3种">解决和避免的方法3种：</h4>
+<ul>
+<li>io占用的问题，对这个表建一个硬链，使Drop table 表的时候并没有真的去磁盘上删那个巨大的ibd文件，事后再用truncate的方式慢慢的删除这个文件，如果是SSD盘和卡,drop table后再直接rm文件也没问题</li>
+<li>内存和IO占用的问题，升级MySQL版本
+<ul>
+<li>
+<p>MySQL 5.5.23 引入了 lazy drop table 来优化改进了drop 操作影响(改进，改进，并没有说完全消除!!!拐杖敲黑板3次)</p>
+</li>
+<li>
+<p>MySQL5.7.8 拆分了AHI共用一个全局的锁结构 btr_search_latch</p>
+</li>
+<li>
+<p>MySQL8.0 解决了truncate table 的风险</p>
+</li>
+</ul>
+</li>
+<li>道路千万行，低峰第一条。选择低峰时间段，找个夜深人静，月黑风高的时候是更好的选择。</li>
+</ul>
+<h2 id="2一组drop表的测试">2.一组drop表的测试</h2>
+<p>drop一张5亿记录的大表究竟需要多久时间，1秒？5秒？10秒？2分钟？3小时？还是一两天？你是否有过靠谱的预计</p>
+<p>先看一组新鲜的热气腾腾的，一组测试，看看不同条件下drop一张表所有的时间</p>
+<h4 id="测试环境">测试环境</h4>
+<ul>
+<li>硬件:128G内存 3T宝存卡 xfs</li>
+<li>系统:CentOS Linux release 7.6.1810</li>
+<li>MySQL version: 5.7.26</li>
+<li>innodb参数:innodb_buffer_pool_instances=1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>表文件大小</th>
+<th style="text-align:center">创建硬链ln</th>
+<th style="text-align:center">BufferPool大小</th>
+<th style="text-align:center">BufferPool繁忙</th>
+<th style="text-align:center">影响其他表的访问</th>
+<th style="text-align:right">执行drop table用时(秒)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>240G</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">64G</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">无明显影响</td>
+<td style="text-align:right">27.52</td>
+</tr>
+<tr>
+<td>240G</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">64G</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">无明显影响</td>
+<td style="text-align:right">18.56</td>
+</tr>
+<tr>
+<td>240G</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">64G</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">无明显影响</td>
+<td style="text-align:right">5.03</td>
+</tr>
+<tr>
+<td>100G</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">64G</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">无明显影响</td>
+<td style="text-align:right">12.93</td>
+</tr>
+<tr>
+<td>100G</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">4G</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">无明显影响</td>
+<td style="text-align:right">15.71</td>
+</tr>
+<tr>
+<td>100G</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">4G</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">无明显影响</td>
+<td style="text-align:right">3.08</td>
+</tr>
+</tbody>
+</table>
+<p><em>作为对比我们再DROP一张不是那么大的表</em></p>
+<table>
+<thead>
+<tr>
+<th>表文件大小</th>
+<th style="text-align:center">创建硬链ln</th>
+<th style="text-align:center">BufferPool大小</th>
+<th style="text-align:center">BufferPool繁忙</th>
+<th style="text-align:center">影响其他表的访问</th>
+<th style="text-align:right">执行drop table用时(秒)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.5G</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">64G</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">无明显影响</td>
+<td style="text-align:right">2.38</td>
+</tr>
+<tr>
+<td>2.5G</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">64G</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">无明显影响</td>
+<td style="text-align:right">0.92</td>
+</tr>
+<tr>
+<td>2.5G</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">4G</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">无明显影响</td>
+<td style="text-align:right">0.11</td>
+</tr>
+<tr>
+<td>2.5G</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">4G</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">无明显影响</td>
+<td style="text-align:right">0.15</td>
+</tr>
+<tr>
+<td>2.5G</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">64G</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">无明显影响</td>
+<td style="text-align:right">2.11</td>
+</tr>
+<tr>
+<td>2.5G</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">64G</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">无明显影响</td>
+<td style="text-align:right">0.56</td>
+</tr>
+<tr>
+<td>2.5G</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">4G</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">无明显影响</td>
+<td style="text-align:right">0.16</td>
+</tr>
+<tr>
+<td>2.5G</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">4G</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">无明显影响</td>
+<td style="text-align:right">0.11</td>
+</tr>
+</tbody>
+</table>
+<p>不管是大表的DROP还是小表的DROP，我们不难总结出来以下规律</p>
+<ul>
+<li>drop 越大的表，同等条件下，执行用时越长</li>
+<li>drop 表如果做了硬链，比不做硬链，执行用时要短</li>
+<li>bufferPool的大小不显著影响 drop表的用时，但是bufferPool的繁忙程度很明显的影响了执行用时，越忙的bufferPool执行Drop表用时越长</li>
+</ul>
+<p>而所有的上面试验中，我们都发现DROP一张大表，好像对线上其他的访问都没有影响，事实上是有点影响的</p>
+<ul>
+<li>我们的DROP 表操作会导致本来就很BUSY的bufferpool置换动作变得更加频繁和拥挤</li>
+<li>我们在drop 表期间，持有MDL锁，这时候show tables等命令，其实是会卡顿的</li>
+<li>如果我们没做硬链，在drop table时会在磁盘上真实的删除一个大文件，期间IO使用率会明显上升
+但是这些影响，在我们的这个压力测试环境下并没有体现（我们用Sysbench压了64个线程，QPS 大约2万左右)</li>
+<li>我们对其他表的查询还在正常进行</li>
+<li>我们的QPS/TPS指标没有明显波动</li>
+<li>我们的MySQL实例还是好好的活着
+这是为什么呢？我们执行一个这么莽撞而无理的SQL请求，似乎系统也没怎么波动，跟想象中的不一样啊！！！那是我们已经用了<em>MySQL5.7</em>了呀(拐棍连续杵地声！)，已经有了成熟的<strong>lazy drop table</strong> 方案了。</li>
+</ul>
+<h2 id="3什么是mysql的lazy-drop-table">3.什么是MySQL的lazy drop table</h2>
+<p>在第2节中我们做了各种各样的花样测试，对比了各种条件下删除表的速度，但是都没有引起MySQL访问异常，我们总结原先是因为MySQL较新的版用了lazy drop table 方法，什么是lazy drop ,它被设计用来解决什么样的问题，以及关联到的 bufferPool，lru列表 等概念是什么，想着用一些简单的描述来说清楚。如果:</p>
+<ul>
+<li>你不关注MySQL是怎么实现的lazy drop table ,你只想知道有这么个技术。</li>
+<li>你不想了解这些枯燥的名词，你只想看看真实的CASE中，MySQL删除一张大表时产生的关联影响和动作</li>
+<li>你正在蹲坑，你不想看这堆名词的解释，你怕你的脚麻了，或者产生其他更为严重的后果。</li>
+<li>你是个成熟的DBA，你对这些概念已经了解了。或者大约知道是怎么会事。</li>
+</ul>
+<p>那么，其实你可以跳过这一节，直接到第4节，看具体的CASE,在那里有一个真实的新鲜的，冒着热气的删除一个大表，在内存中前后的影响以及对应的步骤分析。</p>
+<h3 id="名词储备">名词储备</h3>
+<p>在我们理解MySQL5.5.23以后采用了lazydrop 优化后为什么对线上影响小之前，我们回顾一些基本而又重要的概念。</p>
+<ol>
+<li><strong>Page</strong> MySQL innodb是用page来组织数据和索引的,通常一个Page是16k，在内存中，在磁盘中都是一页页的Page</li>
+<li><strong>BufferPool</strong> 当我们申请一个10G内存的MySQL实例时，通常说的是给这个实例设置了10G的BufferPool ,其他也有一些内存占用，但是量太小，被我们忽略了，MySQL的DATA/INDEX加载到内存都放在这</li>
+<li><strong>Lru</strong> MySQL Lru链表里存的是pageno和指向bufferpool的指针，不同于平时我们说的缓存过期方法，MySQL的LRU链表是有新旧两个队列，37%的冷区只在1秒内3次被访问后移到热区</li>
+<li><strong>AHI</strong> InnoDB存储引擎会监控对表上各索引页的查询，如果监控到某个索引页被频繁查询，并诊断后发现如果为这一页的数据创建Hash索引会带来更大的性能提升，则会自动为这一页的数据创建Hash索引，并称之为自适应Hash索引</li>
+</ol>
+<h3 id="什么是lazy-drop">什么是lazy drop</h3>
+<p>drop table dbatest 这个SQL在对表进行删除的时候，需要清理掉buffer pool中的page，但如果表比较大，占用过多的buffer pool，清理的动作会影响到在线的业务，所以MySQL 5.5.23以后的lazy drop table，帮我们很大程度上消除了大表删除的影响。</p>
+<ul>
+<li>同步方式: 扫描lru链表，如果page属于Ｔ表，就从lru链表，hash表， flush list中删除，回收bufferpool中的block 并标记到free list中。</li>
+<li>lazy方式: 扫描lru链表
+如果page属于Ｔ表，就给page设置一个space_was_being_deleted属性，等lru置换或者checkpoint flush dirty block的时候进行清理。
+即在扫描LRU链表过程中，如果dirty page属于drop table，那么就直接从flush list中remove掉</li>
+</ul>
+<p><em>注意这里的页并没有真正的在buffer Pool中清理掉，也没有从lru中清理了，会在等LRU过期和脏页刷新时再去真实的清理。</em></p>
+<p>下面我们将从实际测试CASE中复现这个lazy drop table过程</p>
+<h2 id="4drop-table时innodb-buffer-pool的处理">4.drop table时innodb buffer pool的处理</h2>
+<p><em>下面我们开始我们第二个测试，测试过程中，用一个精心设计过的BufferPool占用情况分类报表，来展示这仅有的4G内存的BufferPooL各阶段的情况</em></p>
+<h4 id="实际drop-一张热表时innodb-buffer-pool的变化">实际:drop 一张热表时innodb buffer pool的变化</h4>
+<ul>
+<li>步骤1:
+这是一开始的bufferpool状态,我们刚建了一张同结构的dbatest_new的空表，同时执行了,<code>select count(*) from dbatest</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>信息项</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dbatest表</td>
+<td>占用700M内存，且全在LRU列表的冷区(为什么全在冷区，这里你是不是就体会到了MySQL采用变种LRU算法的良苦用心了?)</td>
+</tr>
+<tr>
+<td>sbtest1-8</td>
+<td>这8张表的访问占了剩下的内存空间大约3.2G,且在持续变化和抢占内存</td>
+</tr>
+<tr>
+<td>busy页</td>
+<td>bufferpool中的页状态，要么就是存了数据，要么就是空闲，还有一种是正在操作的页，我们标记为busy,这些页可能是正在从磁盘中读到BufferPool中，也可能是正在从BufferPool的冷热区做交换。也可能是过期被踢出.因为我们整个测试过程中都在用SYSbench在压这个实例，这个实例是个比较<strong>繁忙</strong>的实例。一直能看到Busy的PAGE.</td>
+</tr>
+</tbody>
+</table>
+<p><img src="https://www.dboop.com/img/droptable/droptable_test1.png" alt="图片alt" title="droptable_test"></p>
+<ul>
+<li>步骤2:
+执行SQL,<code>alter table dbatest rename to dbatest_old;alter table dbatest_new rename to dbatest;</code> ,可能你会问了，这个测试不是要DROP 表吗，为啥要多此一步，别慌,只是顺带着说明一件事，你先记住我们DROP表前，做了一个RENAME的操作即可</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>信息项</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>执行用时</td>
+<td>0.00s，很快就执行完了</td>
+</tr>
+<tr>
+<td>BufferPool变化</td>
+<td>原先dbatest的空间自动变成了dbatest_old的，事实上BufferPool中存的是一个叫spaceid的INT型字段，并没有存表名，所以这一步并没有改变bufferpool也没有修改LRU</td>
+</tr>
+</tbody>
+</table>
+<p><img src="https://www.dboop.com/img/droptable/droptable_test2.png" alt="图片alt" title="droptable_test"></p>
+<ul>
+<li>步骤3:
+执行SQL,<code>drop table dbatest_old;</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>信息项</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>执行用时</td>
+<td>15.80s，不是很快，但是执行期间整个sysbench没有异常，QPS/TPS保持相对稳定，没有明显的性能变差</td>
+</tr>
+<tr>
+<td>BufferPool变化</td>
+<td>bufferpool总量变化不大，但是原dbatest_old表占用的空间会显示为找不到表（事实上是spaceid找不到对应的表名)，这部分空间不会立即释放，也不能立即被其他正在运行的其他sbtest表占用，会持续很长一段时间，大约10几分钟后，才慢慢的被挤占完。想起一句话，老兵不死，只会慢慢调零。</td>
+</tr>
+</tbody>
+</table>
+<p><img src="https://www.dboop.com/img/droptable/droptable_test3.png" alt="图片alt" title="droptable_test"></p>
+<h3 id="第二个测试的小结">第二个测试的小结</h3>
+<p>在MySQL5.7.26的版本中我们做了这个删除大表的测试</p>
+<ol>
+<li>drop表时，MySQL采用了lazy drop 的方法，表删除的时候bufferPool 和lru 列表并没有立即消除原来的page和引用</li>
+<li>rename表时，并不会消除内存中的关于这个表的page,因为采用了spaceid做对应关系，跟表名没有关系，更换表名不会影响内存中表和索引的缓存</li>
+<li>drop表后的一段时间内(5-30min)，bufferPool中busy部分会显著增加（呃，事实上这个实验上看起来不明显 ，因为这个实验是在模拟一个高并发访问的SQL实例，所以一直有内存抢占，BufferPool中的busy部分一直都很大，我的另一些测试是在一个空跑的实例上做的，会看到busy部分一直停留在0直到，DROP表后，busy部分明显增加，最后Free出来大量的bufferpool空间）</li>
+</ol>
+<h2 id="drop-table-和truncate-table的风险对比">drop table 和truncate table的风险对比</h2>
+<p>MySQL8.0针对该问题说明：</p>
+<p>On a system with a large InnoDB buffer pool and  innodb_adaptive_hash_index enabled, TRUNCATE TABLE operations could  cause a temporary drop in system performance due to an LRU scan that  occurred when removing an InnoDB tables adaptive hash index entries.</p>
+<p>To address this problem, TRUNCATE TABLE now invokes the same code as  DROP TABLE and CREATE TABLE. The problem was addressed for DROP TABLE  in MySQL 5.5.23.</p>
+<p>意思为：</p>
+<p>当InnoDB buffer pool比较大和innodb_adaptive_hash_index启用时，TRUNCATE TABLE操作可能由于发生了LRU扫描，删除InnoDB表的自适应散列索引项时，导致系统性能暂时下降。为了解决这个问题，TRUNCATE TABLE现在调用与DROP TABLE相同的代码删除表。因为在MySQL 5.5.23后，DROP TABLE解决了这个问题。</p>
+<p>总结：</p>
+<p>5.5.23版本之前，采用truncate+drop方式</p>
+<p>5.5.23版本之后，采用drop方式</p>
+<p>8.0版本之后，采用truncate方式</p>
+<h2 id="pt-online-schema-change-在改表以后的删表是否有风险">pt-online-schema-change 在改表以后的删表是否有风险</h2>
+<pre><code>  41 Query	INSERT LOW_PRIORITY IGNORE INTO `tfm`.`__dbatest_new` (`id`, `k`, `c`, `pad`, `testid`) SELECT `id`, `k`, `c`, `pad`, `testid` FROM `tfm`.`dbatest` FORCE INDEX(`PRIMARY`) WHERE ((`id` &gt;= '9999187')) AND ((`id` &lt;= '10000000')) LOCK IN SHARE MODE /*pt-online-schema-change 26396 copy nibble*/
+  41 Query	SHOW WARNINGS
+  41 Query	SHOW GLOBAL STATUS LIKE 'Threads_running'
+  41 Query	SHOW VARIABLES LIKE 'version%'
+  41 Query	SHOW ENGINES
+  41 Query	SHOW VARIABLES LIKE 'innodb_version'
+  41 Query	ANALYZE TABLE `tfm`.`__dbatest_new` /* pt-online-schema-change */
+  41 Query	RENAME TABLE `tfm`.`dbatest` TO `tfm`.`_dbatest_old`, `tfm`.`__dbatest_new` TO `tfm`.`dbatest`
+  41 Query	DROP TABLE IF EXISTS `tfm`.`_dbatest_old`
+  41 Query	DROP TRIGGER IF EXISTS `tfm`.`pt_osc_tfm_dbatest_del`
+  41 Query	DROP TRIGGER IF EXISTS `tfm`.`pt_osc_tfm_dbatest_upd`
+  41 Query	DROP TRIGGER IF EXISTS `tfm`.`pt_osc_tfm_dbatest_ins`
+  41 Query	SHOW TABLES FROM `tfm` LIKE '\_\_dbatest\_new'
+  42 Quit	
+  41 Quit	
+</code></pre><h2 id="源码解读">源码解读</h2>
+<p><em>这部分我们从DROP TABLE 在MysQL和innodb的源码上跟踪下</em></p>
+<p>嵌套了多层</p>
+<ul>
+<li>mysql_rm_table</li>
+<li>&mdash;-&gt;mysql_rm_table_no_locks</li>
+<li>&mdash;&mdash;&ndash;&gt;</li>
+</ul>
+<h3 id="1入口函数mysql_rm_table">1.入口函数:mysql_rm_table</h3>
+<pre><code>bool mysql_rm_table(THD *thd,TABLE_LIST *tables, my_bool if_exists,
+                    my_bool drop_temporary)
+{
+ //变量定义
+ //准备日志
+ //判断临时表
+ //从tdc里移除信息
+ //加锁
+//以上情节，在我们想drop表的时候，理论上不会有业务访问，移TDC等都不会有阻塞，可以忽略
+  error= mysql_rm_table_no_locks(thd, tables, if_exists, drop_temporary,
+                                 false, false);
+  my_ok(thd);
+
+}
+</code></pre><p>我们继续跟到下一个</p>
+<h3 id="2mysql_rm_table_no_locks">2.mysql_rm_table_no_locks</h3>
+<pre><code>int mysql_rm_table_no_locks(THD *thd, TABLE_LIST *tables, bool if_exists, bool drop_temporary, bool drop_view, bool dont_log_query)
+{
+  
+  //定义了一堆的变量。。
+
+    //定义了变量。。和加了一些assert断言检查 
+    if ((drop_temporary &amp;&amp; if_exists) || !error)
+    {
+       //临时表 ，这里我们不看
+    }
+    else if (!drop_temporary)
+    {
+      non_temp_tables_count++;
+      // 检查表锁，wait_while_table_is_used
+      if (thd-&gt;locked_tables_mode)
+      {
+       // 检查表锁，wait_while_table_is_used
+      }
+    
+    }
+
+    error= 0;
+    if (drop_temporary  ((access(path, F_OK) &amp;&amp; ha_create_table_from_engine(thd, db, alias)) ||   (!drop_view &amp;&amp;  dd_frm_type(thd, path, &amp;frm_db_type) != FRMTYPE_TABLE)))
+    {
+      // 这是删除临时表的一种特殊情况
+    }
+    else
+    {
+      char *end;
+      if (frm_db_type == DB_TYPE_UNKNOWN)
+      {
+        dd_frm_type(thd, path, &amp;frm_db_type);
+        DBUG_PRINT(&quot;info&quot;, (&quot;frm_db_type %d from %s&quot;, frm_db_type, path));
+      }
+      table_type= ha_resolve_by_legacy_type(thd, frm_db_type);
+      if (frm_db_type != DB_TYPE_UNKNOWN &amp;&amp; !table_type)
+      {
+        my_error(ER_STORAGE_ENGINE_NOT_LOADED, MYF(0), db, table-&gt;table_name);
+        wrong_tables.mem_free();
+        error= 1;
+        goto err;
+      }
+      // Remove extension for delete
+      *(end= path + path_length - reg_ext_length)= '\0';
+      DBUG_PRINT(&quot;info&quot;, (&quot;deleting table of type %d&quot;,
+                          (table_type ? table_type-&gt;db_type : 0)));
+      error= ha_delete_table(thd, table_type, path, db, table-&gt;table_name,
+                             !dont_log_query);
+
+      //下面的一堆错误处理，我们也不用管了，继续跟到 ha_delete_table
+}
+</code></pre><h3 id="3ha_delete_table---ha_innobasedelete_table">3.ha_delete_table &ndash;&gt;ha_innobase::delete_table</h3>
+<pre><code>int ha_innobase::delete_table(
+/*======================*/
+	const char*	name)	/*!&lt; in: table name */
+{
+	dberr_t	err;
+	THD*	thd = ha_thd();
+	char	norm_name[FN_REFLEN];
+	trx_t*	trx = innobase_trx_allocate(thd);
+	ulint	name_len = strlen(name);
+	ut_a(name_len &lt; 1000);
+	/* Either the transaction is already flagged as a locking transaction
+	or it hasn't been started yet. */
+	ut_a(!trx_is_started(trx) || trx-&gt;will_lock &gt; 0);
+
+	/* We are doing a DDL operation. */
+	++trx-&gt;will_lock;
+
+	/* Drop the table in InnoDB */
+
+	err = row_drop_table_for_mysql(
+		norm_name, trx, thd_sql_command(thd) == SQLCOM_DROP_DB,
+		true, handler);
+
+	if (err == DB_TABLE_NOT_FOUND) {
+  //一堆错误处理....
+</code></pre><h3 id="4row_drop_table_for_mysql-一个625行的大函数">4.row_drop_table_for_mysql 一个625行的大函数</h3>
+<p>一路跟着足迹我们来到了这个巨大的函数,这个函数逻辑很复杂,,把它从上到下拆成这几块来看</p>
+<ol>
+<li>row_mysql_lock_data_dictionary <em>加锁，锁住整个数据字典</em></li>
+<li>trx_start_for_ddl <em>开启一个事务</em></li>
+<li>row_add_table_to_background_drop_list</li>
+<li>拼接了一个巨大的SQL，用来从系统表中清理信息</li>
+<li>row_drop_table_from_cache <em>清缓存</em></li>
+<li>row_drop_single_table_tablespace <em>删除表空间</em>
+<ul>
+<li>这个又会调用 fil_delete_tablespace</li>
+<li>buf_LRU_flush_or_remove_pages <em>这一步就是最容易出问题的地方，清理lru列表和缓存</em></li>
+<li>os_file_delete 最终unlink文件</li>
+</ul>
+</li>
+<li>row_mysql_unlock_data_dictionary <em>释放锁</em>
+简化以后的代码如下：</li>
+</ol>
+<pre><code class="language-row_drop_table_for_mysql(" data-lang="row_drop_table_for_mysql(">{
+ 
+ //1.
+      row_mysql_lock_data_dictionary(trx); 
+      locked_dictionary = true;
+      nonatomic = true;
+ 
+//2.
+  /* This function is called recursively via fts_drop_tables(). */
+  if (!trx_is_started(trx)) {
+
+    if (!dict_table_is_temporary(table)) {
+      trx_start_for_ddl(trx, TRX_DICT_OP_TABLE);
+    } else {
+      trx_set_dict_operation(trx, TRX_DICT_OP_TABLE);
+    }
+
+//3.
+    row_add_table_to_background_drop_list(table-&gt;name.m_name);
+  
+//4.  
+    sql = &quot;PROCEDURE DROP_TABLE_PROC () IS\n&quot;
+      &quot;sys_foreign_id CHAR;\n&quot;
+      &quot;table_id CHAR;\n&quot;
+      &quot;index_id CHAR;\n&quot;
+      &quot;foreign_id CHAR;\n&quot;
+      &quot;space_id INT;\n&quot;
+      &quot;found INT;\n&quot;;
+   //。。。这里省了很多SQL拼接语句
+
+    sql +=  &quot;DELETE FROM SYS_VIRTUAL\n&quot;
+      &quot;WHERE TABLE_ID = table_id;\n&quot;;
+
+    sql += &quot;END;\n&quot;;
+
+    err = que_eval_sql(info, sql.c_str(), FALSE, trx);
+ 
+//5.
+    /* Free the dict_table_t object. */
+    err = row_drop_table_from_cache(tablename, table, trx);
+    if (err != DB_SUCCESS) {
+      break;
+    }
+
+//6.
+    /* We can now drop the single-table tablespace. */
+    err = row_drop_single_table_tablespace(
+      space_id, tablename, filepath,
+      is_temp, is_encrypted, trx);
+
+
+//7.
+funct_exit:
+
+  mem_heap_free(heap);  
+  ut_free(filepath);
+  trx_commit_for_mysql(trx);   
+  row_mysql_unlock_data_dictionary(trx);
+
+}
+
+</code></pre><h3 id="5buf_lru_flush_or_remove_pages--buf_lru_drop_page_hash_for_tablespace">5.buf_LRU_flush_or_remove_pages&ndash;&gt;buf_LRU_drop_page_hash_for_tablespace</h3>
+<p>我们把上一步提到的buf_LRU_flush_or_remove_pages单独拿出来说
+它加了几层判断 ，真实调用的是buf_LRU_drop_page_hash_for_tablespace</p>
+<p>在这里我们要首重注意的是：
+这一段，每当处理了num_entries&gt;=BUF_LRU_DROP_SEARCH_SIZE次以后,就会释放锁
+buf_pool_mutex_exit() 批量释放一些上页的1000个循环中收集到的ahi空间
+再buf_pool_mutex_enter(buf_pool);加锁。然后goto scan_again，再重新扫一次</p>
+<p>**这个很重要，这里的锁机制保证了在BUF_LRU_DROP_SEARCH_SIZE（这个值默认是1024）
+就会放掉持有的buf_pool mutex锁（拐棍杵地！！！，记住了吗）为什么我们说MySQL5.5.23以后改进了，因为它不长时间持有锁，它每循环1024次以后就放掉了mutex锁，而在代码里循环1024次，是非常快的，对其他进程影响就非常非常小。但是我们一路追踪代码到这，前面还持有的数据字典锁，MDL锁并没有在这里放，但是这种大锁对普通的事务冲突不大。
+**</p>
+<p>然后我们知道每个循环里只是做了个标记，并没有去删LRU和bufferpool,用了一个page_arr记录了要删除的pageno.
+然后每1024次以后，我们放掉了锁，同时把这1024个PAGE:buf_LRU_drop_page_hash_batch
+注意这里的问题
+我们要批量释放的是AHI自适应哈希这部分缓存，真正的LRU和bufferpool依然不会清理，那部分空间释放的太慢了，需要在以后让它自己过期了由master进程清理
+这里就是我们说的lazy drop逻辑
+以及我们要注意到AHI在早期版本中所有进程共用一把锁，在这里也容易产生冲突，直到5.7.8版本</p>
+<pre><code> /* 
+ Store the page number so that we can drop the hash
+    index in a batch later. */
+    page_arr[num_entries] = bpage-&gt;id.page_no();
+    ut_a(num_entries &lt; BUF_LRU_DROP_SEARCH_SIZE);
+    ++num_entries;
+
+//如果num_entries小于BUF_LRU_DROP_SEARCH_SIZE
+    if (num_entries &lt; BUF_LRU_DROP_SEARCH_SIZE) {
+      goto next_page;
+    }
+
+      /* Array full. We release the buf_pool-&gt;mutex to obey
+    the latching order. */
+    buf_pool_mutex_exit(buf_pool);
+
+    buf_LRU_drop_page_hash_batch(
+      id, page_size, page_arr, num_entries);
+
+    num_entries = 0;
+
+    buf_pool_mutex_enter(buf_pool);
+
+ goto scan_again;
+</code></pre><h3 id="drop-table源码小结">drop table源码小结</h3>
+<ol>
+<li>我们从MySQL入口处跟踪mysql_rm_table,跟踪到Innodb的buf_LRU_drop_page_hash_for_tablespace</li>
+<li>在代码中看到了MySQL优化锁占用的处理方式，每隔BUF_LRU_DROP_SEARCH_SIZE次释放一次锁，处理AHI完再加锁，多次循环的处理</li>
+<li>我们也看到了LRU和Buffer在最终的函数里并没有处理删除逻辑，而是等待LRU过期后被清理</li>
+</ol>
+<h2 id="小结">小结</h2>
+<p>如果线上核心业务线有一个几个T数据的大表，被业务认为是没有用的表需要删除 ，这里有一个最保守的最佳实践</p>
+<ol start="0">
+<li><strong>确认无人访问</strong>，这个表最近是否真的没有被访问过。</li>
+<li><strong>选择业务低峰时间</strong>,和这个实例上的库负责人沟通或者看性能监控，选一个低峰时间段。</li>
+<li><strong>检查MySQL版本</strong> MySQL5.5.23版本以上/最好是5.7.8以上</li>
+<li><strong>检查架构</strong>，检查你的高可用架构是否支持这种长SQL的并发执行。</li>
+<li><strong>做硬链</strong>,把ibd做个硬链，延后慢慢处理。这个很重要</li>
+<li><strong>rename表名</strong> 如第二个测试内容，改表名不能把内存中的表缓存清理掉，但是它能保证DROP这个表,没有其他SQL也在访问这张表，没有锁冲突。</li>
+<li><strong>闲置表或DELETE部分数据</strong> 将表重命名后放置一段时间，等缓存失效，或提前分多批次DELETE掉数据，都是可以降低影响</li>
+<li>如果mysql版本低于5.7.8.<strong>禁用innodb_adaptive_hash_index</strong> ,危险操作，注意影响</li>
+<li>如果mysql版本低于8.0.**把truncate分解成<code>create table /rename table /drop table </code> **</li>
+</ol>
+<p>&ndash;
+done</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2020/11/26</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/drop-table">drop table</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

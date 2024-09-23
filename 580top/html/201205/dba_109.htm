@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySQL数据库性能优化的关键参数</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="mysql性能优化涉及到很多方面，本文就一些mysql中的关键参数进行解说，这些参数在一定程度上是决定mysql数据库的性能关键参数。我们在进行数据库管理和开发中经常会遇到性能问题，这就涉及到mysql的性能优化。通过在网络上查找资料和笔者自己的尝试，我认为以下系统参数是比较关键的：关键参数一：back_log要求mysql能有的连接数量。当主要mysql线程在一个很短时间内得到MySQL数据库性能优化的关键参数" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识">基础知识</a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化"><span class="zc_666">性能与优化</span></a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlyouhua/l_16_1.htm">性能与优化</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>MySQL数据库性能优化的关键参数</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   MySQL性能优化涉及到很多方面，本文就一些MySQL中的关键参数进行解说，这些参数在一定程度上是决定MySQL数据库的性能关键参数。 　　我们在进行数据库管理和开发中经常会遇到性能问题，这就涉及到MySQL的性能优化。通过在网络上查找资料和笔者自己的尝试，我认为以下系统参数是比较关键的：　　关键参数一：back_log　　要求 MySQL 能有的连接数量。当主要MySQL线程在一个很短时间内得到非常多的连接请求，这就起作用，然后主线程花些时间(尽管很短)检查连接并且启动一个新线程。　　back_log 值指出在MySQL暂时停止回答新请求之前的短时间内多少个请求可以被存在堆栈中。只有如果期望在一个短时间内有很多连接，你需要增加它，换句话说，这值 对到来的TCP/ip连接的侦听队列的大小。你的操作系统在这个队列大小上有它自己的限制。 试图设定back_log高于你的操作系统的限制将是无效的。　　当你观察你的主机进程列表，发现大量 264084 | unauthenticated user | xxx.xxx.xxx.xxx | NULL | Connect | NULL | login | NULL 的待连接进程时，就要加大 back_log 的值了。默认数值是50，我把它改为500。　　关键参数二：interactive_timeout　　服务器在关闭它前在一个交互连接上等待行动的秒数。一个交互的客户被定义为对 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>_real_connect()使用 CLIENT_INTERACTIVE 选项的客户。 默认数值是28800，我把它改为7200。　　关键参数三：key_buffer_size　　索引块是缓冲的并且被所有的线程共享。key_buffer_size是用于索引块的缓冲区大小，增加它可得到更好处理的索引(对所有读和多重写)，到你 能负担得起那样多。如果你使它太大，系统将开始换页并且真的变慢了。默认数值是8388600(8M)，我的MySQL主机有2GB内存，所以我把它改为 402649088(400MB)。　　关键参数四：max_connections　　允许的同时客户的数量。增加该值增加 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d 要求的文件描述符的数量。这个数字应该增加，否则，你将经常看到 Too many connections 错误。 默认数值是100，我把它改为1024 。　　关键参数五：record_buffer　　每个进行一个顺序扫描的线程为其扫描的每张表分配这个大小的一个缓冲区。如果你做很多顺序扫描，你可能想要增加该值。默认数值是131072(128K)，我把它改为16773120 (16M)　　关键参数六：sort_buffer　　每个需要进行排序的线程分配该大小的一个缓冲区。增加这值加速ORDER BY或GROUP BY操作。默认数值是2097144(2M)，我把它改为 16777208 (16M)。　　关键参数七：table_cache　　为所有线程打开表的数量。增加该值能增加<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d要求的文件描述符的数量。MySQL对每个唯一打开的表需要2个文件描述符。默认数值是64，我把它改为512。　　关键参数八：thread_cache_size　　可以复用的保存在中的线程的数量。如果有，新的线程从缓存中取得，当断开连接的时候如果有空间，客户的线置在缓存中。如果有很多新的线程，为了提高性能可 以这个变量值。通过比较 Connections 和 Threads_created 状态的变量，可以看到这个变量的作用。我把它设置为 80。　　关键参数九：wait_timeout　　服务器在关闭它之前在一个连接上等待行动的秒数。 默认数值是28800，我把它改为7200。　　注：参数的调整可以通过修改 /etc/my.cnf 文件并重启 MySQL 实现。这是一个比较谨慎的工作，上面的结果也仅仅是我的一些看法，你可以根据你自己主机的硬件情况(特别是内存大小)进一步修改。
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

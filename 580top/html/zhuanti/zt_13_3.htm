@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>专题报道：《mysql复制》 - 数据库管理员DBA学习网站 </title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li><li><a href="../zt/l_index_1.htm" class="hover">网站专题</a></li></ul><ul class="sub"><li><a  href="../zt/l_sqlserver_1.htm" title="SQLServer专题">SQLServer</a>|</li><li><a  href="../zt/l_Oracle_1.htm" title="Oracle专题">Oracle</a>|</li><li><a  href="../zt/l_mysql_1.htm" title="MySQL专题"><span class="zc_666">MySQL</span></a>|</li><li><a  href="../zt/l_othersql_1.htm" title="其他数据库专题">其他数据库</a>|</li><li><a  href="../zt/l_yunwei_1.htm" title="系统运维专题">系统运维</a>|</li><li><a  href="../zt/l_kaoshi_1.htm" title="DBA考试专题">DBA考试</a>|</li><li><a  href="../zt/l_dbahuati_1.htm" title="DBA话题专题">DBA话题</a>|</li></ul></div></div>
+<br class="clearfloat" />
+</div>
+ 
+ 
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../zt/l_index_1.htm">网站专题</a>&nbsp;&gt;&nbsp; <a href="../zt/l_mysql_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="zt_13_1.htm">mysql复制</a></div>
+  <div id="sidebar1">
+
+  <div class='div_tab_tab'>
+	<div id="div_login_title">580top数据库:</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+ &nbsp;</div>    
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+   
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+    <div class="d9"><p>&nbsp;</p></div>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+
+
+    <div class="d3"><p>&nbsp;</p></div>
+    
+    <p>&nbsp;</p>
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  
+
+        <div id="contentdiv"> 
+            <div id="news_list">
+                   <div>
+                              <div class="d2"><h1>专题报道：《mysql复制》</h1><span>每个事务更新数据完成之前，master在二日志记录这些改变。MySQL将事务串行的写入二进制日志，即使事务中的语句都是交叉执行的。在事件写入二进制日志完成后，master通知存储引擎提交事务。下一步就是slave将master的binary log拷贝到它自己的中继日志。首先，slave开始一个工作线程——I/O线程。I/O线程在master上打开一个普通的连接，然后开始binlog dump process。Binlog dump process从master的二进制日志中读取事件，如果已经跟上master，它会睡眠并等待master产生新的事件。I/O线程将这些事件写入中继日志。</span></div><UL><LI class=list_title><SPAN>2012/1/15 23:56:16</SPAN><a href="../201201/dba_992.htm"  title="在 Percona 中配置主从的 MY SQL ">在 Percona 中配置主从的 MY SQL </a>  <LI   class="text"> innobackupex 有非常好的一致性的备份功能。它会切好并输出的日志文件和日志的位置，这个来进行 slave 的初始化非常有效。另外，它可以同时工作在 myisam 和 innodb 的引擎中。听讲使用这个 xtrabackup 来备份。锁表时间非常短，合适生产环境使用。percona 是一个 mysql 的高效的分支，目前国内使用的公司也不少。配置恢复之类有点不同，只能使用这个软件来备份<a href="../201201/dba_992.htm" title="在 Percona 中配置主从的 MY SQL ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="13" title="《mysql复制》专题">mysql复制</a></SPAN><SPAN>作者：扶 凯</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2012/3/4 17:51:43</SPAN><a href="../201203/dba_978.htm"  title="自己动手实现Multi-Master Replication ">自己动手实现Multi-Master Replication </a>  <LI   class="text">直到今天为止，mysql依然只支持一个slave从一个master复制数据，虽然也可以做到一主多备(m-&gt;s)，双主复制(mm)等架构，但是局限性依然很大。例如最近我们遇到一个问题，需要为线上的集群搭建在线延时备份，即从线上的双主集群中再延伸出一组slave，以防重要集群主备都宕机。按照现在mysql的架构，要搭建这种在线备份，只能启动相同数据的实例来实现，假设线上有128个实例在提供服务，<a href="../201203/dba_978.htm" title="自己动手实现Multi-Master Replication ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="13" title="《mysql复制》专题">mysql复制</a></SPAN><SPAN>作者：P.Linux</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2012/3/11 22:19:14</SPAN><a href="../201203/dba_974.htm"  title="主从同步失败,报错 1594 ">主从同步失败,报错 1594 </a>  <LI   class="text">mysql 的主从同步挂了,从日志中报的错如下:12030918:39:23[note]slavesqlthreadinitialized,startingreplicationinlog'mysql-bin.000004'atposition2207467,relaylog'./mysqld-relay-bin.000011'position:220761312030918:39:23[erro<a href="../201203/dba_974.htm" title="主从同步失败,报错 1594 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="13" title="《mysql复制》专题">mysql复制</a></SPAN><SPAN>作者：扶 凯</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2012/5/22 20:12:28</SPAN><a href="../201205/dba_182.htm"  title="MySQL复制功能中得到一举三得的好处">MySQL复制功能中得到一举三得的好处</a>  <LI   class="text">我们这里讲解一下mysql数据库中的复制问题，你会发现我们可以从中得到不少好处。在mysql数据库中，支持单项、异步复制。在复制过程中，一个服务器充当主服务器，而另外一台服务器充当从服务器。如下图所示。此时主服务器会将更新信息写入到一个特定的二进制文件中。并会维护文件的一个索引用来跟踪日志循环。这个日志可以记录并发送到从服务器的更新中去。当一台从服务器连接到主服务器时，从服务器会通知主服器从服务器<a href="../201205/dba_182.htm" title="MySQL复制功能中得到一举三得的好处">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="13" title="《mysql复制》专题">mysql复制</a></SPAN><SPAN>作者：网上资料</SPAN>  </LI></UL>
+                            </div>
+                            <div class="sabrosus"><a href='zt_13_1.htm' title='回到第一页'>首页</a><a href='zt_13_2.htm' title='上一页'>上一页</a><a href='zt_13_1.htm' title='第1页'>1</a><a href='zt_13_2.htm' title='第2页'>2</a><span class="current">3</span><span class="disabled">下一页</span><span class="disabled">尾页</span><input type="hidden" value="3" id="page">&nbsp;&nbsp;<strong>分页：3/3页</strong></div>         
+            </div>        
+        </div>
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+	
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

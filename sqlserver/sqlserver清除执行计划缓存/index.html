@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SQLServer清除执行计划缓存| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">SQLServer清除执行计划缓存</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#清除执行计划缓存">清除执行计划缓存</a></li>
+    <li><a href="#查看执行缓存">查看执行缓存</a></li>
+    <li><a href="#如何利用好执行计划缓存">如何利用好执行计划缓存</a>
+      <ul>
+        <li><a href="#定时任务">定时任务</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="清除执行计划缓存">清除执行计划缓存</h2>
+<pre><code> DBCC FREEPROCCACHE    --清除执行计划缓存
+</code></pre><h2 id="查看执行缓存">查看执行缓存</h2>
+<pre><code>		select * from sys.dm_exec_cached_plans
+
+</code></pre><h2 id="如何利用好执行计划缓存">如何利用好执行计划缓存</h2>
+<ul>
+<li>
+<ol>
+<li>使用存储过程，或者 sp_executesql 的方式调用会被重复使用的语句，而不要直接用 ad-hoc 语句或者 dynamic SQL 。</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>在语句里引用对象（表、视图、存储过程等），到带上它的 schema 名字，而不光是对象自己的名字。</li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li>将 数据库 Parameterization 属性设置成 Forced</li>
+</ol>
+<ul>
+<li>这个属性是开启数据库强制参数化。也就是说，对于在这个数据库下运行的大部分语句，SQL Server 都会先参数化，再运行。如果应用经常用 adhoc 的方式调用一样的语句，强制参数化可能会有所帮助</li>
+</ul>
+</li>
+<li>
+<ol start="4">
+<li>统计信息更新</li>
+</ol>
+<ul>
+<li>统计信息手工或者自动更新后，对和它有关的执行计划都不再能重用，而会产生重编译。</li>
+</ul>
+</li>
+<li>
+<ol start="5">
+<li>Create Procedure &hellip; with Recompile 选项 和 Exce &hellip; with Recomplie 选项
+在重建或者调用存储过程的时候使用 &ldquo;with Recomplie&rdquo;，会强制 Sql Server 在调用这个存储过程的时候，永远都要先编译，再运行。</li>
+</ol>
+</li>
+<li>
+<ol start="6">
+<li>用户使用了 sp_recomplie</li>
+</ol>
+</li>
+<li>
+<ol start="7">
+<li>用户在调用语句的时候，使用了 &ldquo;Keep Plan&rdquo; 或者 &ldquo;KeepFixed Plan&rdquo; 这样的查询提示</li>
+</ol>
+</li>
+</ul>
+<h3 id="定时任务">定时任务</h3>
+<ul>
+<li>注意对一些复杂的存储过程，定时清理一下（凌晨）</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2020/02/05</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/sqlserver">sqlserver</a> <a href="/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86">故障处理</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

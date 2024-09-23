@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>操作规范 on Classic</title>
+    <link>/categories/%E6%93%8D%E4%BD%9C%E8%A7%84%E8%8C%83/</link>
+    <description>Recent content in 操作规范 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 11 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E6%93%8D%E4%BD%9C%E8%A7%84%E8%8C%83/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL和Oracle数据库的一些审计要求</title>
+      <link>/dba/mysql%E5%92%8Coracle%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%B8%80%E4%BA%9B%E5%AE%A1%E8%AE%A1%E8%A6%81%E6%B1%82/</link>
+      <pubDate>Mon, 11 Mar 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/mysql%E5%92%8Coracle%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%B8%80%E4%BA%9B%E5%AE%A1%E8%AE%A1%E8%A6%81%E6%B1%82/</guid>
+      <description>MySQL的审计要求  密码是否符合复杂度要求，需要包含大小写字母、数字、字符，密码长度是否达到8位以上  show variables like &#39;%validate%&#39;; INSTALL PLUGIN validate_password SONAME &#39;validate_password.so&#39;; set global validate_password_length=12 set global ... show global variables like &#39;%validate%&#39;;  密码是否定期更换，如，密码有效期设置为90天。  set global default_password_lifetime=360;  是否具有登陆失败锁定策略，例如，登陆失败5次锁定10分钟。   INSTALL PLUGIN CONNECTION_CONTROL SONAME &#39;connection_control.so&#39;; INSTALL PLUGIN CONNECTION_CONTROL_FAILED_LOGIN_ATTEMPTS SONAME &#39;connection_control.so&#39;; show global variables like &#39;connection_%&#39; ;  是否设置超时登出功能，例如，30分钟未操作自动登出  show variables like &#39;wait%timeout%&#39; ; Oracle的审计要求 </description>
+    </item>
+    
+    <item>
+      <title>我为什么要反对DBA参与业务(出报表/改数据)</title>
+      <link>/dba/%E6%88%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%8D%E5%AF%B9dba%E6%94%B9%E6%95%B0%E6%8D%AE/</link>
+      <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%88%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%8D%E5%AF%B9dba%E6%94%B9%E6%95%B0%E6%8D%AE/</guid>
+      <description>上午有业务人员在钉钉上call我
+ A：要修改库里的一批资产的属性 我：这事为啥找我? A：有同事说数据库的事情都要找DBA。 我：DBA不直接改数据,谁跟你这样说的，拉上他一起来说说。 A：不愿意透露这个人是谁，   首先表明态度：坚决反对DBA参与(出报表/改数据)等业务行为，DBA可以提供对应的平台和工具。
+ 以下行为
+ DBA知道很复杂的业务逻辑，知道怎么把一个人客户的帐单做拆分（比业务和产品人员都知道的更清楚） 业务同学邮件发过来一批订单号，DBA同学可以帮他同时修改这些订单号关联的7，8张表的数据和状态（逻辑很复杂，但DBA知道怎么改得滴水不漏） 定期给业务人员出一些报表，这些报表是DBA用很复杂的SQL和各种临时表算出来的。逻辑很复杂，只有DBA能写出来 很多业务和产品上没来得及做的功能，业务会直接发工单给DBA，DBA写SQL帮业务临时完成 都是越界的，DBA不需要也不应该对业务“深入”的了解。  为什么要这样？ 从3个方面说：
+ DBA职责 职业分工 数据安全性  一.DBA职责 DBA的首要任务是保护数据，维护高可用访问(而不是主动修改数据)
+ 制定并实施数据库安全规范/管理规范/访问规范等。 持续改进优化高可用架构（当发生硬件/网络/软件故障时，可以快速恢复） 建立自动监控系统,及时有效处理各种报警 建立自动检查，备份，HA，远程容灾和远程备份系统 发现协助业务优化数据库的库表结构，SQL写法等，共同提升数据库性能  二.职业分工 专业的人做专业的事
+ 出数据和导报表的工作，有大数据部门的同事，有数据分析师。 修改数据的工作，有各业务线的研发和产品人员，他们设计的系统，他们最理解怎么改，DBA可以提供- SQL上线平台，他们自助完成 如果DBA比大数据的同更懂得出报表，比业务线的研发人员更了解应该写SQL改数据是没有必要的， DBA可以分成:业务DBA和运维DBA,通常我们说的DB都是运维DBA,权限很大。如果有业务DBA会限制他的权限，不会有运维DBA这么大的权限。  三.数据安全性  DBA作为数据的最终维护人员，修改数据是最直接暴力的方式 普通员工没有直连数据库做操作的权限，只能通过上线代码和指定的平台(DBA提供的dboop平台)   DBA不参与业务(出报表/改数据),是否意味着DBA从工作中摘了出去? 也不是
+ DBA提供数据查询平台,对短而小的数据查询导出需求,研发定位问题的查询，提供一个快速查询平台（有完整的权限管理，日志审计，行为约束，敏感数据脱敏） DBA提供便利的数据库SQL上线自助流程，方便研发人员快速上线SQL，有完整的日志，SQL审核,数据备份,权限控制,快速回滚。 DBA不需要了解表中的每个字段具体含义，每个表之间的关联，只需要知道这个库存放的数据是否重要，属于哪个业务线，负责人是谁，省下来的精力去做真正运维的工作  DBA有权限可以任意修改库里的数据，但是这个不合规，不应该这样做。正确的做法是提供一个平台，让真正了解业务的研发/产品/数据分析人员，去查询，去出报表，去改数据。</description>
+    </item>
+    
+  </channel>
+</rss>

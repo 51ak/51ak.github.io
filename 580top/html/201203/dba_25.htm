@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mysql主要配置参数4:其他参数</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="Mysql主要参数在优化MySQL时，有两个配置参数是最重要的，即table_cache和key_buffer_size。而具体到应用环境还有个查询参数query_cache_size直接影响查询性能。下面主要是整理的关于下面三个参数的文章1．table_cache表缓存2．key_buffer_size键缓冲3．query_cache_size查询缓存4．其他参数5．Mysql主要配置参数4:其他参数" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识">基础知识</a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化"><span class="zc_666">性能与优化</span></a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlyouhua/l_16_1.htm">性能与优化</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>Mysql主要配置参数4:其他参数</h1></div>
+					<div id="atSource"> 作者：[51ak ] </div>
+					
+                    <div id="viewcontent">
+                   <p><font face="Arial"><a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a>主要参数<br />
+在优化MySQL时，有两个配置参数是最重要的，即table_cache和key_buffer_size。而具体到应用环境还有个查询参数query_cache_size直接影响查询性能。下面主要是整理的关于下面三个参数的文章<br />
+1．<a href="../../html/201203/dba_22.htm">table_cache 表缓存</a><br />
+2．<a href="../../html/201203/dba_23.htm">key_buffer_size 键缓冲</a><br />
+3．<a href="../../html/201203/dba_24.htm">query_cache_size查询缓存</a><br />
+4．<a href="../../html/201203/dba_25.htm"><a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>参数</a><br />
+5．<a href="../../html/201203/dba_26.htm">参考文章</a></font></p>
+<p><font face="Arial">首先，在了解这些参数设置前需要明确的概念是<br />
+&bull; 什么是<a href="../../html/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/l_13_1.htm" title="MYSQL" >MYSQL</a>的缓存：在内存中预留的块<br />
+&bull; 访问内存中的数据快于访问磁盘上的数据。<br />
+&bull; 把数据保存在内存中更重要的是可以减少磁盘IO操作。<br />
+&bull; 当数据变化(update insert delete...)时对应的缓存就失效<br />
+&bull; 内存是有限的</font></p>
+<p><font face="Arial"><br />
+4．<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>参数<br />
+skip-name-resolve &nbsp;# 禁止MySQL对外部连接进行DNS解析，使用这一选项可以消除MySQL进行DNS解析的时间 。<br />
+# 但需要注意，如果开启该选项，则所有远程主机连接授权都要使用IP地址方式，否则MySQL将无法正常处理连接请求！ <br />
+skip-locking&nbsp;# 避免MySQL的外部锁定，减少出错几率增强稳定性<br />
+back_log = 200&nbsp;# back_log参数的值指出在MySQL暂时停止响应新请求之前的短时间内多少个请求可以被存在堆栈中。<br />
+max_connections = 768&nbsp;# 指定MySQL允许的最大连接进程数。如果在访问论坛时经常出现Too Many Connections的错误提 示，则需要增大该参数值。 <br />
+sort_buffer_size = 4M&nbsp;# 查询排序时所能使用的缓冲区大小。注意：该参数对应的分配内存是每连接独占！如果有100个连接，那么实际分配的总共排序缓冲区大小为100 &times; 6 ＝ 600MB。<br />
+所以，对于内存在4GB左右的服务器推荐设置为6-8M。<br />
+read_buffer_size = 4M&nbsp;# 读查询所能使用的缓冲区大小。该参数对应的分配内存也是每连接独享！ 如果有100个连接，那么实际分配的总共读取缓冲区大小为100 &times; 4 ＝ 400MB。<br />
+join_buffer_size = 8M&nbsp;# 联合查询所能使用的缓冲区大小，该参数对应的分配内存也是每连接独享！如果有100个连接，那么实际分配的总共联合查询缓冲区大小为100 &times; 8 ＝ 800MB。<br />
+thread_concurrency = 8&nbsp;# 该参数取值为服务器逻辑CPU数量&times;2<br />
+wait_timeout = 10&nbsp;# 指定一个请求的最大连接时间，对于4GB左右内存的服务器可以设置为5-10<br />
+back_log = 384&nbsp;指定MySQL可能的连接数量。当MySQL主线程在很短的时间内接收到非常多的连接请求，该参数生效，主线程花费很短的时间检查连接并且启动一个新线程。 <br />
+back_log 参数的值指出在MySQL暂时停止响应新请求之前的短时间内多少个请求可以被存在堆栈中。如果系统在一个短时间内有很多连接，则需要增大该参数的值，该参数值指定到来的TCP/IP连接的侦听队列的大小。不同的操作系统在这个队列大小上有它自己的限制。 <br />
+试图设定back_log高于你的操作系统的限制将是无效的。默认值为50。对于Linux系统推荐设置为小于512的整数。<br />
+thread_cache_size = 64&nbsp;入站连接会在MySQL中创建一个新的线程，因为MySQL中打开和关闭连接都很廉价，速度也快，它就没有象其它数据库，如<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>那么多持续连接了，但线程预先创建并不会节约时间，这就是为什么要MySQL线程缓存的原因了。<br />
+A：网上有人说：1G &mdash;&gt; 8&nbsp; 2G &mdash;&gt; 16 3G &mdash;&gt; 32 &gt;3G &mdash;&gt; 64 <br />
+B：如果是短连接，适当设置大一点，因为短连接往往需要不停创建，不停销毁，如果大一点，连接线程都处于取用状态，不需要重新创建和销毁，所以对性能肯定是比较大的提升。对于长连接，不能保证连接的稳定性，所以设置这参数还是有一定必要，可能连接池的问题，会导致连接数据库的不稳定性，也会出现频繁的创建和销毁，但这个情况比较少，如果是长连接，可以设置成小一点，一般在50-100左右。关键还是要根据实际情况来确定。<br />
+如果在增长请密切注意创建的线程，让你的线程缓存更大，对于2550或100的thread_cache_size，内存占用也不多<br />
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+	
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

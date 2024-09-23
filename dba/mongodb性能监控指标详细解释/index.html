@@ -1,0 +1,387 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>mongodb性能监控指标详细解释| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">mongodb性能监控指标详细解释</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#常用监控项及说明">常用监控项及说明</a></li>
+    <li><a href="#mongodb_memory">mongodb_memory</a></li>
+    <li><a href="#mongodb_mongod_op_latencies_latency_total">mongodb_mongod_op_latencies_latency_total</a></li>
+    <li><a href="#mongodb_op_counters_total">mongodb_op_counters_total</a></li>
+    <li><a href="#mongodb_connections">mongodb_connections</a></li>
+    <li><a href="#cache_dirty_percent">cache_dirty_percent</a></li>
+    <li><a href="#mongodb_mongod_wiredtiger_cache_bytes_total">mongodb_mongod_wiredtiger_cache_bytes_total</a></li>
+    <li><a href="#mongodb_asserts_total">mongodb_asserts_total</a></li>
+    <li><a href="#mongodb_mongod_global_lock_current_queue">mongodb_mongod_global_lock_current_queue</a></li>
+    <li><a href="#mongodb_extra_info_page_faults_total">mongodb_extra_info_page_faults_total</a></li>
+    <li><a href="#mongodb_mongod_replset_member_replication_lag">mongodb_mongod_replset_member_replication_lag</a></li>
+    <li><a href="#mongodb_ss_network_bytesout">mongodb_ss_network_bytesOut</a></li>
+    <li><a href="#mongodb_ss_network_bytesin">mongodb_ss_network_bytesIn</a></li>
+    <li><a href="#指标分类及标识">指标分类及标识</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="常用监控项及说明">常用监控项及说明</h2>
+<p>当我们监控mongodb实例时，大约有300多项的监控指标，通常我们可以关注以下的20项指标就够了</p>
+<table>
+<thead>
+<tr>
+<th>监控项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mongodb_memory</td>
+<td>内存占用（MiB）</td>
+</tr>
+<tr>
+<td>mongodb_mongod_op_latencies_latency_total</td>
+<td>累计操作耗时（毫秒）</td>
+</tr>
+<tr>
+<td>mongodb_mongod_op_latencies_ops_total</td>
+<td>累计操作次数</td>
+</tr>
+<tr>
+<td>mongodb_op_counters_total</td>
+<td>累计接收的操作请求次数（即使操作不成功也会增加）</td>
+</tr>
+<tr>
+<td>mongodb_connections</td>
+<td>连接数</td>
+</tr>
+<tr>
+<td>mongodb_mongod_metrics_cursor_open</td>
+<td>打开游标数量</td>
+</tr>
+<tr>
+<td>mongodb_mongod_metrics_document_total</td>
+<td>累计文档操作次数</td>
+</tr>
+<tr>
+<td>mongodb_mongod_global_lock_current_queue</td>
+<td>当前排队等待获取锁的操作个数</td>
+</tr>
+<tr>
+<td>mongodb_mongod_metrics_query_executor_total</td>
+<td>查询和查询计划评估过程扫描的（索引或文档）条目总数</td>
+</tr>
+<tr>
+<td>mongodb_asserts_total</td>
+<td>累计断言错误次数</td>
+</tr>
+<tr>
+<td>mongodb_mongod_metrics_get_last_error_wtime_num_total</td>
+<td>累计getLastError操作数量</td>
+</tr>
+<tr>
+<td>mongodb_mongod_wiredtiger_cache_bytes</td>
+<td>当前缓存数据大小（byte）</td>
+</tr>
+<tr>
+<td>mongodb_mongod_wiredtiger_cache_bytes_total</td>
+<td>写入或读取的缓存数据大小（byte）</td>
+</tr>
+<tr>
+<td>mongodb_mongod_wiredtiger_cache_pages</td>
+<td>当前缓存页数量</td>
+</tr>
+<tr>
+<td>mongodb_mongod_wiredtiger_cache_evicted_total</td>
+<td>累计缓存移除页数量</td>
+</tr>
+<tr>
+<td>mongodb_extra_info_page_faults_total</td>
+<td>累计缺页中断次数</td>
+</tr>
+<tr>
+<td>mongodb_ss_network_bytesOut</td>
+<td>累计发送网络流量（byte）</td>
+</tr>
+<tr>
+<td>mongodb_ss_network_bytesIn</td>
+<td>累计接收网络流量（byte）</td>
+</tr>
+<tr>
+<td>mongodb_mongod_replset_member_replication_lag</td>
+<td>副本集成员主从延迟（秒）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mongodb_memory">mongodb_memory</h2>
+<ul>
+<li>mongodb_memory 指标表示 MongoDB 数据库实例使用的内存量。这个指标可以帮助监控系统管理员查看 MongoDB 的内存使用情况，并对系统的内存进行优化。</li>
+<li>resident 和virtual</li>
+<li>resident 指的是进程在物理内存中占用的空间，即进程实际使用的物理内存。</li>
+<li>virtual 指的是进程在虚拟内存中占用的空间，即进程所占用的总内存，包括物理内存和交换空间。</li>
+<li>通常来说，如果 resident 值很大，说明进程实际使用的物理内存很多，这可能表示系统的内存不足，或者进程的内存使用不合理。如果 virtual 值很大，说明进程占用的总内存很多，这可能表示进程在使用较多的交换空间，或者系统的总内存不足。</li>
+<li>总之，resident 和 virtual 指标可以帮助你了解进程对内存的使用情况，从而为进行性能优化提供重要的参考信息。</li>
+<li>获取代码：</li>
+</ul>
+<pre><code>例：
+mongodb_memory{job=&quot;mongodb&quot;, service=&quot;mongodb&quot;, team=&quot;dba&quot;, type=&quot;resident&quot;}
+34957
+mongodb_memory{job=&quot;mongodb&quot;, service=&quot;mongodb&quot;, team=&quot;dba&quot;, type=&quot;virtual&quot;}
+49537
+</code></pre><h2 id="mongodb_mongod_op_latencies_latency_total">mongodb_mongod_op_latencies_latency_total</h2>
+<ul>
+<li>
+<p>mongodb_mongod_op_latencies_latency_total 指标中的 read、write、command、transactions 分别表示 MongoDB 数据库实例中的不同操作类型的平均响应时间。</p>
+</li>
+<li>
+<p>read write  command transactions</p>
+</li>
+<li>
+<p>read 表示读操作的平均响应时间。</p>
+</li>
+<li>
+<p>write 表示写操作的平均响应时间。</p>
+</li>
+<li>
+<p>command 表示命令操作的平均响应时间。</p>
+</li>
+<li>
+<p>transactions 表示事务操作的平均响应时间。</p>
+</li>
+</ul>
+<p>-这个指标可以帮助监控系统管理员了解 MongoDB 数据库实例中各类操作的响应时间，并对系统进行性能优化。</p>
+<ul>
+<li>获取代码：</li>
+</ul>
+<pre><code>avg(rate(mongodb_mongod_op_latencies_latency_total{team=&quot;dba&quot;}[5m])) by (instance)
+avg(rate(mongodb_mongod_op_latencies_latency_total{team=&quot;dba&quot;,type=&quot;read&quot;}[5m])) by (instance)
+avg(rate(mongodb_mongod_op_latencies_latency_total{team=&quot;dba&quot;,type=&quot;write&quot;}[5m])) by (instance)
+avg(rate(mongodb_mongod_op_latencies_latency_total{team=&quot;dba&quot;,type=&quot;command&quot;}[5m])) by (instance)
+avg(rate(mongodb_mongod_op_latencies_latency_total{team=&quot;dba&quot;,type=&quot;transactions&quot;}[5m])) by (instance)
+</code></pre><h2 id="mongodb_op_counters_total">mongodb_op_counters_total</h2>
+<ul>
+<li>
+<p>表示 MongoDB 数据库实例中每秒执行的不同类型操作的数量。</p>
+</li>
+<li>
+<p>command 表示每秒执行的命令操作的数量。</p>
+</li>
+<li>
+<p>getmore 表示每秒执行的 getmore 操作的数量。</p>
+</li>
+<li>
+<p>query 表示每秒执行的查询操作的数量。</p>
+</li>
+<li>
+<p>update 表示每秒执行的更新操作的数量。</p>
+</li>
+<li>
+<p>delete 表示每秒执行的删除操作的数量。</p>
+</li>
+<li>
+<p>insert 表示每秒执行的插入操作的数量。</p>
+</li>
+<li>
+<p>获取代码：</p>
+</li>
+</ul>
+<pre><code>avg(rate(mongodb_op_counters_total{team=&quot;dba&quot;, type=&quot;getmore&quot;}[5m])) by (instance)
+avg(rate(mongodb_op_counters_total{team=&quot;dba&quot;, type=&quot;insert&quot;}[5m])) by (instance)
+avg(rate(mongodb_op_counters_total{team=&quot;dba&quot;, type=&quot;query&quot;}[5m])) by (instance)
+avg(rate(mongodb_op_counters_total{team=&quot;dba&quot;, type=&quot;update&quot;}[5m])) by (instance)
+avg(rate(mongodb_op_counters_total{team=&quot;dba&quot;, type=&quot;command&quot;}[5m])) by (instance)
+avg(rate(mongodb_op_counters_total{team=&quot;dba&quot;, type=&quot;&quot;}[5m])) by (instance)
+</code></pre><h2 id="mongodb_connections">mongodb_connections</h2>
+<ul>
+<li>表示 MongoDB 数据库实例的连接相关信息。</li>
+<li>totalCreated 表示 MongoDB 数据库实例中已经创建的连接总数。</li>
+<li>current 表示 MongoDB 数据库实例中当前活动的连接数量。</li>
+<li>available 表示 MongoDB 数据库实例中当前可用的连接数量。</li>
+<li>获取代码：</li>
+</ul>
+<pre><code>mongodb_connections{ state=&quot;available&quot;}
+mongodb_connections{ state=&quot;current&quot;}
+mongodb_connections{ state=&quot;totalCreated&quot;}
+</code></pre><h2 id="cache_dirty_percent">cache_dirty_percent</h2>
+<ul>
+<li>mongodb_cache_dirty_percent 指标表示 MongoDB 数据库实例中缓存页面中脏页面（dirty pages）所占的百分比。脏页面指的是已经修改但尚未写回磁盘的页面。</li>
+<li>获取代码：</li>
+<li></li>
+</ul>
+<pre><code class="language-(avg(mongodb_mongod_wiredtiger_cache_pages{type="dirty"})" data-lang="(avg(mongodb_mongod_wiredtiger_cache_pages{type="dirty"})"></code></pre><h2 id="mongodb_mongod_wiredtiger_cache_bytes_total">mongodb_mongod_wiredtiger_cache_bytes_total</h2>
+<ul>
+<li>正在read ,write的缓存占用的内存总量（以字节为单位）</li>
+<li>获取代码：</li>
+</ul>
+<pre><code>avg(rate(mongodb_mongod_wiredtiger_cache_bytes_total{team=&quot;dba&quot;, type=&quot;read&quot;}[5m])) by (instance)
+avg(rate(mongodb_mongod_wiredtiger_cache_bytes_total{team=&quot;dba&quot;, type=&quot;written&quot;}[5m])) by (instance)
+</code></pre><h2 id="mongodb_asserts_total">mongodb_asserts_total</h2>
+<ul>
+<li>错误次数</li>
+<li>获取代码：</li>
+</ul>
+<pre><code>sum(rate(mongodb_asserts_total{team=&quot;dba&quot;} [5m])) by (instance)
+</code></pre><h2 id="mongodb_mongod_global_lock_current_queue">mongodb_mongod_global_lock_current_queue</h2>
+<ul>
+<li>当前排队等待获取锁的操作个数</li>
+<li>获取代码：</li>
+</ul>
+<pre><code>mongodb_mongod_global_lock_current_queue{team=&quot;dba&quot;, type=&quot;total&quot;}
+</code></pre><h2 id="mongodb_extra_info_page_faults_total">mongodb_extra_info_page_faults_total</h2>
+<ul>
+<li>累计缺页中断次数</li>
+<li>获取代码：</li>
+</ul>
+<pre><code>sum(rate(mongodb_extra_info_page_faults_total{team=&quot;dba&quot;}[5m])) by (instance)
+</code></pre><h2 id="mongodb_mongod_replset_member_replication_lag">mongodb_mongod_replset_member_replication_lag</h2>
+<ul>
+<li>副本集成员主从延迟（秒）</li>
+<li>获取代码：</li>
+</ul>
+<pre><code>max(mongodb_mongod_replset_member_replication_lag{team=&quot;dba&quot; }) by   (instance)
+</code></pre><h2 id="mongodb_ss_network_bytesout">mongodb_ss_network_bytesOut</h2>
+<ul>
+<li>累计发送网络流量（byte）</li>
+<li>获取代码：</li>
+</ul>
+<pre><code>sum(rate(mongodb_ss_network_bytesOut{team=&quot;dba&quot;}[5m])) by (instance)
+</code></pre><h2 id="mongodb_ss_network_bytesin">mongodb_ss_network_bytesIn</h2>
+<ul>
+<li>累计接收网络流量（byte）</li>
+<li>获取代码：</li>
+</ul>
+<pre><code>sum(rate(mongodb_ss_network_bytesIn{team=&quot;dba&quot;}[5m])) by (instance)
+</code></pre><h2 id="指标分类及标识">指标分类及标识</h2>
+<ul>
+<li>
+<p>给各项指标做L4评分标准如下：
+<img src="/img/2022auto/2022-12-09-18-27-26.png" alt="MongoDB指标评分标准"></p>
+</li>
+<li>
+<p>最终形成MongoDB性能展示Dashboard
+<img src="/img/2022auto/2022-12-09-18-23-09.png" alt="MongoDB性能模型"></p>
+</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/12/08</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/nosql">nosql</a> <a href="/categories/%E7%9B%91%E6%8E%A7">监控</a> <a href="/categories/mongodb">mongodb</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>用户登录</title>
+      <link href="../img/small.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+body
+{
+   background-image:none;
+}
+
+/*登录*/
+#div_login
+{
+	margin-left:15px;
+	line-height:120%;}
+#div_login p
+{
+    margin: 5px 0 ;
+	margin-left:15px;
+	line-height:120%;}
+#div_login .formt { margin-top:15px;  font-weight:bold; color:#777; letter-spacing:1px;  }
+#div_login #username,#password {
+	background:#fff;
+	border:1px solid #ccc;
+	color:#006633;
+	font-size:14px;
+	width:186px;
+	height:25px;
+	padding-left:20px;
+	line-height:25px;
+	letter-spacing:1px;
+	font-weight:400;
+}
+#div_login #username { background:url(../img/username.gif) no-repeat 2px 5px;}
+#div_login #password { background:url(../img/password.gif) no-repeat 2px 5px;}
+#div_login #forget{ line-height:28px;}
+#div_login .imgbutton {margin-top:7px; margin-left:22px; 
+                       cursor:pointer;
+                       }
+
+.margin8
+{
+margin:8px 0;
+}
+.margin18
+{
+margin:18px 0;
+}
+
+    </style>
+</head>
+<body>
+    <form id="form1" >
+
+     <div id="div_login">	<span class="formt">用户名</span>  
+       <p>
+           <input type="input" ID="username" ></input>
+      </p>  
+               <span class="formt">密码</span>  
+                <p> <input type="password" ID="password" ></input></p>  
+                <img ID="img_save" src="../img/loginin.gif" class="imgbutton"  /> 
+                <img alt="注册会员" onclick="parent.alertWin('注册会员','/page/reg.html',550,400);" src="../img/regin.gif" class="imgbutton" />
+    <div class="margin18"><a href="#" >用新浪微博登录</a></div> 
+    </div> 
+   
+</form>
+    
+</body>
+</html>

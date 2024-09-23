@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>redis on dboop.com</title>
+    <link>/categories/redis/</link>
+    <description>Recent content in redis on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 22 May 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/redis/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>redis使用规范文档 20170522版</title>
+      <link>/post/2017/05/22/redis%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83%E6%96%87%E6%A1%A3-20170522%E7%89%88/</link>
+      <pubDate>Mon, 22 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017/05/22/redis%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83%E6%96%87%E6%A1%A3-20170522%E7%89%88/</guid>
+      <description>运维redis很久了，一直是口头给rd说各种要求，尝试把这些规范总结成文档
+ 强制：所有的key设置过期时间（最长可设置过期时间10天，如有特殊要求，联系dba说明原因 ） 强制：禁止在测试环境，本地办公环境，开发跳板机，连接线上redis实例（实例归业务自运维的 除外） 强制：禁止使用运维类的命令 keys monitor debug watch flush bigkeys 强制：list的长度最大长度不超过1万，size不超过1G 强制：key的长度不超过100个字符 建议：string类型value长度不超过10M 建议：做好容量规划，预先考虑内存占用过大后，业务的拆分和分片后的影响 建议：选择合适的数据类型（string,list,hash,set,sortset) ,使用特殊的数据类型（ bit,geo)须提前与dba沟通 建议：使用常用的命令，m类操作，建议个数100个以下。 建议：不使用多个db,只使用db0,如果要区分业务线，在配置文件里定义各业务线使用的前缀 建议：有一套能区分业务归属的命名规范，key前缀是发生内存暴涨，性能问题时的分析定位问题 的可行基础，Key的命名规范建议：
+ 第1个字符小写定义数据类型： string —&amp;gt;s,Hash—&amp;gt;h,Set—&amp;gt;s,Zset —&amp;gt;z,List —&amp;gt;l,Geo—&amp;gt;g 第2,3字符定义公开的业务分类： 第4-10个字符定义部门类的业务线细分 推荐的key中可使用符号.:# 不推荐使用的有：\ ? * {} [] ()
+ 例：hCMappnode.product.detail:1312342   建议：不命名用对list,set,zset等分片支持不友好的操作如：union diff， 如果不能避免 ，注意使用大括号括起key的关键字
+ 建议：在代码中捕扣redis连接异常。考虑一个redis实例短时当机时业务的降级处理，尤其是对 redis的高频调用，有时候redis报错日志可能会打满磁盘
+ 建议：不同业务线，不同重要程度的redis建议申请多个redis实例，避免业务线中使用的redis过大。
+  </description>
+    </item>
+    
+    <item>
+      <title>redis安全删key脚本(模糊匹配，长list，大set等）</title>
+      <link>/post/2017/02/23/redis%E5%AE%89%E5%85%A8%E5%88%A0key%E8%84%9A%E6%9C%AC%E6%A8%A1%E7%B3%8A%E5%8C%B9%E9%85%8D%E9%95%BFlist%E5%A4%A7set%E7%AD%89/</link>
+      <pubDate>Thu, 23 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017/02/23/redis%E5%AE%89%E5%85%A8%E5%88%A0key%E8%84%9A%E6%9C%AC%E6%A8%A1%E7%B3%8A%E5%8C%B9%E9%85%8D%E9%95%BFlist%E5%A4%A7set%E7%AD%89/</guid>
+      <description>两种情况：
+1.删除指定前缀开头的rediskey ,扫描和删除过程中对线上无感知
+2.删除一个大的list,set,zset,hash，这种得分批次减少大小，一直缩到0再删
+第一种情况：只要知道线上操作的时候我们要用scan来代替 keys ，这一点就行了，简单脚本如下：
+del.sh
+ for((i = 1; i &amp;lt;= 50000; i++)) do b=$[ $i * 100 ] echo $b redis-cli -h test.m.cnhza.kvstore.aliyuncs.com -a test:Paasword scan $b match cache:info_* count 100 |xargs -i redis-cli -h test.m.cnhza.kvstore.aliyuncs.com -a test:Paasword del {} redis-cli -h test.m.cnhza.kvstore.aliyuncs.com -a test:Paasword scan $b match cache:userb* count 100 |xargs -i redis-cli -h test.m.cnhza.kvstore.aliyuncs.com -a test:Paasword del {} redis-cli -h test.m.cnhza.kvstore.aliyuncs.com -a test:Paasword scan $b match cache:userc* count 100 |xargs -i redis-cli -h test.</description>
+    </item>
+    
+  </channel>
+</rss>

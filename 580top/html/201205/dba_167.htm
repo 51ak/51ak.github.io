@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>学习MYSQL存储过程</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="一、简介<br/>&nbsp;&nbsp;&nbsp;&nbsp;存储过程（storedprocedure）是一组为了完成特定功能的sql语句集，经编译后存储在数据库中。用户通过指定存储过程的名字并给出参数（如果该存储过程带有参数）来执行它。存储过程是数据库中的一个重要对象，任何一个设计良好的数据库应用程序都应该用到存储过程。<br/>&nbsp;&nbsp;&nbsp;虽然常用术语是存学习MYSQL存储过程" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化">性能与优化</a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlzhishi/l_14_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>学习MYSQL存储过程</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   一、 简介<br />&nbsp;&nbsp;&nbsp;&nbsp;存储过程（Stored Procedure）是一组为了完成特定功能的SQL语句集，经编译后存储在数据库中。用户通过指定存储过程的名字并给出参数（如果该存储过程带有参数）来执行它。存储过程是数据库中的一个重要对象，任何一个设计良好的数据库应用程序都应该用到存储过程。<br />&nbsp;&nbsp;&nbsp; 虽然常用术语是存储过程（stored procedure），但MySQL实际上实现了两中类型，除了存储过程外，还有存储函数（stored routine）,它们统称为存储例程。<br />&nbsp;&nbsp;&nbsp;&nbsp; 二、基本格式1、存储过程&nbsp; CREATE PROCEDURE 过程名 ([过程参数[,...]])&nbsp; [特性 ...] 过程体<br />如创建: CEATE PROCEDURE p1 (a INT)<br />SELECT a;<br />调用一下：CALL p1(8);&nbsp;&nbsp;<br />将显示：<br />+------+<br />| a&nbsp;&nbsp;&nbsp; |<br />+------+<br />|&nbsp;&nbsp;&nbsp; 8 |<br />+------+<br />1 row in set (0.00 sec)2、存储函数&nbsp; CREATE FUNCTION 函数名 ([函数参数[,...]])&nbsp; RETURNS 返回类型&nbsp; [特性 ...] 函数体<br />如创建：CREATE FUNCTION f1 (x INT)<br />RETURNS INT<br />RETURN x;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* 过程函数一次只能返回一个值<br />调用一下：SELECT f1 (3);<br />将显示：<br />+-------+<br />| f1(3) |<br />+-------+<br />|&nbsp;&nbsp;&nbsp;&nbsp; 3 |<br />+-------+<br />1 row in set (0.00 sec)<br />3、过程参数&nbsp; [ IN | OUT | INOUT ] 参数名 参数类型4、函数参数&nbsp; 参数名 参数类型5、返回类型&nbsp; 有效的MySQL数据类型即可6、过程体/函数体格式如下BEGIN有效的SQL语句END<br />7、特性（一般不要求）LANGUAGE SQL| [NOT] DETERMINISTIC| { CONTAINS SQL | NO SQL | READS SQL DATA | MODIFIES SQL DATA }| SQL SECURITY { DEFINER | INVOKER }| COMMENT 'string'<br />8、存储过程中参数的IN,OUT,INOUT类型<br />&nbsp;&nbsp;&nbsp; 存储过程可以接受输入参数，并把参数返回给调用方。不过，对于每个参数，需要声明其参数名、数据类型，还要指定此参数是用于向过程传递信息，还是从过程传回信息，或是二者兼有。<br />&nbsp;&nbsp;&nbsp; 为声明参数的作用，使用如下3个关键字之一：<br />&#732; IN :&nbsp; IN参数只用来向过程传递信息，为默认值。<br />&nbsp;<br />&#732; OUT : OUT参数只用来从过程传回信息。<br />&nbsp;<br />&#732; INOUT ： INOUT参数可以向过程传递信息，如果值改变，则可再从过程外调用。<br />如果仅仅想把数据传给 MySQL 存储过程，那就使用“in” 类型参数；如果仅仅从 MySQL 存储过程返回值，那就使用“out” 类型参数；如果需要把数据传给 MySQL 存储过程，还要经过一些计算后再传回给我们，此时，要使用“inout” 类型参数。<br />对于任何声明为OUT或INOUT的参数，，当调用存储过程时需要在参数名前加上@符号，这样该参数就可以在过程外调用了。<br />&nbsp;下面举三个实例：MySQL 存储过程 “in” 参数：跟 C 语言的函数参数的值传递类似， MySQL 存储过程内部可能会修改此参数，但对 in 类型参数的修改，对调用者（caller）来说是不可见的（not visible）。<br />create procedure pr_param_in(&nbsp;&nbsp; in id int -- in 类型的 MySQL 存储过程参数)begin&nbsp;&nbsp; if (id is not null) then&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; set id = id + 1;&nbsp;&nbsp; end if;&nbsp;&nbsp;&nbsp; select id as id_inner;end;set @id = 10; call pr_param_in(@id); select @id as id_out;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; call pr_param_in(@id);+----------+| id_inner |+----------+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 11 |+----------+ <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; select @id as id_out;+--------+| id_out |+--------+| 10&nbsp;&nbsp;&nbsp;&nbsp; |+--------+可以看到：用户变量 @id 传入值为 10，执行存储过程后，在过程内部值为：11（id_inner），但外部变量值依旧为：10（id_out）。<br />MySQL 存储过程 “out” 参数：从存储过程内部传值给调用者。在存储过程内部，该参数初始值为 null，无论调用者是否给存储过程参数设置值。<br />create procedure pr_param_out(&nbsp;&nbsp; out id int)begin&nbsp;&nbsp; select id as id_inner_1;&nbsp;&nbsp;&nbsp; /* id 初始值为 null*/&nbsp;&nbsp;&nbsp; if (id is not null) then&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; set id = id + 1;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; select id as id_inner_2;&nbsp;&nbsp; else&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; select 1 into id;&nbsp;&nbsp; end if;&nbsp;&nbsp;&nbsp; select id as id_inner_3;end;set @id = 10; call pr_param_out(@id); select @id as id_out;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; set @id = 10;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; call pr_param_out(@id);&nbsp;&nbsp;&nbsp; /*外部变量不能传给存储过程*/+------------+| id_inner_1 |+------------+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NULL |+------------+ +------------+| id_inner_3 |+------------+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 |+------------+ <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; select @id as id_out;&nbsp; /*过程将改变的值传给外部变量*/+--------+| id_out |+--------+| 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |+--------+可以看出，虽然我们设置了用户定义变量 @id 为 10，传递 @id 给存储过程后，在存储过程内部，id 的初始值总是 null（id_inner_1）。最后 id 值（id_out = 1）传回给调用者。<br />MySQL 存储过程 inout 参数跟 out 类似，都可以从存储过程内部传值给调用者。不同的是：调用者还可以通过 inout 参数传递值给存储过程。<br />drop procedure if exists pr_param_inout; create procedure pr_param_inout(&nbsp;&nbsp; inout id int)begin&nbsp;&nbsp; select id as id_inner_1;&nbsp; -- id 值为调用者传进来的值&nbsp;&nbsp;&nbsp; if (id is not null) then&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; set id = id + 1;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; select id as id_inner_2;&nbsp;&nbsp; else&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; select 1 into id;&nbsp;&nbsp; end if;&nbsp;&nbsp;&nbsp; select id as id_inner_3;end;set @id = 10; call pr_param_inout(@id); select @id as id_out;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; set @id = 10; <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; call pr_param_inout(@id);+------------+| id_inner_1 |+------------+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10 |+------------+ +------------+| id_inner_2 |+------------+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 11 |+------------+ +------------+| id_inner_3 |+------------+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 11 |+------------+<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; select @id as id_out;+--------+| id_out |+--------+| 11&nbsp;&nbsp;&nbsp;&nbsp; |+--------+从结果可以看出：我们把 @id（10），传给存储过程后，存储过程最后又把计算结果值 11（id_inner_3）传回给调用者。 MySQL 存储过程 inout 参数的行为跟 C 语言函数中的引用传值类似。<br />通过以上例子：如果仅仅想把数据传给 MySQL 存储过程，那就使用“in” 类型参数；如果仅仅从 MySQL 存储过程返回值，那就使用“out” 类型参数；如果需要把数据传给 MySQL 存储过程，还要经过一些计算后再传回给我们，此时，要使用“inout” 类型参数。<br />9、声明和设置变量<br />（1） 声明变量<br />&nbsp;&nbsp; 在存储例程使用局部变量之前，必须声明局部变量，变量声明通过DECLARE语句实现，其原型如下：<br />&nbsp;&nbsp; DECLARE variable_name TYPE ;<br />如：DECLARE x VARCHAR(254);<br />&nbsp;&nbsp; 在声明变量时，声明必须放在BEGIN/END块中。此外声明必须在执行该块任何其它语句之前进行。<br />（2） 设置变量<br />SET语句用来设置声明的存储例程变量值。其原型如下：<br />SET&nbsp; variable_name =value;<br />如下声明和设置变量过程：<br />&nbsp; DECLARE&nbsp; x&nbsp; INT;<br />SET&nbsp; x = 155;<br />也可使用SELECT…..INTO语句设置变量。<br />&nbsp; 如：<br />SELECT&nbsp; 155&nbsp; INTO&nbsp; x;<br />当然，此变量是声明该变量的BEGIN/END块作用范围内的一个局部变量。如果希望在存储例程外使用此变量，需要将其作为OUT变量传递。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

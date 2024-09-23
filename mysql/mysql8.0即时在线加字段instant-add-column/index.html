@@ -1,0 +1,245 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL8.0即时在线加字段instant-add-column| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL8.0即时在线加字段instant-add-column</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#以前有什么问题">以前有什么问题</a>
+      <ul>
+        <li><a href="#copy和inplace的存在的问题">copy和inplace的存在的问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#新的instant加字段方式">新的instant加字段方式</a>
+      <ul>
+        <li><a href="#出现的时间点">出现的时间点</a></li>
+        <li><a href="#优势">优势</a></li>
+        <li><a href="#原理">原理</a></li>
+        <li><a href="#使用限制">使用限制</a></li>
+        <li><a href="#使用范围">使用范围</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <blockquote>
+<p>原文地址：https://mysqlserverteam.com/mysql-8-0-innodb-now-supports-instant-add-column/</p>
+</blockquote>
+<p>在MySQL 8.0中迁移到新的事务数据字典使我们的这项工作变得容易得多。在MySQL 8.0之前，元数据（数据字典）存储在称为.frm文件的平面文件中， .frm文件是一种不可思议的格式，已近过时很久了。<br>
+该即时加列补丁是由腾讯游戏数据库管理员团队提供的，我们要感谢并感谢腾讯游戏所做的重要而及时的贡献。</p>
+<h2 id="以前有什么问题">以前有什么问题</h2>
+<ul>
+<li>MySQL 5.6之前，执行DDL的唯一方法是逐行复制行 (copy)</li>
+<li>MySQL 5.6是第一个支持INPLACE DDL的版本。(inplace)
+<ul>
+<li>INPLACE DDL主要由InnoDB处理，而逐行COPY在服务器层处理</li>
+</ul>
+</li>
+</ul>
+<h3 id="copy和inplace的存在的问题">copy和inplace的存在的问题</h3>
+<ul>
+<li>对于大型表，可能要花费很长时间，尤其是在复制环境中。</li>
+<li>磁盘空间需求将增加一倍以上，大小与现有表大致相同。</li>
+<li>DDL操作占用资源，并且对CPU，内存和IO提出了很高的要求，这从用户事务中争夺资源。</li>
+<li>如果涉及复制，slave要一直要等待到DDL的完成，才能开始同步。</li>
+</ul>
+<h2 id="新的instant加字段方式">新的instant加字段方式</h2>
+<h3 id="出现的时间点">出现的时间点</h3>
+<ul>
+<li>MySQL 8.0.12 由腾讯游戏数据库管理员团队提供的instant-add-column被官方集成认可</li>
+<li>新的加字段语法,通过指定<code>ALGORITHM=INSTANT</code>来代替原来的加字段方式，SQL如下：</li>
+</ul>
+<pre><code>ALTER TABLE table_name [alter_specification], ALGORITHM=INSTANT;
+</code></pre><ul>
+<li>MySQL 8.0.29开始，扩展了对<code>ALTER TABLE … ALGORITHM=INSTANT</code>的支持：用户可以在表的任何位置即时添加列、即时删除列、添加列时评估行大小限制。</li>
+<li>MySQL 8.0.29开始，添加列时会检查行大小限制。如果超出限制，则会报错。</li>
+</ul>
+<h3 id="优势">优势</h3>
+<ul>
+<li>INSTANT算法的优势在于，仅在数据字典中进行元数据更改。 更改期间无需获取元数据锁定，也不会修改表中的数据。</li>
+<li>速度极快，秒速完成，对业务几乎没有影响</li>
+<li>不会产生大量的binlog</li>
+<li>不会影响主从同步</li>
+<li>不会影响性能</li>
+</ul>
+<h3 id="原理">原理</h3>
+<ul>
+<li>简单的说：只修改了表定义元数据，并没有修改真正的数据</li>
+<li>翻译官方的原理是：</li>
+</ul>
+<pre><code>我们面临的问题是，在立即添加列后元数据发生更改后，如何解析页面上的物理记录？
+请注意，此处的物理记录是指存储在聚集索引的叶页中的记录。聚簇索引的现有二级索引甚至非叶页（B树的内部节点）都不会受到影响。
+ 
+InnoDB有两种主要的行格式，即冗余行和紧凑行格式。行格式动态是compact的一个较小变体。压缩及其派生的行格式从冗余行格式中删除了一些元数据，以节省空间。
+由于这种“节省空间”的更改，当我们必须对页面上物理行中的数据进行反序列化时，我们总是需要从内部元数据结构中查找元数据。
+为了使即时添加列起作用，我们需要为页面上的DYNAMIC和COMPACT行格式的物理记录添加一些元数据。 REDUNDANT行格式不需要此附加元数据，因为列数已存储在物理记录中。
+ 
+额外的信息与数据字典中的一些元数据一起保留在物理记录中。
+这与基于相同腾讯补丁的一些下游黑客的做法非常不同，后者在表空间的模糊和未使用的部分存储类似的元数据。
+我们认为，将元数据存储在适当的数据字典表中并使其在事务上保持一致将使其更健壮且更自然。此新的元数据存储在物理记录中。
+这个新的元数据包括一个存储在info_bits中的标志。 info_bits中的此新信息用于跟踪是否在第一个即时ADD COLUMN之后创建记录。
+我们还使用info_bits跟踪物理记录中的字段/列数。当表经历第一个即时ADD COLUMN时的列数以及新添加的列的所有默认值都存储在数据字典中。
+这两条信息存储在数据字典表的se_private_data列中。
+ 
+有了这些额外的信息，现在可以立即执行ADD COLUMN操作，而无需修改表中的任何行。如果没有即时的ADD COLUMN，则表中的所有行将采用与以前相同的格式。
+即时发出ADD COLUMN后，对该表的任何更新都将以新格式写入行。从数据字典中查找默认值（如果有）。
+
+在每个即时ADD COLUMN中，都会分别跟踪新添加的列的默认值。这些列的默认值可以随时更改。因此，在重建或截断表之后，可以丢弃即时列数和默认值，此外，可以像以前一样将表中的行更改为旧格式。
+如果该表是分区表，则不同的分区可能具有不同数量的即时列，并且需要不同数量的默认值。
+如果某些分区被重建，截断或重新创建，则分区中的行也可以像以前一样更改为旧格式。
+</code></pre><h3 id="使用限制">使用限制</h3>
+<ul>
+<li>在了解原理之后，我们来看看 “立刻加列” 的使用限制，就很容易能理解其中的前两项：</li>
+<li>“instant加列” 的加列位置只能在表的最后，而不能加在其他列之间（MySQL8.0.29 已经支持了，小于这个版本的有此限制）</li>
+<li>“instant加列” 不能添加主键列</li>
+<li>“instant加列” 不支持压缩的表格式</li>
+<li>不预先检查行大小，使用新的即时ADD COLUMN，行大小将仅在以后对行进行更新时进行检查。可能会造成行大小超标（MySQL8.0.29 已经支持了，小于这个版本的有此限制）</li>
+<li>如果表或索引已损坏，则可以通过重建表来“修复”问题。使用即时添加列会带来更多挑战</li>
+<li>不支持已经有全文索引的表</li>
+<li>不支持临时表</li>
+</ul>
+<h3 id="使用范围">使用范围</h3>
+<ul>
+<li>当前,Innodb的即时DDL支持如下操作</li>
+<li>Change index option</li>
+<li>Rename table (in ALTER way)</li>
+<li>SET/DROP DEFAULT</li>
+<li>MODIFY COLUMN</li>
+<li>Add/drop virtual columns</li>
+<li>Add columns(non-generated)</li>
+</ul>
+<h2 id="总结">总结</h2>
+<ul>
+<li>MySQL8.0.12 开始支持的称为INSTANT的ALTER TABLE的新算法是个非常实用的功能。</li>
+<li>尽可能用新的加列算法代替原有的inplace和copy方式</li>
+<li>优势是：业务影响小，加列快，业务几乎无感知</li>
+<li>限制是：不是所有改表的方式都支持，部分场景不支持，也不是完全无锁的(要修改表定义元数据),MySQL8.0.29完善了这个功能的一些补丁更加安全。</li>
+<li>总结：能用，好用，快用。注意限制</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2024/01/25</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/mysql8.0">mysql8.0</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

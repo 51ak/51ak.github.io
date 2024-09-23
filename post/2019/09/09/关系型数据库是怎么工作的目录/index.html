@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>关系型数据库是怎么工作的(目录) | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">关系型数据库是怎么工作的(目录)</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+
+
+<p>本文翻译自一篇法国作者的博客，觉得写得不错，
+原文地址：<a href="http://coding-geek.com/how-databases-work/">http://coding-geek.com/how-databases-work/</a></p>
+
+<p>说起关系型数据库，我总是认为少了点什么。
+关系型DB几乎无处不在，有不同类型，从迷你但实用的SQLite到功能强大的Teradata。
+但只有少数几个文章谈论这些关系型数据库的工作方式。</p>
+
+<p>不信，你可以看看Google搜索“关系数据库如何工作”，只有很少的几条结果，且非常简短。
+如果你搜索新的流行技术(Big Data, NoSQL or JavaScript),你会发现很多深入解释工作原理的文章</p>
+
+<p>是不是关系型数据库太老了，以至于在大学课程、研究论文、书本以外的地方解释原理显得无聊。</p>
+
+<p>作为一个开发者，我不能容忍我不明白的事情发生，而且 ，如果数据库技术已经被用了40年，这里一定有原因。这些年，我花了几百个小时去真正理解这些奇怪的我每天都用的黑盒子， 关系型数据库是非常有趣的因为他们基于有用的可复用的理念上，如果你有兴趣搞懂数据库，但是你没有时间或意愿去深入了解这个很宽泛的主题，那么你会喜欢这篇文章的。</p>
+
+<p>标题已经说得很清楚了，这篇文章的上的不是为了让大家学会怎么用数据库。所以你应该已经知道怎么写一个简单的JOIN查询和基本的增删改查SQL，否则你可能无法理解这篇文章，这是你唯一需要了解的知识，其他的我来给你们讲解吧。</p>
+
+<p>这是一篇很长的包括了很多算法和数据结果技术文章,将会花费你很长的时间去阅读，有些概念很难懂，你可以跳过它理解整体的思路。</p>
+
+<p>为了你更容易理解，本文大约分成三个部分</p>
+
+<ol>
+<li>一些低阶或高阶的数据库理论(1-3节，包含在本篇文章中)</li>
+<li>查询优化器进程（第4节）</li>
+<li>事务和缓冲池管理（第5节）</li>
+</ol>
+
+<p>以下是目录：</p>
+
+<ol>
+<li>基础知识
+
+<ul>
+<li>1.1 O(1) vs O(n^2)<br /></li>
+<li>1.2 合并排序</li>
+<li>1.3 数组，树，哈希表</li>
+</ul></li>
+<li>通用概念</li>
+<li>客户端管理</li>
+<li>SQL查询
+
+<ul>
+<li>4.1 SQL解析</li>
+<li>4.2 查询重写</li>
+<li>4.3 统计信息</li>
+<li>4.4 SQL优化</li>
+<li>4.5 SQL执行</li>
+</ul></li>
+<li>数据管理
+
+<ul>
+<li>5.1 缓存管理</li>
+<li>5.2 事务管理</li>
+</ul></li>
+<li>总结</li>
+</ol>
+
+<p>在很远很远的远古时期,码农们需要准确知道他们编写的代码是怎么运行的。他们心里知道他们的算法和数据结构，因为他们不能浪费一点点他们那些破电脑的一点点CPU和内存。</p>
+
+<p>在这个章节，我将带大家回顾这些概念，因为这对弄懂数据库很关键，顺便我还会介绍索引的概念</p>
+
+<h1 id="o-1-vs-o-n-2">O(1) vs O(n^2)</h1>
+
+<p>现如今，很多程序员不关心时间复杂度&hellip;.好吧，他们是对的！</p>
+
+<p>但当你处理大数据时（我不是说几千个）或者你为了几毫秒的性能在优化，就非常有必要了解这个理论了。刚巧，数据库符合这两种情况！
+不会花费太长时间，只是了解下，这将有助于我们理解后面说的&rdquo;基于成本的优化&rdquo;</p>
+
+<h2 id="时间复杂度概念">时间复杂度概念</h2>
+
+<p>时间复杂度被用来表达算法处理已知问题所消耗的时长，为了表达这个复杂度，计算机科学家使用数学上的大O符号。 该符号加上算法需要进行多少次操作函数一起使用。</p>
+
+<p>用下图来说明时间复杂度的差异
+<img src="/img/TimeComplexity.png" alt="时间复杂度的差异" title="TimeComplexity" /></p>
+
+<p>O(1) 是静态的
+O(log(n)) 保持在一个低复杂度，哪怕有几十亿的数据要处理
+O(n平方) 是复杂度最差的</p>
+
+</main>
+<h2 class="date">发布日期:2019/09/09</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%90%86%E8%AE%BA">数据库理论</a> <a href="/categories/%E7%BF%BB%E8%AF%91">翻译</a> <a href="/categories/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93">关系型数据库</a> <a href="/categories/mysql">mysql</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E8%BD%AC%E8%AF%91">转译</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

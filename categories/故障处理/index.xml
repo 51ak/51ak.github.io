@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>故障处理 on Classic</title>
+    <link>/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/</link>
+    <description>Recent content in 故障处理 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 23 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>redis的内存报警OOM command not allowed when used memory&gt;maxmemory</title>
+      <link>/dba/redis%E7%9A%84%E5%86%85%E5%AD%98%E6%8A%A5%E8%AD%A6oomcommandnotallowedwhenusedmemorymaxmemory/</link>
+      <pubDate>Tue, 23 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/redis%E7%9A%84%E5%86%85%E5%AD%98%E6%8A%A5%E8%AD%A6oomcommandnotallowedwhenusedmemorymaxmemory/</guid>
+      <description> 非核心业务的一次小故障，未造成用户感知到的业务影响，记录如下
+ 参与者  DEV1,DEV2 DBA1,DBA2 3主3从的RedisCluster集群：1.10,1.11,1.12,1.20,1.21,1.22  故障起因  DEV1想排查线上Redis是否有对指定的key有访问 11:45 DEV1找到DBA1协助排查 11:50 DBA1在1.11实例上开启monitor进程，监控Redis写入 11:55 monitor进程启动5分钟后，1.11实例的内存占用从2G涨到10G 触发该节点的内存占满，引发故障(该节点的新写入报错，其他节点正常读写) 12:05 DBA1在1.11实例上停止monitor进程，1.11实例的内存占用从10G回退到2G 12:05 Redis集群自动恢复正常   故障发现和处理  12:20 DEV2收到报警 12:23 DEV2找到DBA2反馈程序报错Caused by: io.lettuce.core.RedisCommandExecutionException: OOM command not allowed when used memory &amp;gt; &#39;maxmemory&#39; 12:25 DBA2上线检查问题，在节点1.10上查看内存使用率是2G/10G 正常 12:28 DBA2检查该集群的1.10，1.11,1.12三个节点内存都是2G/10G 没发现异常。 12:30 查不到问题，修改该集群的所有节点最大内存从10G 改到12G 12:30 DEV2重启应用，发现恢复。 12:40 DBA2检查Redis应用，发现set,get的命令从每秒的6000次/秒降到500次/秒，认为业务没有恢复，建议继续排查 12:45 DBA1，DEV1参与排查，DEV2发现有个status任务没有重启成功 12:46 DEV2重启status任务，1分钟后，Redis监控指标恢复正常，故障完成处理 13:12 回溯整个过程，确认是11:50的Monitor进程引起的内存占用异常，原因定位 13:25 沟通确认Monitor进和不可以长期开启的规范。故障完成处理和总结  总结  DBA协助研发排查问题时，开启Monitor进程时间过长，引起一个节点的内存占满，继而引起研发的进程挂掉 非核心业务，没有影响到用户和交易，处理过程中现象比较明显，处理难度低，监控还是不够周全 补充：考虑换LRU策略  </description>
+    </item>
+    
+    <item>
+      <title>MySQL8.0尝试用json索引替换全文索引</title>
+      <link>/mysql/mysql8.0%E5%B0%9D%E8%AF%95%E7%94%A8json%E7%B4%A2%E5%BC%95%E6%9B%BF%E6%8D%A2%E5%85%A8%E6%96%87%E7%B4%A2%E5%BC%95/</link>
+      <pubDate>Mon, 27 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql8.0%E5%B0%9D%E8%AF%95%E7%94%A8json%E7%B4%A2%E5%BC%95%E6%9B%BF%E6%8D%A2%E5%85%A8%E6%96%87%E7%B4%A2%E5%BC%95/</guid>
+      <description>原因  MySQL8.0.22版本 线上有一张task表的users字段因历史原因 存放了以逗号分隔的用户id列表 程序中会匹配用户id进行查询 用到的SQL如下：  # 查询 select users from task limit 2; | users | |300511164303031, 310406164883350, 151134164673502, 330203164377115, 310633164035316, 310408164888300, 170515164003106, 150636164603618, 310510164335822, 151336164653174, 310508164331806, 301115164423156 | |310406164883350,181138164432020,1000130,330312164322768,170515164003106,300608164825431,331015164472774,150304164442136,331108164613233,1000164,301113164430265,171016164003026,300333164732303,151134164673502,1000143,331034164487883,181033164253337,310633164035316,150304164442101,1000136,330312164636073,310508164331806,330302164334267,181017164275220,301115164423156,330203164377336,310303164733465,330312164322726,330203164377115,310408164888300,311116164231848,1000123,310214164825778,301317164618388,300333164732155,151013164628330,300511164303031,1000138,1000185,150636164603618,300415164783624,310237164871433,310510164335822,151336164653174,330210164387154 | -- 数据和表名，列名已做掩码转换。非真实数据 # 示例 select * from task where MATCH(users) AGAINST(&#39;19323422341234&#39; );	 表的数据量不多40多万条记录 但是频繁的出现慢查询(超过500毫秒)  优化思路  定位到全文索引慢的时候 第一反应是拆了这个全文索引查询 业务方将逗号字段拆表的改动量大暂时不考虑 折中办法是将这个字段换成json类型 然后用json的索引来替换全文索引 我在想这个方案的时候 给忠哥的预估是性能会提升3-10倍 当时没做测试 靠的是经验和信口开河 一通怂恿说服了研发同事 开始拉群开整  验证和测试 # 加json字段 alter table task add users_list json ; # 填值 update task set users_list = concat(&#39;[&#39; ,TRIM(BOTH &#39;,&#39; FROM users),&#39;]&#39;) where users is not null and users !</description>
+    </item>
+    
+    <item>
+      <title>MySQL5.7实例无限重启故障定位及解决</title>
+      <link>/mysql/mysql5.7%E5%AE%9E%E4%BE%8B%E6%97%A0%E9%99%90%E9%87%8D%E5%90%AF%E6%95%85%E9%9A%9C%E5%AE%9A%E4%BD%8D%E5%8F%8A%E8%A7%A3%E5%86%B3/</link>
+      <pubDate>Fri, 30 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql5.7%E5%AE%9E%E4%BE%8B%E6%97%A0%E9%99%90%E9%87%8D%E5%90%AF%E6%95%85%E9%9A%9C%E5%AE%9A%E4%BD%8D%E5%8F%8A%E8%A7%A3%E5%86%B3/</guid>
+      <description>故障开始时间：2023-06-30 09:18 故障实例：BI大数据业务
+ 环境  系统：CentOS Linux release 7.8.2003 (Core) MySQL: 5.7.28-log MySQL Community Server (GPL) 部署：多实例部署，当前实例bufferPool:8G 集群：3台主机  主：51 备：52 (和51做双主) 从：53 （同步自52）    故障现象  收到报警，该实例频繁报连接异常和恢复 检查发现该MySQL实例频繁重启 1.该实例访问量很小，不是资源不足引起 2.和研发确认该实例相关的业务最近未发生变更 3.DBA内部确认最近该实例没有做配置变更 4.报错时系统日志无异常报错 5.MySQL正常运行时可以提供服务，但1分钟左右就会自动shutdown 6.慢日志里没有异常SQL 7.MySQL错误日志里只有实例启动后自检的warinning 以及  2023-06-30T10:15:35.534553+08:00 0 [Warning] CA certificate ca.pem is self signed. 2023-06-30T10:15:35.546909+08:00 0 [Warning] Recovery from master pos 59075485 and file mysql-bin.***** for channel &#39;&#39;. Previous relay log pos and relay log file had been set to 416, /data/mysql******/relaylognew/relay-bin.</description>
+    </item>
+    
+    <item>
+      <title>show engine innodb status 工具化实现</title>
+      <link>/mysql/mysql%E7%9A%84showinnodbstatus/</link>
+      <pubDate>Wed, 06 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84showinnodbstatus/</guid>
+      <description>为什么要写这个工具 当MySQL出现性能问题时，DBA经常得去innodb status ，
+但是innodb status的输出信息非常丰富也很复杂。滚了几个屏幕的指标，像这样的得翻好几页，几百行的结果。
+ 哪些是重要的指标 指标具体代表什么意思 指标的值是否正常  非常考验DBA的眼力。
+考虑到以上的不方便，写了个小脚本把这些指标提取出来，并将指标对应的中文意思和合理取值范围做了详细的备注。
+实现思路  当用户选中MySQL实例，并点击show engine innnodb statutus按钮时 后台进程去该实例执行 show engine innnodb statutus 语句 返回结果做正则筛选，将各种指标和值保存在一个字典中 提前准备好一个指标的字典，字典里记了该值的中文说明和取值范围（取值范围这个还没做好） 两个字典一合并，输出一个分好类的可视化结果  指标提取和定义 脚本内容是定义了一个数据字典去翻译这些指标
+{ &amp;quot;background_thread&amp;quot;:(&amp;quot;后台进程:除掉用户请求的活动会话，MySQL后台进程也会定时的进行一系列工作。&amp;quot;,[(&amp;quot;master_thread_loops_active&amp;quot;,&amp;quot;&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;后台master线程avtive执行次数合计值&amp;lt;/b&amp;gt;,后台master线程的每次循环时会选择一种状态来执行(active、shutdown、idle),active次数/idle次数 比值越高，代表系统的写操作越繁忙。&amp;quot;), (&amp;quot;master_thread_loops_idle&amp;quot;,&amp;quot;&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;后台master线程idle执行次数合计值&amp;lt;/b&amp;gt;,和上一个指标连起来看,idle次数越高，代表系统的写操作越少。所以该指标值越大，系统写资源越充足&amp;quot;), (&amp;quot;master_thread_log_flush_and_writes&amp;quot;,&amp;quot;Bytes&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;后台master线程刷新redo日志&amp;lt;/b&amp;gt;,定期刷新redo日志，和参数innodb_flush_log_at_timeout控制刷新时间&amp;quot;) ] ) ,&amp;quot;bufferpool_memory&amp;quot;:(&amp;quot;缓冲池:有关已读和已写页面的统计信息。可以从这些数字中获得缓冲池的使用情况。&amp;quot;,[ (&amp;quot;total_large_memory_allocated&amp;quot;,&amp;quot;Bytes&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;分配给InnoDB Buffer Pool的总内存&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;dictionary_memory_allocated&amp;quot;,&amp;quot;Bytes&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;分配给InnoDB数据字典的内存&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;buffer_pool_size&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;分配给IBP的内存，单位pages&amp;lt;/b&amp;gt;,每页16k&amp;quot;) ,(&amp;quot;buffer_pool_hit&amp;quot;,&amp;quot;/1000&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool命中率&amp;lt;/b&amp;gt;每1000次请求有*次命中buffer pool,非常重要&amp;quot;) ,(&amp;quot;free_buffers&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool Free List 总大小，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;database_pages&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool LRU List 总大小，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;old_database_pages&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool old LRU 总大小，单位pages(冷端)&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;modified_db_pages&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool中脏页的数量，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pending_reads&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;等待读入Buffer Pool的页数量，单位pages&amp;lt;/b&amp;gt;,理论上不应该有等待队列&amp;quot;) ,(&amp;quot;pending_writes_lru&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;LRU中buffer中等待被刷的脏页数，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pending_writes_flush_list&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在checkpoint期间要刷新的缓冲池页数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pending_writes_single_page&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在缓冲池中写入挂起的独立页的数目&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_made_young&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;热点页数&amp;lt;/b&amp;gt;,在缓冲池LRU list中年轻的总页数(移动新页面到sublist的头部)&amp;quot;) ,(&amp;quot;pages_made_not_young&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;old sublist中的page数，冷端的page数&amp;lt;/b&amp;gt;,在缓冲池LRU列表中不年轻的页面总数(保留旧页面在sublist中，不改变)&amp;quot;) ,(&amp;quot;pages_made_young_per_sec&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒LRU链中被young的page数&amp;lt;/b&amp;gt;,oungs/s度量标准仅用于old pages，基于对page的访问次数，而不是页的数量。对页进行多次访问都会被计算。如果见到非常低的值，可能需要减小延迟或增加old page LRU list 的比例。增大后，页面需要更长的时间才会移动到尾部，这就增加了再次访问page，从而使他们made young的可能性增大&amp;quot;) ,(&amp;quot;pages_made_non_young_per_sec&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒LRU链中未被young的page数&amp;lt;/b&amp;gt;，可以一定程度上看出库的繁忙程度和命中率,Not young，如果在执行大表扫描时未看到较高的non-young和non-youngs/s，请增加innodb_old_blocks_time。&amp;quot;) ,(&amp;quot;pages_read&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool中读取的page总数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_created&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在bufferpool中创建的page数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_written&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool写入的page数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_read_per_sec&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool中读取的page数/秒&amp;lt;/b&amp;gt;, 比较重要，代表库的繁忙程度&amp;quot;) ,(&amp;quot;pages_created_per_sec&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在bufferpool中创建的page数/秒&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_written_per_sec&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool写入的page数/秒&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_read_ahead&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒平均预读操作次数&amp;lt;/b&amp;gt;k&amp;quot;) ,(&amp;quot;evicted_without_access&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒驱逐的page数&amp;lt;/b&amp;gt;k&amp;quot;) ,(&amp;quot;random_read_ahead&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒钟随机预读操作的次数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;lrn_len&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;LRU的长度&amp;lt;/b&amp;gt;&amp;quot;) ] ) .</description>
+    </item>
+    
+    <item>
+      <title>MySQL复制参数_slave_rows_search_algorithms及无主键表的处理</title>
+      <link>/mysql/mysql%E5%A4%8D%E5%88%B6%E5%8F%82%E6%95%B0slave_rows_search_algorithms/</link>
+      <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%A4%8D%E5%88%B6%E5%8F%82%E6%95%B0slave_rows_search_algorithms/</guid>
+      <description>0.起因 线上MySQL实例，今天报大量延时，且卡住不动。（表现为seconds_behind_master不断上涨，从库gtid不动）
+同时二级从库有复制SQL进程报错
+[ERROR] [MY-010584] [Repl] Slave SQL for channel &#39;&#39;: Could not execute Update_rows event on table 「表名」; Can&#39;t find record in &#39;「表名」&#39;, Error_code: 1032; handler error HA_ERR_END_OF_FILE; the event&#39;s master log mysql-bin.000****, end_log_pos *******, Error_code: MY-001032 1.排查问题 排查问题时
+ 确认该实例上的从库不提供线上实时业务访问（业务可以接受延时）。不需要做从库切流量动作 先是看了一下从库的多线程复制是database级的，开启多线程复制到logical_clock ,问题并没有恢复       set global slave_parallel_type=&amp;lsquo;logical_clock&amp;rsquo;; set global slave_parallel_workers=4; start slave sql_thread;```
+ 排除掉是线程数不够的原因 发现processlist中是在等Applying batch of row changes (update)  确定是卡在sql进程，再看relaylog确实持续增长800M(表示该实例写入不频繁)   解析relaylog 发现是普通的update语句大约有8000次左右  这个量级的update且是row模式，理论1分钟内就追上了。   查看锁datalocks，发现有大量的行数50几万，都是同一个表的  slave的sql进程不应该有这个量级的行锁。   查看表结构发现这个表是无主键的表，里面大约有50几万条记录，无主键无索引  2.</description>
+    </item>
+    
+    <item>
+      <title>MySQL复制故障修复_无主键表大事务卡住</title>
+      <link>/mysql/mysql%E5%A4%8D%E5%88%B6%E6%95%85%E9%9A%9C%E8%A7%A3%E5%86%B3_%E5%A4%A7%E4%BA%8B%E5%8A%A1%E5%8D%A1%E4%BD%8F/</link>
+      <pubDate>Fri, 18 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%A4%8D%E5%88%B6%E6%95%85%E9%9A%9C%E8%A7%A3%E5%86%B3_%E5%A4%A7%E4%BA%8B%E5%8A%A1%E5%8D%A1%E4%BD%8F/</guid>
+      <description>0.故障现象 生产环境MySQL复制报警，现象
+ 从库复制延时越来越大,gtid一直停留在固定的地方不变 从库的relaylog越来越大，1G以上，但是增长不明显。 从库当前没有业务访问，不存在资源紧张 主库上最近一段时间没有明显的大批量写入  1.原因定位  从上面的现象卡，基本上可以推断是大事务卡住了， 我看的时候法爷已经把relaylog解出来了，也很明显的看到有很多的delete。 根据以上推断我们去主库上查时间点的日志，发现了： 一个SQL是 delete from t1 where c1=&#39;&#39; 删除了65万行数据 于是问题定位：生产环境的windows机器上有同事用navicat删除了线上MySQL的数据。  简单的一个SQL ，但是因为一些原因综合在一起引起了雪崩
+ 不幸的是：这张表是个没主键的表，导致从库追日志进程卡住，无法正常执行 幸运的是：这些从库没有业务访问，没有造成实际影响  2.安全规范 首先：生产环境的windows机器安装navicat访问数据库这种行为，肯定是不被允许的，
+但是因为“历史原因”我们依然有少量同学（不超过10人）有这种特殊需求。
+原计划是3月底推动消除的，
+经过此事以后，DBA会加快推进禁止在生产环境安装数据库客户端连接数据库这个规范。
+有时候就是这样，觉得这个地方可能有风险，我们排个期来解决，通常就会没等到期限就先暴出来了
+ 问：为什么我们不用限制账号访问来源的方法？ 答：因为一些原因,加ip限制代价太大，且不利于未来的docker虚拟化。
+ 3.问题修复 共有3个从节点，我和另外两个DBA用了三种不同的方式来修复
+方法一：我用的方法，就很暴力的在从库上reset master 再set 跳过这个事务 use db_test; truncate table t1; stop slave ; reset master; set @@GLOBAL.GTID_PURGED=&#39;59939d78-de2d-11eb-ac46-e43d1a074d20:16020676&#39; start slave; 方法二：法爷用了相对温和的方法，模拟一个事务的方法。 use db_test; stop slave; SET gtid_next=&#39;59939d78-de2d-11eb-ac46-e43d1a074d20:16020676&#39; truncate table t1; SET gtid_next=&#39;automatic&#39;; start slave; 我和法爷讨论了一下，相对来说这个是更安全的方法。保证了事务的连续，偷换了一个事务的内容</description>
+    </item>
+    
+    <item>
+      <title>SQLServer联机重建或组织索引</title>
+      <link>/sqlserver/sqlserver%E8%81%94%E6%9C%BA%E9%87%8D%E5%BB%BA%E6%88%96%E7%BB%84%E7%BB%87%E7%B4%A2%E5%BC%95/</link>
+      <pubDate>Fri, 21 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/sqlserver/sqlserver%E8%81%94%E6%9C%BA%E9%87%8D%E5%BB%BA%E6%88%96%E7%BB%84%E7%BB%87%E7%B4%A2%E5%BC%95/</guid>
+      <description>索引维护 联机重建或组织索引 CREATE procedure [pr_auto_indexdefrag_online] as begin set nocount on declare @Db_name nvarchar(256) ,@SchemaName nvarchar(256) ,@TableName Nvarchar(256) ,@IndexName Nvarchar(512) ,@PctFrag decimal ,@Defrag nvarchar(max) if exists(select 1 from sys.objects where object_id =object_id(N&#39;#tmp&#39;)) Drop table #tmp; if exists(select 1 from sys.objects where object_id =object_id(N&#39;#tmp_sub&#39;)) Drop table #tmp_sub; create table #tmp_sub(database_id int,dbname nvarchar(32),tablename nvarchar(128),index_type_desc nvarchar(128)) create table #tmp(database_id int,dbname nvarchar(256),tablename nvarchar(256),indexname nvarchar(256),type_desc nvarchar(128),schemaname nvarchar(256),avgfragment decimal) ------找出 text、ntext、image、varchar(max)、nvarchar(max)、varbinary(max)、xml 或大型 CLR 类型的列 exec sp_MSforeachdb &#39;insert into #tmp_sub(database_id,dbname,tablename,index_type_desc) select distinct c.</description>
+    </item>
+    
+    <item>
+      <title>SQLServer清除执行计划缓存</title>
+      <link>/sqlserver/sqlserver%E6%B8%85%E9%99%A4%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E7%BC%93%E5%AD%98/</link>
+      <pubDate>Wed, 05 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/sqlserver/sqlserver%E6%B8%85%E9%99%A4%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E7%BC%93%E5%AD%98/</guid>
+      <description>清除执行计划缓存  DBCC FREEPROCCACHE --清除执行计划缓存 查看执行缓存 	select * from sys.dm_exec_cached_plans 如何利用好执行计划缓存    使用存储过程，或者 sp_executesql 的方式调用会被重复使用的语句，而不要直接用 ad-hoc 语句或者 dynamic SQL 。    在语句里引用对象（表、视图、存储过程等），到带上它的 schema 名字，而不光是对象自己的名字。    将 数据库 Parameterization 属性设置成 Forced   这个属性是开启数据库强制参数化。也就是说，对于在这个数据库下运行的大部分语句，SQL Server 都会先参数化，再运行。如果应用经常用 adhoc 的方式调用一样的语句，强制参数化可能会有所帮助    统计信息更新   统计信息手工或者自动更新后，对和它有关的执行计划都不再能重用，而会产生重编译。    Create Procedure &amp;hellip; with Recompile 选项 和 Exce &amp;hellip; with Recomplie 选项 在重建或者调用存储过程的时候使用 &amp;ldquo;with Recomplie&amp;rdquo;，会强制 Sql Server 在调用这个存储过程的时候，永远都要先编译，再运行。    用户使用了 sp_recomplie    用户在调用语句的时候，使用了 &amp;ldquo;Keep Plan&amp;rdquo; 或者 &amp;ldquo;KeepFixed Plan&amp;rdquo; 这样的查询提示    定时任务  注意对一些复杂的存储过程，定时清理一下（凌晨）  </description>
+    </item>
+    
+    <item>
+      <title>SQLServer索引相关的DMV</title>
+      <link>/sqlserver/sqlserver%E7%B4%A2%E5%BC%95%E7%9B%B8%E5%85%B3%E7%9A%84dmv/</link>
+      <pubDate>Tue, 04 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/sqlserver/sqlserver%E7%B4%A2%E5%BC%95%E7%9B%B8%E5%85%B3%E7%9A%84dmv/</guid>
+      <description>动态管理视图：   sys.dm_db_missing_index_details –返回关于缺失索引的详细信息。
+  sys.dm_db_missing_index_group_stats - 返回缺失索引组的摘要信息
+  sys.dm_db_missing_index_groups – 返回一个具体组的缺失索引的信息。
+  sys.dm_db_missing_index_columns(index_handle) – 返回在一个索引中缺失的数据库表列的信息。这是一个函数，它要求传递index_handle。
+  和大多数动态管理视图的跟踪统计数据一样，当SQL Server实例重启，这些数据被完全清除时，
+  　1.被大量更新，却很少被使用的索引 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED SELECT DB_NAME() AS DatabaseName , SCHEMA_NAME(o.Schema_ID) AS SchemaName , OBJECT_NAME(s.[object_id]) AS TableName , i.name AS IndexName , s.user_updates , s.system_seeks + s.system_scans + s.system_lookups AS [System usage] INTO #TempUnusedIndexes FROM sys.dm_db_index_usage_stats s INNER JOIN sys.indexes i ON s.</description>
+    </item>
+    
+    <item>
+      <title>SQLServer的资源等待</title>
+      <link>/sqlserver/sqlserver%E7%9A%84%E8%B5%84%E6%BA%90%E7%AD%89%E5%BE%85/</link>
+      <pubDate>Mon, 03 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/sqlserver/sqlserver%E7%9A%84%E8%B5%84%E6%BA%90%E7%AD%89%E5%BE%85/</guid>
+      <description>清除执行计划缓存 DBCC SQLPERF (&#39;sys.dm_os_wait_stats&#39;, CLEAR);  开始重新统计  统计SQL  select a.[RowNum] ,a.[WaitType] ,a.[Wait_S]-b.[Wait_S] as [Wait_S] ,a.[Resource_S]-b.[Resource_S] as [Resource_S] ,a.[Signal_S]-b.[Signal_S] as [Signal_S] ,a.[WaitCount]-b.[WaitCount] as [WaitCount] ,a.[Percentage]-b.[Percentage] as [Percentage] ,a.[AvgWait_S]-b.[AvgWait_S] as [AvgWait_S] ,a.[AvgRes_S]-b.[AvgRes_S] as [AvgRes_S] ,a.[AvgSig_S]-b.[AvgSig_S] as [AvgSig_S] from ( SELECT [RowNum] ,[WaitType] ,[Wait_S] ,[Resource_S] ,[Signal_S] ,[WaitCount] ,[Percentage] ,[AvgWait_S] ,[AvgRes_S] ,[AvgSig_S] FROM [system].[dbo].[dba_WaitType_log] where addtime=&#39;2015-03-26 17:04:04.683&#39; ) a left join ( SELECT [RowNum] ,[WaitType] ,[Wait_S] ,[Resource_S] ,[Signal_S] ,[WaitCount] ,[Percentage] ,[AvgWait_S] ,[AvgRes_S] ,[AvgSig_S] FROM [system].</description>
+    </item>
+    
+    <item>
+      <title>SQLServer移动ALWASYON副本文件的方法和脚本</title>
+      <link>/sqlserver/sqlserver%E7%A7%BB%E5%8A%A8alwasyon%E5%89%AF%E6%9C%AC%E6%96%87%E4%BB%B6%E7%9A%84%E6%96%B9%E6%B3%95%E5%92%8C%E8%84%9A%E6%9C%AC/</link>
+      <pubDate>Sun, 02 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/sqlserver/sqlserver%E7%A7%BB%E5%8A%A8alwasyon%E5%89%AF%E6%9C%AC%E6%96%87%E4%BB%B6%E7%9A%84%E6%96%B9%E6%B3%95%E5%92%8C%E8%84%9A%E6%9C%AC/</guid>
+      <description>1.暂停ALWAYSON数据传送 ALTER DATABASE [db1] SET HADR SUSPEND; ALTER DATABASE [db2] SET HADR SUSPEND; ALTER DATABASE [db3] SET HADR SUSPEND; 2.生成脚本：  SELECT database_id, (sum(size)*8/1024/1024) as usedGb FROM sys.master_files WHERE database_id in ( select database_id from sys.databases where NAME NOT IN (&#39;....&#39;) ) AND physical_name LIKE &#39;E:\%&#39; group by database_id order by 2 desc 3.生成脚本2 SELECT name , physical_name AS CurrentLocation , state_desc,(size*8/1024/1024) as usedGb ,&#39;ALTER DATABASE [&#39;+DB_NAME(database_id)+&#39;] MODIFY FILE ( NAME = &#39;+name+&#39; , FILENAME = &#39;&#39;&#39;+REPLACE(physical_name,&#39;D:\&#39;,&#39;F:\&#39;)+&#39;&#39;&#39; )&#39; FROM sys.</description>
+    </item>
+    
+    <item>
+      <title>windowsCluster集群脑裂问题最佳实践</title>
+      <link>/sqlserver/windowscluster%E9%9B%86%E7%BE%A4%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/</link>
+      <pubDate>Sun, 12 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/sqlserver/windowscluster%E9%9B%86%E7%BE%A4%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/</guid>
+      <description>故障描述  WinSvr2008R2/Windows 故障转移集群 意外中断1分钟左右后自行恢复 导致SQLServer alwayson集群 中断访问，连接卡住无法提供访问  错误日志 从日志上来看，当时应该在这个时段节点dboopawo91和dboopawo92两台服务器发生了网络错误，我们看到在日志中显示，两台服务器互相联不通对方了，所以在他们的日志中显示，由于这些机器都无法联通，所以他们都被从群集中踢出。
+------------------------------------------------------------------------------ 节点dboopawo91报由于网络问题联系上不dboopawo92。 --------------------- 11/06/2015 12:13:02 AM Critical dboopawo91.server.dboop.com 1135 Microsoft-Windows-FailoverClustering Node Mgr NT AUTHORITY\SYSTEM Cluster node &#39;dboopawo92&#39; was removed from the active failover cluster membership. The Cluster service on this node may have stopped. This could also be due to the node having lost communication with other active nodes in the failover cluster. Run the Validate a Configuration wizard to check your network configuration.</description>
+    </item>
+    
+  </channel>
+</rss>

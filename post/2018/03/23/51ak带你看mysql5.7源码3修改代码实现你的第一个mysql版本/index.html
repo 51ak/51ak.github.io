@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>51ak带你看MYSQL5.7源码3：修改代码实现你的第一个Mysql版本 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">51ak带你看MYSQL5.7源码3：修改代码实现你的第一个Mysql版本</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+<p>经过开发和测试环境部署</p>
+
+<p>现在到了我们动手的时候了，万事开头难，首先我们实现个小功能</p>
+
+<p>今天我们准备实现这样一个功能：数据永远也不会被DELETE掉</p>
+
+<p>当你把这个版本的MYSQL放到线上环境以后，就永远不用担心有人来DELETE你的数据了</p>
+
+<p>思路很简单：顺腾摸瓜找到Delete所在的FUNC在函数开头就返回一个OK</p>
+
+<p>问题来了，怎么找到这个函数?</p>
+
+<p>有两种：一种很有灵性的同学，可能一眼就看到了sql/sql_delete.cc 这个文件 ，猜到是这个文件</p>
+
+<p>另一种方法就是基础一点，我们顺着这样的代码一层一层找到这里也行。</p>
+
+<p>dispatch_command
+|-&gt;mysql_parse
+  |-&gt;mysql_execute_command
+    -&gt;mysql_update/mysql_delete
+为了快速上手，我们用第一种方法，直接打开sql/sql_delete.cc
+找到这个方法:</p>
+
+<pre><code>bool Sql_cmd_delete::execute(THD *thd)
+{
+  DBUG_ASSERT(thd-&gt;lex-&gt;sql_command == SQLCOM_DELETE);
+
+  LEX *const lex= thd-&gt;lex;
+  SELECT_LEX *const select_lex= lex-&gt;select_lex;
+  SELECT_LEX_UNIT *const unit= lex-&gt;unit;
+  TABLE_LIST *const first_table= select_lex-&gt;get_table_list();
+  TABLE_LIST *const all_tables= first_table;
+
+  if (delete_precheck(thd, all_tables))
+    return true;
+  DBUG_ASSERT(select_lex-&gt;offset_limit == 0);
+  unit-&gt;set_limit(select_lex);
+
+  /* Push ignore / strict error handler */
+  Ignore_error_handler ignore_handler;
+  Strict_error_handler strict_handler;
+  if (thd-&gt;lex-&gt;is_ignore())
+    thd-&gt;push_internal_handler(&amp;ignore_handler);
+  else if (thd-&gt;is_strict_mode())
+    thd-&gt;push_internal_handler(&amp;strict_handler);
+　
+
+/*注:我们要改的就是这里,直接返回一个true,而把真正要执行的地方给注释掉了*/
+  bool res =true;
+  /*MYSQL_DELETE_START(const_cast&lt;char*&gt;(thd-&gt;query().str));
+  bool res = mysql_delete(thd, unit-&gt;select_limit_cnt);
+  MYSQL_DELETE_DONE(res, (ulong) thd-&gt;get_row_count_func());
+  */
+
+  /* Pop ignore / strict error handler */
+  if (thd-&gt;lex-&gt;is_ignore() || thd-&gt;is_strict_mode())
+    thd-&gt;pop_internal_handler();
+
+  return res;
+}
+
+</code></pre>
+
+<p>好了，代码就改这一个小地方，现在去编译运行</p>
+
+<p>然后建 一个测试表往里写几条数据,然后尝试各种DELETE语句，接下来就是见证奇迹的时候了，你会发现数据永远不能被DELETE掉了。。</p>
+
+<pre><code>mysql&gt; select * from t1;
++----+
+| id |
++----+
+|  1 |
+|  2 |
+|  3 |
+|  4 |
+|  5 |
++----+
+5 rows in set (0.00 sec)
+
+mysql&gt; delete from t1 where id=2;
+Query OK, 0 rows affected (0.00 sec)
+mysql&gt; select * from t1;
++----+
+| id |
++----+
+| 1 |
+| 2 |
+| 3 |
+| 4 |
+| 5 |
++----+
+5 rows in set (0.00 sec)
+
+</code></pre>
+
+<p>怎么样，小小的一个改动，就让你再也不担心数据被删除了，感觉很酷有没有</p>
+
+<p>看到这里的同学，现在你已经有了第一个自定义版 的MYSQL了，还不赶紧打包发布到线上去！！</p>
+
+<p>让那些RD同学感受一下来自DBA的控制力吧。</p>
+
+<p>可能有好事的同学会问，这只防了DELETE,没防TRUNCATE和DROP啊。。。</p>
+
+<p>这样问的同学，我觉得你不够有灵性。。</p>
+
+</main>
+<h2 class="date">发布日期:2018/03/23</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/mysql%E6%BA%90%E7%A0%81">mysql源码</a> <a href="/categories/c">c</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

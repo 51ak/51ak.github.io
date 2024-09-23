@@ -1,0 +1,142 @@
+﻿body  {
+	font-size:12px;
+	background-image: url(logo-bg.gif);
+	margin: 10; 
+	padding: 0;
+	line-height:160%;
+	letter-spacing:1px;
+}
+ 
+a:link {
+	color: #006633;
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+	color: #3a9668;
+}
+a:hover {
+	text-decoration: underline;
+	letter-spacing:1px;
+	color:#009999;
+	/*font-weight:bold;
+	color: #FF9900;*/
+}
+a:active {
+	text-decoration: underline;
+	color: #CC0000;
+}
+
+a.blue:link {
+	color: #0000ff;
+	text-decoration: none;
+}
+a.blue:visited {
+	text-decoration: none;
+	color: #0000ff;
+}
+a.blue:hover {
+	text-decoration: none;
+	color: #FF9900;
+}
+a.blue:active {
+	text-decoration: underline;
+	color: #006633;
+}
+
+
+
+.hrdt
+{
+border-top:1px dotted #494949;
+HEIGHT:0;
+text-align:center;
+width:98%;
+margin:10px 0;
+}
+.riqi
+{
+color:#999999;
+
+letter-spacing:1px;
+}
+.font12
+{
+font-size:12px;
+font-family:"宋体";
+}
+.f_right
+{
+float:right;
+padding-right:10px;
+}
+.local_daohang
+{
+border:1px solid #dddddd; background-color:#f4f9fd;padding:4px; margin-top:10px; color:#CCCCCC;
+margin:10px 0;
+}
+.zc_red
+{
+color:#FF0000;
+}
+.zc_blue
+{
+color:#0000FF;
+}
+.zc_966
+{
+color:#996666;
+}
+.zc_s1
+{
+color:#FF0000;
+}
+.zc_s2
+{
+font-weight:bold;
+}
+.zc_s3
+{
+color:#003399;
+}
+.zc_title
+{
+font-size:13px;
+font-weight:bold;
+color:#003333;
+
+}
+.zc_666
+{
+color:#666666;
+
+}
+
+.zc_999
+{
+color:#666666;
+
+}
+.bigtitle {
+	color: #203524;
+	font-family: "黑体";
+	font-size:20px;
+	padding:12px 0 0 0;
+}
+.zc_margin10
+{
+margin:20px 0;
+font-weight:bold;
+}
+.table_border
+{
+	margin-top:10px; background-color:#D7E6E8; border:0;	 
+}
+.table_border td
+{
+	background-color:#ffffff;
+}
+img
+{
+    border:0;
+}

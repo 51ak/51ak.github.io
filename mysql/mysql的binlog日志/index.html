@@ -1,0 +1,391 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL的7种日志(四):BinLog| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL的7种日志(四):BinLog</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#0前言">0.前言</a></li>
+    <li><a href="#1什么是binlog">1.什么是binlog</a></li>
+    <li><a href="#2binlog的作用">2.binlog的作用</a></li>
+    <li><a href="#3binlog-和-redolog-区别">3.binlog 和 redolog 区别</a></li>
+    <li><a href="#4什么时候写binlog">4.什么时候写binlog</a></li>
+    <li><a href="#5binlog的存储">5.binlog的存储</a>
+      <ul>
+        <li><a href="#binlog日志包括两类文件">binlog日志包括两类文件:</a></li>
+        <li><a href="#binlog日志物理存储">binlog日志物理存储</a></li>
+        <li><a href="#type_code">type_code</a></li>
+      </ul>
+    </li>
+    <li><a href="#6binlog解析和反解">6.binlog解析和反解</a></li>
+    <li><a href="#其他binlog问题">其他binlog问题</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="0前言">0.前言</h2>
+<p>续：</p>
+<ul>
+<li><a href="https://www.dboop.com/mysql/mysql7%E7%A7%8D%E6%97%A5%E5%BF%97/">MySQL的7种日志(一):概况</a></li>
+<li><a href="https://www.dboop.com/mysql/mysql%E7%9A%84redo%E6%97%A5%E5%BF%97/">MySQL的7种日志(二):RedoLog</a></li>
+<li><a href="https://www.dboop.com/mysql/mysql%E7%9A%84undo%E6%97%A5%E5%BF%97/">MySQL的7种日志(三):UndoLog</a></li>
+<li>MySQL的7种日志(四):BinLog</li>
+</ul>
+<h2 id="1什么是binlog">1.什么是binlog</h2>
+<ul>
+<li>又名:MySQL归档日志,MySQL二进制日志</li>
+<li>记录所有数据库表结构变更（DDL例如CREATE、ALTER TABLE…）以及表数据修改（DMLINSERT、UPDATE、DELETE …）的所有操作。</li>
+<li>默认情况下，二进制日志并不是在每次写的时候同步到磁盘。因此，当数据库所在地操作系统发生宕机时，可能会有最后一部分数据没有写入二进制日志文件中，这会给恢复和复制带来问题。</li>
+</ul>
+<h2 id="2binlog的作用">2.binlog的作用</h2>
+<ul>
+<li>时间点的恢复：某些数据的恢复需要二进制日志，例如，在一个数据库全备文件恢复后，用户可通过二进制日志进行即时点（point-in-time）恢复。</li>
+<li>主从复制：通过复制和执行二进制日志使一台远程的 Mysql 数据库（一般称为 slave）与一台 MySQL 数据库（一般称为 master）进行实时同步。</li>
+<li>变更审计：用户可以通过二进制日志中的信息来进行审计，回溯是否对数据库的修改。</li>
+<li>误操作回滚：当误修改(ins/upd/del)发生时,可以用binlog解析出修改前后的语句,用于快速回滚</li>
+<li>异构数据同步：通过解析binlog,可以将MySQL的变更通知到异构数据源(kafka,es,mongo,redis,mq&hellip;)</li>
+<li>事务存储引擎的崩溃恢复。MySQL采用事务的两阶段提交协议。当 MySQL 系统发生崩溃时，事务在存储引擎内部的状态可能为 prepared 和 commit 两种。对于 prepared 状态的事务，是进行提交操作还是进行回滚操作，这时需要参考 binlog：如果事务在 binlog 中存在，那么将其提交；如果不在 binlog 中存在，那么将其回滚，这样就保证了数据在主库和从库之间的一致性。</li>
+</ul>
+<h2 id="3binlog-和-redolog-区别">3.binlog 和 redolog 区别</h2>
+<ul>
+<li>适用对象不同：</li>
+<li>binlog 是 MySQL 的 Server 层实现的，所有引擎都可以使用</li>
+<li>redolog 是 InnoDB 引擎特有的</li>
+<li>写入内容不同：
+<ul>
+<li>binlog 有 3 种格式类型，分别是 STATEMENT（默认格式）、ROW、 MIXED，区别如下：</li>
+<li>STATEMENT：语句</li>
+<li>ROW：记录行数据最终被修改成什么样了</li>
+<li>MIXED：包含了 STATEMENT 和 ROW 模式，它会根据不同的情况自动使用 ROW 模式和 STATEMENT 模式；
+redolog 是物理日志，记录的是在某个数据页做了什么修改，比如对 XXX 表空间中的 YYY 数据页 ZZZ 偏移量的地方做了AAA 更新；</li>
+</ul>
+</li>
+<li>写入方式不同：</li>
+<li>binlog 是可以追加写入的。“追加写” 是指 binlog 文件写到一定大小后会切换到下一个，并不会覆盖以前的日志</li>
+<li>redolog 是循环写的，空间固定会被用完</li>
+<li>作用不同</li>
+</ul>
+<h2 id="4什么时候写binlog">4.什么时候写binlog</h2>
+<ul>
+<li>对支持事务的引擎如InnoDB而言，必须要提交了事务才会记录binlog。</li>
+<li>binlog 什么时候刷新到磁盘跟参数 sync_binlog 相关。</li>
+<li>如果设置为0，则表示MySQL不控制binlog的刷新，由文件系统去控制它缓存的刷新；</li>
+<li>如果设置为不为0的值，则表示每 sync_binlog 次事务，MySQL调用文件系统的刷新操作刷新binlog到磁盘中。</li>
+<li>设为1是最安全的，在系统故障时最多丢失一个事务的更新，但是会对性能有所影响。</li>
+<li>如果 sync_binlog=0 或 sync_binlog大于1，当发生电源故障或操作系统崩溃时，可能有一部分已提交但其binlog未被同步到磁盘的事务会被丢失，恢复程序将无法恢复这部分事务。</li>
+</ul>
+<h2 id="5binlog的存储">5.binlog的存储</h2>
+<h3 id="binlog日志包括两类文件">binlog日志包括两类文件:</h3>
+<ul>
+<li>二进制日志索引文件（文件名后缀为.index）用于记录所有有效的的二进制文件</li>
+<li>二进制日志文件（文件名后缀为.00000*）记录数据库所有的DDL和DML语句事件</li>
+</ul>
+<h4 id="abinlog的索引文件一个文本文件其中内容为当前的binlog文件列表">a.binlog的索引文件:一个文本文件，其中内容为当前的binlog文件列表</h4>
+<ul>
+<li>当遇到以下3种情况时，MySQL会重新生成一个新的日志文件，文件序号递增：</li>
+<li>1.MySQL服务器停止或重启时</li>
+<li>2.使用 flush logs 命令；</li>
+<li>当 binlog 文件大小超过 max_binlog_size 变量的值时；(如果你有很大的事务，为了保证事务的完整性，不可能做切换日志的动作)</li>
+</ul>
+<h4 id="bbinlog一个二进制文件集合">b.binlog:一个二进制文件集合</h4>
+<ul>
+<li>每个binlog文件以一个4字节的魔数开头，接着是一组Events:</li>
+<li>魔数：0xfe62696e对应的是0xfebin；</li>
+<li>Event：每个Event包含header和data两个部分；header提供了Event的创建时间，哪个服务器等信息，data部分提供的是针对该Event的具体信息，如具体数据的修改；</li>
+<li>第一个Event用于描述binlog文件的格式版本，这个格式就是event写入binlog文件的格式；</li>
+<li>其余的Event按照第一个Event的格式版本写入；</li>
+<li>最后一个Event用于说明下一个binlog文件；</li>
+</ul>
+<h3 id="binlog日志物理存储">binlog日志物理存储</h3>
+<pre><code>+=====================================+
+| event  | timestamp         0 : 4    |
+| header +----------------------------+
+|        | type_code         4 : 1    | 
+|        +----------------------------+
+|        | server_id         5 : 4    |
+|        +----------------------------+
+|        | event_length      9 : 4    | 
+|        +----------------------------+
+|        | next_position    13 : 4    |
+|        +----------------------------+
+|        | flags            17 : 2    |
++=====================================+
+| event  | binlog_version   19 : 2    | 
+| data   +----------------------------+
+|        | server_version   21 : 50   |
+|        +----------------------------+
+|        | create_timestamp 71 : 4    |
+|        +----------------------------+
+|        | header_length    75 : 1    |
+|        +----------------------------+
+|        | post-header      76 : n    | 
+|        | lengths for all            |  
+|        | event types                |
++=====================================+
+如果事件头的长度是 x 字节，那么事件体的长度为 (event_length - x) 字节；设事件体中 fixed part 的长度为 y 字节，那么 variable part 的长度为 (event_length - (x + y)) 字节。
+</code></pre><h3 id="type_code">type_code</h3>
+<ul>
+<li>主要有3个版本：</li>
+</ul>
+<ul>
+<li>v1: 在 MySQL 3.23 中使用</li>
+<li>v3: 在 MySQL 4.0.2 到 4.1 中使用</li>
+<li>v4: 在 MySQL 5.0 及以上版本中使用</li>
+</ul>
+<p>现在一般不会使用MySQL5.0以下版本，所以下面仅介绍v4版本的binlog事件类型。binlog 的事件类型较多，本文在此做一些简单的汇总</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">事件类型</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">UNKNOWN_EVENT</td>
+<td style="text-align:left">此事件从不会被触发，也不会被写入binlog中；发生在当读取binlog时，不能被识别其他任何事件，那被视为UNKNOWN_EVENT</td>
+</tr>
+<tr>
+<td style="text-align:left">START_EVENT_V3</td>
+<td style="text-align:left">每个binlog文件开始的时候写入的事件，此事件被用在MySQL3.23 – 4.1，MYSQL5.0以后已经被 FORMAT_DESCRIPTION_EVENT 取代</td>
+</tr>
+<tr>
+<td style="text-align:left">QUERY_EVENT</td>
+<td style="text-align:left">执行更新语句时会生成此事件，包括：create，insert，update，delete；</td>
+</tr>
+<tr>
+<td style="text-align:left">STOP_EVENT</td>
+<td style="text-align:left">当mysqld停止时生成此事件</td>
+</tr>
+<tr>
+<td style="text-align:left">ROTATE_EVENT</td>
+<td style="text-align:left">当mysqld切换到新的binlog文件生成此事件，切换到新的binlog文件可以通过执行flush logs命令或者binlog文件大于 <code>max_binlog_size</code> 参数配置的大小；</td>
+</tr>
+<tr>
+<td style="text-align:left">INTVAR_EVENT</td>
+<td style="text-align:left">当sql语句中使用了AUTO_INCREMENT的字段或者LAST_INSERT_ID()函数；此事件没有被用在binlog_format为ROW模式的情况下</td>
+</tr>
+<tr>
+<td style="text-align:left">LOAD_EVENT</td>
+<td style="text-align:left">执行LOAD DATA INFILE 语句时产生此事件，在MySQL 3.23版本中使用</td>
+</tr>
+<tr>
+<td style="text-align:left">SLAVE_EVENT</td>
+<td style="text-align:left">未使用</td>
+</tr>
+<tr>
+<td style="text-align:left">CREATE_FILE_EVENT</td>
+<td style="text-align:left">执行LOAD DATA INFILE 语句时产生此事件，在MySQL4.0和4.1版本中使用</td>
+</tr>
+<tr>
+<td style="text-align:left">APPEND_BLOCK_EVENT</td>
+<td style="text-align:left">执行LOAD DATA INFILE 语句时产生此事件，在MySQL4.0版本中使用</td>
+</tr>
+<tr>
+<td style="text-align:left">EXEC_LOAD_EVENT</td>
+<td style="text-align:left">执行LOAD DATA INFILE 语句时产生此事件，在MySQL4.0和4.1版本中使用</td>
+</tr>
+<tr>
+<td style="text-align:left">DELETE_FILE_EVENT</td>
+<td style="text-align:left">执行LOAD DATA INFILE 语句时产生此事件，在MySQL4.0版本中使用</td>
+</tr>
+<tr>
+<td style="text-align:left">NEW_LOAD_EVENT</td>
+<td style="text-align:left">执行LOAD DATA INFILE 语句时产生此事件，在MySQL4.0和4.1版本中使用</td>
+</tr>
+<tr>
+<td style="text-align:left">RAND_EVENT</td>
+<td style="text-align:left">执行包含RAND()函数的语句产生此事件，此事件没有被用在binlog_format为ROW模式的情况下</td>
+</tr>
+<tr>
+<td style="text-align:left">USER_VAR_EVENT</td>
+<td style="text-align:left">执行包含了用户变量的语句产生此事件，此事件没有被用在binlog_format为ROW模式的情况下</td>
+</tr>
+<tr>
+<td style="text-align:left">FORMAT_DESCRIPTION_EVENT</td>
+<td style="text-align:left">描述事件，被写在每个binlog文件的开始位置，用在MySQL5.0以后的版本中，代替了START_EVENT_V3</td>
+</tr>
+<tr>
+<td style="text-align:left">XID_EVENT</td>
+<td style="text-align:left">支持XA的存储引擎才有，本地测试的数据库存储引擎是innodb，所有上面出现了XID_EVENT；innodb事务提交产生了QUERY_EVENT的BEGIN声明，QUERY_EVENT以及COMMIT声明，如果是myIsam存储引擎也会有BEGIN和COMMIT声明，只是COMMIT类型不是XID_EVENT</td>
+</tr>
+<tr>
+<td style="text-align:left">BEGIN_LOAD_QUERY_EVENT</td>
+<td style="text-align:left">执行LOAD DATA INFILE 语句时产生此事件，在MySQL5.0版本中使用</td>
+</tr>
+<tr>
+<td style="text-align:left">EXECUTE_LOAD_QUERY_EVENT</td>
+<td style="text-align:left">执行LOAD DATA INFILE 语句时产生此事件，在MySQL5.0版本中使用</td>
+</tr>
+<tr>
+<td style="text-align:left">TABLE_MAP_EVENT</td>
+<td style="text-align:left">用在binlog_format为ROW模式下，将表的定义映射到一个数字，在行操作事件之前记录（包括：WRITE_ROWS_EVENT，UPDATE_ROWS_EVENT，DELETE_ROWS_EVENT）</td>
+</tr>
+<tr>
+<td style="text-align:left">PRE_GA_WRITE_ROWS_EVENT</td>
+<td style="text-align:left">已过期，被 WRITE_ROWS_EVENT 代替</td>
+</tr>
+<tr>
+<td style="text-align:left">PRE_GA_UPDATE_ROWS_EVENT</td>
+<td style="text-align:left">已过期，被 UPDATE_ROWS_EVENT 代替</td>
+</tr>
+<tr>
+<td style="text-align:left">PRE_GA_DELETE_ROWS_EVENT</td>
+<td style="text-align:left">已过期，被 DELETE_ROWS_EVENT 代替</td>
+</tr>
+<tr>
+<td style="text-align:left">WRITE_ROWS_EVENT</td>
+<td style="text-align:left">用在binlog_format为ROW模式下，对应 insert 操作</td>
+</tr>
+<tr>
+<td style="text-align:left">UPDATE_ROWS_EVENT</td>
+<td style="text-align:left">用在binlog_format为ROW模式下，对应 update 操作</td>
+</tr>
+<tr>
+<td style="text-align:left">DELETE_ROWS_EVENT</td>
+<td style="text-align:left">用在binlog_format为ROW模式下，对应 delete 操作</td>
+</tr>
+<tr>
+<td style="text-align:left">INCIDENT_EVENT</td>
+<td style="text-align:left">主服务器发生了不正常的事件，通知从服务器并告知可能会导致数据处于不一致的状态</td>
+</tr>
+<tr>
+<td style="text-align:left">HEARTBEAT_LOG_EVENT</td>
+<td style="text-align:left">主服务器告诉从服务器，主服务器还活着，不写入到日志文件中</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6binlog解析和反解">6.binlog解析和反解</h2>
+<p>参见:</p>
+<ul>
+<li><a href="https://www.dboop.com/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_binlog/">MySQL常用脚本_binlog解析和回滚</a></li>
+</ul>
+<h2 id="其他binlog问题">其他binlog问题</h2>
+<ul>
+<li><a href="https://www.dboop.com/dba/mysqlbinlogquestion/">MySQL binlog 问答</a></li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/12/27</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/binlog">binlog</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

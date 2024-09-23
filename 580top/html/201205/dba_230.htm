@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SQL简介和SQL语法</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="sql&nbsp;是用于访问和处理数据库的标准的计算机语言。<br/>什么是sql？sql指结构化查询语言sql使我们有能力访问数据库sql是一种ansi的标准计算机语言编者注：ansi，美国国家标准化组织<br/>sql能做什么？sql面向数据库执行查询sql可从数据库取回数据sql可在数据库中插入新的纪录sql可更新数据库中的数据sql可从数据库删除记录sql可创SQL简介和SQL语法" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA">高可用性和HA</a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化">性能与优化</a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决">故障与解决</a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserverzhishi/l_2_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>SQL简介和SQL语法</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   SQL&nbsp;是用于访问和处理数据库的标准的计算机语言。<br />什么是 SQL？SQL 指结构化查询语言SQL 使我们有能力访问数据库SQL 是一种 ANSI 的标准计算机语言编者注：ANSI，美国国家标准化组织<br />SQL 能做什么？SQL 面向数据库执行查询SQL 可从数据库取回数据SQL 可在数据库中插入新的纪录SQL 可更新数据库中的数据SQL 可从数据库删除记录SQL 可创建新数据库SQL 可在数据库中创建新表SQL 可在数据库中创建存储过程SQL 可在数据库中创建视图SQL 可以设置表、存储过程和视图的权限SQL 是一种标准 - 但是...SQL 是一门 ANSI 的标准计算机语言，用来访问和操作数据库系统。SQL 语句用于取回和更新数据库中的数据。SQL 可与数据库程序协同工作，比如 MS&nbsp;<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>、<a href="../../html/db2/l_22_1.htm" title="DB2" >DB2</a>、<a href="../../html/infomix/l_24_1.htm" title="Informix" >Informix</a>、MS SQLServer、<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>、<a href="../../html/sysbase/l_21_1.htm" title="Sybase" >Sybase</a> 以及<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>数据库系统。<br />不幸地是，存在着很多不同版本的 SQL 语言，但是为了与 ANSI 标准相兼容，它们必须以相似的方式共同地来支持一些主要的关键词（比如&nbsp;SELECT、UPDATE、DELETE、INSERT、WHERE 等等）。<br />注释：除了 SQL 标准之外，大部分 SQL 数据库程序都拥有它们自己的私有扩展！<br />在您的网站中使用 SQL要创建发布数据库中数据的网站，您需要以下要素：<br />RDBMS 数据库程序（比如 MS <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>, SQL Server,&nbsp;MySQL）服务器端脚本语言（比如&nbsp;PHP&nbsp;或&nbsp;ASP）SQLHTML&nbsp;/&nbsp;CSSRDBMSRDBMS 指的是关系型数据库管理系统。<br />RDBMS 是 SQL 的基础，同样也是所有现代数据库系统的基础，比如 MS SQL Server, IBM <a href="../../html/db2/l_22_1.htm" title="DB2" >DB2</a>, <a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>, MySQL 以及 Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a>。<br />RDBMS 中的数据存储在被称为表（tables）的数据库对象中。<br />表是相关的数据项的集合，它由列和行组成。<br />数据库表一个数据库通常包含一个或多个表。每个表由一个名字标识（例如“客户”或者“订单”）。表包含带有数据的记录（行）。<br />下面的例子是一个名为 "Persons" 的表：<br />IdLastNameFirstNameAddressCity1AdamsJohnOxford StreetLondon2BushGeorgeFifth AvenueNew York3CarterThomasChangan StreetBeijing上面的表包含三条记录（每一条对应一个人）和五个列（Id、姓、名、地址和城市）。<br />SQL 语句您需要在数据库上执行的大部分工作都由 SQL 语句完成。<br />下面的语句从表中选取 LastName 列的数据：<br />SELECT LastName FROM Persons结果集类似这样：<br />LastNameAdamsBushCarter在本教程中，我们将为您讲解各种不同的 SQL 语句。<br />重要事项一定要记住，SQL 对大小写不敏感！<br />SQL 语句后面的分号？某些数据库系统要求在每条 SQL 命令的末端使用分号。在我们的教程中不使用分号。<br />分号是在数据库系统中分隔每条 SQL 语句的标准方法，这样就可以在对服务器的相同请求中执行一条以上的语句。<br />如果您使用的是 MS <a href="../../html/access/l_23_1.htm" title="Access" >Access</a> 和<br />SQL Server 2000，则不必在每条 SQL 语句之后使用分号，不过某些数据库软件要求必须使用分号。&nbsp;<br />SQL DML 和 DDL可以把 SQL 分为两个部分：数据操作语言 (DML) 和 数据定义语言 (DDL)。SQL (结构化查询语言)是用于执行查询的语法。但是 SQL 语言也包含用于更新、插入和删除记录的语法。本文来源于网页教学网。<br />查询和更新指令构成了 SQL 的 DML 部分：<br />SELECT - 从数据库表中获取数据UPDATE - 更新数据库表中的数据DELETE - 从数据库表中删除数据INSERT INTO - 向数据库表中插入数据SQL 的数据定义语言 (DDL) 部分使我们有能力创建或删除表格。我们也可以定义索引（键），规定表之间的链接，以及施加表间的约束。<br />SQL 中最重要的 DDL 语句:<br />CREATE DATABASE - 创建新数据库ALTER DATABASE - 修改数据库CREATE TABLE - 创建新表ALTER TABLE - 变更（改变）数据库表DROP TABLE - 删除表CREATE INDEX - 创建索引（搜索键）DROP INDEX - 删除索引
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

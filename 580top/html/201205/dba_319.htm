@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>oracle权限管理源代码</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="一、系统的默认用户&nbsp;java代码&nbsp;sys;//系统管理员，拥有最高权限&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;system;//本地管理员，次高权限&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scott;//普通用户，密码默认为tiger,默认未解锁&nbsp;&nbsp;&nbsp;二、登陆&nbsp;java代码&oracle权限管理源代码" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a href="../Oracle/l_7_1.htm" class="hover"　title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../Oraclezhishi/l_8_1.htm" title="Oracle基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../Oracleha/l_9_1.htm" title="Oracle高可用性和HA">高可用性和HA</a>|</li><li><a  href="../Oracleyouhua/l_10_1.htm" title="Oracle性能与优化">性能与优化</a>|</li><li><a  href="../Oracleguzhang/l_11_1.htm" title="Oracle故障与解决">故障与解决</a>|</li><li><a  href="../Oraclebi/l_12_1.htm" title="Oracle商业应用">Oracle商业应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../Oracle/l_7_1.htm">Oracle</a>&nbsp;&gt;&nbsp;<a href="../Oraclezhishi/l_8_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>oracle权限管理源代码</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   一、系统的默认用户&nbsp;Java代码&nbsp;sys;//系统管理员，拥有最高权限&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;system;//本地管理员，次高权限&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scott;//普通用户，密码默认为tiger,默认未解锁&nbsp;&nbsp;&nbsp;二、登陆&nbsp;Java代码&nbsp;sqlplus conn / as sysdba;//登陆sys帐户&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sqlplus sys as sysdba;//同上&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sqlplus scott/tiger;//登陆普通用户scott&nbsp;&nbsp;三、管理用户&nbsp;Java代码&nbsp;create user zhangsan;//在管理员帐户下，创建用户zhangsan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alert user scott identified by tiger;//修改密码&nbsp;&nbsp;四，授予权限&nbsp;1、默认的普通用户scott默认未解锁，不能进行那个使用，新建的用户也没有任何权限，必须授予权限&nbsp;Java代码&nbsp;/*管理员授权*/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grant create session to zhangsan;//授予zhangsan用户创建session的权限，即登陆权限&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grant unlimited session to zhangsan;//授予zhangsan用户使用表空间的权限&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grant create table to zhangsan;//授予创建表的权限&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grant drop table to zhangsan;//授予删除表的权限&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grant insert table to zhangsan;//插入表的权限&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grant update table to zhangsan;//修改表的权限&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grant all to public;//这条比较重要，授予所有权限(all)给所有用户(public)&nbsp;&nbsp;&nbsp;&nbsp;2、oralce对权限管理比较严谨，普通用户之间也是默认不能互相访问的，需要互相授权&nbsp;Java代码&nbsp;/*oralce对权限管理比较严谨，普通用户之间也是默认不能互相访问的*/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grant select on tablename to zhangsan;//授予zhangsan用户查看指定表的权限&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grant drop on tablename to zhangsan;//授予删除表的权限&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grant insert on tablename to zhangsan;//授予插入的权限&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grant update on tablename to zhangsan;//授予修改表的权限&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grant insert(id) on tablename to zhangsan;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grant update(id) on tablename to zhangsan;//授予对指定表特定字段的插入和修改权限，注意，只能是insert和update&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grant alert all table to zhangsan;//授予zhangsan用户alert任意表的权限&nbsp;&nbsp;&nbsp;&nbsp;五、撤销权限&nbsp;Java代码&nbsp;基本语法同grant,关键字为revoke&nbsp;&nbsp;六、查看权限&nbsp;Java代码&nbsp;select * from user_sys_privs;//查看当前用户所有权限&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;select * from user_tab_privs;//查看所用用户对表的权限&nbsp;&nbsp;&nbsp;&nbsp;七、操作表的用户的表&nbsp;Java代码&nbsp;/*需要在表名前加上用户名，如下*/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;select * from zhangsan.tablename&nbsp;&nbsp;&nbsp;&nbsp;八、权限传递&nbsp;即用户A将权限授予B，B可以将操作的权限再授予C，命令如下：&nbsp;Java代码&nbsp;grant alert table on tablename to zhangsan with admin option;//关键字 with admin option&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grant alert table on tablename to zhangsan with grant option;//关键字 with grant option效果和admin类似&nbsp;&nbsp;&nbsp;&nbsp;九、角色&nbsp;角色即权限的集合，可以把一个角色授予给用户&nbsp;Java代码&nbsp;create role myrole;//创建角色&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grant create session to myrole;//将创建session的权限授予myrole&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;grant myrole to zhangsan;//授予zhangsan用户myrole的角色&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drop role myrole;删除角色&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*但是有些权限是不能授予给角色的，比如unlimited tablespace和any关键字*/&nbsp;&nbsp;&nbsp;
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

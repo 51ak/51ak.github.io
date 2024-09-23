@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySQL设置数据同步的方法</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="mysql从3.23.15版本以后提供数据库复制功能。利用该功能可以实现两个数据库同步，主从模式，互相备份模式的功能。数据库同步复制功能的设置都在mysql的设置文件中体现。mysql的配置文件（一般是my.cnf），在unix环境下在/etc/mysql/my.cnf或者在mysql用户的home目录下的my.cnf。<br/>window环境中，如果c:根目录下有my.cnf文件则MySQL设置数据同步的方法" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化">性能与优化</a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlzhishi/l_14_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>MySQL设置数据同步的方法</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   　　<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>从3.23.15版本以后提供数据库复制功能。利用该功能可以实现两个数据库同步，主从模式，互相备份模式的功能。数据库同步复制功能的设置都在<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>的设置文件中体现。<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>的配置文件（一般是my.cnf），在unix环境下在/etc/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/my.cnf 或者在<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>用户的home目录下的my.cnf。<br />　　Window环境中，如果c:根目录下有my.cnf文件则取该配置文件。当运行<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>的win<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>admin.exe工具时候，该工具会把c:根目录下的my.cnf 命名为mycnf.bak。并在winnt目录下创建my.ini。<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>服务器启动时候会读该配置文件。所以可以把my.cnf中的内容拷贝到my.ini文件中，用my.ini文件作为<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>服务器的配置文件。<br />　　设置方法<br />　　设置范例环境：<br />操作系统：window2000 professional<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>：4.0.4-beta-max-nt-log<br />a&nbsp;ip:10.10.10.22<br />b ip:10.10.10.53<br />a:设置<br />1.增加一个用户最为同步的用户帐号：grant file on *.* to backup@''10.10.10.53'' identified by ‘1234’<br />2.增加一个数据库作为同步数据库：create database backup<br />b:设置<br />&nbsp;<br />1.增加一个用户最为同步的用户帐号：grant file on *.* to backup@''10.10.10.22'' identified by ‘1234’<br />2.增加一个数据库作为同步数据库： create database backup<br />主从模式：a-&gt;b<br />a为master ，修改a <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>的my.ini文件。在<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d配置项中加入下面配置：server-id=1log-bin#设置需要记录log 可以设置log-bin=c:<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>bak<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>log 设置日志文件的目录，#其中<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>log是日志文件的名称，<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>将建立不同扩展名，文件名为<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>log的几个日志文件。binlog-do-db=backup #指定需要日志的数据库<br />重起数据库服务<br />　　用show master status 命令看日志情况。<br />b为slave，修改b <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>的my.ini文件。在<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d配置项中加入下面配置：server-id=2master-host=10.10.10.22master-user=backup #同步用户帐号master-password=1234master-port=3306master-connect-retry=60 预设重试间隔60秒replicate-do-db=backup 告诉slave只做backup数据库的更新<br />重起数据库<br />　　用show slave status看同步配置情况。<br />注意：由于设置了slave的配置信息，<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>在数据库目录下生成master.info，所以如有要修改相关slave的配置要先删除该文件。否则修改的配置不能生效。<br />双机互备模式<br />　　如果在a加入slave设置，在b加入master设置，则可以做b-&gt;a的同步。在a的配置文件中 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d 配置项加入以下设置：<br />master-host=10.10.10.53master-user=backupmaster-password=1234replicate-do-db=backupmaster-connect-retry=10<br />在b的配置文件中 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d 配置项加入以下设置：log-bin=c:<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>log<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>logbinlog-do-db=backup<br />注意：当有错误产生时*.err日志文件。同步的线程退出，当纠正错误后要让同步机制进行工作，运行slave start 。重起ab机器，则可以实现双向的热备。<br />测试：向b批量插入大数据量表aa（1872000）条，a数据库每秒钟可以更新2500条数据<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

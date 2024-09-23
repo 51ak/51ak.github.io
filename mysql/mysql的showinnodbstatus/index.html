@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>show engine innodb status 工具化实现| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">show engine innodb status 工具化实现</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#为什么要写这个工具">为什么要写这个工具</a></li>
+    <li><a href="#实现思路">实现思路</a></li>
+    <li><a href="#指标提取和定义">指标提取和定义</a></li>
+    <li><a href="#实现效果">实现效果：</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="为什么要写这个工具">为什么要写这个工具</h2>
+<p>当MySQL出现性能问题时，DBA经常得去innodb status ，</p>
+<p>但是innodb status的输出信息非常丰富也很复杂。滚了几个屏幕的指标，像这样的得翻好几页，几百行的结果。</p>
+<ul>
+<li>哪些是重要的指标</li>
+<li>指标具体代表什么意思</li>
+<li>指标的值是否正常</li>
+</ul>
+<p>非常考验DBA的眼力。</p>
+<p><img src="/img/mysql/show_innodb_status_01.png" alt="show innodb status"></p>
+<p>考虑到以上的不方便，写了个小脚本把这些指标提取出来，并将指标对应的中文意思和合理取值范围做了详细的备注。</p>
+<h2 id="实现思路">实现思路</h2>
+<ul>
+<li>当用户选中MySQL实例，并点击show engine innnodb statutus按钮时</li>
+<li>后台进程去该实例执行 <code>show engine innnodb statutus</code> 语句</li>
+<li>返回结果做正则筛选，将各种指标和值保存在一个字典中</li>
+<li>提前准备好一个指标的字典，字典里记了该值的中文说明和取值范围（取值范围这个还没做好）</li>
+<li>两个字典一合并，输出一个分好类的可视化结果</li>
+</ul>
+<h2 id="指标提取和定义">指标提取和定义</h2>
+<p>脚本内容是定义了一个数据字典去翻译这些指标</p>
+<pre><code>{
+&quot;background_thread&quot;:(&quot;后台进程:除掉用户请求的活动会话，MySQL后台进程也会定时的进行一系列工作。&quot;,[(&quot;master_thread_loops_active&quot;,&quot;&quot;,&quot;not count&quot;,&quot;&lt;b&gt;后台master线程avtive执行次数合计值&lt;/b&gt;,后台master线程的每次循环时会选择一种状态来执行(active、shutdown、idle),active次数/idle次数 比值越高，代表系统的写操作越繁忙。&quot;),
+(&quot;master_thread_loops_idle&quot;,&quot;&quot;,&quot;not count&quot;,&quot;&lt;b&gt;后台master线程idle执行次数合计值&lt;/b&gt;,和上一个指标连起来看,idle次数越高，代表系统的写操作越少。所以该指标值越大，系统写资源越充足&quot;),
+(&quot;master_thread_log_flush_and_writes&quot;,&quot;Bytes&quot;,&quot;not count&quot;,&quot;&lt;b&gt;后台master线程刷新redo日志&lt;/b&gt;,定期刷新redo日志，和参数innodb_flush_log_at_timeout控制刷新时间&quot;)    
+]
+)
+,&quot;bufferpool_memory&quot;:(&quot;缓冲池:有关已读和已写页面的统计信息。可以从这些数字中获得缓冲池的使用情况。&quot;,[
+(&quot;total_large_memory_allocated&quot;,&quot;Bytes&quot;,&quot;not count&quot;,&quot;&lt;b&gt;分配给InnoDB Buffer Pool的总内存&lt;/b&gt;&quot;)
+,(&quot;dictionary_memory_allocated&quot;,&quot;Bytes&quot;,&quot;not count&quot;,&quot;&lt;b&gt;分配给InnoDB数据字典的内存&lt;/b&gt;&quot;)
+
+,(&quot;buffer_pool_size&quot;,&quot; &quot;,&quot;not count&quot;,&quot;&lt;b&gt;分配给IBP的内存，单位pages&lt;/b&gt;,每页16k&quot;)
+,(&quot;buffer_pool_hit&quot;,&quot;/1000&quot;,&quot;not count&quot;,&quot;&lt;b&gt;Buffer Pool命中率&lt;/b&gt;每1000次请求有*次命中buffer pool,非常重要&quot;)                                                
+,(&quot;free_buffers&quot;,&quot; &quot;,&quot;not count&quot;,&quot;&lt;b&gt;Buffer Pool Free List 总大小，单位pages&lt;/b&gt;&quot;)
+,(&quot;database_pages&quot;,&quot; &quot;,&quot;not count&quot;,&quot;&lt;b&gt;Buffer Pool LRU List 总大小，单位pages&lt;/b&gt;&quot;)
+,(&quot;old_database_pages&quot;,&quot; &quot;,&quot;not count&quot;,&quot;&lt;b&gt;Buffer Pool old LRU 总大小，单位pages(冷端)&lt;/b&gt;&quot;)
+,(&quot;modified_db_pages&quot;,&quot; &quot;,&quot;not count&quot;,&quot;&lt;b&gt;Buffer Pool中脏页的数量，单位pages&lt;/b&gt;&quot;)
+
+,(&quot;pending_reads&quot;,&quot; &quot;,&quot;not count&quot;,&quot;&lt;b&gt;等待读入Buffer Pool的页数量，单位pages&lt;/b&gt;,理论上不应该有等待队列&quot;)
+,(&quot;pending_writes_lru&quot;,&quot; &quot;,&quot;not count&quot;,&quot;&lt;b&gt;LRU中buffer中等待被刷的脏页数，单位pages&lt;/b&gt;&quot;)
+,(&quot;pending_writes_flush_list&quot;,&quot; &quot;,&quot;not count&quot;,&quot;&lt;b&gt;在checkpoint期间要刷新的缓冲池页数&lt;/b&gt;&quot;)
+,(&quot;pending_writes_single_page&quot;,&quot; &quot;,&quot;not count&quot;,&quot;&lt;b&gt;在缓冲池中写入挂起的独立页的数目&lt;/b&gt;&quot;)
+
+,(&quot;pages_made_young&quot;,&quot; &quot;,&quot;not count&quot;,&quot;&lt;b&gt;热点页数&lt;/b&gt;,在缓冲池LRU list中年轻的总页数(移动新页面到sublist的头部)&quot;)
+,(&quot;pages_made_not_young&quot;,&quot; &quot;,&quot;not count&quot;,&quot;&lt;b&gt;old sublist中的page数，冷端的page数&lt;/b&gt;,在缓冲池LRU列表中不年轻的页面总数(保留旧页面在sublist中，不改变)&quot;)
+,(&quot;pages_made_young_per_sec&quot;,&quot;page/s&quot;,&quot;not count&quot;,&quot;&lt;b&gt;每秒LRU链中被young的page数&lt;/b&gt;,oungs/s度量标准仅用于old pages，基于对page的访问次数，而不是页的数量。对页进行多次访问都会被计算。如果见到非常低的值，可能需要减小延迟或增加old page LRU list 的比例。增大后，页面需要更长的时间才会移动到尾部，这就增加了再次访问page，从而使他们made young的可能性增大&quot;)
+,(&quot;pages_made_non_young_per_sec&quot;,&quot;page/s&quot;,&quot;not count&quot;,&quot;&lt;b&gt;每秒LRU链中未被young的page数&lt;/b&gt;，可以一定程度上看出库的繁忙程度和命中率,Not young，如果在执行大表扫描时未看到较高的non-young和non-youngs/s，请增加innodb_old_blocks_time。&quot;)
+
+
+,(&quot;pages_read&quot;,&quot; &quot;,&quot;not count&quot;,&quot;&lt;b&gt;从bufferpool中读取的page总数&lt;/b&gt;&quot;)
+,(&quot;pages_created&quot;,&quot; &quot;,&quot;not count&quot;,&quot;&lt;b&gt;在bufferpool中创建的page数&lt;/b&gt;&quot;)
+,(&quot;pages_written&quot;,&quot; &quot;,&quot;not count&quot;,&quot;&lt;b&gt;从bufferpool写入的page数&lt;/b&gt;&quot;)
+,(&quot;pages_read_per_sec&quot;,&quot; &quot;,&quot;not count&quot;,&quot;&lt;b&gt;从bufferpool中读取的page数/秒&lt;/b&gt;, 比较重要，代表库的繁忙程度&quot;)
+,(&quot;pages_created_per_sec&quot;,&quot; &quot;,&quot;not count&quot;,&quot;&lt;b&gt;在bufferpool中创建的page数/秒&lt;/b&gt;&quot;)
+,(&quot;pages_written_per_sec&quot;,&quot; &quot;,&quot;not count&quot;,&quot;&lt;b&gt;从bufferpool写入的page数/秒&lt;/b&gt;&quot;)
+
+
+,(&quot;pages_read_ahead&quot;,&quot;page/s&quot;,&quot;not count&quot;,&quot;&lt;b&gt;每秒平均预读操作次数&lt;/b&gt;k&quot;)
+,(&quot;evicted_without_access&quot;,&quot;page/s&quot;,&quot;not count&quot;,&quot;&lt;b&gt;每秒驱逐的page数&lt;/b&gt;k&quot;)
+,(&quot;random_read_ahead&quot;,&quot;page/s&quot;,&quot;not count&quot;,&quot;&lt;b&gt;每秒钟随机预读操作的次数&lt;/b&gt;&quot;)
+,(&quot;lrn_len&quot;,&quot; &quot;,&quot;not count&quot;,&quot;&lt;b&gt;LRU的长度&lt;/b&gt;&quot;)
+]
+)
+....此处省略代码若干行
+}
+</code></pre><h2 id="实现效果">实现效果：</h2>
+<p>用户：输入指定MySQL的ip 和端口，点innodb status 会自动带出一份翻译和标识好的innodb status。
+<img src="/img/mysql/show_innodb_status_02.png" alt="show innodb status"></p>
+<p><img src="/img/mysql/show_innodb_status_03.png" alt="show innodb status"></p>
+<p>非常nice！</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/07/06</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96">自动化</a> <a href="/categories/python">python</a> <a href="/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86">故障处理</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

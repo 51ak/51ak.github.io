@@ -1,0 +1,282 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>怎么通俗的理解向量和数字化| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">怎么通俗的理解向量和数字化</span></h1>
+</div>
+
+
+  <main>
+    <h2 id="从向量数据库说起">从《向量数据库》说起</h2>
+<ul>
+<li>上周同学来望京聊天时</li>
+<li>我说最近在做：向量数据库</li>
+<li>然后就向他解释</li>
+<li>什么是向量</li>
+<li>当时我们在楼下公园里遛弯</li>
+<li>路边停了一排摩托车</li>
+<li>我指着一辆比较酷的摩托给他举例子</li>
+<li>意外的很容易他就听懂了</li>
+<li>向量的核心是：把世间万物都数字化</li>
+<li>一个人，一个美女，一辆车，一条狗</li>
+<li>一群僵尸，一段记忆，一句话&hellip;</li>
+<li>不管是什么</li>
+<li>都用数字来表达</li>
+</ul>
+<h2 id="怎么做到向量的数字化呢">怎么做到向量的数字化呢</h2>
+<ul>
+<li>比如说：我</li>
+<li>怎么用数字来描述我这个人呢</li>
+<li>第1个维度：</li>
+<li>在这个维度的设定是（物种:人：5001,狗:1001，猪:1002,花:2001,草:2002&hellip;）</li>
+<li>我是个人：不是狗，不是猪，不是花，不是草</li>
+<li>所以得到一个数字:<code>5001</code></li>
+<li>第2个维度:</li>
+<li>在这个维度的设定是（性别，男：1，女:0 ,不男不女:0.5,又男又妇:2,其他:3）</li>
+<li>我是纯爷们,得到数字1,现在我的向量是<code>[5001,1]</code></li>
+<li>第3个维度是身高</li>
+<li>于是我的向量:<code>[5001,1,174]</code></li>
+<li>第4个维度是籍贯</li>
+<li>于是我的向量:<code>[5001,1,174,551]</code></li>
+<li>第5个维度是体重</li>
+<li>于是我的向量:<code>[5001,1,174,551,70]</code></li>
+<li>第6个维度是小学学校名对应的数字</li>
+<li>于是我的向量:<code>[5001,1,174,551,70,22]</code></li>
+<li>第7个维度是喜欢的运动</li>
+<li>第8个维度是喜欢的食物</li>
+<li>第9个维度是喜欢的书</li>
+<li>第10个维度是脸长</li>
+<li>第11个维度是脸宽</li>
+<li>第12个维度是眼睛大小</li>
+<li>第13个维度是鼻孔大小</li>
+<li>第14个维度是腿上有几根毛</li>
+<li>第15个维度是肌肉密度</li>
+<li>第16个维度是帅气程度</li>
+<li>第17个维度是脾气</li>
+<li>&hellip;.</li>
+<li>于是我的向量:<code>[5001,1,174,551,70,22,....]</code></li>
+<li>维度越多</li>
+<li>对我的描述越具体</li>
+<li>最终我们定义一下，比如700个维度</li>
+<li>那么最终我们用<code>[5001,1,174,551,70,22,....]</code>类似的700个数字定义了我</li>
+<li>这一组数字就是我的向量表达</li>
+</ul>
+<h2 id="向量-有什么用">向量 有什么用？</h2>
+<ul>
+<li>刚才我们用向量表达了我这个人</li>
+<li>这样会有什么好处呢</li>
+<li>假设：</li>
+<li>因为我的帅气英俊加上气宇不凡</li>
+<li>有众多的追求者</li>
+<li>但是我已经名花有主了</li>
+<li>这时候追求者们</li>
+<li>对我这个优秀的稀缺资源已经不能再被占有了</li>
+<li>于是她们想找个：最接近我的人</li>
+<li>这时候怎么办</li>
+<li>去向量数据库里匹配向量和我重合度最高的人</li>
+<li>这时候就会得到一批非常接近我的人</li>
+<li>快去抢吧&hellip;</li>
+<li>机会不等人</li>
+</ul>
+<h2 id="向量-崩塌">向量 崩塌</h2>
+<ul>
+<li>这时候就会有人质疑了</li>
+<li>会不会出现一个人的向量和我无限接近</li>
+<li>只有某一项或少数几项和我的不一样的人</li>
+<li>比如一个各个向量都接近的女版的我？</li>
+<li>比如会不会有条狗跟我的向量表达很近？</li>
+<li>如果向量的维度不够</li>
+<li>是会出现的</li>
+<li>但是维度足够多</li>
+<li>就会避免出现此类向量崩塌的场景</li>
+<li>一个女版的我</li>
+<li>一定会在其他的很多维度上和我产生明显差异</li>
+<li>比如头发，运动能力，比如胸围，比如&hellip;</li>
+<li>这就是向量的维度多的好处</li>
+<li>大力出奇迹</li>
+<li>维度多，细节到位</li>
+<li>向量的匹配越真实</li>
+</ul>
+<h2 id="向量与ai">向量与AI</h2>
+<ul>
+<li>到这里是不是已经理解了向量是什么了</li>
+<li>再从一句话来说</li>
+<li>“帮我写一篇今天晚饭的健康食谱”</li>
+<li>这一句话</li>
+<li>在向量维度也是用一组数字来表达</li>
+<li>首先做分词</li>
+<li>再对每个词的词性做数字化</li>
+<li>词之间的关联数字化</li>
+<li>最终这句话会对应成一个向量表达</li>
+<li><code>[2,82,234,5,22,2197,74......]</code></li>
+<li>这时候人工智能的输入层</li>
+<li>就是通过向量化的数字</li>
+<li>来理解这句话</li>
+<li>再通过transformer层</li>
+<li>最终输出合适的结果</li>
+<li>“请帮我写一篇晚饭的健康食谱”</li>
+<li>“写一篇晚饭的健康食谱”</li>
+<li>“晚饭的健身食谱”</li>
+<li>以上的内容在向量表达层是很接近的</li>
+<li>这就是一句话的多种说法</li>
+<li>在向量表达层面非常接近</li>
+<li>这点很重要</li>
+<li>这也是大语言模型的基础</li>
+</ul>
+<h2 id="chatgpt的向量">ChatGPT的向量</h2>
+<ul>
+<li>以最火的ChatGPT举例</li>
+<li>我们说ChatGPT搞出1750亿参数的大模型时</li>
+<li>这1750亿参数是怎么算出来的</li>
+<li>GPT3参数 = <code>输入层参数 + 层数 * transformer层</code></li>
+<li>输入层参数量 = <code> 词向量维度 * 词表大小 + 窗口长度）</code></li>
+<li>transformer层=<code>4 * 词向量维度 * 词向量维度 + 8 * 词向量维度 * 词向量维度 + 5 * 词向量维度</code></li>
+<li>简化一下:</li>
+<li>GPT-3参数 = <code>12 * 层数 * 词向量维度 * 词向量维度 + （词表大小 + 窗口长度 + 5 * 层数） * 词向量维度</code></li>
+<li>ChatGPT的1750亿参数= <code>12 * 96 * 12288 * 12288 + （50257 + 2048 + 5 * 96） * 12288</code></li>
+<li><img src="/img/2022auto/2023-08-03-15-05-24.png" alt="ChatGPT的1750亿参数"></li>
+<li>ChatGPT之类的大语言模型</li>
+<li>通过足够多的向量化表达</li>
+<li>来理解人类的语言的</li>
+<li>在它出现之前人们训练AI只到几亿个参数的级别</li>
+<li>结果openai公司有钱任性大力出奇迹</li>
+<li>有足够多的显卡，烧到1750亿参数</li>
+<li>训练出来的大模型让人产生的惊讶的理解和输出能力</li>
+<li>而后面的GPT4的参数提升到1.8万亿</li>
+<li>这段是不是不好理解啊</li>
+<li>没关系</li>
+<li>上面这通计算是在解释：</li>
+<li>ChatGPT智能的原因：大力出奇迹</li>
+</ul>
+<h2 id="总结">总结</h2>
+<ul>
+<li>这篇文章里</li>
+<li>我们用一个英俊的帅气男性举例</li>
+<li>说明了向量是怎么产生的</li>
+<li>向量是怎么用的</li>
+<li>以及向量在AI人工智能领域的作用</li>
+<li>而我最近在折腾的向量数据库</li>
+<li>你能猜到是为什么吗？</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/08/03</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

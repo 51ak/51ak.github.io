@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>自动化流程:数据找回(二:Oracle部分)| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">自动化流程:数据找回(二:Oracle部分)</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#一些改进">一些改进</a></li>
+    <li><a href="#oracle数据回退功能的方案对比">Oracle数据回退功能的方案对比</a></li>
+    <li><a href="#oracle数据回退功能演示">Oracle数据回退功能演示</a></li>
+    <li><a href="#小结">小结</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <p>续上一篇： <a href="https://www.dboop.com/dba/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B_%E6%95%B0%E6%8D%AE%E6%89%BE%E5%9B%9E%E9%97%AA%E5%9B%9E/">自动化流程:数据找回(一:MySQL数据闪回)</a></p>
+<p>上一篇说的是</p>
+<ul>
+<li>1.数据找回的作用</li>
+<li>2.MySQL数据找回自动化流程功能演示</li>
+<li>3.自动化流程的代码配置</li>
+</ul>
+<p>这篇主要介绍Oracle的数据找回自动化流程.</p>
+<h2 id="一些改进">一些改进</h2>
+<ul>
+<li>改进1:Oracle数据找回功能从利用OGG改到用归档日志
+<ul>
+<li>上一篇的结尾,说Oracle的数据找回.要用到OGG+Kafka的方案.</li>
+<li>​最终经过对比验证,换了更好的Oracle原生归档日志方案</li>
+</ul>
+</li>
+<li>改进2:增加了操作类型的筛选项,这样可以针对指定的操作(例如:delete)进行redo和undo</li>
+</ul>
+<p><img src="/img/2022auto/2023-02-03-19-06-41.png" alt="操作类型的筛选项"></p>
+<h2 id="oracle数据回退功能的方案对比">Oracle数据回退功能的方案对比</h2>
+<p>当尝试做Oracle数据回退功能时有以下几个方案</p>
+<ul>
+<li>Oracle数据闪回功能 ,优:自带的功能,速度快,简单 缺:需要开启闪回段,闪回的时间太短(平均约30分钟内)</li>
+<li>全备和日志还原,优:30天内数据可回退  ,缺:慢,需要资源大,复杂不利于自动化脚本</li>
+<li>OGG,因为我们的环境大部分重点表都做了OGG到kafka的订阅, 所以可以直接扫描kafka的信息来获取指定表的变更, 优:资源占用少,快,开发难度低  缺: 如果要回退的这张表没有做OGG订阅怎么办?</li>
+<li>归档日志解析, 优:7天内任意时间点可回退 ,缺: 每次回退的时间段不能太长</li>
+</ul>
+<p>我们完成了方案3和方案4的代码开发工作,最终选用了方案4: 归档日志解析</p>
+<ul>
+<li>脚本化实现难度小</li>
+<li>7天内任意时间点,能满足90%的业务需求</li>
+<li>回滚速度快,举个例子:
+<ul>
+<li>研发提交流程,要求看A数据库里Order表在周三上午10:00-10:30的所有修改动作,提交申请后,大约10秒内就可以完成这个流程.</li>
+</ul>
+</li>
+<li>覆盖的范围大,线上/测试/开发 环境的所有库表都支持</li>
+<li>占用资源少,对线上影响小</li>
+</ul>
+<h2 id="oracle数据回退功能演示">Oracle数据回退功能演示</h2>
+<p><img src="/img/2022auto/2023-02-03-19-05-57.png" alt="Oracle数据回退功能"></p>
+<ul>
+<li>在测试环境还原一次全库的历史快照只需要 0.4秒,非常的快速!!!</li>
+</ul>
+<h2 id="小结">小结</h2>
+<p>当数据库有了这个功能以后:</p>
+<ul>
+<li>研发可以在改错数据的时候,快速提交流程回退数据</li>
+<li>当有奇怪的线上数据问题时,可以很方便的生成redoSQL,重放过去某个时间段的数据修改</li>
+<li>数据库有大量写入时,快速的定位是哪张表,什么样的SQL引起的</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/02/03</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/sql%E4%B8%8A%E7%BA%BF">SQL上线</a> <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B">自动化流程</a> <a href="/categories/oracle">Oracle</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

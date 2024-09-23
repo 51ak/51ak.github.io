@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mysql开发中的外键与参照完整性</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="参照完整性(referentialintegrity)是数据库设计中一个重要的概念。在系统不同的列表中，当数据库所有参照合法或非合法关联时都会涉及到参照完整性。当参照完整性存在时，任何与不存在记录的关联将变得无效化，由此可防止用户出现各种错误，从而提供更为准确和实用的数据库。<br/>参照完整性通常通过外键(foreignkey)的使用而被广泛应用。长久以来，流行工具开源rdbmsMysql开发中的外键与参照完整性" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化">性能与优化</a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlzhishi/l_14_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>Mysql开发中的外键与参照完整性</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   　　参照完整性(Referential integrity)是数据库设计中一个重要的概念。在系统不同的列表中，当数据库所有参照合法或非合法关联时都会涉及到参照完整性。当参照完整性存在时，任何与不存在记录的关联将变得无效化，由此可防止用户出现各种错误，从而提供更为准确和实用的数据库。<br />　　参照完整性通常通过外键(foreign key)的使用而被广泛应用。长久以来，流行工具开源RDBMS MySQL并没有支持外键，原因是这种支持将会降低RDBMS的速度和性能。然而，由于很多用户对参照完整性的优点倍感兴趣，最近MySQL的不同版本都通过新InnoDB列表引擎支持外键。由此，在数据库组成的列表中保持参照完整性将变得非常简单。<br />为了建立两个MySQL表之间的一个外键关系，必须满足以下三种情况：<br />两个表必须是InnoDB表类型。<br />使用在外键关系的域必须为索引型(Index)。<br />使用在外键关系的域必须与数据类型相似。<br />例子是理解以上要点的最好方法。如表A所示，建立两个表，其中一个列出动物种类及相应的代码(表名为：species)，另一表列出动物园中的动物(表名为：zoo)。现在，我们想通过species关联这两个表，所以我们只需要接受和保存zoo表中包含species表中的合法动物的入口到数据库中。<br />表A<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; CREATE TABLE species (id TINYINT NOT NULL AUTO_INCREMENT, name VARCHAR(50) NOT NULL, PRIMARY KEY(id)) ENGINE=INNODB;<br />Query OK, 0 rows affected (0.11 sec)<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; INSERT INTO species VALUES (1, 'orangutan'), (2, 'elephant'), (3, 'hippopotamus'), (4, 'yak');<br />Query OK, 4 rows affected (0.06 sec)<br />Records: 4 Duplicates: 0 Warnings: 0<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; CREATE TABLE zoo (id INT(4) NOT NULL, name VARCHAR(50) NOT NULL, FK_species TINYINT(4) NOT NULL, INDEX (FK_species), FOREIGN KEY (FK_species) REFERENCES species (id), PRIMARY KEY(id)) ENGINE=INNODB;<br />注意:对于非InnoDB表， FOREIGN KEY 语句将被忽略。<br />现在，fieldszoo.species与species.id 之间存在一个外键关系。只有相应的zoo.specie与species.idfield的一个值相匹配，动物表中的入口才可被访问。以下的输出即演示了当你想输入一个Harry Hippopotamus记录，而使用到不合法的species代码：<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; INSERT INTO zoo VALUES (1, 'Harry', 5);<br />ERROR 1216 (23000): Cannot add or update a child row: a foreign key constraint fails<br />这里，MySQL核查species表以查看species代码是否存在，如果发现不存在，就拒绝该记录。当你输入正确代码的，可以与以上做比较。<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; INSERT INTO zoo VALUES (1, 'Harry', 3);<br />Query OK, 1 row affected (0.06 sec)<br />&nbsp;<br />这里，MySQL核查species表以查看species代码是否存在，当发现存在，允许记录保存在zoo表中。<br />为了删除一个外键关系，首先使用SHOW CREATE TABLE找出InnoDB的内部标签，如表B所示：<br />表 B<br />+-------+---------------------------------------------------+<br />| Table | Create Table |<br />+-------+---------------------------------------------------+<br />| zoo | CREATE TABLE `zoo` (<br />`id` int(4) NOT NULL default '0',<br />`name` varchar(50) NOT NULL default '',<br />`FK_species` tinyint(4) NOT NULL default '0',<br />KEY `FK_species` (`FK_species`),<br />CONSTRAINT `zoo_ibfk_1` FOREIGN KEY (`FK_species`)<br />REFERENCES `species` (`id`)<br />) ENGINE=InnoDB DEFAULT CHARSET=latin1 |<br />+-------+----------------------------------------------------+<br />然后使用带有DROP FOREIGN KEY 语句的ALTER TABLE命令，如以下：<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; ALTER TABLE zoo DROP FOREIGN KEY zoo_ibfk_1;<br />Query OK, 1 row affected (0.11 sec)<br />Records: 1 Duplicates: 0 Warnings: 0<br />为了将一个外键添加到一个现成的表中，使用ADD FOREIGN KEY的 ALTER TABLE语句指定合适的域作为一个外键：<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; ALTER TABLE zoo ADD FOREIGN KEY (FK_species) REFERENCES species (id);<br />Query OK, 1 rows affected (0.11 sec)<br />Records: 1 Duplicates: 0 Warnings: 0<br />　　如以上例子解释的，外键在捉摸数据入口错误上起着重要的作用，由此可建立更为强健更加集成的数据库。另一方面值得提到的是，执行外键核实是内部资料处理的过程，且不同表之间指定复杂的内部关系可以导致数据库的性能下降。所以，在参照完整性与性能考虑之间找到平衡点相当重要，而使用外键就是能够确保性能与稳健之间的最优结合。<br />我期望本期的有关外键的介绍对你有所好处，你将会在下回的MySQL数据库设计中感受到外键的好处。编程快乐！<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

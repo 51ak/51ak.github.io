@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySQL数据库安全解决方案</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="随着网络的普及，基于网络的应用也越来越多。网络数据库就是其中之一。通过一台或几台服务器可以为很多客户提供服务，这种方式给人们带来了很多方便，但也给不法分子造成了可乘之机。由于数据都是通过网络传输的，这就可以在传输的过程中被截获，或者通过非常手段进入数据库。由于以上原因，数据库安全就显得十分重要。因此，本文就以上问题讨论了mysql数据库在网络安全方面的一些功能。帐户安全<br/>帐户是mMySQL数据库安全解决方案" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化">性能与优化</a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlzhishi/l_14_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>MySQL数据库安全解决方案</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   随着网络的普及，基于网络的应用也越来越多。网络数据库就是其中之一。通过一台或几台服务器可以为很多客户提供服务，这种方式给人们带来了很多方便，但也给不法分子造成了可乘之机。由于数据都是通过网络传输的，这就可以在传输的过程中被截获，或者通过非常手段进入数据库。由于以上原因，数据库安全就显得十分重要。因此，本文就以上问题讨论了MySQL数据库在网络安全方面的一些功能。　　帐户安全<br />　　帐户是MySQL最简单的安全措施。每一帐户都由用户名、密码以及位置（一般由服务器名、IP或通配符）组成。如用户john从server1进行登录可能和john从server2登录的权限不同。<br />　　MySQL的用户结构是用户名/密码/位置。这其中并不包括数据库名。下面的两条命令为database1和database2设置了SELECT用户权限。<br />　　GRANT SELECT ON database1.* to 'abc'@'server1' IDENTIFIED BY 'password1';<br />　　GRANT SELECT ON database2.* to 'abc'@'server1' IDENTIFIED BY 'password2';<br />　　第一条命令设置了用户abc在连接数据库database1时使用password1。第二条命令设置了用户abc在连接数据库database2时使用password2。因此，用户abc在连接数据库database1和database2的密码是不一样的。<br />　　上面的设置是非常有用的。如果你只想让用户对一个数据库进行有限的访问，而对其它数据库不能访问，这样可以对同一个用户设置不同的密码。如果不这样做，当用户发现这个用户名可以访问其它数据库时，那将会造成麻烦。<br />　　MySQL使用了很多授权表来跟踪用户和这些用户的不同权限。这些表就是在<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>数据库中的MyISAM表。将这些安全信息保存在MySQL中是非常有意义的。因此，我们可以使用标准的SQL来设置不同的权限。<br />　　一般在MySQL数据库中可以使用3种不同类型的安全检查：<br />　　·登录验证<br />　　也就是最常用的用户名和密码验证。一但你输入了正确的用户名和密码，这个验证就可通过。<br />　　·授权<br />　　在登录成功后，就要求对这个用户设置它的具体权限。如是否可以删除数据库中的表等。<br />　　·访问控制<br />　　这个安全类型更具体。它涉及到这个用户可以对数据表进行什么样的操作，如是否可以编辑数据库，是否可以查询数据等等。<br />　　访问控制由一些特权组成，这些特权涉及到所何使用和操作MySQL中的数据。它们都是布尔型，即要么允许，要么不允许。下面是这些特权的列表：<br />　　·SELECT<br />　　SELECT是设定用户是否可以使用SELECT来查询数据。如果用户没有这个特权，那么就只能执行一些简单的SELECT命令，如计算表达式（SELECT 1+2）,或是日期转换（SELECT Unix_TIMESTAMP(NOW( )))等。<br />　　·INSERT<br />　　·UPDATE<br />　　·INDEX<br />　　INDEX决定用户是否可以对表的索引进行设置。如果用户没有这个权限，那么将无法设置表中的索引。<br />　　·ALTER<br />　　·CREATE<br />　　·GRANT<br />　　如果一个用户拥有这个GRANT权限，那么他就可以将自己的权限授给别的用户。也就是说，这个用户可以和其它用户共享自己的权限。<br />　　·REFERENCES<br />　　有了REFERENCES权限，用户就可以将其它表的一个字段作为某一个表的外键约束。<br />　　除了以上的权限外，MySQL还有一些权限可以对整个MySQL进行操作。<br />　　·Reload<br />　　这个权限可以使用户有权执行各种FLUSH命令，如FLUSH TABLES, FLUSH STATUS等。<br />　　·Shutdown<br />　　这个权限允许用户关闭MySQL<br />　　·Process<br />　　通过这个权限，用户可以执行SHOW PROCESSLIST和KILL命令。这些命令可以查看MySQL的处理进程，可以通过这种方式查看SQL执行的细节。<br />　　·File<br />　　这个权限决定用户是否可以执行LOAD DATA INFILE命令。给用户这个权限要慎重，因为有这个权限的用户可以将任意的文件装载到表中，这样对MySQL是十分危险的。<br />　　·Super<br />　　这个权限允许用户终止任何查询（这些查询可能并不是这个用户执行的）。<br />　　以上几种权限是非常危险的，在给用户授权限时要非常谨慎。<br />　[NextPage]<br />　　MySQL中的SSL<br />　　以上的帐户安全只是以普通的Socket进行数据传输的，这样非常不安全。因此，MySQL在4.1版以后提供了对SSL（Secure Scokets Layer）的支持。MySQL使用的是免费的OpenSSL库。<br />　　由于MySQL的Linux版本一般都是随Linux本身一起发布，因此，它们默认时都不使用SSL进行传输数据。如果要打开SSL功能，需要对hava_openssl变量进行设置：<br />　　MySQL的Windows版本已经将OpenSSL加入了。也面的命令是查看你的MySQL是否打开了SSL功能。<br />　　SHOW VARIABLES LIKE 'have_openssl';<br />　　+---------------+-------+<br />　　| Variable_name | Value |<br />　　+---------------+-------+<br />　　| have_openssl | NO |<br />　　+---------------+-------+<br />　　1 row in set (0.00 sec)<br />　　如果返回的是NO，那么说明你需要将OpenSSL编译进自己的MySQL<br />　　在有时你可能需要将用户名和密码进行加密传输。在这时可以使用下面GRANT命令：<br />　　GRANT ALL PRIVILEGES ON ssl_only_db.* to 'abc'@'%' IDENTIFIED BY "password!" REQUIRE SSL;<br />　　还可以通过 REQUIRE x509 选项进行SSL传输:<br />　　GRANT ALL PRIVILEGES ON ssl_only_db.* to 'abc'@'%' IDENTIFIED BY "password!" REQUIRE x509;<br />　　你还可以使用REQUIRE SUBJECT来指定一个特定的客户端证书来访问数据库。<br />　　GRANT ALL PRIVILEGES ON ssl_only_db.* to 'abc'@'%'<br />　　IDENTIFIED BY "password!"<br />　　REQUIRE SUBJECT "/C=US/ST=New York/L=Albany/O=Widgets Inc./CN=client-ray.<br />　　example.com/emailAddress=raymond@example.com";<br />　　也许你并不关心使用的是什么客户许可，而仅仅关心的是你的证书。那么你可以使用REQUIRE ISSUER来实现：<br />　　GRANT ALL PRIVILEGES ON ssl_only_db.* to 'abc'@'%' IDENTIFIED BY "password!"<br />　　REQUIRE ISSUER "/C=US/ST=New+20York/L=Albany/O=Widgets Inc./CN=cacert.example.<br />　　com/emailAddress=admin@example.com";<br />　　SSL还可以直接通过密码进行加密。可以使用REQUIRE CIPHER设置密码。<br />　　GRANT ALL PRIVILEGES ON ssl_only_db.* to 'abc'@'%' IDENTIFIED BY "password!"<br />　　REQUIRE CIPHER "EDH-RSA-DES-CBC3-SHA";<br />　　上面使用了GRANT命令对用户权限进行设置。而这些信息都是保存在授权表中，这些表是安全系统的心脏。在这些表中保存了每一个用户和客户机所具有的权限。如果正确地操作这些表，将会对数据库的安全起到积极的作用，而如果使用不慎，将是非常危险的。<br />　　下面让我们来看看MySQL中的最要的5个授权表。<br />　　user<br />　　用户表保存了用户的权限和被加密的密码。这个表负责确定哪些用户和客户机可以连接到服务器上。<br />　　host<br />　　这个表为每一个客户机分配权限，它并不考虑用户的权限。MySQL在确定是否接收还是拒绝一个连接时，首先考虑的是user表。而使用GRANT或REVOKE命令并不影响host表，我们可以通过手工方式修改这个表中的内容。<br />　　db<br />　　db表保存了数据库层的权限信息。<br />　　tables_priv<br />　　这个表存储了表的权限信息。<br />　　columns_priv<br />　　这个表保存了单独列的权限信息。通过这个表，可以将操作某一列的权限授予一个用户。<br />　　[NextPage]<br />　　哈希加密<br />　　如果数据库保存了敏感的数据，如银行卡密码，客户信息等，你可能想将这些数据以加密的形式保存在数据库中。这样即使有人进入了你的数据库，并看到了这些数据，也很难获得其中的真实信息。<br />　　在应用程序的大量信息中，也许你只想交很小的一部分进行加密，如用户的密码等。这些密码不应该以明文的形式保存，它们应该以加密的形式保存在数据库中。一般情况下，大多数系统，这其中包括MySQL本身都是使用哈希算法对敏感数据进行加密的。<br />　　哈希加密是单向加密，也就是说，被加密的字符串是无法得到原字符串的。这种方法使用很有限，一般只使用在密码验证或其它需要验证的地方。在比较时并不是将加密字符串进行解密，而是将输入的字符串也使用同样的方法进行加密，再和数据库中的加密字符串进行比较。这样即使知道了算法并得到了加密字符串，也无法还原最初的字符串。银行卡密码就是采用的这种方式进行加密。<br />　　MySQL提供了4个函数用于哈希加密：PASSWORD, ENCRYPT, SHA1和MD5。下面让我们试一试这4个函数，看看会得到什么结果。我们以加密字符串"pa55word"为例进行说明：<br />　　让我们先来看看MD5函数<br />　　SELECT MD5('pa55word');<br />　　+----------------------------------+<br />　　| MD5('pa55word') |<br />　　+----------------------------------+<br />　　| a17a41337551d6542fd005e18b43afd4 |<br />　　+----------------------------------+<br />　　1 row in set (0.13 sec)<br />　　下面是PASSWORD函数<br />　　SELECT PASSWORD('pa55word');<br />　　+----------------------+<br />　　| PASSWORD('pa55word') |<br />　　+----------------------+<br />　　| 1d35c6556b8cab45 |<br />　　+----------------------+<br />　　1 row in set (0.00 sec)<br />　　下面是ENCRYPT函数<br />　　SELECT ENCRYPT('pa55word');<br />　　+---------------------+<br />　　| ENCRYPT('pa55word') |<br />　　+---------------------+<br />　　| up2Ecb0Hdj25A |<br />　　+---------------------+<br />　　1 row in set (0.17 sec)<br />　　上面的每个函数都返回了一个加密后的字符串。为了区分加密字符串的大小写，最好在使用ENCRYPT生成加密字符串时，将这个字段定义成CHAR BINARY类型。<br />　　上面列举了3种加密的方法，但我认为使用MD5加密是最好的。这是因为这样做可以将明文密码显示在处理列表中或是查询日志中，这样便于跟踪。如下面的INSERT语句使用插入了一条记录，其中的密码使用了MD5进行加密：<br />　　INSERT INTO table1 (user, pw) VALUE ('user1', MD5('password1') )<br />　　可以通过如下的语句进行密码验证：<br />　　SELECT * FROM table1 WHERE user = 'user1' AND pw = MD5('password1')<br />　　哈希加密方法可以很好地对密码进行加密，使用了这种方法加密，密码将无法 恢复成明文。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

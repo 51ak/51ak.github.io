@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Innodb_row_lock_waits和Innodb_row_lock_current_waits报警处理 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Innodb_row_lock_waits和Innodb_row_lock_current_waits报警处理</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#报警判断">报警判断</a></li>
+<li><a href="#报警排查">报警排查</a></li>
+<li><a href="#补充">补充</a></li>
+</ul></li>
+</ul>
+</nav>
+
+
+<main>
+
+
+<p><em>刚才有RD部门负责人在企业微信上问我他们的一个MYSQL实例Innodb_row_lock_waits在报警，这个是什么情况？</em></p>
+
+<p>得益于我们把数据库的报警，发送给了RD负责人，每个负责人会对自己业务线的数据库性能比较关心，比DBA还要关心。
+通常DBA收到这种row_lock报警只要不是连续的长时间报，一般会忽略。
+这也是我们努力做数据库负责人制度的原因。</p>
+
+<p>回归正题，处理Innodb_row_lock_waits或者Innodb_row_lock_current_waits报警。</p>
+
+<h2 id="报警判断">报警判断</h2>
+
+<p>首先第一步这不是个严重的报警，如果没有其他并发报警.
+但这个报警一般会对业务来说，行数增多，意味着更多的锁等待时长</p>
+
+<p>行锁的报警规则设置如下：
+ <code>&lt;counter_node&gt;&lt;counter&gt;Innodb_row_lock_waits&lt;/counter&gt;&lt;checkpoint&gt;0,10,30,80,5000&lt;/checkpoint&gt;&lt;weight&gt;1&lt;/weight&gt;&lt;/counter_node&gt;</code></p>
+
+<h2 id="报警排查">报警排查</h2>
+
+<p><code>show engine innodb status \G</code></p>
+
+<p>观察结果TRANSACTIONS 这一段：</p>
+
+<p>TRANSACTIONS</p>
+
+<p>Trx id counter 581112825
+Purge done for trx&rsquo;s n:o &lt; 581112824 undo n:o &lt; 0 state: running but idle
+History list length 34
+LIST OF TRANSACTIONS FOR EACH SESSION:
+&mdash;TRANSACTION 421991409852768, not started
+0 lock struct(s), heap size 1136, 0 row lock(s)
+&mdash;TRANSACTION 421991409917520, not started
+0 lock struct(s), heap size 1136, 0 row lock(s)
+&mdash;TRANSACTION 421991409914784, not started
+0 lock struct(s), heap size 1136, 0 row lock(s)
+&mdash;TRANSACTION 421991409911136, not started
+0 lock struct(s), heap size 1136, 0 row lock(s)</p>
+
+<p>一般会看到
+<code>RECORD LOCKS space id 161 page no 2405 n bits 80 index PRIMARY of table ***库名，表名*****trx id 579998817 lock_mode X insert intention waiting</code></p>
+
+<p>类似的提示。把库名表名记下来。</p>
+
+<p>如果上面的 <code>show engine innodb status \G</code> 看不到结果怎么办？</p>
+
+<p>不慌， 开启锁监控(InnoDB Lock Monitor)
+在早期Mysql版本里需要手动创建表（很2的方法）
+ <code>CREATE TABLE innodb_lock_monitor (a INT) ENGINE=INNODB;</code></p>
+
+<p>Mysql5.6 以后可以用系统变量来开关：</p>
+
+<p><code>set GLOBAL innodb_status_output=ON;
+ set GLOBAL innodb_status_output_locks=ON;</code></p>
+
+<p>开启锁监控以后可以在错误日志中每隔一段时间（一般是15秒）刷新一次锁信息</p>
+
+<p>在实例上</p>
+
+<p><code>tail -f mysql-error.log |grep &quot;space id&quot;</code></p>
+
+<p>可以持续观察锁输出。找到高频率出现锁的库名和表名.</p>
+
+<p>在慢日志里捞一下，基本都能具体的SQL，如果出不来，告诉给RD自己也能查出来。如果RD查得费劲，可以开下全日志或者调低下SLOW QUERY的阈值</p>
+
+<h2 id="补充">补充</h2>
+
+<p>行锁相关的状态和监控说明</p>
+
+<p>show global status like &lsquo;Innodb_row_lock%&rsquo;</p>
+
+<ul>
+<li>Innodb_row_lock_current_waits：当前正在等待锁定的数量；</li>
+<li>Innodb_row_lock_time：从系统启动到现在锁定总时间长度；</li>
+<li>Innodb_row_lock_time_avg：每次等待所花平均时间；</li>
+<li>Innodb_row_lock_time_max：从系统启动到现在等待最常的一次所花的时间；</li>
+<li>Innodb_row_lock_waits：系统启动后到现在总共等待的次数； ``</li>
+</ul>
+
+<p>对于这5个状态变量，比较重要的主要是Innodb_row_lock_time_avg（等待平均时长），Innodb_row_lock_waits（等待总次数）以及Innodb_row_lock_time（等待总时长）这三项。尤其是当等待次数很高，而且每次等待时长也不小的时候，我们就需要分析系统中为什么会有如此多的等待，然后根据分析结果着手指定优化计划。</p>
+
+<p>对于innodb中的latch，可以通过以下命令查看</p>
+
+<p><code>show engine innodb mutex;</code></p>
+
+</main>
+<h2 class="date">发布日期:2019/09/16</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/innodb">Innodb</a> <a href="/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86">故障处理</a> <a href="/categories/mysql%E5%8F%82%E6%95%B0">mysql参数</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

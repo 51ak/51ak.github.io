@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>binlog on Classic</title>
+    <link>/categories/binlog/</link>
+    <description>Recent content in binlog on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 27 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/binlog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL的7种日志(四):BinLog</title>
+      <link>/mysql/mysql%E7%9A%84binlog%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Tue, 27 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84binlog%E6%97%A5%E5%BF%97/</guid>
+      <description>0.前言 续：
+ MySQL的7种日志(一):概况 MySQL的7种日志(二):RedoLog MySQL的7种日志(三):UndoLog MySQL的7种日志(四):BinLog  1.什么是binlog  又名:MySQL归档日志,MySQL二进制日志 记录所有数据库表结构变更（DDL例如CREATE、ALTER TABLE…）以及表数据修改（DMLINSERT、UPDATE、DELETE …）的所有操作。 默认情况下，二进制日志并不是在每次写的时候同步到磁盘。因此，当数据库所在地操作系统发生宕机时，可能会有最后一部分数据没有写入二进制日志文件中，这会给恢复和复制带来问题。  2.binlog的作用  时间点的恢复：某些数据的恢复需要二进制日志，例如，在一个数据库全备文件恢复后，用户可通过二进制日志进行即时点（point-in-time）恢复。 主从复制：通过复制和执行二进制日志使一台远程的 Mysql 数据库（一般称为 slave）与一台 MySQL 数据库（一般称为 master）进行实时同步。 变更审计：用户可以通过二进制日志中的信息来进行审计，回溯是否对数据库的修改。 误操作回滚：当误修改(ins/upd/del)发生时,可以用binlog解析出修改前后的语句,用于快速回滚 异构数据同步：通过解析binlog,可以将MySQL的变更通知到异构数据源(kafka,es,mongo,redis,mq&amp;hellip;) 事务存储引擎的崩溃恢复。MySQL采用事务的两阶段提交协议。当 MySQL 系统发生崩溃时，事务在存储引擎内部的状态可能为 prepared 和 commit 两种。对于 prepared 状态的事务，是进行提交操作还是进行回滚操作，这时需要参考 binlog：如果事务在 binlog 中存在，那么将其提交；如果不在 binlog 中存在，那么将其回滚，这样就保证了数据在主库和从库之间的一致性。  3.binlog 和 redolog 区别  适用对象不同： binlog 是 MySQL 的 Server 层实现的，所有引擎都可以使用 redolog 是 InnoDB 引擎特有的 写入内容不同：  binlog 有 3 种格式类型，分别是 STATEMENT（默认格式）、ROW、 MIXED，区别如下： STATEMENT：语句 ROW：记录行数据最终被修改成什么样了 MIXED：包含了 STATEMENT 和 ROW 模式，它会根据不同的情况自动使用 ROW 模式和 STATEMENT 模式； redolog 是物理日志，记录的是在某个数据页做了什么修改，比如对 XXX 表空间中的 YYY 数据页 ZZZ 偏移量的地方做了AAA 更新；   写入方式不同： binlog 是可以追加写入的。“追加写” 是指 binlog 文件写到一定大小后会切换到下一个，并不会覆盖以前的日志 redolog 是循环写的，空间固定会被用完 作用不同  4.</description>
+    </item>
+    
+    <item>
+      <title>MySQL常用脚本_binlog解析和回滚</title>
+      <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_binlog/</link>
+      <pubDate>Sat, 10 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_binlog/</guid>
+      <description>解析binlog 方法1:mysqlbinlog mysqlbinlog --no-defaults --base64-output=decode-rows -vv --database=dboop --start-datetime=&#39;2020-10-11 00:00:00&#39; --stop-datetime=&#39;2020-10-11 15:00:00&#39; mysql-bin.000075 &amp;gt;75.sql 常用参数 database：只列出该数据库下的binlog数据，但无法过滤由触发器执行的SQL。 base64-output=decode-rows -vv：显示具体 SQL 语句。 skip-gtids=true：忽略 GTID 显示。  输出结果  # at 20001 #201011 12:04:09 server id 1 end_log_pos 20094 CRC32 0x2b305ac Query thread_id=53 exec_time=0 error_code=0 SET TIMESTAMP=1651011012/*!*/; BEGIN /*!*/; 上面输出包括信息：
+ position: 位于文件中的位置，即第一行的（# at 20001）,说明该事件记录从文件第20001个字节开始 timestamp: 事件发生的时间戳，即第二行的（#201011 12:04:09） server id: 服务器标识（1） end_log_pos 表示下一个事件开始的位置（即当前事件的结束位置+1） thread_id: 执行该事件的线程id （thread_id=53） exec_time: 事件执行的花费时间 error_code: 错误码，0意味着没有发生错误 type:事件类型Query  方法2:my2sql wget https://www.</description>
+    </item>
+    
+    <item>
+      <title>MySQL binlog 问答</title>
+      <link>/dba/mysqlbinlogquestion/</link>
+      <pubDate>Fri, 15 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/mysqlbinlogquestion/</guid>
+      <description>binlog 是什么?  MySQL 的二进制日志 ,不是纯文本类的 记录的是数据库变动的日志(insert,update,delete,create,replace,grant &amp;hellip;.) 不包括 select,set 等  binlog 重要吗？是不是一定要开？  几乎是最重要的MySQL日志，严谨点说是最重要的之一 如果没有特殊情况，一定要开！为什么？你再往后看&amp;hellip;)  binlog 有什么作用？  高可用同步，经常用它来同步主库和从库的数据。 它本身就是记录了数据库变化的日志，放在那让你看也是它作为“日志”的作用 恢复指定时间点的数据, 想把数据库恢复到指定时间眯，得靠它 回滚数据 ，误删除数据时用到 审计 变更捕获到其他平台(kafka,es或其他数据库)  binlog 怎么开启，放在哪，怎么存储的？ binlog组提交  MySQL 引入了 binlog 组提交（group commit）机制，当有多个事务提交的时候，会将多个 binlog 刷盘操作合并成一个，从而减少磁盘 I/O 的次数 引入了组提交机制后，prepare 阶段不变，只针对 commit 阶段，将 commit 阶段拆分为三个过程： flush 阶段：多个事务按进入的顺序将 binlog 从 cache 写入文件（不刷盘）； sync 阶段：对 binlog 文件做 fsync 操作（多个事务的 binlog 合并一次刷盘）； commit 阶段：各个事务按顺序做 InnoDB commit 操作； 上面的每个阶段都有一个队列，每个阶段有锁进行保护，因此保证了事务写入的顺序，第一个进入队列的事务会成为 leader，leader领导所在队列的所有事务，全权负责整队的操作，完成后通知队内其他事务操作结束。 对每个阶段引入了队列后，锁就只针对每个队列进行保护，不再锁住提交事务的整个过程，可以看的出来，锁粒度减小了，这样就使得多个阶段可以并发执行，从而提升效率。  主从复制是怎么实现？ MySQL 集群的主从复制过程梳理成 3 个阶段：  写入 Binlog：主库写 binlog 日志，提交事务，并更新本地存储数据。 同步 Binlog：把 binlog 复制到所有从库上，每个从库把 binlog 写到暂存日志中。 回放 Binlog：回放 binlog，并更新存储引擎中的数据。  具体详细过程如下：  MySQL 主库在收到客户端提交事务的请求之后，会先写入 binlog，再提交事务，更新存储引擎中的数据，事务提交完成后，返回给客户端“操作成功”的响应。 从库会创建一个专门的 I/O 线程，连接主库的 log dump 线程，来接收主库的 binlog 日志，再把 binlog 信息写入 relay log 的中继日志里，再返回给主库“复制成功”的响应。 从库会创建一个用于回放 binlog 的线程，去读 relay log 中继日志，然后回放 binlog 更新存储引擎中的数据，最终实现主从的数据一致性。  24、什么时候 binlog cache 会写到 binlog 文件？ 在事务提交的时候，执行器把 binlog cache 里的完整事务写入到 binlog 文件中，并清空 binlog cache。</description>
+    </item>
+    
+  </channel>
+</rss>

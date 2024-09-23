@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>提高MySQL中数据装载效率</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="很多时候关心的是优化select查询，因为它们是最常用的查询，而且确定怎样优化它们并不总是直截了当。相对来说，将数据装入数据库是直截了当的。然而，也存在可用来改善数据装载操作效率的策略，其基本原理如下：<br/>成批装载较单行装载更快，因为在装载每个记录后，不需要刷新索引高速缓存;可在成批记录装入后才刷新。<br/>在表无索引时装载比索引后装载更快。如果有索引，不仅必须增加记录到数据文件，而提高MySQL中数据装载效率" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化">性能与优化</a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlzhishi/l_14_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>提高MySQL中数据装载效率</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   很多时候关心的是优化SELECT 查询，因为它们是最常用的查询，而且确定怎样优化它们并不总是直截了当。相对来说，将数据装入数据库是直截了当的。然而，也存在可用来改善数据装载操作效率的策略，其基本原理如下：<br />成批装载较单行装载更快，因为在装载每个记录后，不需要刷新索引高速缓存;可在成批记录装入后才刷新。<br />在表无索引时装载比索引后装载更快。如果有索引，不仅必须增加记录到数据文件，而且还要修改每个索引以反映增加了的新记录。<br />较短的SQL&nbsp;语句比较长的SQL 语句要快，因为它们涉及服务器方的分析较少，而且还因为将它们通过网络从客户机发送到服务器更快。这些因素中有一些似乎微不足道（特别是最后一个因素），但如果要装载大量的数据，即使是很小的因素也会产生很大的不同结果。我们可以利用上述的一般原理推导出几个关于如何最快地装载数据的实际结论：<br />LOAD DATA（包括其所有形式）比INSERT 效率高，因为其成批装载行。索引刷新较少，并且服务器只需分析和解释一条语句而不是几条语句。<br />LOAD DATA 比LOAD DATA LOCAL 效率更高。利用LOAD DATA，文件必须定位在服务器上，而且必须具有FILE 权限，但服务器可从磁盘直接读取文件。利用LOAD DATA LOCAL，客户机读取文件并将其通过网络发送给服务器，这样做很慢。<br />如果必须使用INSERT，应该利用允许在单个语句中指定多行的形式，例如：<br />可在语句中指定的行越多越好。这样会减少所需的语句数目，降低索引刷新量。如果使用<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>dump 生成数据库备份文件，应该使用--extended-insert 选项，使转储文件包含多行INSERT 语句。还可以使用- - o p t（优化） ，它启用--extended-insert 选项。反之，应该避免使用<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>dump 的--complete-insert 选项;此选项会导致INSERT 语句为单行，执行时间更长，比不用--complete-insert 选项生成的语句需要更多的分析。<br />使用压缩了的客户机/服务器协议以减少网络数据流量。对于大多数MySQL客户机，可以用--compress 命令行选项来指定。它一般只用于较慢的网络，因为压缩需要占用大量的处理器时间。<br />让MySQL插入缺省值;不要在INSERT 语句中指定将以任意方式赋予缺省值的列。平均来说，这样做语句会更短，能减少通过网络传送给服务器的字符数。此外，语句包含的值较少，服务器所进行的分析和转换就会较少。<br />如果表是索引的，则可利用批量插入（ LOAD DATA 或多行的INSERT 语句）来减少索引的开销。这样会最小化索引更新的影响，因为索引只需要在所有行处理过时才进行刷新，而不是在每行处理后就刷新。<br />如果需要将大量数据装入一个新表，应该创建该表且在未索引时装载，装载数据后才创建索引，这样做较快。一次创建索引（而不是每行修改一次索引）较快。<br />如果在装载之前删除或禁用索引，装入数据后再重新创建或启用索引可能使装载更快。如果想对数据装载使用删除或禁用策略，一定要做一些实验，看这样做是否值得（如果将少量数据装入一个大表中，重建和索引所花费的时间可能比装载数据的时间还要长）。<br />可用DROP INDEX 和CREATE INDEX 来删除和重建索引。另一种可供选择的方法是利用myisamchk 或isamchk 禁用和启用索引。这需要在MySQL服务器主机上有一个帐户，并对表文件有写入权。为了禁用表索引，可进入相应的数据库目录，执行下列命令之一：<br />对具有.MYI 扩展名的索引文件的MyISAM 表使用myisamchk，对具有.ISM 扩展名的索引文件的ISAM 表使用isamchk。在向表中装入数据后，按如下激活索引：<br />如果决定使用索引禁用和激活，应该使用第13章中介绍的表修复锁定协议以阻止服务器同时更改锁（虽然此时不对表进行修复，但要对它像表修复过程一样进行修改，因此需要使用相同的锁定协议）。<br />上述数据装载原理也适用于与需要执行不同操作的客户机有关的固定查询。例如，一般希望避免在频繁更新的表上长时间运行SELECT 查询。长时间运行SELECT 查询会产生大量争用，并降低写入程序的性能。一种可能的解决方法为，如果执行写入的主要是INSERT 操作，那么先将记录存入一个临时表，然后定期地将这些记录加入主表中。如果需要立即访问新记录，这不是一个可行的方法。但只要能在一个较短的时间内不访问它们，就可以使用这个方法。使用临时表有两个方面的好处。首先，它减少了与主表上SELECT 查询语句的争用，因此，执行更快。其次，从临时表将记录装入主表的总时间较分别装载记录的总时间少;相应的索引高速缓存只需在每个批量装载结束时进行刷新，而不是在每行装载后刷新。这个策略的一个应用是进入Web&nbsp;服务器的Web 页访问MySQL数据库。在此情形下，可能没有保证记录立即进入主表的较高权限。<br />如果数据并不完全是那种在系统非正常关闭事件中插入的单个记录，那么减少索引刷新的另一策略是使用MyISAM 表的DELAYED_KEY_WRITE 表创建选项（如果将MySQL用于某些数据录入工作时可能会出现这种情况）。此选项使索引高速缓存只偶尔刷新，而不是在每次插入后都要刷新。<br />如果希望在服务器范围内利用延迟索引刷新，只要利用--delayed-key-write 选项启动<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d 即可。在此情形下，索引块写操作延迟到必须刷新块以便为<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>索引值腾出空间为止，或延迟到执行了一个flush-tables 命令后，或延迟到该索引表关闭。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

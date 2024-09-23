@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SQL Server 触发器详解</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="触发器是一种特殊类型的存储过程，它不同于之前的我们介绍的存储过程。触发器主要是通过事件进行触发被自动调用执行的。而存储过程可以通过存储过程的名称被调用。<br/>&oslash;什么是触发器<br/>&nbsp;&nbsp;&nbsp;触发器对表进行插入、更新、删除的时候会自动执行的特殊存储过程。触发器一般用在check约束更加复杂的约束上面。触发器和普通的存储过程的区别是：触发器是当对某SQL Server 触发器详解" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA">高可用性和HA</a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化">性能与优化</a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决">故障与解决</a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserverzhishi/l_2_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>SQL Server 触发器详解</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   触发器是一种特殊类型的存储过程，它不同于之前的我们介绍的存储过程。触发器主要是通过事件进行触发被自动调用执行的。而存储过程可以通过存储过程的名称被调用。<br />&Oslash; 什么是触发器<br />&nbsp;&nbsp;&nbsp; 触发器对表进行插入、更新、删除的时候会自动执行的特殊存储过程。触发器一般用在check约束更加复杂的约束上面。触发器和普通的存储过程的区别是：触发器是当对某一个表进行操作。诸如：update、insert、delete这些操作的时候，系统会自动调用执行该表上对应的触发器。SQL Server 2005中触发器可以分为两类：DML触发器和DDL触发器，其中DDL触发器它们会影响多种数据定义语言语句而激发，这些语句有create、alter、drop语句。<br />&nbsp;<br />&nbsp;&nbsp;&nbsp; DML触发器分为：<br />&nbsp;&nbsp;&nbsp; 1、 after触发器（之后触发）<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a、 insert触发器<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; b、 update触发器<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; c、 delete触发器<br />&nbsp;<br />&nbsp;&nbsp;&nbsp; 2、 instead of 触发器 （之前触发）<br />&nbsp;<br />&nbsp;&nbsp;&nbsp; 其中after触发器要求只有执行某一操作insert、update、delete之后触发器才被触发，且只能定义在表上。而instead of触发器表示并不执行其定义的操作（insert、update、delete）而仅是执行触发器本身。既可以在表上定义instead of触发器，也可以在视图上定义。<br />&nbsp;<br />&nbsp;&nbsp;&nbsp; 触发器有两个特殊的表：插入表（instered表）和删除表（deleted表）。这两张是逻辑表也是虚表。有系统在内存中创建者两张表，不会存储在数据库中。而且两张表的都是只读的，只能读取数据而不能修改数据。这两张表的结果总是与被改触发器应用的表的结构相同。当触发器完成工作后，这两张表就会被删除。Inserted表的数据是插入或是修改后的数据，而deleted表的数据是更新前的或是删除的数据。<br />&nbsp;<br />&nbsp;<br />对表的操作<br />Inserted逻辑表<br />Deleted逻辑表<br />增加记录（insert）<br />存放增加的记录<br />无<br />删除记录（delete）<br />无<br />存放被删除的记录<br />修改记录（update）<br />存放更新后的记录<br />存放更新前的记录<br />&nbsp;<br />&nbsp;&nbsp;&nbsp; Update数据的时候就是先删除表记录，然后增加一条记录。这样在inserted和deleted表就都有update后的数据记录了。注意的是：触发器本身就是一个事务，所以在触发器里面可以对修改数据进行一些特殊的检查。如果不满足可以利用事务回滚，撤销操作。<br />&nbsp; &Oslash; 创建触发器<br />&nbsp;&nbsp;&nbsp; 语法<br />create trigger tgr_nameon table_namewith encrypion –加密触发器&nbsp;&nbsp;&nbsp; for update...as&nbsp;&nbsp;&nbsp; Transact-SQL<br />&nbsp;&nbsp;&nbsp; # 创建insert类型触发器<br />--创建insert插入类型触发器if (object_id('tgr_classes_insert', 'tr') is not null)&nbsp;&nbsp;&nbsp; drop trigger tgr_classes_insertgocreate trigger tgr_classes_inserton classes&nbsp;&nbsp;&nbsp; for insert --插入触发as&nbsp;&nbsp;&nbsp; --定义变量&nbsp;&nbsp;&nbsp; declare @id int, @name varchar(20), @temp int;&nbsp;&nbsp;&nbsp; --在inserted表中查询已经插入记录信息&nbsp;&nbsp;&nbsp; select @id = id, @name = name from inserted;&nbsp;&nbsp;&nbsp; set @name = @name + convert(varchar, @id);&nbsp;&nbsp;&nbsp; set @temp = @id / 2;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; insert into student values(@name, 18 + @id, @temp, @id);&nbsp;&nbsp;&nbsp; print '添加学生成功！';go--插入数据insert into classes values('5班', getDate());--查询数据select * from classes;select * from student order by id;&nbsp;&nbsp;&nbsp;&nbsp; insert触发器，会在inserted表中添加一条刚插入的记录。<br />&nbsp;<br />&nbsp;&nbsp;&nbsp; # 创建delete类型触发器<br />--delete删除类型触发器if (object_id('tgr_classes_delete', 'TR') is not null)&nbsp;&nbsp;&nbsp; drop trigger tgr_classes_deletegocreate trigger tgr_classes_deleteon classes&nbsp;&nbsp;&nbsp; for delete --删除触发as&nbsp;&nbsp;&nbsp; print '备份数据中……';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (object_id('classesBackup', 'U') is not null)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --存在classesBackup，直接插入数据&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; insert into classesBackup select name, createDate from deleted;&nbsp;&nbsp;&nbsp; else&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --不存在classesBackup创建再插入&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; select * into classesBackup from deleted;&nbsp;&nbsp;&nbsp; print '备份数据成功！';go----不显示影响行数--set nocount on;delete classes where name = '5班';--查询数据select * from classes;select * from classesBackup;&nbsp;&nbsp; delete触发器会在删除数据的时候，将刚才删除的数据保存在deleted表中。<br />&nbsp;<br />&nbsp;&nbsp;&nbsp; # 创建update类型触发器<br />--update更新类型触发器if (object_id('tgr_classes_update', 'TR') is not null)&nbsp;&nbsp;&nbsp; drop trigger tgr_classes_updategocreate trigger tgr_classes_updateon classes&nbsp;&nbsp;&nbsp; for updateas&nbsp;&nbsp;&nbsp; declare @oldName varchar(20), @newName varchar(20);&nbsp;&nbsp;&nbsp; --更新前的数据&nbsp;&nbsp;&nbsp; select @oldName = name from deleted;&nbsp;&nbsp;&nbsp; if (exists (select * from student where name like '%'+ @oldName + '%'))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; begin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --更新后的数据&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; select @newName = name from inserted;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; update student set name = replace(name, @oldName, @newName) where name like '%'+ @oldName + '%';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; print '级联修改数据成功！';&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end&nbsp;&nbsp;&nbsp; else&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; print '无需修改student表！';go--查询数据select * from student order by id;select * from classes;update classes set name = '五班' where name = '5班';&nbsp;&nbsp;&nbsp;&nbsp; update触发器会在更新数据后，将更新前的数据保存在deleted表中，更新后的数据保存在inserted表中。<br />&nbsp;<br />&nbsp;&nbsp;&nbsp; # update更新列级触发器<br />if (object_id('tgr_classes_update_column', 'TR') is not null)&nbsp;&nbsp;&nbsp; drop trigger tgr_classes_update_columngocreate trigger tgr_classes_update_columnon classes&nbsp;&nbsp;&nbsp; for updateas&nbsp;&nbsp;&nbsp; --列级触发器：是否更新了班级创建时间&nbsp;&nbsp;&nbsp; if (update(createDate))&nbsp;&nbsp;&nbsp; begin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; raisError('系统提示：班级创建时间不能修改！', 16, 11);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rollback tran;&nbsp;&nbsp;&nbsp; endgo--测试select * from student order by id;select * from classes;update classes set createDate = getDate() where id = 3;update classes set name = '四班' where id = 7;&nbsp;&nbsp;&nbsp;&nbsp; 更新列级触发器可以用update是否判断更新列记录；<br />&nbsp;<br />&nbsp;&nbsp;&nbsp; # instead of类型触发器<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; instead of触发器表示并不执行其定义的操作（insert、update、delete）而仅是执行触发器本身的内容。<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 创建语法<br />create trigger tgr_nameon table_namewith encryption&nbsp;&nbsp;&nbsp; instead of update...as&nbsp;&nbsp;&nbsp; T-SQL&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # 创建instead of触发器<br />if (object_id('tgr_classes_inteadOf', 'TR') is not null)&nbsp;&nbsp;&nbsp; drop trigger tgr_classes_inteadOfgocreate trigger tgr_classes_inteadOfon classes&nbsp;&nbsp;&nbsp; instead of delete/*, update, insert*/as&nbsp;&nbsp;&nbsp; declare @id int, @name varchar(20);&nbsp;&nbsp;&nbsp; --查询被删除的信息，病赋值&nbsp;&nbsp;&nbsp; select @id = id, @name = name from deleted;&nbsp;&nbsp;&nbsp; print 'id: ' + convert(varchar, @id) + ', name: ' + @name;&nbsp;&nbsp;&nbsp; --先删除student的信息&nbsp;&nbsp;&nbsp; delete student where cid = @id;&nbsp;&nbsp;&nbsp; --再删除classes的信息&nbsp;&nbsp;&nbsp; delete classes where id = @id;&nbsp;&nbsp;&nbsp; print '删除[ id: ' + convert(varchar, @id) + ', name: ' + @name + ' ] 的信息成功！';go--testselect * from student order by id;select * from classes;delete classes where id = 7;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # 显示自定义消息raiserror<br />if (object_id('tgr_message', 'TR') is not null)&nbsp;&nbsp;&nbsp; drop trigger tgr_messagegocreate trigger tgr_messageon student&nbsp;&nbsp;&nbsp; after insert, updateas raisError('tgr_message触发器被触发', 16, 10);go--testinsert into student values('lily', 22, 1, 7);update student set sex = 0 where name = 'lucy';select * from student order by id;<br />&nbsp;&nbsp;&nbsp; # 修改触发器<br />alter trigger tgr_messageon studentafter deleteas raisError('tgr_message触发器被触发', 16, 10);go--testdelete from student where name = 'lucy';<br />&nbsp;&nbsp;&nbsp; # 启用、禁用触发器<br />--禁用触发器disable trigger tgr_message on student;--启用触发器enable trigger tgr_message on student;<br />&nbsp;&nbsp;&nbsp; # 查询创建的触发器信息<br />--查询已存在的触发器select * from sys.triggers;select * from sys.objects where type = 'TR';--查看触发器触发事件select te.* from sys.trigger_events te join sys.triggers ton t.object_id = te.object_idwhere t.parent_class = 0 and t.name = 'tgr_valid_data';--查看创建触发器语句exec sp_helptext 'tgr_message';<br />&nbsp;&nbsp;&nbsp; # 示例，验证插入数据<br />if ((object_id('tgr_valid_data', 'TR') is not null))&nbsp;&nbsp;&nbsp; drop trigger tgr_valid_datagocreate trigger tgr_valid_dataon studentafter insertas&nbsp;&nbsp;&nbsp; declare @age int,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @name varchar(20);&nbsp;&nbsp;&nbsp; select @name = s.name, @age = s.age from inserted s;&nbsp;&nbsp;&nbsp; if (@age &lt; 18)&nbsp;&nbsp;&nbsp; begin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; raisError('插入新数据的age有问题', 16, 1);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rollback tran;&nbsp;&nbsp;&nbsp; endgo--testinsert into student values('forest', 2, 0, 7);insert into student values('forest', 22, 0, 7);select * from student order by id;<br />&nbsp;&nbsp;&nbsp; # 示例，操作日志<br />if (object_id('log', 'U') is not null)&nbsp;&nbsp;&nbsp; drop table loggocreate table log(&nbsp;&nbsp;&nbsp; id int identity(1, 1) primary key,&nbsp;&nbsp;&nbsp; action varchar(20),&nbsp;&nbsp;&nbsp; createDate datetime default getDate())goif (exists (select * from sys.objects where name = 'tgr_student_log'))&nbsp;&nbsp;&nbsp; drop trigger tgr_student_loggocreate trigger tgr_student_logon studentafter insert, update, deleteas&nbsp;&nbsp;&nbsp; if ((exists (select 1 from inserted)) and (exists (select 1 from deleted)))&nbsp;&nbsp;&nbsp; begin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; insert into log(action) values('updated');&nbsp;&nbsp;&nbsp; end&nbsp;&nbsp;&nbsp; else if (exists (select 1 from inserted) and not exists (select 1 from deleted))&nbsp;&nbsp;&nbsp; begin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; insert into log(action) values('inserted');&nbsp;&nbsp;&nbsp; end&nbsp;&nbsp;&nbsp; else if (not exists (select 1 from inserted) and exists (select 1 from deleted))&nbsp;&nbsp;&nbsp; begin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; insert into log(action) values('deleted');&nbsp;&nbsp;&nbsp; endgo--testinsert into student values('king', 22, 1, 7);update student set sex = 0 where name = 'king';delete student where name = 'king';select * from log;select * from student order by id;<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

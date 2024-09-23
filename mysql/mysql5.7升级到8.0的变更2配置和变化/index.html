@@ -1,0 +1,379 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL5.7升级到8.0(二):配置和参数| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL5.7升级到8.0(二):配置和参数</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1配置文件cnf变化">1.配置文件.cnf变化</a>
+      <ul>
+        <li><a href="#以下参数变化">以下参数变化</a></li>
+        <li><a href="#以下参数不再支持">以下参数不再支持</a></li>
+      </ul>
+    </li>
+    <li><a href="#2系统表变化">2.系统表变化</a></li>
+    <li><a href="#3binlog变化">3.binlog变化</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#4权限与密码">4.权限与密码</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#5表变更">5.表变更</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#6索引变更">6.索引变更</a></li>
+    <li><a href="#7默认编码变成utf8mb4">7.默认编码变成UTF8MB4</a></li>
+    <li><a href="#8mysqldump-备份">8.mysqldump 备份</a></li>
+    <li><a href="#9主从复制">9.主从复制</a></li>
+    <li><a href="#升级步骤">升级步骤</a>
+      <ul>
+        <li><a href="#1执行升级程序">1.执行升级程序</a></li>
+        <li><a href="#2问题总结">2.问题总结</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <ul>
+<li>
+<p>研发：<a href="https://www.dboop.com/mysql/mysql5.7%E5%8D%87%E7%BA%A7%E5%88%B08.0%E7%9A%84%E5%8F%98%E6%9B%B41sql%E8%AF%AD%E6%B3%95/">MySQL5.7升级到8.0(一):SQL语法变化</a></p>
+</li>
+<li>
+<p>DBA：<a href="https://www.dboop.com/mysql/mysql5.7%E5%8D%87%E7%BA%A7%E5%88%B08.0%E7%9A%84%E5%8F%98%E6%9B%B42%E9%85%8D%E7%BD%AE%E5%92%8C%E5%8F%98%E5%8C%96/">MySQL5.7升级到8.0(二):配置和参数</a></p>
+</li>
+</ul>
+<blockquote>
+<p>Note：这里面是升级到8.0,需要<code>DBA</code>参与修改部分或注意部分</p>
+</blockquote>
+<h2 id="1配置文件cnf变化">1.配置文件.cnf变化</h2>
+<h3 id="以下参数变化">以下参数变化</h3>
+<pre><code>expire-logs-days  =&gt;  binlog_expire_logs_seconds # 替换 expire-logs-days
+tx_isolation      =&gt;  transaction_isolation
+tx_read_only      =&gt;  transaction_read_only
+innodb_undo_logs  =&gt;  innodb_rollback_segments
+have_query_cache  = no      # 永远为 NO
+expire-logs-days 后续可能废弃, 使用 binlog_expire_logs_seconds  (目前还支持)
+</code></pre><h3 id="以下参数不再支持">以下参数不再支持</h3>
+<pre><code>innodb_stats_sample_pages
+innodb_locks_unsafe_for_binlog
+innodb_file_format   
+innodb_file_format_check
+innodb_file_format_max
+innodb_large_prefix
+ignore_builtin_innodb
+skip-symbolic-links  # 默认即 skip-symbolic-links.
+sync_frm             # 8.0 版本去掉了 .frm 文件, 内置在 ibd 文件中
+sql_log_bin          # 仅支持会话级别设置
+query_cache_xxx      # 缓存相关的系统变量
+metadata_locks_cache_size
+metadata_locks_hash_instances
+date_format
+datetime_format
+time_format
+max_tmp_tables
+</code></pre><h2 id="2系统表变化">2.系统表变化</h2>
+<pre><code>INNODB_LOCKS      =&gt; data_locks
+INNODB_LOCK_WAITS =&gt; data_lock_waits
+</code></pre><h2 id="3binlog变化">3.binlog变化</h2>
+<h4 id="binlog命令">binlog命令</h4>
+<ul>
+<li>通过 mysqlbinlog 工具查看, 额外指定 <code>--base64-output</code> 参数避免解析乱码:</li>
+</ul>
+<pre><code>mysqlbinlog --verbose --base64-output=decode-rows mysql-bin.0000xx
+</code></pre><h4 id="binlog格式">binlog格式</h4>
+<ul>
+<li>binlog 头信息中增加了一些时间及版本信息:</li>
+</ul>
+<pre><code># original_commit_timestamp=1587435300248124 (2020-04-21 10:15:00.248124 CST)
+# immediate_commit_timestamp=1587435300248124 (2020-04-21 10:15:00.248124 CST)
+/*!80001 SET @@session.original_commit_timestamp=1587435300248124*//*!*/;
+/*!80014 SET @@session.original_server_version=80019*//*!*/;
+/*!80014 SET @@session.immediate_server_version=80019*//*!*/;
+</code></pre><h2 id="4权限与密码">4.权限与密码</h2>
+<h4 id="权限">权限</h4>
+<ul>
+<li>
+<p>新版可能会废弃 SUPER 权限, 更多见 <a href="https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/privileges-provided.html#dynamic-privileges-migration-from-super">dynamic-privileges-migration-from-super</a>, 如果需要管理 slave, 可以赋予  REPLICATION_SLAVE_ADMIN 权限;</p>
+</li>
+<li>
+<p>增加角色设置, 不同用户可以分配不同的角色连接数据库, 更多见 <a href="https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-role.html">create-role</a>;</p>
+</li>
+<li>
+<p>默认加密插件变更为 caching_sha2_password;</p>
+</li>
+<li>
+<p>更多权限见 <a href="https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/privileges-provided.html">8.0-privileges-provided</a>.</p>
+</li>
+</ul>
+<h4 id="密码">密码</h4>
+<ul>
+<li>8.0 中默认的密码以 caching_sha2_password 插件加密, 不兼容 8.0 以下的版本. 各编程语言的驱动需要查看官方信息确定. 可以对单个用户指定以前的 <code>mysql_native_password</code> 认证插件.</li>
+</ul>
+<pre><code>mysql &gt; show global variables like '%auth%plugin%';                            
++-------------------------------+-----------------------+
+| Variable_name                 | Value                 |
++-------------------------------+-----------------------+
+| default_authentication_plugin | caching_sha2_password |
++-------------------------------+-----------------------+
+
+mysql &gt; alter user 'user'@'xxx' identified with mysql_native_password by 'pass';
+</code></pre><ul>
+<li>如下所示, 默认低版本连接出现的错误:</li>
+</ul>
+<pre><code># mysql -h infodb6 -P 3397 -u root -p
+Enter password: 
+ERROR 2059 (HY000): Authentication plugin 'caching_sha2_password' cannot be loaded: /usr/local/mysql/lib/mysql/plugin/caching_sha2_password.so: cannot open shared object file: No such file or directory
+</code></pre><ul>
+<li>低版本的驱动, 可以通过修改默认的加密插件来连接 DB:</li>
+</ul>
+<pre><code>[mysqld]
+default_authentication_plugin = mysql_native_password
+</code></pre><ul>
+<li><strong>说明:</strong> 如果编程语言的驱动还不支持 <code>caching_sha2_password</code> 方式, 建议修改默认的验证为 <code>mysql_native_password</code>;</li>
+</ul>
+<h2 id="5表变更">5.表变更</h2>
+<h4 id="没有-frm-文件">没有 frm 文件</h4>
+<ul>
+<li>
+<p>8.0 开始去掉了 frm 文件, 表结构定义默认内置到 innodb 的 ibd 文件中, 可以通过 <code>ibd2sdi  ..table.ibd</code> 获取详细的字段信息.</p>
+</li>
+<li>
+<p>更多见:</p>
+<p><a href="https://dev.mysql.com/doc/refman/8.0/en/ibd2sdi.html">8.0-ibd2sdi</a><br>
+<a href="https://www.percona.com/blog/2018/12/07/mysql-8-frm-drop-how-to-recover-table-ddl/">mysql-8-frm-drop-how-to-recover-table-ddl</a></p>
+</li>
+</ul>
+<h4 id="没有整形宽度">没有整形宽度</h4>
+<ul>
+<li>表结构中去掉了整数类型宽度的声明, 只能看到类型:</li>
+</ul>
+<pre><code>mysql root@[localhost:s3397 percona] &gt; show warnings\G
+*************************** 1. row ***************************
+  Level: Warning
+   Code: 1681
+Message: Integer display width is deprecated and will be removed in a future release.
+
+mysql root@[localhost:s3397 percona] &gt; show create table tests\G
+*************************** 1. row ***************************
+       Table: tests
+Create Table: CREATE TABLE `tests` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `host` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `port` smallint NOT NULL DEFAULT '3306',
+  `tag` varchar(100) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `location` varchar(50) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unq_hostmark` (`host`,`port`,`tag`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+</code></pre><h4 id="datetime和时区">DATETIME和时区</h4>
+<ul>
+<li>从 8.0.19 版本开始, <code>TIMESTAMP</code> 和 <code>DATETIME</code> 两个时间类型都支持时区相关的设置. 以前仅有 <code>TIMESTAMP</code> 支持, <code>DATETIME</code> 支持后时间转换方便不少.</li>
+</ul>
+<h4 id="大小写敏感">大小写敏感</h4>
+<ul>
+<li>8.0 版本中, 初始化和启动的时候, 选项 <code>lower_case_table_names</code> 的值必须相同. 更多见 <a href="https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_lower_case_table_names">sysvar_lower_case_table_names</a>.</li>
+</ul>
+<h4 id="innodb-变更">innodb 变更</h4>
+<ul>
+<li>一个库中的表可以共用一个 ibd 表空间文件, 也可以一个表一个 idb 文件;</li>
+<li>undo log 不再存放在字典信息中, 单独出来在 undo log 文件中;</li>
+<li>默认在 data/#innodb_temp 目录中创建 10 个 ibt 文件被 innodb 内部和用户空间的临时表使用;</li>
+<li>information_schema 中表的列名存在变化, 更多见 <a href="https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/information-schema.html">8.0-information_schema</a>.</li>
+</ul>
+<h2 id="6索引变更">6.索引变更</h2>
+<ul>
+<li>增加 invisible index(隐藏索引), 一个索引被设置为 invisible 后, 优化器会忽略该索引. 适合性能调试;</li>
+<li>支持 descending index(降序索引);</li>
+<li>支持 functional index(函数索引), 更多见 <a href="https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/create-index.html#create-index-functional-key-parts">8.0-functional-key</a>;</li>
+<li>索引命中优化, 更多见 <a href="https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/optimizer-hints.html#optimizer-hints-index-level">optimizer hints</a>;</li>
+</ul>
+<h2 id="7默认编码变成utf8mb4">7.默认编码变成UTF8MB4</h2>
+<p>去掉了 UTF8 编码, 使用 UTF8MB3 代替以前的 UTF8, 8.0 中建议使用 UTF8MB4 编码. 默认的编码亦从 latin1 改为 utf8mb4, 默认的编码排序规则从 latin1_swedish_ci 改为 utf8mb4_0900_ai_ci;</p>
+<h2 id="8mysqldump-备份">8.mysqldump 备份</h2>
+<p>使用较低的 <code>5.7.x</code> 或 <code>8.0.x</code> 版本进行 mysqldump 备份的时候, 默认指定了 sql 模式 <code>NO_AUTO_CREATE_USER</code>, 包含此模式的 <code>dump</code> 文件在恢复的时候都会失败, 需要手动删除该模式.</p>
+<h2 id="9主从复制">9.主从复制</h2>
+<ul>
+<li>从5.7到8.0的复制中避免使用  <code>caching_sha2_password</code></li>
+<li>从5.7到8.0的复制中避免使用不同的sqlmode</li>
+</ul>
+<h2 id="升级步骤">升级步骤</h2>
+<blockquote>
+<p>mysql版本:低版本5.7.26 高版本8.0.20</p>
+</blockquote>
+<h3 id="1执行升级程序">1.执行升级程序</h3>
+<ul>
+<li>1.1 登陆5.7.26数据库执行如下sql。确保数据刷到硬盘</li>
+</ul>
+<pre><code>/data/mysql5.7/bin/mysql -h {} -P {} -u {} -p
+
+show variables like 'innodb_fast_shutdown';
+
+set global innodb_fast_shutdown=0;
+
+shutdown;
+
+exit;
+</code></pre><ul>
+<li>1.2退出至终端 用mysql8.0.20客户端直接启动</li>
+</ul>
+<p>/usr/local/mysql3307/bin/mysqld_safe &ndash;defaults-file=/data/mysql3308/conf/my.cnf &ndash;user=mysql &ndash;lc-messages-dir=/usr/local/mysql3307/share &ndash;lc-messages=en_US &amp;</p>
+<h3 id="2问题总结">2.问题总结</h3>
+<ul>
+<li>2.1配置文件信息(重要)</li>
+<li>主要注意sql_mode、basedir、密码认证插件及字符集设置，标注为#的表示8.0取消的参数。配置会有报错。</li>
+</ul>
+<pre><code>basedir = /data/mysql3308
+skip_ssl
+default_authentication_plugin=mysql_native_password
+#query_cache_limit = 1M
+#sql_mode = NO_AUTO_CREATE_USER
+#default-time_zone = '+8:00'
+#innodb_support_xa = 1
+#query_cache_min_res_unit = 4096
+#query_cache_size = 0 #query_cache_type = 0
+#innodb_undo_logs=128
+mysqlx_port = 33080
+mysqlx_socket = /data/mysql3308/mysqlx.sock
+
+#innodb_undo_tablespaces=4
+</code></pre><ul>
+<li>2.2 &ndash;lc-messages报错</li>
+</ul>
+<p>更改完配置以后。mysql启动正常，但是检查日志。有 &ndash;lc-messages报错。</p>
+<pre><code>[ERROR] [MY-010338] [Server] Can't find error-message file '/data/mysql3308/share/errmsg.sys'. Check error-message file location and 'lc-messages-dir' configuration directive.
+</code></pre><ul>
+<li>启动脚本指定定&ndash;lc-messages-dir=/usr/local/mysql3307/share &ndash;lc-messages=en_US后正常</li>
+</ul>
+<pre><code>/usr/local/mysql3307/bin/mysqld_safe --defaults-file=/data/mysql3308/conf/my.cnf --user=mysql --lc-messages-dir=/usr/local/mysql3307/share --lc-messages=en_US &amp;
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/04/20</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/mysql8.0">mysql8.0</a> <a href="/categories/mysql%E5%8D%87%E7%BA%A7">mysql升级</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

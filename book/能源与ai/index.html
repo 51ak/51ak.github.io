@@ -1,0 +1,350 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI的电力需求以及国内的电力能源情况| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">AI的电力需求以及国内的电力能源情况</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#ai的惊人耗电量">AI的惊人耗电量</a>
+      <ul>
+        <li><a href="#ai训练阶段耗电量">AI训练阶段耗电量</a></li>
+        <li><a href="#ai推理阶段的耗电量">AI推理阶段的耗电量</a></li>
+        <li><a href="#ai耗电的原因及改进方向">AI耗电的原因及改进方向</a></li>
+      </ul>
+    </li>
+    <li><a href="#国内电力能源现状">国内电力能源现状</a>
+      <ul>
+        <li><a href="#火电水电是基本盘">火电，水电是基本盘</a></li>
+        <li><a href="#太阳能光伏">太阳能光伏</a></li>
+        <li><a href="#风能">风能</a></li>
+      </ul>
+    </li>
+    <li><a href="#储能">储能</a>
+      <ul>
+        <li><a href="#为什么需要储能">为什么需要储能</a></li>
+        <li><a href="#我国的储能技术发展方向">我国的储能技术发展方向</a></li>
+        <li><a href="#我国的储能现状">我国的储能现状</a></li>
+        <li><a href="#特斯拉的储能">特斯拉的储能</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <p><img src="/img/2024/062000000062171720000730.png" alt="AI需要能源"></p>
+<h2 id="ai的惊人耗电量">AI的惊人耗电量</h2>
+<ul>
+<li>当我们说大模型AI的使用成本很贵的时候</li>
+<li>一方面其训练和推理的硬件GPU本身很贵，另一方面其消耗的电力也很夸张</li>
+<li>这里我们只说AI的耗电量</li>
+</ul>
+<h3 id="ai训练阶段耗电量">AI训练阶段耗电量</h3>
+<ul>
+<li>OpenAI的GPT-3模型一次训练的耗电量高达1287兆瓦时</li>
+<li>谷歌于2022年发布的大语言模型PaLM一次训练需要消耗3436兆瓦时的电量</li>
+<li>模型越大，训练所需要消耗的电量越多。现在gpt-4o,文心一言4,通义千问这些新的大模型训练用电量会更夸张</li>
+</ul>
+<h3 id="ai推理阶段的耗电量">AI推理阶段的耗电量</h3>
+<ul>
+<li>GPT每生成1000个英文单词大约消耗0.125千瓦时的电量</li>
+<li>OpenAI需要3,617台英伟达公司的HGX A100服务器（共有28,936个图形处理单元 (GPU)）来支持 ChatGPT，这意味着每天的能源需求为 564 兆瓦时</li>
+<li>谷歌搜索中应用生成式AI技术，谷歌每年的耗电量将高达290亿千瓦时，也就是每天约7900万度电</li>
+</ul>
+<h3 id="ai耗电的原因及改进方向">AI耗电的原因及改进方向</h3>
+<h4 id="ai耗电的原因gpu运算">AI耗电的原因：GPU运算</h4>
+<ul>
+<li>
+<p>以H800 GPU PCIE 服务器整机为例：</p>
+<ul>
+<li>CPU耗电约 300W*2，</li>
+<li>内存16根耗电约 250W</li>
+<li>硬盘6块盘约200W</li>
+<li>风扇耗电约150W</li>
+<li>H800GPU卡耗电约700W*8</li>
+</ul>
+</li>
+<li>
+<p>合计：最大耗电量约为6800W（90%以上的耗电都是GPU引起的）</p>
+</li>
+<li>
+<p>这些还不包括机房空调制冷的电力消耗</p>
+</li>
+<li>
+<p><img src="/img/2024/059000000059171719997532.png" alt="H800 GPU"></p>
+</li>
+<li>
+<p>这样的一台服务器，对OpenAI这样的公司来说，一个机房里需要放几万台</p>
+</li>
+</ul>
+<h4 id="ai耗电的改进方向">AI耗电的改进方向</h4>
+<ul>
+<li>随着英伟达的GPU工艺不停的迭代发展</li>
+<li>每次英伟达的新品发布会，都会发现新一代的显卡比上一代的能耗是几倍的减少</li>
+<li>性能越来越高，单位算力的能耗成倍的减少，这是实大实的在减少能耗</li>
+<li>可惜AI的算力要求越来越高，减少的能耗目前赶不上需求的增长</li>
+<li>未来很长一段时间AI消耗的能源会越来越多。</li>
+</ul>
+<h2 id="国内电力能源现状">国内电力能源现状</h2>
+<ul>
+<li>来自国家能源局发布的《2023年全国电力工业统计数据》</li>
+<li>太阳能和风能装机量正在快速增长</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>装机容量(万千瓦时)</th>
+<th>占比</th>
+<th>同比增长</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>火电</td>
+<td>139032</td>
+<td>47.6%</td>
+<td>4.1%</td>
+</tr>
+<tr>
+<td>太阳能</td>
+<td>60949</td>
+<td>20.9%</td>
+<td>55.2%</td>
+</tr>
+<tr>
+<td>风电</td>
+<td>44134</td>
+<td>15.1%</td>
+<td>20.7%</td>
+</tr>
+<tr>
+<td>水电</td>
+<td>42154</td>
+<td>14.4%</td>
+<td>1.8%</td>
+</tr>
+<tr>
+<td>核电</td>
+<td>5691</td>
+<td>1.9%</td>
+<td>2.4%</td>
+</tr>
+<tr>
+<td>合计</td>
+<td>291965</td>
+<td>100.0%</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>最近一次国内的限电</li>
+</ul>
+<p><img src="/img/2024/809000000809181720001075.png" alt="国内的限电"></p>
+<h3 id="火电水电是基本盘">火电，水电是基本盘</h3>
+<ul>
+<li>火电水电依旧是基本盘。因为稳定性还是最高的</li>
+</ul>
+<h3 id="太阳能光伏">太阳能光伏</h3>
+<ul>
+<li>这是目前增长最快的一种电力能源</li>
+<li>也是朋友们讨论认为当前解决能源问题最好的方案</li>
+</ul>
+<h4 id="前景">前景</h4>
+<ul>
+<li>持续增长的市场需求：电力能源还不够。</li>
+<li>技术进步与成本降低：技术在成熟。光伏成本在降低</li>
+<li>政策支持：政府继支持：减免税收、补贴</li>
+<li>产业链协同发展：国内整个产业链的协同发展。</li>
+</ul>
+<h4 id="优势">优势</h4>
+<ul>
+<li>无限性和可持续性：太阳能资源取之不尽用之不竭</li>
+<li>广泛性：只要有光照的地方就可以使用光伏发电系统。</li>
+<li>绿色环保：0排放，0污染空气，0噪声。</li>
+<li>运维成本低：只要有太阳能电池组件就能发电</li>
+<li>提高能源安全性：减少对化石燃料发电的依赖</li>
+</ul>
+<h4 id="要解决的问题">要解决的问题</h4>
+<ul>
+<li>继续降成本</li>
+<li>电力传输问题，从西部晒出来的电怎么高效的运到东部</li>
+<li>储能问题，跟第2个解决一个都会极大的提高太阳能发电的利用率</li>
+</ul>
+<h3 id="风能">风能</h3>
+<ul>
+<li>跟太阳能有点像</li>
+<li>只是比起太阳，风的不稳定更高，并网难度更大</li>
+<li>对环境的影响更大</li>
+</ul>
+<h2 id="储能">储能</h2>
+<ul>
+<li>2023年，中国新型储能市场继续高速发展</li>
+<li>项目数量较2022年增长46%，新增规模较去年增长65%。</li>
+<li>锂离子电池在新型储能累计装机中占比高达94.9%</li>
+</ul>
+<h3 id="为什么需要储能">为什么需要储能</h3>
+<ul>
+<li>火力和水力发电对储能要求不高</li>
+<li>但是光伏，风力发电由于发电时间的不可控性，对储能技术依赖严重</li>
+<li>平抑波动：储能技术可以有效平抑风电和光伏发电的波动性。由于风能和太阳能发电具有间歇性和不稳定性，储能系统能够储存多余的电能，在需要时释放，从而保障电网的稳定运行。</li>
+<li>支撑大规模并网：随着风电和光伏发电的快速发展，储能技术成为支撑这些能源大规模并网的关键手段。通过储能系统，可以解决新能源高比例接入电网带来的挑战，提升电力系统的灵活性、经济性和安全性。</li>
+</ul>
+<h3 id="我国的储能技术发展方向">我国的储能技术发展方向</h3>
+<ul>
+<li>国家能源局发布的56个新型储能试点示范项目涵盖了多种技术路线。</li>
+<li>锂离子电池储能</li>
+<li>压缩空气储能</li>
+<li>液流电池（全钒、锌铁、铁基）</li>
+<li>飞轮储能</li>
+<li>重力储能</li>
+<li>二氧化碳储能</li>
+<li>液态空气储能</li>
+<li>钠离子电池储能</li>
+<li>铅炭电池储能</li>
+</ul>
+<h3 id="我国的储能现状">我国的储能现状</h3>
+<ul>
+<li>累计装机规模：截至2023年底，中国新型储能累计装机功率约为32.2GW，同比增长196.5%。</li>
+<li>新增装机规模：2023年，中国新型储能新增装机规模为21.5GW，占全球市场的近50%。其中，新增投运规模达到45.6GW，创历史新高。</li>
+<li>项目数量：2023年，中国新型储能项目数量（含规划、建设中和运行项目）超过2500个，较2022年增长46%。</li>
+</ul>
+<h3 id="特斯拉的储能">特斯拉的储能</h3>
+<ul>
+<li>国内上涨的特斯拉工厂扩建后的产能在生产储能电池</li>
+<li>集装箱样式的超大型商用储能电池Megapack</li>
+<li>特斯拉Powerwall3持续并网功率为11.5千瓦</li>
+</ul>
+<p><img src="/img/2024/939000000939181720000880.png" alt="特斯拉Powerwall"></p>
+<h2 id="总结">总结</h2>
+<ul>
+<li>AI的快速发展，会带来能源的进一步消耗</li>
+<li>电力能源最终通过化石能源还是可再生能源解决：国内倾向于太阳能的方案解决更优</li>
+<li>期待核能和储能技术的一次技术革新。</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2024/07/03</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E8%A7%82%E7%82%B9">观点</a> <a href="/categories/chatgpt">chatgpt</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

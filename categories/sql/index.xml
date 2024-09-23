@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>sql on dboop.com</title>
+    <link>/categories/sql/</link>
+    <description>Recent content in sql on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 08 Oct 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/sql/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>mysql中sql语句的一些写法技巧</title>
+      <link>/post/2017/10/08/mysql%E4%B8%ADsql%E8%AF%AD%E5%8F%A5%E7%9A%84%E4%B8%80%E4%BA%9B%E5%86%99%E6%B3%95%E6%8A%80%E5%B7%A7/</link>
+      <pubDate>Sun, 08 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017/10/08/mysql%E4%B8%ADsql%E8%AF%AD%E5%8F%A5%E7%9A%84%E4%B8%80%E4%BA%9B%E5%86%99%E6%B3%95%E6%8A%80%E5%B7%A7/</guid>
+      <description>一行转多行  url列以分号分隔，将其一行转化为多行，借助自增长表help_topic 实现。
+select a.dboop_id,dboop_code,tab_name,tabid,refer_dboop, substring_index(substring_index(a.url,&#39;;&#39;,b.help_topic_id+1),&#39;;&#39;,-1) as urls from t_dboop_mapping a join mysql.help_topic b on (length(a.url) - length(replace(a.url,&#39;;&#39;,&#39;&#39;))+1) &amp;gt; b.help_topic_id;  多行转一行  分组后汇总成一行，testid以逗号分隔
+select tabID,group_concat(distinct cast(testid as char(8))) as testid from tab_test group by tabID  COALESCE COALESCE(value,…)是一个可变参函数，可以使用多个参数。
+select coalesce(null,2,3); // Return 2 select coalesce(null,null,3); // Return 3 select coalesce(1,2,3); // Return 1  这个参数使用的场合为：假如某个字段默认是null，你想其返回的不是null，而是比如0或其他值，可以使用这个函数
+作用：接受多个参数，返回第一个不为 NULL 的参数，如果所有参数都为 NULL，此函数返回 NULL；当它使用 2 个参数时，和 IFNULL 函数作用相同。 ## CONCAT_WS() 和 concat()一样，将多个字符串连接成一个字符串，但是可以一次性指定分隔符（concat_ws 就是 concat with separator） `concat_ws(separator, str1, str2, .</description>
+    </item>
+    
+  </channel>
+</rss>

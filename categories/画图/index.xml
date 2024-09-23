@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>画图 on Classic</title>
+    <link>/categories/%E7%94%BB%E5%9B%BE/</link>
+    <description>Recent content in 画图 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 14 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E7%94%BB%E5%9B%BE/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>数据库迁移流程图</title>
+      <link>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%81%E7%A7%BB%E6%B5%81%E7%A8%8B%E5%9B%BE/</link>
+      <pubDate>Sat, 14 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%81%E7%A7%BB%E6%B5%81%E7%A8%8B%E5%9B%BE/</guid>
+      <description>合集 MySQL: MySQL迁移前 MySQL迁移中 MySQL迁移后 Oracle: Oracle迁移前 Oracle迁移中 Oracle迁移后 Redis: Redis迁移前 Redis迁移中 Redis迁移后 </description>
+    </item>
+    
+    <item>
+      <title>如何把MySQL和Oracle里的表同步到一个加密库中</title>
+      <link>/dba/%E5%A6%82%E4%BD%95%E6%8A%8Amysql%E5%92%8Coracle%E9%87%8C%E7%9A%84%E8%A1%A8%E5%90%8C%E6%AD%A5%E5%88%B0%E4%B8%80%E4%B8%AA%E5%8A%A0%E5%AF%86%E5%BA%93%E4%B8%AD/</link>
+      <pubDate>Wed, 24 Apr 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E5%A6%82%E4%BD%95%E6%8A%8Amysql%E5%92%8Coracle%E9%87%8C%E7%9A%84%E8%A1%A8%E5%90%8C%E6%AD%A5%E5%88%B0%E4%B8%80%E4%B8%AA%E5%8A%A0%E5%AF%86%E5%BA%93%E4%B8%AD/</guid>
+      <description>如图 加密配置元信息表 REATE TABLE `encrypt_baseinfo` (`from_linkname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;&#39; COMMENT &#39;来源数据库信息&#39;,`from_linktype` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;mysql&#39; COMMENT &#39;mysql,oracle,mongo&#39;,`from_connstr` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;&#39; COMMENT &#39;127.0.0.1;3306;u_test;password;db_test;&#39;,`to_linkname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;&#39; COMMENT &#39;目标数据库信息&#39;,`to_linktype` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;mysql&#39; COMMENT &#39;mysql,oracle,mongo&#39;,`to_connstr` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;&#39; COMMENT &#39;127.0.0.1;3306;u_test;password;db_test;&#39;,`kafka_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;&#39; COMMENT &#39;kafka_name&#39;,`kafka_groupid` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;&#39; COMMENT &#39;kakfak_groupid&#39;,`kakfak_offset` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;&#39; COMMENT &#39;kakfak_auto_offset_reset&#39;,PRIMARY KEY (`from_linkname`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT=&#39;加密字段基础信息表&#39;CREATE TABLE `encrypt_col_info` (`id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT &#39;ID、主键&#39;,`service_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT &#39;服务信息&#39;,`db_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT &#39;数据库信息&#39;,`tab_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT &#39;表名&#39;,`col_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT &#39;列名&#39;,`sub_col_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT &#39;json_key信息&#39;,`col_type` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT &#39;字段类型&#39;,`col_desc` varchar(5000) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT &#39;列名描述信息&#39;,`create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &#39;创建时间&#39;,`update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT &#39;最后更新时间&#39;,`linkname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;&#39;,`sec_type` tinyint NOT NULL DEFAULT &#39;0&#39; COMMENT &#39;加密类型：0，1：卡号，2：身份证，3：手机，4：地址&#39;,PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT=&#39;加密字段信息表&#39;判断配置表里的数据类型是否正确的快速方法  select concat(&#39;mysqlw -h &#39;,replace(linkname,&#39;my&#39;,&#39;mysql&#39;),&#39;-w.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>规范 on dboop.com</title>
+    <link>/categories/%E8%A7%84%E8%8C%83/</link>
+    <description>Recent content in 规范 on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 02 Apr 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/%E8%A7%84%E8%8C%83/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Sqlserver上线规范(准入条例)</title>
+      <link>/post/2019/04/02/sqlserver%E4%B8%8A%E7%BA%BF%E8%A7%84%E8%8C%83%E5%87%86%E5%85%A5%E6%9D%A1%E4%BE%8B/</link>
+      <pubDate>Tue, 02 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/04/02/sqlserver%E4%B8%8A%E7%BA%BF%E8%A7%84%E8%8C%83%E5%87%86%E5%85%A5%E6%9D%A1%E4%BE%8B/</guid>
+      <description>##核心规则 不在数据库中存储图片、文件，不使用大文本类型【必须】 不使用外键，由程序保证数据一致性【必须】 禁止使用存储过程、触发器 【必须】 每张表数据量控制在2000W以下 ，如预计会超出，需提前做好拆分或者归档迁移计划【强烈建议】
+##表的字义 a) 尽可能少的使用允许NULL 字段 b) 聚集索引字段应该尽可能的少（不超过3个字段,不多与200字节） c) 鼓励使用GUID字段 代替IDENTITY（1，1）自增字段。推荐使用自定义扩展的GUID( YYYYmmDDHHMMssms+3位机器编号+6位随机数字),尤其是对快速增长的表 linq(修改映射文件，在此字段前添加：[Column(Storage=&amp;ldquo;cID&amp;rdquo;, IsDbGenerated=true)]) d) 在使用INDENTITY字段，需考虑IDENTITY字段在特殊情况的“非连续性”，“非顺序性” e) 表记录中的单行最大占用空间，原则上要求在8K以下，避免单行数据的分页存储 f) 使用varhcar(max)，navarchar(max) varbinary(max)代替text,ntext,image g) 建议多使用time,date 等SQL2008新类型来节省存储空间和查询时的转换运算 h) XML类型字段：要考虑到该类型字段索引的宠大开销,事实上不推荐使用XML存储列. i) 对数据有效性的验证优先采用 CHECK约束 j) 主键和聚集索引是可以分开定义,网站相关代码不允许用外键(ERP相关可考虑) k) 所有定义字段需要填写说明. EXEC sys.sp_addextendedproperty l) 在不影响业务的前题下，多用空间换时间 m) 建表需要有备注
+--建表示例 CREATE TABLE [dbo].[job_info]( [job_id] int identity(1,1) NOT NULL primary key, [job_name] varchar(500) NOT NULL, ) ON [PRIMARY] GO EXEC sys.sp_addextendedproperty @name=N&#39;MS_Description&#39;, @value=N&#39;表:存储作业信息,主键自增--wenjing.zhang&#39; , @level0type=N&#39;SCHEMA&#39;,@level0name=N&#39;dbo&#39;,@level1type=N&#39;TABLE&#39;,@level1name=N&#39;job_info&#39;, @level2type=N&#39;COLUMN&#39;,@level2name=N&#39;job_id&#39; GO EXEC sys.</description>
+    </item>
+    
+    <item>
+      <title>Mysql使用规范文档 20180223版</title>
+      <link>/post/2018/02/23/mysql%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83%E6%96%87%E6%A1%A3-20180223%E7%89%88/</link>
+      <pubDate>Fri, 23 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/02/23/mysql%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83%E6%96%87%E6%A1%A3-20180223%E7%89%88/</guid>
+      <description>强制：不允许在跳板机上/生产服务器上手工连接,查询或更改线上数据
+强制：所有上线脚本必须先在测试环境执行，验证通过以后方可在生产环境执行。
+强制：上线脚本的编码格式统一为UTF-8
+强制：访问数据库需要使用DNS域名，不能直接写IP
+建议：DB名、表名、字段名，都小写,长度建议尽量不超过15
+强制：建表_新建表必须包含自增主键列，主键列不应该被修改；
+强制：建表_MySQL 字符集 utf8mb4 存储引擎innodb
+强制：建表_可能需要建索引的字段，不允许为空 NOT NULL，其他字体内也建议为NOT NULL
+强制：建表_需要为每张表的每个字段添加字段注释（最好是中文）
+强制：建表_不允许有外键
+强制：建表_不允许用enum,set,bit数据类型
+强制：建表_需要为timestamp类型指定默认值
+强制：建表_定义列名时不能包含关键字
+强制：建表_控制单表数据量 单表不超过2000w，建议不超过500w；
+强制：建表_合理分表：限制单库表数量在300以内，除未来可能的分表以外；
+强制：建表_控制列数量，字段少而精，字段数建议在20以内；
+建议：建表_自增列最好是为无符号型
+建议：建表_自增列需兼容不连续空洞出现的可能如1,7,15,23
+建议：建表_少用text/blob varchar的性能会比text高很多；实在避免不了blob，请拆表
+建议：建表_不使用HINT强制使用索引
+强制：SQL_不在数据库做运算 cpu计算务必移至业务层；
+强制：SQL_禁用跨库查询。
+强制：SQL_不允许线上程序做DDL操作
+强制：SQL_select 程序代码中不允许有SELECT *
+强制：SQL_select 程序代码中最多一次SELECT不允许超过5万行记录
+强制：SQL_select 程序代码中单次SELECT 执行时间不能超过5秒，建议不超过200ms
+强制：SQL_删除(delete)，变更（update) 语句不允许不加where条件
+强制：SQL_删除(delete)，变更（update) 语句不使用LIMIT
+强制：SQL_删除(delete)，变更（update) 语句对超过50万行的表 要求WHERE条件一定要用到索引
+强制：SQL_删除(delete)，变更（update) 语句单个影响行数不能超过5千行。
+强制：SQL_删除(delete)，变更（update) ，INSERT 语句在影响了5千行以后，需要SLEEP1秒才能执行下一组。不能并发，不能多线程
+建议：SQL_拒绝3B 拒绝大sql语句：big sql 拒绝大事物：big transaction 拒绝大批量：big batch
+强制：SQL_大语句拆小语句，减少锁时间；一条大sql可以堵死整个库；
+建议：SQL_OR改写为IN() or的效率是n级别； in的消息时log(n)级别；
+建议：SQL_OR改写为UNION，实际上更建议在程序中去做merge，语句尽量保持简单。
+建议：SQL_in的个数建议控制在200以内；
+建议：SQL_limit高效分页limit越大，效率越低 建议用id &amp;gt; $last_selected_id limit 10;</description>
+    </item>
+    
+    <item>
+      <title>oracle审计相关:audit日志和安全策略</title>
+      <link>/post/2017/11/19/oracle%E5%AE%A1%E8%AE%A1%E7%9B%B8%E5%85%B3audit%E6%97%A5%E5%BF%97%E5%92%8C%E5%AE%89%E5%85%A8%E7%AD%96%E7%95%A5/</link>
+      <pubDate>Sun, 19 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017/11/19/oracle%E5%AE%A1%E8%AE%A1%E7%9B%B8%E5%85%B3audit%E6%97%A5%E5%BF%97%E5%92%8C%E5%AE%89%E5%85%A8%E7%AD%96%E7%95%A5/</guid>
+      <description>开启审计日志 1.查询当前审计日志开启状态 show parameter audit;
+show parameter audit; NAME TYPE VALUE ------------------------------------ ----------- ------------------------------ audit_file_dest string /app/oracle/******/adum p audit_sys_operations boolean TRUE audit_syslog_level string audit_trail string DB   audit_sys_operations 应为True audit_trail 的value值为NONE表示不开启； audit_trail 的value值为FALSE表示不开启； audit_trail 的value值为DB表示开启； audit_trail 的value值为TURE表示开启；  2.开启审计日志 alter system set audit_sys_operations=TRUE scope=spfile;
+需重启
+3.关闭审计功能 conn /as sysdba show parameter audit alter system set audit_trail = none scope=spfile;  密码策略 1.创建profile create profile DEFAULTE limit sessions_per_user unlimited cpu_per_session unlimited cpu_per_call unlimited connect_time unlimited ;  这里分两类：</description>
+    </item>
+    
+    <item>
+      <title>redis使用规范文档 20170522版</title>
+      <link>/post/2017/05/22/redis%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83%E6%96%87%E6%A1%A3-20170522%E7%89%88/</link>
+      <pubDate>Mon, 22 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017/05/22/redis%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83%E6%96%87%E6%A1%A3-20170522%E7%89%88/</guid>
+      <description>运维redis很久了，一直是口头给rd说各种要求，尝试把这些规范总结成文档
+ 强制：所有的key设置过期时间（最长可设置过期时间10天，如有特殊要求，联系dba说明原因 ） 强制：禁止在测试环境，本地办公环境，开发跳板机，连接线上redis实例（实例归业务自运维的 除外） 强制：禁止使用运维类的命令 keys monitor debug watch flush bigkeys 强制：list的长度最大长度不超过1万，size不超过1G 强制：key的长度不超过100个字符 建议：string类型value长度不超过10M 建议：做好容量规划，预先考虑内存占用过大后，业务的拆分和分片后的影响 建议：选择合适的数据类型（string,list,hash,set,sortset) ,使用特殊的数据类型（ bit,geo)须提前与dba沟通 建议：使用常用的命令，m类操作，建议个数100个以下。 建议：不使用多个db,只使用db0,如果要区分业务线，在配置文件里定义各业务线使用的前缀 建议：有一套能区分业务归属的命名规范，key前缀是发生内存暴涨，性能问题时的分析定位问题 的可行基础，Key的命名规范建议：
+ 第1个字符小写定义数据类型： string —&amp;gt;s,Hash—&amp;gt;h,Set—&amp;gt;s,Zset —&amp;gt;z,List —&amp;gt;l,Geo—&amp;gt;g 第2,3字符定义公开的业务分类： 第4-10个字符定义部门类的业务线细分 推荐的key中可使用符号.:# 不推荐使用的有：\ ? * {} [] ()
+ 例：hCMappnode.product.detail:1312342   建议：不命名用对list,set,zset等分片支持不友好的操作如：union diff， 如果不能避免 ，注意使用大括号括起key的关键字
+ 建议：在代码中捕扣redis连接异常。考虑一个redis实例短时当机时业务的降级处理，尤其是对 redis的高频调用，有时候redis报错日志可能会打满磁盘
+ 建议：不同业务线，不同重要程度的redis建议申请多个redis实例，避免业务线中使用的redis过大。
+  </description>
+    </item>
+    
+    <item>
+      <title>Mysql大批量更新规范文档(批量update/select)</title>
+      <link>/post/2016/02/23/mysql%E5%A4%A7%E6%89%B9%E9%87%8F%E6%9B%B4%E6%96%B0%E8%A7%84%E8%8C%83%E6%96%87%E6%A1%A3%E6%89%B9%E9%87%8Fupdate/select/</link>
+      <pubDate>Tue, 23 Feb 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2016/02/23/mysql%E5%A4%A7%E6%89%B9%E9%87%8F%E6%9B%B4%E6%96%B0%E8%A7%84%E8%8C%83%E6%96%87%E6%A1%A3%E6%89%B9%E9%87%8Fupdate/select/</guid>
+      <description>业务上操作一批数据行，包括定期数据清理（delete）、初始化数据（insert）、 批量数据订正/修复（update）、业务数据导出/查询（select）。以上这些操作 若是涉及的数据量在 1 万行以下，通常没有问题。但超过一定数量级仍采用一个 SQL 进行处理，就会导致数据库出现主从延迟、IO 负载大、数据库响应超时甚至 没有响应的情况。 所以，对于大数据量（1 万行以上）的数据进行操作时，可以采用批量的方式。 原则：批量处理数据；事务大小合适；数据处理要可控。 给 RD 的建议，这些建议都是最安全且高效的，可以保证不影响线上数据库正常 运行，以及主从同步没有延迟，当然具体量值还要视情况而定： 对于 insert/update/delete，每次处理 200 行数据，执行 commit，之后 sleep 1 秒 对于 select，每次查询 1000 行数据，之后 sleep1 秒 下面举几个例子来说明如何来做。 注：例子中都是类 SQL，有些字段不存在，具体 SQL 视表而定，这个不要太较真 儿。 ###例子 1：数据表 iknow_accuse_user_item 要根据字段 accuse_time 清理 3 个月 前的数据 注：accuse_time 必须是索引字段，禁止全表扫描 #####批量删除方法 1：
+begin; delete from iknow_accuse_user_item where accuse_time &amp;lt; ‘3-month-ago’ limit 200; commit; select sleep(1);  重复上面的代码。。。。 #####批量删除方法 2： 首先在备库或者从业务前端获取要删除数据行的主键值，
+select itemid from iknow_accuse_user_item where accuse_time &amp;lt; ‘3-month-ago’ limit 200;  然后根据主键 itemid 进行删除，</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>分布式数据库| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">分布式数据库</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#分布式cap原则">分布式CAP原则</a></li>
+    <li><a href="#分布式的一致性">分布式的一致性</a></li>
+    <li><a href="#数据分片">数据分片</a></li>
+    <li><a href="#分布式查询处理及优化">分布式查询处理及优化</a></li>
+    <li><a href="#分布式数据库产品分成几大类">分布式数据库产品分成几大类：</a></li>
+    <li><a href="#国产分布式数据库pingcap-的-tidb">国产分布式数据库：PingCAP 的 TiDB</a></li>
+    <li><a href="#国产分布式数据库oceanbase">国产分布式数据库：OceanBase</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="分布式cap原则">分布式CAP原则</h2>
+<p>CAP定理是NOSQL数据库的基石，指的是在一个分布式系统中，Consistency(一致性)、Availability(可用性)、Partition tolerance(分区容错性)这三者只能满足其中两个，不能全部满足，这个结论是实践的总结，但是理论上，如果网络很好的情况下，三个特性可以同时满足。现实中的分布式系统因为网络的原因，很有可能会出现延迟或丢包等问题，因此必须要实现分区容忍性，一致性和可用性之间只能二选一。 对于传统的数据库来说，需要强一致性；而NoSQL系统一般注重性能和扩展性，而非强一致性。</p>
+<ul>
+<li>Consistency(一致性)：分布式数据系统中的所有的数据备份，在同一时刻值都相同。也就是同一时刻所有机器上的数据保持一致。</li>
+<li>Availability(可用性)：当集群中的一部分节点故障后，集群整体还能响应客户端的请求。也就是说，每个用户的请求都能收到正常的响应，并且响应时间在用户可接受范围内。</li>
+<li>Partition tolerance(分区容错性)：尽管节点之间网络通信丢失或延迟了任意数量的消息，但是整个系统仍然在正常运行。</li>
+</ul>
+<p>可以有三种组合：</p>
+<ul>
+<li>CA：指的是单点集群。</li>
+<li>CP：舍弃了可用性，可用性指的是高性能，所以性能不是很高。</li>
+<li>AP：是弱一致性，一般的NoSQL数据库对一致性的要求不是很高</li>
+</ul>
+<h2 id="分布式的一致性">分布式的一致性</h2>
+<ul>
+<li>为什么要有一致性？
+<ul>
+<li>1.数据不能存在单个节点（主机）上，否则可能出现单点故障</li>
+<li>2.多个节点（主机）需要保证具有相同的数据。</li>
+</ul>
+</li>
+<li>都有哪些一致性协议（算法）
+<ul>
+<li>Paxos ：强一致性，由Lamport出品，例如：腾讯的PhxSQL，阿里的OceanBase数据库</li>
+<li>Raft ：强一致性，由Paxos改进而来，例如：redis的sentinel,etcd数据库 用的是raft协议</li>
+<li>ZAB ：强一致性，由Paxos改进而来，例如：ZooKeeper</li>
+<li>Gossip协议：弱一致性或者叫最终一致性，例如：rediscluster协议</li>
+</ul>
+</li>
+</ul>
+<h2 id="数据分片">数据分片</h2>
+<p>当数据量过于庞大，单机难以支撑时，会面临扩展瓶颈，那么就需要将数据进行拆分，分散在多个数据库实例上。</p>
+<p>数据分片是指将数据全局划分为相关的逻辑片段，有水平切分、垂直切分、混合切分三种类型。</p>
+<ul>
+<li>水平切分:可以简单地理解为按照数据行进行切分，即一部分行放在某数据库，另外一部分放在另外的数据库实例。比如可以按照时间、地区拆分，亦或是根据hash进行拆分。</li>
+<li>垂直切分：垂直拆分可以简单理解为按照表进行分类，将表分布在不同的节点上,基本目标是将使用频繁的属性聚集在一起</li>
+<li>混合切分：水平切分与垂直切合的结合。</li>
+</ul>
+<p><img src="/img/2022/dbcap01.png" alt="混合切分" title="混合切分"></p>
+<p>数据分片的基本原则</p>
+<ul>
+<li>完备性条件</li>
+<li>可重构性条件</li>
+<li>不相交性条件</li>
+</ul>
+<p>垂直分片后将数据组合起来需要执行连接运算，比水平分片后的数据组合要困难一些。</p>
+<h2 id="分布式查询处理及优化">分布式查询处理及优化</h2>
+<p>分布式数据库需要考虑查询问题，其需要做的就是把一个分布式数据库上的高层次查询映射为本地数据库上的操作，最后通过网络通信，将操作结果汇聚起来。</p>
+<p>相对于集中式数据库，分布式数据库还要考虑额外的几个问题：</p>
+<ul>
+<li>选择最优站点查询</li>
+<li>数据传送方式</li>
+<li>站点之间交换数据的问题</li>
+<li>相对于集中式的查询目标，分布式需要多考虑一项 “通信开销代价”</li>
+</ul>
+<p>对水平分片的优化</p>
+<ul>
+<li>尽量把选择条件下移到分片的限定关系处，再把分片的限定关系与选择条件进行比较，去掉它们之间存在矛盾的相应片断。</li>
+<li>如果最后剩下一个水平片断，则在重构全局关系的操作中，就可去掉“并”操作.</li>
+</ul>
+<p>对垂直分片的优化</p>
+<ul>
+<li>把垂直分片所用到的属性集，与查询条件中的投影操作所涉及的属性相比较，去掉无关的垂直片断。</li>
+<li>如果最后只剩下一个垂直片断与查询有关时，去掉重构全局关系的**“连接”**操作（至少可以减少“连接”操作的次数）</li>
+</ul>
+<p>基于半连接算法的查询优化</p>
+<ul>
+<li>
+<p>网络中两个站点间进行连接操作时，需要将一个站点的关系通过网络传输到另一站点与在该站点上的关系进行连接操作。在这个过程中，如果传输整个关系，那么网络传输中的数据量会很大，网络本身复杂多变，如果一次性传输较大的数据量定会产生不少问题，而在实际的连接操作中，并非所有的数据都参与连接操作。</p>
+</li>
+<li>
+<p>因此为减少传输数据量，可以禁止那些不参与或者无用的数据在网络中传输，而半连接操作就是针对这一问题提出来的，它要实现的目标是减少进行连接操作关系的数据量，从而减少在网络上的传输的数据量，但同时在某种程度上会增加通信的次数以及本地处理的时间。</p>
+</li>
+</ul>
+<p>简单来说，就是在连接之前，先消除无用数据，减少网路通信中传输的数据量。</p>
+<p>基于直接连接算法的查询优化</p>
+<ul>
+<li>利用站点依赖信息</li>
+<li>分片与复制算法</li>
+<li>站点依赖和数据复制结合</li>
+<li>Hash划分算法</li>
+</ul>
+<h2 id="分布式数据库产品分成几大类">分布式数据库产品分成几大类：</h2>
+<ol>
+<li>物联网方向：时序数据库产品，满足IoT数据的收集、存储和统计。时序数据库产品也是现在对内存数据库产品冲击最大的。例如：InfluxDB、Kudu、kdb、OpenTSDB；</li>
+<li>交易关系方向：替代传统交易关系型数据库产品Oracle/DB2等满足不了海量吞吐、海量并发、海量交易、海量存储的在线交易业务场景。例如：蚂蚁金服Oceanbase、腾讯TDSQL、热璞HotDB、中兴GoldenDB、开源MyCAT、开源Cobar。</li>
+<li>分析关系方向：解决结构化数据存储和数据分析的业务场景，例如：Greenplum、Vertical、Gbase8a等。不过这块收到KV分析型产品巨大的冲击；</li>
+<li>KV分析方向：Hadoop、Spark是当下的基石，国内国外较多公司都是在其基础上再做二次研发，尤其是实现兼容SQL标准语法，已迎合业务场景和研发人员。</li>
+<li>KV文档方向：解决在线文档类型的非结构化数据存储和数据处理，例如：MongoDB、巨衫SequoiaDB，不过也都在拼命地在兼容SQL标准语法。</li>
+<li>HTAP：交易分析混合型分布式数据库产品，例如：国内TiDB、国外Spanner/F1</li>
+</ol>
+<p>有影响的国产分布式数据库，目前看（2022年1月）主要是下面这两家</p>
+<h2 id="国产分布式数据库pingcap-的-tidb">国产分布式数据库：PingCAP 的 TiDB</h2>
+<p>为用户提供一站式 OLTP、HTAP 解决方案。TiDB 适合高可用、强一致要求较高、数据规模较大等各种应用场景。</p>
+<p>TiDB 架构图TIDB 采用分层架构，有三种角色：</p>
+<ul>
+<li>TIDB：作为 SQL 引擎。</li>
+<li>TiKV：作为底层分布式键值存储。</li>
+<li>PD：承担元数据管理和全局时钟的职责。</li>
+</ul>
+<p>TiDB 的衍生项目：</p>
+<ul>
+<li>Ti-Binlog、Ti-CDC 支持数据导出。</li>
+<li>Ti-Operator 更方便地实现容器云部署。</li>
+<li>Chaos Mesh 支持混沌工程。</li>
+</ul>
+<h2 id="国产分布式数据库oceanbase">国产分布式数据库：OceanBase</h2>
+<p>OceanBase是一个支持海量数据的高性能分布式数据库系统，实现了数千亿条记录、数百TB数据上的跨行跨表事务，由淘宝核心系统研发、运维、DBA、广告、应用研发等部门共同完成。</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/01/03</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F">分布式</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

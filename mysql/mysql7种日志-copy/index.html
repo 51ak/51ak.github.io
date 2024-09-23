@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">当前分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档分类</a>
+      </li>
+      
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL中show processlist详细解释</span></h1>
+</div>
+
+
+  <main>
+    <h1 id="0概况">【0.概况】</h1>
+<p>MySQL执行SHOW PROCESSLIST命令后，显示的各个字段的含义如下所示：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">列</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">id</td>
+<td style="text-align:left">一个标识，要kill一个语句的时候有用。</td>
+</tr>
+<tr>
+<td style="text-align:left">user</td>
+<td style="text-align:left">显示当前用户</td>
+</tr>
+<tr>
+<td style="text-align:left">host</td>
+<td style="text-align:left">这条语句是从那个服务器的哪个端口上发出的，可以用来追踪出问题语句的用户</td>
+</tr>
+<tr>
+<td style="text-align:left">db</td>
+<td style="text-align:left">当前连接连接使用哪个数据库</td>
+</tr>
+<tr>
+<td style="text-align:left">command</td>
+<td style="text-align:left">显示当前连接的执行的命令，一般就是休眠（sleep），查询（query），连接（connect）</td>
+</tr>
+<tr>
+<td style="text-align:left">time</td>
+<td style="text-align:left">状态持续的时间，单位是秒。</td>
+</tr>
+<tr>
+<td style="text-align:left">state</td>
+<td style="text-align:left">当前连接的sql语句的状态，很重要的列</td>
+</tr>
+<tr>
+<td style="text-align:left">info</td>
+<td style="text-align:left">sql语句。</td>
+</tr>
+</tbody>
+</table>
+<h1 id="1详细说明">【1.详细说明】</h1>
+<h2 id="id">id</h2>
+<p>一个标识，要kill一个语句的时候有用。</p>
+<h2 id="user">user</h2>
+<p>显示当前用户</p>
+<h2 id="host">host</h2>
+<p>这条语句是从那个服务器的哪个端口上发出的，可以用来追踪出问题语句的用户</p>
+<h2 id="db">db</h2>
+<p>当前连接连接使用哪个数据库</p>
+<h2 id="command-重要">command (重要)</h2>
+<p>共有以下几种状态</p>
+<ul>
+<li>Command 说明</li>
+<li>Sleep 休眠，但是连接保持，可以通过设置超时时间的变量，使得连接在超时时间之后，断开连接。</li>
+<li>Query 查询。Query的范围包括Create、Insert、Select、Delete、Drop语句类型。</li>
+<li>Connect 连接。建立连接过程。</li>
+</ul>
+<h2 id="time">time</h2>
+<p>状态持续的时间，单位是秒</p>
+<h2 id="state-重要">state (重要)</h2>
+<ul>
+<li>Checking table 正在检查数据表。</li>
+<li>Closing tables 正在将表中修改的数据刷新到磁盘中，同时正在关闭已经用完的表。</li>
+<li>Connect Out 复制从服务器正在连接主服务器</li>
+<li>Copying to tmp table on disk 由于临时结果集大于 tmp_table_size，正在将临时表从内存存储转为磁盘存储以此节省内存。</li>
+<li>Creating tmp table 正在创建临时表以存放部分查询结果。</li>
+<li>deleting from main table 服务器正在执行多表删除中的第一部分，刚删除第一个表。</li>
+<li>deleting from reference tables 服务器正在执行多表删除中的第二部分，正在删除其他表的记录。</li>
+<li>Flushing tables 正在执行 FLUSH TABLES，等待其他线程关闭数据表。</li>
+<li>Killed 发送了一个kill请求给某线程，那么这个线程将会检查kill标志位，同时会放弃下一个kill请求。MySQL会在每次的主循环中检查kill标志位，不过有些情况下该线程可能会过一段时间才能死掉。如果该线程被其他线程锁住了，那么kill请求会在锁释放时马上生效。</li>
+<li>Locked 被其他查询锁住了。</li>
+<li>Sending data 正在处理 SELECT 查询的记录，同时正在把结果发送给客户端。</li>
+<li>Sorting for group 正在为 GROUP BY 做排序。</li>
+<li>Sorting for order 正在为 ORDER BY 做排序。</li>
+<li>Opening tables 正尝试打开一个表。</li>
+<li>Removing duplicates 正在执行一个 SELECT DISTINCT 方式的查询，但是MySQL无法在前一个阶段优化掉那些重复的记录。因此，MySQL需要再次去掉重复的记录，然后再把结果发送给客户端。</li>
+<li>Reopen table 获得了对一个表的锁，但是必须在表结构修改之后才能获得这个锁。已经释放锁，关闭数据表，正尝试重新打开数据表。</li>
+<li>Repair by sorting 修复指令正在排序以创建索引。</li>
+<li>Repair with keycache 修复指令正在利用索引缓存一个一个地创建新索引。</li>
+<li>Searching rows for update 正在将符合条件的记录找出来以备更新。必须在 UPDATE 要修改相关的记录之前就完成。</li>
+<li>Sleeping 正在等待客户端发送新请求。</li>
+<li>System lock 正在等待取得一个外部的系统锁。</li>
+<li>Upgrading lock INSERT DELAYED 正在尝试取得一个锁表以插入新记录。</li>
+<li>Updating 正在搜索匹配的记录，并且修改它们</li>
+<li>User Lock 正在等待GET_LOCK()。</li>
+<li>Waiting for tables 该线程得到通知，数据表结构已经被修改了，需要重新打开数据表以取得新的结构。然后，为了能的重新打开数据表，必须等到所有其他线程关闭这个表。</li>
+<li>waiting for handler insert INSERT DELAYED 已经处理完了所有待处理的插入操作，正在等待新的请求。</li>
+</ul>
+<h2 id="info">info</h2>
+<p>SQL语句</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h2 class="author">51ak</h2>
+<h2 class="date">2022/02/27</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E7%9F%A5%E8%AF%86">知识</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

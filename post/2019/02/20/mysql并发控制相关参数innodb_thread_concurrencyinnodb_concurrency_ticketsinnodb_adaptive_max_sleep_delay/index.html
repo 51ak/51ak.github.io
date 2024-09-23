@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>mysql并发控制相关参数:innodb_thread_concurrency,innodb_concurrency_tickets,innodb_adaptive_max_sleep_delay | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">mysql并发控制相关参数:innodb_thread_concurrency,innodb_concurrency_tickets,innodb_adaptive_max_sleep_delay</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+
+
+<p>目录：</p>
+
+<p>[TOC]</p>
+
+<p>正文：</p>
+
+<p>mysql的innodb存储引擎控制并发的方式有很多，最常见的应该就属通过设置：innodb_thread_concurrency 设置mysql进入innodb的并发线程数</p>
+
+<p>相关的参数有4个：</p>
+
+<ul>
+<li>innodb_thread_concurrency</li>
+<li>innodb_concurrency_tickets</li>
+<li>innodb_thread_sleep_delay</li>
+<li>innodb_adaptive_max_sleep_delay</li>
+</ul>
+
+<p><strong>先说结论</strong>
+- 对并发不高的业务，不建议设置innodb_thread_concurrency(默认：innodb_thread_concurrency=0)
+- 不建议统一设置innodb_thread_concurrency来限制并发数。
+- 只对特殊的业务场景，适度设置，以限制innodb并发，将高压力下线程之间抢占CPU而造成线程上下文切换的情况尽量阻塞在Innodb层之外（innodb_thread_concurrency）。
+- 预防大SQL大事务占有太多资源，妨碍其他小事务通行（innodb_concurrency_tickets）</p>
+
+<h1 id="参数解释">参数解释</h1>
+
+<ul>
+<li>1、<strong>innodb_thread_concurrency</strong>：同一时刻能够进入innodb层次并发执行的线程数(注意是并发不是并行)，如果SERVER层的线程大于这个值，多余的线程将会被放到一个叫做wait queue的队列中，不能进入INNODB层次（等待的线程状态显示为：sleeping before entering InnoDB)。默认值为0，它表示默认情况下不限制线程并发执行的数量。</li>
+<li>2、<strong>innodb_concurrency_tickets</strong>：这个参数设置为一种tickets,默认是5000，代表一个事务进出innodb的次数，一般情况他代表处理的行数，但<code>insert into () select ..</code> 这种复合语句，select和insert都要计一次所以是双倍，大事物需要处理的行数自然更多，小事物需要的少，如果tickets减少到0，这个线程将被踢出innodb层次，进入wait queue的队列尾部，这里假设有一个小的事物正在排队进入innodb层，又或者它已经进入了innodb层没有获得CPU时间轮片，突然一个大的事物tickets耗尽被提出了innodb层，那么这个小事物就自然而然能够获得CPU轮片干活，而小事物执行非常快，执行完成后另外的事物又能尽快的获得CPU干活，不会由于OS线程调度不均匀的问题而造成的小事物饥饿问题。</li>
+<li>3、<strong>innodb_thread_sleep_delay</strong>：是代表当事物被踢出innodb层次后等待睡眠完成后再次进入wait que队列，这个值的大小，以早期版本中，需要经过严格的评估或训练才能得到合理值，5.6.3以后可以设置innodb_adaptive_max_sleep_delay，来自动调整innodb_thread_sleep_delay，其单位是microseconds，从某种意义上来讲这个值加剧了大事物执行的时间，小事物也就更加容易进入INNODB层次获得CPU时间来干活。</li>
+<li>4、<strong>innodb_adaptive_max_sleep_delay</strong>：在MySQL 5.6.3之前的版本中，MySQL要求通过测试和实验找到innodb_thread_sleep_delay的最优值，这个最优值可能会因工作负载情况不同而发生改变。在MySQL 5.6.3及更高版本中，你可以通过设置参数innodb_adaptive_max_sleep_delay为innodb_thread_sleep_delay设置最大允许的值，InnoDB会根据当前线程调度活动自动调整innodb_thread_sleep_delay的值，这种动态调整机制有助于工作的线程，在系统负载低时或系统接近满负荷运转时，都能够顺利的调度。</li>
+<li><strong>thread_concurrency</strong> MySQL 5.7之前还有这个参数，针对于Solaris 8及低版本的系统，设置此参数允许应用程序给同一时间运行的线程系统提示所需数量的线程，mysql5.7版本以后已移除
+关于这几个值如果一旦innodb_thread_concurrency设置为0，其他值的设置均没有效果
+如果设置为0后show engine status的下面值始终为0：<em>0 queries inside InnoDB, 0 queries in queue</em></li>
+</ul>
+
+<p>官方文档：<a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-performance-thread_concurrency.html">https://dev.mysql.com/doc/refman/5.7/en/innodb-performance-thread_concurrency.html</a></p>
+
+<h1 id="源码解读">源码解读</h1>
+
+<p>innodb_thread_concurrency 并发控制的源码参考：mysql-5.7.21\storage\innobase\handler\ha_innodb.cc 1476行左右</p>
+
+<pre><code class="language-c">
+/** Enter InnoDB engine after checking the max number of user threads
+allowed, else the thread is put into sleep.
+@param[in,out]	prebuilt	row prebuilt handler */
+static inline
+void
+innobase_srv_conc_enter_innodb(
+	row_prebuilt_t*	prebuilt)
+{
+	/* We rely on server to do external_lock(F_UNLCK) to reset the
+	srv_conc.n_active counter. Since there are no locks on instrinsic
+	tables, we should skip this for intrinsic temporary tables. */
+	if (dict_table_is_intrinsic(prebuilt-&gt;table)) {
+		return;
+	}
+
+	trx_t*	trx	= prebuilt-&gt;trx;
+	if (srv_thread_concurrency) {
+		if (trx-&gt;n_tickets_to_enter_innodb &gt; 0) {
+
+			/* If trx has 'free tickets' to enter the engine left,
+			then use one such ticket */
+
+			--trx-&gt;n_tickets_to_enter_innodb;
+
+		} else if (trx-&gt;mysql_thd != NULL
+			   &amp;&amp; thd_is_replication_slave_thread(trx-&gt;mysql_thd)) {
+
+			UT_WAIT_FOR(
+				srv_conc_get_active_threads()
+				&lt; srv_thread_concurrency,
+				srv_replication_delay * 1000);
+
+		} else {
+			srv_conc_enter_innodb(prebuilt);
+		}
+	}
+}
+
+</code></pre>
+
+<p>这个函数的翻译如下：如果设置了srv_thread_concurrency变量，判断trx-&gt;n_tickets_to_enter_innodb &gt; 0 innodb是否有空闲，如果有FREE的，则开始分配tickets处理。
+如果没有等srv_replication_delay毫秒。</p>
+
+<h1 id="通俗解读">通俗解读</h1>
+
+<p>网上有人写了个段子来解释innodb的并发控制，原文有点污，改写了下（其实你们能猜到原文说的是啥事）</p>
+
+<p>7侠镇上有家同福客栈（Innodb）。店主湘玉(MySQL)默认是不限制进店客人的（innodb_thread_concurrency=0），</p>
+
+<p>假如吃饭的人多了，店里可能会挤很多人，不停的挤座位抢饭菜吃，乱了反而影响大家吃饭速度 ，于是客栈（innodb)就限制每次只能进去20个人(innodb_thread_concurrency=20).</p>
+
+<p>其他的人怎么办，只能在外面的台阶上排队依次进入．并安排门口的流浪汉小米(os_thread)组织秩序，门口排队吃饭的客人(thread)可以休息（sleep)</p>
+
+<p>这里小米会隔一段时间（innodb_thread_sleep_delay）叫醒一位客人，问店里（innodb)是否有空位(tickets)，如果有进屋，如果没有，继续让这个客人睡下去。</p>
+
+<p>也怕总是叫醒客人不好交代，就看快到了再叫，小米自己发明了一个自适应的叫醒算法，能够尽量减少唤醒次数．</p>
+
+<p>但是客人会规定一个最长唤醒时间，就是必须在这样的时间（innodb_adaptive_max_sleep_delay）时必须去看一下有没有空位．</p>
+
+<p>如此当有人从内部出来以后（free tichkets)，等待的客人(排在最前面的)就可以店吃饭．</p>
+
+<p>但是每位客人吃饭用的时间不一样，有的一分钟,有的客人需要几个小时．这样外面等待的客人就会有意见，哎呀，怎么还不出来．</p>
+
+<p>客栈（Innodb）又想了一个办法，规定每个人不能在店里张口次数不超过5000次(innodb_concurrency_tickets=5000), 跑堂的会数着每个客人张口的次数，超过了5000次就踢出店里，到门外继续排队(排在队尾)．</p>
+
+<p>等到下一次轮到他再进来吃饭</p>
+
+<p>人物对应：店主湘玉(MySQL), 客人(threads), 客栈(innodb)</p>
+
+<h1 id="innodb-thread-concurrency使用建议">innodb_thread_concurrency使用建议</h1>
+
+<p>如果一个工作负载中，并发用户线程的数量小于64，建议设置innodb_thread_concurrency=0；</p>
+
+<p>如果工作负载一直较为严重甚至偶尔达到顶峰，建议先设置innodb_thread_concurrency=128，并通过不断的降低这个参数，96, 80, 64等等，直到发现能够提供最佳性能的线程数，例如，假设系统通常有40到50个用户，但定期的数量增加至60，70，甚至200。你会发现，性能在80个并发用户设置时表现稳定，如果高于这个数，性能反而下降。在这种情况下，建议设置innodb_thread_concurrency参数为80，以避免影响性能。</p>
+
+<p>如果你不希望InnoDB使用的虚拟CPU数量比用户线程使用的虚拟CPU更多（比如20个虚拟CPU），建议通过设置innodb_thread_concurrency参数为这个值（也可能更低，这取决于性能体现），如果你的目标是将MySQL与其他应用隔离，你可以考虑绑定mysqld进程到专有的虚拟CPU。但是需要注意的是，这种绑定，在myslqd进程一直不是很忙的情况下，可能会导致非最优的硬件使用率。在这种情况下，你可能会设置mysqld进程绑定的虚拟CPU，允许其他应用程序使用虚拟CPU的一部分或全部。</p>
+
+<p>在某些情况下，最佳的innodb_thread_concurrency参数设置可以比虚拟CPU的数量小。定期检测和分析系统，负载量、用户数或者工作环境的改变可能都需要对innodb_thread_concurrency参数的设置进行调整。</p>
+
+<h1 id="如何判断是否在并发排队">如何判断是否在并发排队</h1>
+
+<ul>
+<li><p>show engine innodb status</p>
+
+<p>如果有 &mdash;TRANSACTION ******, ACTIVE **** sec sleeping before entering InnoDB  这段，则表示在排队</p></li>
+
+<li><p><code>select trx_id,trx_state,trx_query,trx_operation_state,trx_concurrency_tickets from information_schema.innodb_trx \G</code></p>
+
+<p>如出现以下内容：
+trx_operation_state: sleeping before entering InnoDB
+trx_concurrency_tickets: 0</p></li>
+</ul>
+
+</main>
+<h2 class="date">发布日期:2019/02/20</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql%E5%8F%82%E6%95%B0">mysql参数</a> <a href="/categories/innodb">innodb</a> <a href="/categories/%E9%AB%98%E5%B9%B6%E5%8F%91">高并发</a> <a href="/categories/mysql">mysql</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

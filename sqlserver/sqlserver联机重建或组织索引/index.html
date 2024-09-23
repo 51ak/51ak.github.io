@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SQLServer联机重建或组织索引| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">SQLServer联机重建或组织索引</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#索引维护-联机重建或组织索引">索引维护 联机重建或组织索引</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h3 id="索引维护-联机重建或组织索引">索引维护 联机重建或组织索引</h3>
+<pre><code>CREATE procedure [pr_auto_indexdefrag_online]
+as
+
+begin
+set nocount on
+declare @Db_name nvarchar(256)
+,@SchemaName nvarchar(256)
+,@TableName Nvarchar(256)
+,@IndexName Nvarchar(512)
+,@PctFrag decimal
+,@Defrag nvarchar(max)
+
+if exists(select 1 from sys.objects where object_id =object_id(N'#tmp')) Drop table #tmp;
+if exists(select 1 from sys.objects where object_id =object_id(N'#tmp_sub')) Drop table #tmp_sub;
+
+create table #tmp_sub(database_id int,dbname nvarchar(32),tablename nvarchar(128),index_type_desc nvarchar(128))
+create table #tmp(database_id int,dbname nvarchar(256),tablename nvarchar(256),indexname nvarchar(256),type_desc nvarchar(128),schemaname nvarchar(256),avgfragment decimal)
+
+------找出 text、ntext、image、varchar(max)、nvarchar(max)、varbinary(max)、xml 或大型 CLR 类型的列
+
+exec sp_MSforeachdb 'insert into #tmp_sub(database_id,dbname,tablename,index_type_desc)
+select distinct c.database_id,''?'' dbname,b.name,''CLUSTERED''
+from
+sys.dm_db_index_physical_stats(DB_ID(''?''),NULL,NULL,NULL,''SAMPLED'') as a
+join sys.tables as b on a.object_id=b.object_id
+join sys.databases as c on a.database_id=c.database_id
+join sys.all_columns d on d.object_id =a.object_id
+join sys.sysobjects e on d.object_id=e.id and e.xtype=''U''
+join sys.types f on d.user_type_id=f.user_type_id
+where b.type_desc=''USER_TABLE'' and b.is_ms_shipped=0 and (d.max_length =-1
+OR (f.name in (''image'',''text'',''ntext'',''xml'',''varbinary'',''binary'')))'
+---- d.max_length =-1 ( varchar(max) 如果表中有某列是这些类型，则重建索引会报错
+----找出 所有库中的索引
+
+exec sp_MSforeachdb 'insert into #tmp(database_id,dbname,tablename,indexname,type_desc,schemaname,avgfragment)
+select distinct d.database_id,''?'' dbname,c.name,b.name,b.type_desc,e.name,a.avg_fragmentation_in_percent
+from sys.dm_db_index_physical_stats(DB_ID(''?''),NULL,NULL,NULL,''SAMPLED'') as a
+join sys.indexes as b on a.object_id=b.object_id and a.index_id=b.index_id
+join sys.tables as c on a.object_id=c.object_id
+join sys.databases as d on a.database_id=d.database_id
+join sys.schemas as e on c.schema_id=e.schema_id
+join sys.sysobjects f on c.object_id=f.id
+join sys.all_columns g on f.id=g.object_id
+join sys.types h on g.user_type_id=h.user_type_id
+where a.avg_fragmentation_in_percent &gt;20
+and c.type=''U'' and f.xtype=''U''
+and c.is_ms_shipped=0 '
+
+declare frg_cur cursor for
+select dbname,tablename,indexname,
+schemaname,avgfragment
+from #tmp
+where not exists (select 1 from #tmp_sub b where database_id=b.database_id and tablename=b.tablename and type_desc=b.index_type_desc)
+
+open frg_cur
+fetch next from frg_cur into @Db_name,@TableName,@IndexName,@SchemaName,@PctFrag
+while @@FETCH_STATUS=0
+begin
+if @PctFrag between 20.0 and 40.0
+begin
+set @Defrag=N' ALTER INDEX '+@IndexName+' ON'+@Db_name+'.'+@SchemaName+'.'+ @TableName +' REORGANIZE'--重新组织索引页不删除索引
+EXEC SP_EXECUTESQL @Defrag
+end
+else if @PctFrag&gt;40.0
+begin
+SET @Defrag=N' ALTER INDEX '+@IndexName+' ON'+@Db_name+'.'+@SchemaName+'.'+ @TableName +' REBUILD WITH (ONLINE = ON )'--联机重建索引。即不锁定表重新创建索引
+EXEC SP_EXECUTESQL @Defrag
+end
+fetch next from frg_cur into @Db_name,@TableName,@IndexName,@SchemaName,@PctFrag
+end
+close frg_cur
+deallocate frg_cur
+
+end
+
+set nocount off
+
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2020/02/21</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/sqlserver">sqlserver</a> <a href="/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86">故障处理</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

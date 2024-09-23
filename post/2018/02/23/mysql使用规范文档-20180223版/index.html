@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mysql使用规范文档 20180223版 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Mysql使用规范文档 20180223版</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+<p>强制：不允许在跳板机上/生产服务器上手工连接,查询或更改线上数据</p>
+
+<p>强制：所有上线脚本必须先在测试环境执行，验证通过以后方可在生产环境执行。</p>
+
+<p>强制：上线脚本的编码格式统一为UTF-8</p>
+
+<p>强制：访问数据库需要使用DNS域名，不能直接写IP</p>
+
+<p>建议：DB名、表名、字段名，都小写,长度建议尽量不超过15</p>
+
+<p>强制：建表_新建表必须包含自增主键列，主键列不应该被修改；</p>
+
+<p>强制：建表_MySQL 字符集 utf8mb4  存储引擎innodb</p>
+
+<p>强制：建表_可能需要建索引的字段，不允许为空 NOT NULL，其他字体内也建议为NOT NULL</p>
+
+<p>强制：建表_需要为每张表的每个字段添加字段注释（最好是中文）</p>
+
+<p>强制：建表_不允许有外键</p>
+
+<p>强制：建表_不允许用enum,set,bit数据类型</p>
+
+<p>强制：建表_需要为timestamp类型指定默认值</p>
+
+<p>强制：建表_定义列名时不能包含关键字</p>
+
+<p>强制：建表_控制单表数据量 单表不超过2000w，建议不超过500w；</p>
+
+<p>强制：建表_合理分表：限制单库表数量在300以内，除未来可能的分表以外；</p>
+
+<p>强制：建表_控制列数量，字段少而精，字段数建议在20以内；</p>
+
+<p>建议：建表_自增列最好是为无符号型</p>
+
+<p>建议：建表_自增列需兼容不连续空洞出现的可能如1,7,15,23</p>
+
+<p>建议：建表_少用text/blob varchar的性能会比text高很多；实在避免不了blob，请拆表</p>
+
+<p>建议：建表_不使用HINT强制使用索引</p>
+
+<p>强制：SQL_不在数据库做运算 cpu计算务必移至业务层；</p>
+
+<p>强制：SQL_禁用跨库查询。</p>
+
+<p>强制：SQL_不允许线上程序做DDL操作</p>
+
+<p>强制：SQL_select 程序代码中不允许有SELECT *</p>
+
+<p>强制：SQL_select 程序代码中最多一次SELECT不允许超过5万行记录</p>
+
+<p>强制：SQL_select 程序代码中单次SELECT 执行时间不能超过5秒，建议不超过200ms</p>
+
+<p>强制：SQL_删除(delete)，变更（update) 语句不允许不加where条件</p>
+
+<p>强制：SQL_删除(delete)，变更（update) 语句不使用LIMIT</p>
+
+<p>强制：SQL_删除(delete)，变更（update) 语句对超过50万行的表 要求WHERE条件一定要用到索引</p>
+
+<p>强制：SQL_删除(delete)，变更（update) 语句单个影响行数不能超过5千行。</p>
+
+<p>强制：SQL_删除(delete)，变更（update) ，INSERT 语句在影响了5千行以后，需要SLEEP1秒才能执行下一组。不能并发，不能多线程</p>
+
+<p>建议：SQL_拒绝3B 拒绝大sql语句：big sql 拒绝大事物：big transaction 拒绝大批量：big batch</p>
+
+<p>强制：SQL_大语句拆小语句，减少锁时间；一条大sql可以堵死整个库；</p>
+
+<p>建议：SQL_OR改写为IN() or的效率是n级别； in的消息时log(n)级别；</p>
+
+<p>建议：SQL_OR改写为UNION，实际上更建议在程序中去做merge，语句尽量保持简单。</p>
+
+<p>建议：SQL_in的个数建议控制在200以内；</p>
+
+<p>建议：SQL_limit高效分页limit越大，效率越低 建议用id &gt; $last_selected_id limit 10;</p>
+
+<p>建议：SQL_使用union all替代union union有去重开销</p>
+
+<p>建议：SQL_少用连接join；不使用子查询，子查询转化为JOIN执行</p>
+
+<p>建议：SQL_请使用同类型比较，不同类型比较会发生类型转换，当类型转换发生在索引字段上时，将无法使用索引，很可能导致扫表的慢查询。</p>
+
+<p>建议：SQL_打散批量更新/删除，UPDATE/DELETE一条SQL操作几十万、上百万行数据，需要拆分成小SQL，分批次操作，减小对数据库影响。</p>
+
+<p>强制：索引_一个表中，最多可包含16个索引</p>
+
+<p>强制：索引_一个索引中，最多可包含5个列</p>
+
+<p>强制：索引_不允许建重复索引，冗余索引特殊情况下允许 ，但需要给出明确原因。</p>
+
+<p>强制：索引_不使用全文索引</p>
+
+<p>强制：索引_长字符字段必须建前缀索引</p>
+
+<p>建议：索引_索引一定不是越多越好(能不加就不加，要加的一定得加)；</p>
+
+<p>建议：索引<em>名字前缀为&rdquo;idx</em>&ldquo;，检查唯一索引前缀是不是&rdquo;uniq_&rdquo;</p>
+
+</main>
+<h2 class="date">发布日期:2018/02/23</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86">数据库管理</a> <a href="/categories/%E8%A7%84%E8%8C%83">规范</a> <a href="/categories/mysql">mysql</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

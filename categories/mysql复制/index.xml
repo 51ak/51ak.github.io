@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mysql复制 on Classic</title>
+    <link>/categories/mysql%E5%A4%8D%E5%88%B6/</link>
+    <description>Recent content in mysql复制 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 06 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/mysql%E5%A4%8D%E5%88%B6/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL Group Replication(MGR集群)增加节点和迁移节点</title>
+      <link>/mysql/mysqlgroupreplicationmgr%E9%9B%86%E7%BE%A4%E5%A2%9E%E5%8A%A0%E8%8A%82%E7%82%B9%E5%92%8C%E8%BF%81%E7%A7%BB%E8%8A%82%E7%82%B9/</link>
+      <pubDate>Thu, 06 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysqlgroupreplicationmgr%E9%9B%86%E7%BE%A4%E5%A2%9E%E5%8A%A0%E8%8A%82%E7%82%B9%E5%92%8C%E8%BF%81%E7%A7%BB%E8%8A%82%E7%82%B9/</guid>
+      <description>MySQL Group Replication 多主结构的3节点需要切到另外三个节点上，任务需要先加3个节点到集群中，再删掉原来的3个节点。
+ 环境   原实例：
+ 172.0.2.30:3309 172.0.2.31:3309 172.0.2.32:3309    新实例：
+ 172.0.2.83:3309 172.0.2.84:3309 172.0.2.85:3309    修改host - 修改6台主机的/etc/hosts 172.0.2.30 dba-mysql3309-230 dba-mysql3309-230.dboop.com 172.0.2.31 dba-mysql3309-231 dba-mysql3309-231.dboop.com 172.0.2.32 dba-mysql3309-232 dba-mysql3309-232.dboop.com 172.0.2.83 dba-mysql3309-83 dba-mysql3309-83.dboop.com 172.0.2.84 dba-mysql3309-84 dba-mysql3309-84.dboop.com 172.0.2.85 dba-mysql3309-85 dba-mysql3309-85.dboop.com 旧实例上增加seed  检查状态  mysqlw -h 172.0.2.30 -P 3309 -e &amp;quot;show global variables like &#39;group_replication_group_seeds&#39;&amp;quot;; mysqlw -h 172.0.2.31 -P 3309 -e &amp;quot;show global variables like &#39;group_replication_group_seeds&#39;&amp;quot;; mysqlw -h 172.</description>
+    </item>
+    
+    <item>
+      <title>MySQL中间件对比:ProxySQL/MaxScale/ShardingSphere</title>
+      <link>/mysql/mysql%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/</link>
+      <pubDate>Thu, 03 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/</guid>
+      <description>MySQL中件间对比 目标：对比以下3款MySQL中件间
+ ProxySQL MaxScale ShardingSphere  一.Proxy基础能力 兼容性  ProxySQL:良好 MaxScale:mairdb更友好，MGR支持不好 ShardingSphere:良好  发行方  ProxySQL:sysown MaxScale:mairdb ShardingSphere:京东  发布/更新/生态  ProxySQL:c++, 5.1k stars,最新版v2.4.4 1个半月前发布 MaxScale:c,1.6k stars,最新版22.08.2 3个半月前发布 ShardingSphere:java,17.6k stars,最新版5.2.1 16天前发布  运维便利性  ProxySQL:简单 MaxScale:普通 ShardingSphere:复杂（配置文件多且复杂）  二.Proxy高可用架构支持 主从架构下的从库故障  如何探测到   ALL: 每N秒主动探测一次
+  如何响应故障   ALL:探测不到，主动处理: - ShardingSphere:从路由表中标记下线 - proxysql:从group中标记下线 - MaxScale:标记下线
+  切换后状态   ALL:复制拓扑可用
+  影响时长   ALL:1-5 秒</description>
+    </item>
+    
+    <item>
+      <title>MySQL高可用组件之ProxySQL</title>
+      <link>/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Bproxysql/</link>
+      <pubDate>Tue, 25 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Bproxysql/</guid>
+      <description>ProxySQL是什么 介绍  MySQL一款开源的中间件的产品 支持读写分离 支持 Query 路由功能 支持动态指定某个SQL进行缓存 支持动态加载（无需重启ProxySQL服务） 故障切换和SQL过滤功能。  ProxySQL初始化 安装 wget https://github.com/sysown/proxysql/releases/download/v2.4.4/proxysql-2.4.4-1-centos7.x86_64.rpm rpm -ivh proxysql-2.4.4-1-centos7.x86_64.rpm 产生报错： warning: proxysql-2.4.4-1-centos7.x86_64.rpm: Header V4 RSA/SHA512 Signature, key ID 8217c97e: NOKEY error: Failed dependencies: gnutls is needed by proxysql-2.4.4-1.x86_64 libgnutls.so.28()(64bit) is needed by proxysql-2.4.4-1.x86_64 libgnutls.so.28(GNUTLS_1_4)(64bit) is needed by proxysql-2.4.4-1.x86_64 libgnutls.so.28(GNUTLS_3_0_0)(64bit) is needed by proxysql-2.4.4-1.x86_64 libgnutls.so.28(GNUTLS_3_1_0)(64bit) is needed by proxysql-2.4.4-1.x86_64 执行： yum install -y gnutls rpm -ivh proxysql-2.4.4-1-centos7.x86_64.rpm 检查安装情况  rpm -ql proxysql /etc/logrotate.</description>
+    </item>
+    
+    <item>
+      <title>MySQL高可用组件之orchestrator</title>
+      <link>/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Borchestrator/</link>
+      <pubDate>Mon, 17 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Borchestrator/</guid>
+      <description>orchestrator是什么 介绍  GitHub公司的用go语言编写并开源的一个MySQL高可用管理工具 MySQL高可用性和复制拓扑管理工具，支持复制拓扑结构的调整，自动故障转移和手动主从切换等。 提供Web界面展示MySQL复制的拓扑关系及状态，通过Web可更改MySQL实例的复制关系和部分配置信息 同时也提供命令行和api接口，方便运维管理。 相对比MHA来看最重要的是解决了管理节点的单点问题，其通过raft协议保证本身的高可用。  特点  自动发现MySQL的复制拓扑，并且在web上展示。 重构复制关系，可以在web进行拖图来进行复制关系变更。 检测主异常，并可以自动或手动恢复，通过Hooks进行自定义脚本。 支持命令行和web界面管理复制。  功能限制  slave不能手动提升为master 不支持多源复制 不支持并行复制 不支持与PXC联合使用  注意事项  对主机名依赖严重，习惯用ip来管理实例的，需要注意确保主机名可解析 主从拓扑结果目前不支持两个实例互为主备或环形结构 自动故障转移，只负责将主从切换了，把从设置为主，其他的变更（dns或proxy变更以及运维信息的变更等需要自己写hook脚本）  orchestrator的工作原理 orchestrator的探测机制  orchestrator会每隔InstancePollSeconds（默认5s）时间用以下SQL去被监控的实例上读取实例状态  show global status like &#39;Uptime&#39; select @@global.hostname, ifnull(@@global.report_host, &#39;&#39;), @@global.server_id, @@global.version, @@global.version_comment, @@global.read_only, @@global.binlog_format, @@global.log_bin, @@global.log_slave_updates show master status show global status like &#39;rpl_semi_sync_%_status&#39; select @@global.gtid_mode, @@global.server_uuid, @@global.gtid_executed, @@global.gtid_purged, @@global.master_info_repository = &#39;TABLE&#39;, @@global.binlog_row_image show slave status select count(*) &amp;gt; 0 and MAX(User_name) !</description>
+    </item>
+    
+    <item>
+      <title>MySQL复制参数_slave_rows_search_algorithms及无主键表的处理</title>
+      <link>/mysql/mysql%E5%A4%8D%E5%88%B6%E5%8F%82%E6%95%B0slave_rows_search_algorithms/</link>
+      <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%A4%8D%E5%88%B6%E5%8F%82%E6%95%B0slave_rows_search_algorithms/</guid>
+      <description>0.起因 线上MySQL实例，今天报大量延时，且卡住不动。（表现为seconds_behind_master不断上涨，从库gtid不动）
+同时二级从库有复制SQL进程报错
+[ERROR] [MY-010584] [Repl] Slave SQL for channel &#39;&#39;: Could not execute Update_rows event on table 「表名」; Can&#39;t find record in &#39;「表名」&#39;, Error_code: 1032; handler error HA_ERR_END_OF_FILE; the event&#39;s master log mysql-bin.000****, end_log_pos *******, Error_code: MY-001032 1.排查问题 排查问题时
+ 确认该实例上的从库不提供线上实时业务访问（业务可以接受延时）。不需要做从库切流量动作 先是看了一下从库的多线程复制是database级的，开启多线程复制到logical_clock ,问题并没有恢复       set global slave_parallel_type=&amp;lsquo;logical_clock&amp;rsquo;; set global slave_parallel_workers=4; start slave sql_thread;```
+ 排除掉是线程数不够的原因 发现processlist中是在等Applying batch of row changes (update)  确定是卡在sql进程，再看relaylog确实持续增长800M(表示该实例写入不频繁)   解析relaylog 发现是普通的update语句大约有8000次左右  这个量级的update且是row模式，理论1分钟内就追上了。   查看锁datalocks，发现有大量的行数50几万，都是同一个表的  slave的sql进程不应该有这个量级的行锁。   查看表结构发现这个表是无主键的表，里面大约有50几万条记录，无主键无索引  2.</description>
+    </item>
+    
+    <item>
+      <title>MySQL复制故障修复_无主键表大事务卡住</title>
+      <link>/mysql/mysql%E5%A4%8D%E5%88%B6%E6%95%85%E9%9A%9C%E8%A7%A3%E5%86%B3_%E5%A4%A7%E4%BA%8B%E5%8A%A1%E5%8D%A1%E4%BD%8F/</link>
+      <pubDate>Fri, 18 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%A4%8D%E5%88%B6%E6%95%85%E9%9A%9C%E8%A7%A3%E5%86%B3_%E5%A4%A7%E4%BA%8B%E5%8A%A1%E5%8D%A1%E4%BD%8F/</guid>
+      <description>0.故障现象 生产环境MySQL复制报警，现象
+ 从库复制延时越来越大,gtid一直停留在固定的地方不变 从库的relaylog越来越大，1G以上，但是增长不明显。 从库当前没有业务访问，不存在资源紧张 主库上最近一段时间没有明显的大批量写入  1.原因定位  从上面的现象卡，基本上可以推断是大事务卡住了， 我看的时候法爷已经把relaylog解出来了，也很明显的看到有很多的delete。 根据以上推断我们去主库上查时间点的日志，发现了： 一个SQL是 delete from t1 where c1=&#39;&#39; 删除了65万行数据 于是问题定位：生产环境的windows机器上有同事用navicat删除了线上MySQL的数据。  简单的一个SQL ，但是因为一些原因综合在一起引起了雪崩
+ 不幸的是：这张表是个没主键的表，导致从库追日志进程卡住，无法正常执行 幸运的是：这些从库没有业务访问，没有造成实际影响  2.安全规范 首先：生产环境的windows机器安装navicat访问数据库这种行为，肯定是不被允许的，
+但是因为“历史原因”我们依然有少量同学（不超过10人）有这种特殊需求。
+原计划是3月底推动消除的，
+经过此事以后，DBA会加快推进禁止在生产环境安装数据库客户端连接数据库这个规范。
+有时候就是这样，觉得这个地方可能有风险，我们排个期来解决，通常就会没等到期限就先暴出来了
+ 问：为什么我们不用限制账号访问来源的方法？ 答：因为一些原因,加ip限制代价太大，且不利于未来的docker虚拟化。
+ 3.问题修复 共有3个从节点，我和另外两个DBA用了三种不同的方式来修复
+方法一：我用的方法，就很暴力的在从库上reset master 再set 跳过这个事务 use db_test; truncate table t1; stop slave ; reset master; set @@GLOBAL.GTID_PURGED=&#39;59939d78-de2d-11eb-ac46-e43d1a074d20:16020676&#39; start slave; 方法二：法爷用了相对温和的方法，模拟一个事务的方法。 use db_test; stop slave; SET gtid_next=&#39;59939d78-de2d-11eb-ac46-e43d1a074d20:16020676&#39; truncate table t1; SET gtid_next=&#39;automatic&#39;; start slave; 我和法爷讨论了一下，相对来说这个是更安全的方法。保证了事务的连续，偷换了一个事务的内容</description>
+    </item>
+    
+  </channel>
+</rss>

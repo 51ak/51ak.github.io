@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySQL数据库的数据类型和建库方法</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="不管你是微小的免费数据库空间还是大型电子商务网站，对于数据库来说合理的设计表结构、充分利用空间都是十分必要的。这就要求我们对数据库系统的常用数据类型有充分的认识和合理的应用。下面我们将给大家介绍一点心得体会希望能帮助你在建库的时候能考虑的更加合理。一、数字类型数字类型按照我的分类方法分为三类：整数类、小数类和数字类。我所谓的“数字类”，就是指decimal和numeric，它MySQL数据库的数据类型和建库方法" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化">性能与优化</a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlzhishi/l_14_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>MySQL数据库的数据类型和建库方法</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   　　不管你是微小的免费数据库空间还是大型电子商务网站，对于数据库来说合理的设计表结构、充分利用空间都是十分必要的。这就要求我们对数据库系统的常用数据类型有充分的认识和合理的应用。下面我们将给大家介绍一点心得体会希望能帮助你在建库的时候能考虑的更加合理。　　一、数字类型　　数字类型按照我的分类方法分为三类：整数类、小数类和数字类。　　我所谓的“数字类”，就是指 DECIMAL 和 NUMERIC，它们是同一种类型。它严格的说不是一种数字类型，因为他们实际上是将数字以字符串形式保存的;他的值的每一位 (包括小数点) 占一个字节的存储空间，因此这种类型耗费空间比较大。但是它的一个突出的优点是小数的位数固定，在运算中不会“失真”，所以比较适合用于“价格”、“金额”这样对精度要求不高但准确度要求非常高的字段。　　小数类，即浮点数类型，根据精度的不同，有 FLOAT 和 DOUBLE 两种。它们的优势是精确度，FLOAT 可以表示绝对值非常小、小到约 1.17E-38 (0.000...0117，小数点后面有 37 个零) 的小数，而 DOUBLE 更是可以表示绝对值小到约 2.22E-308 (0.000...0222，小数点后面有 307 个零) 的小数。FLOAT 类型和 DOUBLE 类型占用存储空间分别是 4 字节和 8 字节。如果需要用到小数的字段，精度要求不高的，当然用 FLOAT 了。可是说句实在话，我们“民用”的数据，哪有要求精度那么高的呢?这两种类型至今我没有用过――我还没有遇到适合于使用它们的事例。　　用的最多的，最值得精打细算的，是整数类型。从只占一个字节存储空间的 TINYINT 到占 8 个字节的 BIGINT，挑选一个“够用”并且占用存储空间最小的类型是设计数据库时应该考虑的。TINYINT、SMALLINT、MEDIUMINT、INT 和 BIGINT 占用存储空间分别为 1 字节、2 字节、3 字节、4 字节和 8 字节，就无符号的整数而言，这些类型能表示的最大整数分别为 255、65535、16777215、4294967295 和 18446744073709551615。如果用来保存用户的年龄 (举例来说，数据库中保存年龄是不可取的)，用 TINYINT 就够了;九城的《纵横》里，各项技能值，用 SMALLINT 也够了;如果要用作一个肯定不会超过 16000000 行的表的 AUTO_INCREMENT 的 IDENTIFY 字段，当然用 MEDIUMINT 不用 INT，试想，每行节约一个字节，16000000 行可以节约 10 兆多呢。
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>socket timeout exception和常见网络丢包情况--笔记 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">socket timeout exception和常见网络丢包情况--笔记</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+
+
+<ul>
+<li>今天参加了一场内部的网络方面的分享</li>
+<li>这是现场记下和整理的笔记</li>
+</ul>
+
+<h3 id="socket-timeout-exception出现一般有两种情况">socket timeout exception出现一般有两种情况</h3>
+
+<h4 id="一-超时时间过短">一、超时时间过短</h4>
+
+<pre><code>慢查询、负载高等
+</code></pre>
+
+<h4 id="二-网络连接丢包">二、网络连接丢包</h4>
+
+<pre><code>TCP重试机制：20ms重传，指数递增。
+</code></pre>
+
+<h3 id="数据库传输路径">数据库传输路径</h3>
+
+<p>网卡&ndash;&gt;驱动&ndash;&gt;硬件缓存&ndash;》内核</p>
+
+<h5 id="网卡">网卡</h5>
+
+<p>网卡在内存中分配一个缓冲区:sk_buffer 如果无法及时写到sk_buffer ,会产生丢包 ()</p>
+
+<p>写入SK_BUFFER后，网卡立即发起一个CPU硬件中断</p>
+
+<h5 id="驱动">驱动</h5>
+
+<p>CPU接受到后，触发网卡驱动的软中断程序，消费SK_BUFFER上的数据，交给内核协议处理</p>
+
+<h5 id="硬件缓存">硬件缓存</h5>
+
+<p>默认将sk_buffer队列数据写入到CPU队列，如果满了也会丢弃</p>
+
+<h5 id="内核">内核</h5>
+
+<p>数据我进到IP层后
+因为窗口可调整不会丢包,但TCP握手还是会丢包</p>
+
+<p>client发送sync
+SERVER在收到后 SYNC_QUEUE半连接队列，然后返回syn+ack
+client 收到后 发送ack
+server 收到后写入accept_queue 全连接队列</p>
+
+<p>server收到client的syn后，把相关信息放到半连接队列中
+server回复syn+ack给client
+server收到client的ack，如果这时全连接队列没满，那么从连接队列拿出相关信息放入到全连接队列中，否则按tcp_abort_on_overflow指示的执行。</p>
+
+<p>当这两个连接满时会发生丢包，试如下参数
+/proc/sys/net/ipv4/tcp_abort_on_overflow 为0表示当队列满时丢弃
+/proc/sys/net/ipv4/tcp_abort_on_overflow 为1表示当队列满时发送RST报文</p>
+
+<h3 id="应用进程过程中常见的可能导致超时的情况">应用进程过程中常见的可能导致超时的情况:</h3>
+
+<p>1.JVM Full GC
+2.上游服务较慢
+3.慢SQL
+4.使用了慢Redis命令
+5.系统CPU使用率较高(可能是外部进程使用较高，可能是Java进程中存在死锁或死循环)
+6.磁盘IO wait导致
+7.打开的文件数过多</p>
+
+<h3 id="监控">监控</h3>
+
+<ul>
+<li><p>NIC缓冲区到driver buffer缓冲区过程中，如果NIC缓冲区消费能力小于NIC写入能力，则会发生网络丢包
+ 命令行可以通过ifconfig 查看overruns对应的值
+ 或者cat /proc/net/dev里面fifo列对应的值
+  命令行可以通过ifconfig 查看dropped对应的值
+  或者cat /proc/net/dev里面dropped列对应的值</p>
+
+<p>当出现这两种值时，需要使用top 检查cpu core0的idle比例，如果cpu idle较低， 可能需要更换配置更好的机器。</p></li>
+
+<li><p>全连接队列丢包会引起连接超时
+可以通过netstat –s | egrep “listen|LISTEN”来查看，如果全连接队列丢包，需要业务检查是否是有突发的大量建立连接的请求。
+全连接队列大小: min(backlog, somaxconn) ,backlog socket指定的，somaxconn为系统设置的
+半连接队列大小: max(64, /proc/sys/net/ipv4/tcp_max_syn_backlog)
+例如:</p>
+
+<ol>
+<li>使用了短链接</li>
+<li>使用连接池，连接池minTotal较小并且maxTotal非常大</li>
+</ol></li>
+</ul>
+
+</main>
+<h2 class="date">发布日期:2019/07/26</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E7%BD%91%E7%BB%9C">网络</a> <a href="/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86">故障处理</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

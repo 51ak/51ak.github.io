@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>mysql数据库优化</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="优化mysql首先应该多用explainselect,showvariables,showstatus,showprocesslist这些工具。在写sql的时候，在大表上不做groupby操作。对于索引：1.不要索引你不想要的东西。2.mysql能使用索引的情况：&gt;,&gt;=,=,&lt;,&lt;=,ifnull以及between3.mysql不使用索引的情mysql数据库优化" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识">基础知识</a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化"><span class="zc_666">性能与优化</span></a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlyouhua/l_16_1.htm">性能与优化</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>mysql数据库优化</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   优化<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>首先应该多用explain select ,show variables, show status ,show processlist这些工具。在写sql的时候，在大表上不做group by 操作。对于索引：1.不要索引你不想要的东西。2.<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>能使用索引的情况：&gt; ,&gt;=, =, &lt;,&lt;= ,if null 以及between3.<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>不使用索引的情况：如果<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>能估计出它可能比扫描整张表还快的时候，就不使用索引。对于使用explain：使用explain 分析你认为慢的语句：EXPLAIN列的解释：table 显示这一行的数据是关于哪张表的type&nbsp;&nbsp;这是重要的列，显示连接使用了何种类型。从最好到最差的连接类型为const、eq_reg、ref、range、index和ALLpossible_keys 显示可能应用在这张表中的索引。如果为空，没有可能的索引。可以为相关的域从WHERE语句中选择一个合适的语句key 实际使用的索引。如果为NULL，则没有使用索引。很少的情况下，<a href="../../html/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/l_13_1.htm" title="MYSQL" >MYSQL</a>会选择优化不足的索引。这种情况下，可以在SELECT语句中使用USE INDEX（indexname）来强制使用一个索引或者用IGNORE INDEX（indexname）来强制<a href="../../html/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/l_13_1.htm" title="MYSQL" >MYSQL</a>忽略索引key_len 使用的索引的长度。在不损失精确性的情况下，长度越短越好ref 显示索引的哪一列被使用了，如果可能的话，是一个常数rows <a href="../../html/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/l_13_1.htm" title="MYSQL" >MYSQL</a>认为必须检查的用来返回请求数据的行数Extra 关于<a href="../../html/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/l_13_1.htm" title="MYSQL" >MYSQL</a>如何解析查询的额外信息。将在表4.3中讨论，但这里可以看到的坏的例子是Using temporary和Using filesort，意思<a href="../../html/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/l_13_1.htm" title="MYSQL" >MYSQL</a>根本不能使用索引，结果是检索会很慢extra 列返回的描述的意义Distinct 一旦<a href="../../html/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/l_13_1.htm" title="MYSQL" >MYSQL</a>找到了与行相联合匹配的行，就不再搜索了Not exists <a href="../../html/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/l_13_1.htm" title="MYSQL" >MYSQL</a>优化了LEFT JOIN，一旦它找到了匹配LEFT JOIN标准的行，就不再搜索了Range checked for eachRecord（index map:#）没有找到理想的索引，因此对于从前面表中来的每一个行组合，<a href="../../html/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/l_13_1.htm" title="MYSQL" >MYSQL</a>检查使用哪个索引，并用它来从表中返回行。这是使用索引的最慢的连接之一Using filesort 看到这个的时候，查询就需要优化了。<a href="../../html/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/l_13_1.htm" title="MYSQL" >MYSQL</a>需要进行额外的步骤来发现如何对返回的行排序。它根据连接类型以及存储排序键值和匹配条件的全部行的行指针来排序全部行Using index 列数据是从仅仅使用了索引中的信息而没有读取实际的行动的表返回的，这发生在对表的全部的请求列都是同一个索引的部分的时候Using temporary 看到这个的时候，查询需要优化了。这里，<a href="../../html/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/l_13_1.htm" title="MYSQL" >MYSQL</a>需要创建一个临时表来存储结果，这通常发生在对不同的列集进行ORDER BY上，而不是GROUP BY上used where&nbsp;&nbsp;使用了WHERE从句来限制哪些行将与下一张表匹配或者是返回给用户。如果不想返回表中的全部行，并且连接类型ALL或index，这就会发生，或者是查询有问题不同连接类型的解释（按照效率高低的顺序排序）system 表只有一行：system表。这是const连接类型的特殊情况const 表中的一个记录的最大值能够匹配这个查询（索引可以是主键或惟一索引）。因为只有一行，这个值实际就是常数，因为<a href="../../html/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/l_13_1.htm" title="MYSQL" >MYSQL</a>先读这个值然后把它当做常数来对待eq_ref 在连接中，<a href="../../html/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/l_13_1.htm" title="MYSQL" >MYSQL</a>在查询时，从前面的表中，对每一个记录的联合都从表中读取一个记录，它在查询使用了索引为主键或惟一键的全部时使用ref 这个连接类型只有在查询使用了不是惟一或主键的键或者是这些类型的部分（比如，利用最左边前缀）时发生。对于之前的表的每一个行联合，全部记录都将从表中读出。这个类型严重依赖于根据索引匹配的记录多少—越少越好range 这个连接类型使用索引返回一个范围中的行，比如使用&gt;或&lt;查找东西时发生的情况&nbsp;index 这个连接类型对前面的表中的每一个记录联合进行完全扫描（比ALL更好，因为索引一般小于表数据）ALL 这个连接类型对于前面的每一个记录联合进行完全扫描，这一般比较糟糕，应该尽量避免对于使用show processlist：使用show processlist可以发现你正在做什么
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL5.7升级到8.0(一):SQL语法变化| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL5.7升级到8.0(一):SQL语法变化</span></h1>
+</div>
+
+
+<nav id="TableOfContents"></nav>
+
+  <main>
+    <ul>
+<li>
+<p>研发：<a href="https://www.dboop.com/mysql/mysql5.7%E5%8D%87%E7%BA%A7%E5%88%B08.0%E7%9A%84%E5%8F%98%E6%9B%B41sql%E8%AF%AD%E6%B3%95/">MySQL5.7升级到8.0(一):SQL语法变化</a></p>
+</li>
+<li>
+<p>DBA：<a href="https://www.dboop.com/mysql/mysql5.7%E5%8D%87%E7%BA%A7%E5%88%B08.0%E7%9A%84%E5%8F%98%E6%9B%B42%E9%85%8D%E7%BD%AE%E5%92%8C%E5%8F%98%E5%8C%96/">MySQL5.7升级到8.0(二):配置和参数</a></p>
+</li>
+</ul>
+<blockquote>
+<p>Note：这里面是升级到8.0,需要开发人员参与修改部分或注意部分</p>
+</blockquote>
+<ul>
+<li>
+<p>不常用 废弃了 GROUP BY 分组的排序 ASC 和 DESC, 存储过程中包含此语法的无法正常执行;</p>
+</li>
+<li>
+<p>不常用 最新版可能不支持 &amp;&amp;, ||, ! 的语法, 需要使用标准 SQL 的 AND, OR, NOT 进行替换;</p>
+</li>
+<li>
+<p>不常用 外键的名字在整个 schema 中必须唯一;</p>
+</li>
+<li>
+<p>常用 <!-- raw HTML omitted --> 支持公共表表达式cte, 窗口函数<!-- raw HTML omitted --></p>
+<blockquote>
+<p>不再支持5.6，5.7 的土方法实现递规这种写法废了！不能再用了</p>
+</blockquote>
+<pre><code>SELECT * FROM(SELECT
+@rn:= CASE WHEN @id = id THEN @rn + 1 ELSE 1 END AS rownum,@id:= id as id,
+volume, dateFROM(SELECT * from table_001 WHERE fdate &lt;= '2022-02-16' ORDER BY id, date DESC) a
+,(SELECT @rn=0, @id=0) b
+)aWHERE rownum &lt;= 5
+</code></pre></li>
+<li>
+<p>不常用 支持备份锁(backup lock)</p>
+</li>
+<li>
+<p>常用 <!-- raw HTML omitted --> 使用 select xxx into outfile xx from xxx 语法导出数据, select xx from xxx into outfile .. 语法可能废弃;<!-- raw HTML omitted --></p>
+</li>
+<li>
+<p>DBA常用 使用 set password for &hellip; = '' 修改用户密码, password(..) 语法已经废弃;</p>
+</li>
+<li>
+<p>不常用 不支持 SELECT SQL_NO_CACHE &hellip; 语法;</p>
+</li>
+<li>
+<p>DBA常用 sqllogbin 仅支持会话级别的设置;</p>
+</li>
+<li>
+<p>常用 使用 EXPLAIN 时, 不支持于 EXTENDED 和 PARTITIONS 关键字一起使用;</p>
+</li>
+<li>
+<p>DBA索引调优常用 索引增加 invisible index(隐藏索引), 一个索引被设置为 invisible 后, 优化器会忽略该索引. 适合性能调试;</p>
+</li>
+<li>
+<p>索引常用 索引支持 descending index(降序索引);</p>
+</li>
+<li>
+<p>索引常用索引支持 functional index(函数索引)</p>
+</li>
+<li>
+<p>索引常用索引索引命中优化, 更多见 optimizer hints;</p>
+</li>
+<li>
+<p>建表语句没有整形宽度</p>
+<blockquote>
+<p><code>id int(11) NOT NULL</code>
+变成
+<code>id int NOT NULL</code></p>
+</blockquote>
+</li>
+<li>
+<p>8.0新增131个关键字 <code>ACTIVE,ADMIN,ARRAY,ATTRIBUTE,AUTHENTICATION,BUCKETS,CHALLENGE_RESPONSE,CLONE,COMPONENT,CUME_DIST,DEFINITION,DENSE_RANK,DESCRIPTION,EMPTY,ENFORCED,ENGINE_ATTRIBUTE,EXCEPT,EXCLUDE,FACTOR,FAILED_LOGIN_ATTEMPTS,FINISH,FIRST_VALUE,FOLLOWING,GEOMCOLLECTION,GET_MASTER_PUBLIC_KEY,GET_SOURCE_PUBLIC_KEY,GROUPING,GROUPS,GTID_ONLY,HISTOGRAM,HISTORY,INACTIVE,INITIAL,INITIATE,INVISIBLE,JSON_TABLE,JSON_VALUE,KEYRING,LAG,LAST_VALUE,LATERAL,LEAD,LOCKED,MASTER_COMPRESSION_ALGORITHMS,MASTER_PUBLIC_KEY_PATH,MASTER_TLS_CIPHERSUITES,MASTER_ZSTD_COMPRESSION_LEVEL,MEMBER,NESTED,NETWORK_NAMESPACE,NOWAIT,NTH_VALUE,NTILE,NULLS,OF,OFF,OJ,OLD,OPTIONAL,ORDINALITY,ORGANIZATION,OTHERS,OVER,PASSWORD_LOCK_TIME,PATH,PERCENT_RANK,PERSIST,PERSIST_ONLY,PRECEDING,PRIVILEGE_CHECKS_USER,PROCESS,RANDOM,RANK,RECURSIVE,REFERENCE,REGISTRATION,REPLICA,REPLICAS,REQUIRE_ROW_FORMAT,RESOURCE,RESPECT,RESTART,RETAIN,RETURNING,REUSE,ROLE,ROW_NUMBER,SECONDARY,SECONDARY_ENGINE,SECONDARY_ENGINE_ATTRIBUTE,SECONDARY_LOAD,SECONDARY_UNLOAD,SKIP,SOURCE_AUTO_POSITION,SOURCE_BIND,SOURCE_COMPRESSION_ALGORITHMS,SOURCE_CONNECT_RETRY,SOURCE_DELAY,SOURCE_HEARTBEAT_PERIOD,SOURCE_HOST,SOURCE_LOG_FILE,SOURCE_LOG_POS,SOURCE_PASSWORD,SOURCE_PORT,SOURCE_PUBLIC_KEY_PATH,SOURCE_RETRY_COUNT,SOURCE_SSL,SOURCE_SSL_CA,SOURCE_SSL_CAPATH,SOURCE_SSL_CERT,SOURCE_SSL_CIPHER,SOURCE_SSL_CRL,SOURCE_SSL_CRLPATH,SOURCE_SSL_KEY,SOURCE_SSL_VERIFY_SERVER_CERT,SOURCE_TLS_CIPHERSUITES,SOURCE_TLS_VERSION,SOURCE_USER,SOURCE_ZSTD_COMPRESSION_LEVEL,SRID,STREAM,SYSTEM,THREAD_PRIORITY,TIES,TLS,UNBOUNDED,UNREGISTER,VCPU,VISIBLE,WINDOW,ZONE</code>
+减少 6个关键字 <code>ANALYSE,DES_KEY_FILE,MASTER_SERVER_ID,PARSE_GCOL_EXPR,REDOFILE,SQL_CACHE</code></p>
+</li>
+</ul>
+<p>对业务有影响的关键字有：
+<!-- raw HTML omitted -->
+&lsquo;CUME_DIST&rsquo;,&lsquo;DENSE_RANK&rsquo;,&lsquo;EMPTY&rsquo;,&lsquo;EXCEPT&rsquo;,&lsquo;FIRST_VALUE&rsquo;,&lsquo;GROUPING&rsquo;,&lsquo;GROUPS&rsquo;,&lsquo;JSON_TABLE&rsquo;,&lsquo;LAG&rsquo;,&lsquo;LAST_VALUE&rsquo;,&lsquo;LATERAL&rsquo;,&lsquo;LEAD&rsquo;,&lsquo;NTH_VALUE&rsquo;,&lsquo;NTILE&rsquo;,&lsquo;OF&rsquo;,&lsquo;OVER&rsquo;,&lsquo;PERCENT_RANK&rsquo;,&lsquo;RANK&rsquo;,&lsquo;RECURSIVE&rsquo;,&lsquo;ROW_NUMBER&rsquo;,&lsquo;SYSTEM&rsquo;,&lsquo;WINDOW&rsquo;
+<!-- raw HTML omitted --></p>
+<p>附：
+我们查表/字段是否用到8.0关键字的SQL</p>
+<pre><code>select c.linkname,c.dbver,b.dbname,a.table_name,a.COLUMN_NAME from info_columns  a 
+join linkdb b on a.dbid=b.dbid 
+join linkset c on b.linkname=c.linkname
+  where  length(IS_NULLABLE)&gt;1 and 
+(
+table_name in ('CUME_DIST','DENSE_RANK','EMPTY','EXCEPT','FIRST_VALUE','GROUPING','GROUPS','JSON_TABLE','LAG','LAST_VALUE','LATERAL','LEAD','NTH_VALUE','NTILE','OF','OVER','PERCENT_RANK','RANK','RECURSIVE','ROW_NUMBER','SYSTEM','WINDOW')  
+
+or
+COLUMN_NAME in ('CUME_DIST','DENSE_RANK','EMPTY','EXCEPT','FIRST_VALUE','GROUPING','GROUPS','JSON_TABLE','LAG','LAST_VALUE','LATERAL','LEAD','NTH_VALUE','NTILE','OF','OVER','PERCENT_RANK','RANK','RECURSIVE','ROW_NUMBER','SYSTEM','WINDOW')  
+
+)
+
+and c.appuse=9
+
+and c.dbver not like '8%'
+
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/02/14</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/mysql8.0">mysql8.0</a> <a href="/categories/mysql%E5%8D%87%E7%BA%A7">mysql升级</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

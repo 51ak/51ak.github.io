@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sqlserver上线规范(准入条例) | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Sqlserver上线规范(准入条例)</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+<p>##核心规则
+不在数据库中存储图片、文件，不使用大文本类型【必须】
+不使用外键，由程序保证数据一致性【必须】
+禁止使用存储过程、触发器 【必须】
+每张表数据量控制在2000W以下 ，如预计会超出，需提前做好拆分或者归档迁移计划【强烈建议】</p>
+
+<p>##表的字义
+a)  尽可能少的使用允许NULL 字段
+b)  聚集索引字段应该尽可能的少（不超过3个字段,不多与200字节）
+c)  鼓励使用GUID字段 代替IDENTITY（1，1）自增字段。推荐使用自定义扩展的GUID( YYYYmmDDHHMMssms+3位机器编号+6位随机数字),尤其是对快速增长的表 linq(修改映射文件，在此字段前添加：[Column(Storage=&ldquo;cID&rdquo;, IsDbGenerated=true)])
+d)  在使用INDENTITY字段，需考虑IDENTITY字段在特殊情况的“非连续性”，“非顺序性”
+e)  表记录中的单行最大占用空间，原则上要求在8K以下，避免单行数据的分页存储
+f)  使用varhcar(max)，navarchar(max) varbinary(max)代替text,ntext,image
+g)  建议多使用time,date 等SQL2008新类型来节省存储空间和查询时的转换运算
+h)  XML类型字段：要考虑到该类型字段索引的宠大开销,事实上不推荐使用XML存储列.
+i)  对数据有效性的验证优先采用 CHECK约束
+j)  主键和聚集索引是可以分开定义,网站相关代码不允许用外键(ERP相关可考虑)
+k)  所有定义字段需要填写说明. EXEC sys.sp_addextendedproperty
+l)  在不影响业务的前题下，多用空间换时间
+m)  建表需要有备注</p>
+
+<pre><code>--建表示例
+CREATE TABLE [dbo].[job_info](
+[job_id] int identity(1,1) NOT NULL primary key,
+[job_name] varchar(500) NOT NULL,
+) ON [PRIMARY]
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'表:存储作业信息,主键自增--wenjing.zhang' , @level0type=N'SCHEMA',@level0name=N'dbo',@level1type=N'TABLE',@level1name=N'job_info', @level2type=N'COLUMN',@level2name=N'job_id'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'作业名称 --wenjing.zhang' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'job_info',@level2type=N'COLUMN',@level2name=N'job_id'
+
+GO
+</code></pre>
+
+<p>##命名规则
+库名、表名、字段名、索引名使用小写字母,以下划线_分割 【必须】
+库名、表名、字段名、索引名不使用保留字 （关键字）【必须】
+库名、表名、字段名不超过15个字符，需见名知意 【建议】
+索引命名：【强烈建议】
+聚集索引：“cx_表名_字段名前3字母[_字段名前3字母]”
+唯一索引：“ux_表名_字段名前3字母[_字段名前3字母]”
+非唯一索引：“ix_表名_字段名前3字母[_字段名前3字母]”
+如果索引具有多种属性，按照“聚集 &gt;唯一 &gt;非唯一”的顺序命名</p>
+
+<p>##字段类规范
+所有字段均定义为NOT NULL 【必须】
+拆分TEXT、BLOB类型字段，或者独立建表 【必须】
+非中文字段使用varchar存储变长字符串 【强烈建议】</p>
+
+<p>##索引类规范
+单张表索引数量不超过5，单个索引字段数不超过5 【强烈建议】
+避免冗余索引 【强烈建议】
+重要的SQL必须被索引 【强烈建议】
+UPDATE、DELETE语句的WHERE条件列
+ORDER BY、GROUP BY、DISTINCT的字段
+多表JOIN的字段
+复合索引字段排序，区分度最大的字段放在前面【建议】
+核心SQL优先考虑覆盖索引【建议】
+前缀长度不超过8个字符
+必须是最左前缀
+针对索引的禁忌 【建议】
+不使用负向查询，例如 not in，!= ，not like
+不在索引列进行数学运算和函数运算
+不使用%前导的查询，例如like “%abc”</p>
+
+<p>##SQL类规范
+UPDATE、DELETE语句不使用LIMIT 【必须】
+避免大数据类型间的隐式转换 【必须】
+会导致索引失效，例如数字转字符串
+拒绝大SQL，拆分成小SQL【强烈建议】
+使用预编译语句【建议】
+只传参数，比传递SQL语句更高效
+一次解析，多次使用
+可以避免SQL注入
+不使用select * 【必须】
+避免使用大表的JOIN 【强烈建议】
+SQLServer最擅长的是单表的主键/索引查询
+JOIN消耗较多内存，产生临时表
+避免在数据库中进行数学运算 【强烈建议】 SQLServer不擅长数学运算无法使用索引
+减少与数据库的交互次数 【建议】</p>
+
+<p>##流程规范</p>
+
+<p>对所有的业务数据库，都需要在新建数据库申请中明确RTO和RPO，DBA制订对应的维护和备份策略（SLA）【必须】
+对线上数据库结构的任何变更，均走上线部署流程，流程中包括测试部同步测试基准环境 【必须】
+对线上数据库的数据变更操作（增删改） ，都需要邮件&lt;生产数据操作申请，并通过领导邮件审批</p>
+
+<p>需要DBA的操作，均需抄送dba邮件组
+紧急部署操作请至少提前半天通知DBA需要做脚本上线审核
+工作日业务高峰时段不允许执行以下操作：大批量数据操作（增删改）、大表索引变更（增删改）
+不允许出现drop操作,一律改为rename操作
+业务程序使用的帐号只能是Reader，Writer账户，其他权限一般不予申请
+所有临时备份用的数据都必须生成到pubs(非生产)数据库中，而不是生产数据库。</p>
+
+</main>
+<h2 class="date">发布日期:2019/04/02</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/sqlserver">sqlserver</a> <a href="/categories/%E4%B8%8A%E7%BA%BF">上线</a> <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86">数据库管理</a> <a href="/categories/%E8%A7%84%E8%8C%83">规范</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

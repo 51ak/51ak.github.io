@@ -1,0 +1,214 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css?id=20180707003" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">关于这个dboop.com</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#为什么要做这个网站">为什么要做这个网站</a></li>
+    <li><a href="#工具">工具</a></li>
+    <li><a href="#自定义样式">自定义样式</a></li>
+    <li><a href="#内容">内容</a></li>
+    <li><a href="#效率">效率</a></li>
+    <li><a href="#价值">价值</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="为什么要做这个网站">为什么要做这个网站</h2>
+<ul>
+<li>数据迁移成本问题：首先这个网站的定位肯定是博客性质的。最早我在csdn论坛,csdn博客,cnblogs博客,新浪博客上面写一些公开的偏数据库技术的文章，也会在为知笔记/印象笔记里记录各种工作中的脚本, 由于各种各样的原因东拼西凑的。有个很麻烦的事情是，换一个工具和平台，迁移成本太大。这些文字和内容对我来说不可控，甚至我在自己的笔记里想批量导出来还要受限制。</li>
+<li>格式和内容可控问题：在其他平台上的功能和格式受限于平台要求，不能自由发挥(cnblog应该是最自由的了)。还是觉得自己掌控的平台更舒服一些</li>
+<li>成本问题：
+<ul>
+<li>服务器空间：我一直有专门的vps服务器(用于科学上网），上面的空间完全可以支撑一个复杂的网站跑起来，放个这样的小博客，估计放几百个都没问题，性能冗余太多，</li>
+<li>githubio，后来因为vps服务长期在国外，性能没问题，但是会因为ip被封，有时候要换ip，造成非常的不方便，于是把网页做成了静态的hugo，然后用了github.io这个免费的平台了。好像也挺好用的</li>
+<li>域名： 以前因为爱好，收集了很多域名，后来丢了不少，最喜欢的三个域名：dboop.com top580.com 580top.com 一直在续费闲置状态。有眯浪费了</li>
+<li>服务器/域名都是0成本的（不用也浪费了），唯一的成本就是人力成本，而我刚好又是个喜欢折腾这些的人，所以。。。</li>
+</ul>
+</li>
+<li>根本原因，我是个喜欢折腾的人，我就不喜欢各博客平台的限制：）</li>
+</ul>
+<h2 id="工具">工具</h2>
+<ul>
+<li>用vscode写markdown笔记</li>
+<li>然后执行一个写好的shell脚本，调用hugo生成静态文件，用git发布出去</li>
+<li>hugo是用go写的一个开源的博客类生成工具，我用了很久了，最近才开始去研究它的一些功能和模板语法</li>
+</ul>
+<h2 id="自定义样式">自定义样式</h2>
+<ul>
+<li>前端的样式和模板，用的是hugo官方提供的最简洁的模板</li>
+<li>简洁：用的是官方模板，但我做了大量的改动。能删的删，该减的减，最终得到了一个很简洁的自定义风格中</li>
+<li>配色用的是湖绿色
+<ul>
+<li>为了纪念一段过往：那个QQ上顶着一个绿头发的头像的叫： <code>叶子</code> 的网友</li>
+<li>曾经写了一段文字 <code>在静静的湖水边相遇...</code> 这样的二呼呼的文字，在网上找了个满是垂柳的湖边的图片，挂在qq空间，从那以后就喜欢上了这个配色</li>
+<li>后来我主导的网站和工具类应用都是湖绿色配色，包括在艺龙网是写的那个被无数人吐槽说很丑的报表系统（我就是不改，爱用不用）</li>
+<li>最近这几年我的这种配色习惯发生了改变，偏向于深蓝色，但是这个博客的模板太久远了，也难得改它了</li>
+<li>18年我去了西湖，好像应该差不多确定当时挂的图片就是西湖的照片吧</li>
+</ul>
+</li>
+</ul>
+<h2 id="内容">内容</h2>
+<ul>
+<li>主要是记录工作中的一些想法/思路/工具</li>
+<li>偶尔会转载一些想记住的其他人的文字（会显示标记：转载），如果是英文的，我会尝试翻译过来（标记为：转译）</li>
+<li>有时候在这个博客里也会写一些非技术类的生活记录，一般过段时间就都隐藏了（没有删，是觉得都是当时的心情记录，删了就无趣了）</li>
+<li>2020年我的个人电脑发生硬盘损坏，导致很多文章丢失，后来各种渠道找回来一些。但是还是丢了不少
+<ul>
+<li>当时还录了不少MySQL视频，以及这些视频的前置ppt讲度，也一并没了。太伤了</li>
+<li>现在我用两台电脑互做备份，一台mac 一台win ，两台电脑用git同步</li>
+<li>还有一些写在其他平台上的文字，有时间也可能会慢慢copy回来</li>
+</ul>
+</li>
+</ul>
+<h2 id="效率">效率</h2>
+<ul>
+<li>markdown笔记可能是目前写得最快的笔记了</li>
+<li>纯工作的笔记，大约是30分钟左右一篇，如果有截图的，一般会比较慢一些</li>
+<li>有些文字我也会copy到公众号里。</li>
+<li>有些不太熟的技术细节，也会去网上搜索确认，防止传播错误观点，这一步会耽误时间，但是对自己的技术也是在提升</li>
+<li>有些想法和细节，我想表达得更清楚，有时候会为了这篇文章去写个工具，这个非常费时间。其实没必要的
+<ul>
+<li>我记得以前为了MySQL的存储格式，写了个可视化idb文件的脚本（调用了ruby大神的脚本，然后做可视化了）</li>
+<li>前段时间写redolog的文章，我也尝试过做redolog可视化，做了一个开始，后来觉得太无聊了，就放弃了</li>
+</ul>
+</li>
+</ul>
+<h2 id="价值">价值</h2>
+<ul>
+<li>首先写这个博客的价格，最大的价值是对自己的提升：技术层面/文字表达/习惯养成</li>
+<li>然后对看到这个博客的人，每一个技能点我尽可能的表达清楚，应该差不多能说清楚吧。。。
+<ul>
+<li>因为写的时候是乱着写的，很碎，可能会在一个时间点，回头去整理下。</li>
+<li>如果有对数据库自动化方面有兴趣的，可以重点关注下我做自动化时的思路，因为认真的说我在这方面真的非常强</li>
+</ul>
+</li>
+<li>当我认真写博客的时候
+<ul>
+<li>1.可能比较闲。</li>
+<li>2.可能正在补一些技能。</li>
+</ul>
+</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">1970/01/01</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E6%97%A5%E8%AE%B0">日记</a> <a href="/categories/%E7%94%9F%E6%B4%BB">生活</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

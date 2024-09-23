@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL的事务id:trx_id| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL的事务id:trx_id</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#什么是事务idtrx_id">什么是事务id(trx_id)</a></li>
+    <li><a href="#事务id的作用">事务id的作用</a></li>
+    <li><a href="#如何查看事务id">如何查看事务id</a>
+      <ul>
+        <li><a href="#查看当前事务的trx_id">查看当前事务的trx_id</a></li>
+        <li><a href="#查看当前的事务id列表活动">查看当前的事务id列表（活动)</a></li>
+        <li><a href="#查看当前的事务id列表活动非活动">查看当前的事务id列表（活动+非活动)</a></li>
+      </ul>
+    </li>
+    <li><a href="#什么时候获取trx_id">什么时候获取trx_id?</a>
+      <ul>
+        <li><a href="#mysql56版本以前">MySQL5.6版本以前</a></li>
+        <li><a href="#mysql57版本做了优化">MySQL5.7+版本做了优化</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="什么是事务idtrx_id">什么是事务id(trx_id)</h2>
+<ul>
+<li>可以理解为MySQL官方存储引擎innodb维护的一个全局自增变量:max_trx_id,</li>
+<li>一个6字节长度的整数。(max_trx_id如果一直增长，理论上也是有溢出的可能性的，超过2的48次方后，会重新从0开始，这时候会破坏事务的顺序规则)</li>
+<li>每当一个事务开始时，需要申请一个新的trx_id值时，就获取max_trx_id的最新值，然后将max_trx_id值加1。</li>
+</ul>
+<h2 id="事务id的作用">事务id的作用</h2>
+<ul>
+<li>主要是用来记录事务开始的顺序</li>
+<li>会用在各种事务冲突和mvcc中</li>
+</ul>
+<h2 id="如何查看事务id">如何查看事务id</h2>
+<h3 id="查看当前事务的trx_id">查看当前事务的trx_id</h3>
+<pre><code> select TRX_ID from INFORMATION_SCHEMA.INNODB_TRX where TRX_MYSQL_THREAD_ID = CONNECTION_ID()
+</code></pre><h3 id="查看当前的事务id列表活动">查看当前的事务id列表（活动)</h3>
+<pre><code> select TRX_ID from INFORMATION_SCHEMA.INNODB_TRX 
+</code></pre><h3 id="查看当前的事务id列表活动非活动">查看当前的事务id列表（活动+非活动)</h3>
+<p>看innodb status 的TRANSACTIONS 部分</p>
+<pre><code>show engine innodb status \G
+# 找到这一部分 TRANSACTIONS 部分
+
+
+TRANSACTIONS
+Trx id counter 2419 -- 当前最大事务 ID
+Purge done for trx's n:o &lt; 2419 undo n:o &lt; 0 state: running but idle
+History list length 0
+LIST OF TRANSACTIONS FOR EACH SESSION:
+---TRANSACTION 421658589187480, not started
+0 lock struct(s), heap size 1136, 0 row lock(s)
+---TRANSACTION 421658589186624, not started
+0 lock struct(s), heap size 1136, 0 row lock(s)
+---TRANSACTION 421658589185768, not started
+0 lock struct(s), heap size 1136, 0 row lock(s)
+
+</code></pre><p>上面是我搭的测试环境，所以没有活跃事务， 需要注意的是几个事务id都非常大（例：421658589187480） 这个后面会解释说明</p>
+<h2 id="什么时候获取trx_id">什么时候获取trx_id?</h2>
+<h3 id="mysql56版本以前">MySQL5.6版本以前</h3>
+<p>当开启一个事务时，就会去获取trx_id</p>
+<h3 id="mysql57版本做了优化">MySQL5.7+版本做了优化</h3>
+<p>开启一个事务，不会立即获取trx_id,只有这个事务发生了写行为，才会立即获得trx_id</p>
+<h4 id="优化目的">优化目的</h4>
+<ul>
+<li>本身事务如果只是读数据，申请trx_id也是没用的行为</li>
+<li>可以减少trx_id申请的次数</li>
+<li>减少了trx_id申请过程中锁冲突的几率。</li>
+</ul>
+<h4 id="问题只读事务的trx_id怎么办">问题，只读事务的trx_id怎么办？</h4>
+<p>如果是只读的事务，用正常的trx_id的极限最大值（2^48）+trx变量的地址，这样就会得到一个非常大的形如（421658589187480）的trx_id,它肯定不会和正常的trx_id冲突。且非常好识别。</p>
+<p>这个也是在<code>show  engine innodb status </code>时能看到的非常大的trx_id的原因</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2020/05/02</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/innodb">innodb</a> <a href="/categories/%E4%BA%8B%E5%8A%A1">事务</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,682 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL高可用组件之orchestrator| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL高可用组件之orchestrator</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#orchestrator是什么">orchestrator是什么</a>
+      <ul>
+        <li><a href="#介绍">介绍</a></li>
+        <li><a href="#特点">特点</a></li>
+        <li><a href="#功能限制">功能限制</a></li>
+        <li><a href="#注意事项">注意事项</a></li>
+      </ul>
+    </li>
+    <li><a href="#orchestrator的工作原理">orchestrator的工作原理</a>
+      <ul>
+        <li><a href="#orchestrator的探测机制">orchestrator的探测机制</a></li>
+        <li><a href="#orchestrator的探测判定">orchestrator的探测判定</a></li>
+      </ul>
+    </li>
+    <li><a href="#orchestrator的安装和配置">orchestrator的安装和配置</a>
+      <ul>
+        <li><a href="#安装环境">安装环境</a></li>
+        <li><a href="#安装步骤">安装步骤</a></li>
+        <li><a href="#启动">启动</a></li>
+      </ul>
+    </li>
+    <li><a href="#orchestrator的管理和使用">orchestrator的管理和使用</a>
+      <ul>
+        <li><a href="#使用web-界面来管理">使用Web 界面来管理</a></li>
+        <li><a href="#使用api方式来管理">使用API方式来管理</a></li>
+        <li><a href="#orchestrator常用命令">orchestrator常用命令</a></li>
+      </ul>
+    </li>
+    <li><a href="#orchestrator的自动故障转移">orchestrator的自动故障转移</a>
+      <ul>
+        <li><a href="#集群初始状态">集群初始状态</a></li>
+        <li><a href="#手动停止主节点58">手动停止主节点（58）</a></li>
+        <li><a href="#重新上线58节点">重新上线58节点</a></li>
+      </ul>
+    </li>
+    <li><a href="#自定义hook脚本">自定义hook脚本</a>
+      <ul>
+        <li><a href="#自定义hook脚本的目标">自定义hook脚本的目标</a></li>
+        <li><a href="#hook的类型">hook的类型</a></li>
+        <li><a href="#切换shell脚本范例">切换shell脚本（范例）</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="orchestrator是什么">orchestrator是什么</h2>
+<h3 id="介绍">介绍</h3>
+<ul>
+<li>GitHub公司的用go语言编写并开源的一个MySQL高可用管理工具</li>
+<li>MySQL高可用性和复制拓扑管理工具，支持复制拓扑结构的调整，自动故障转移和手动主从切换等。</li>
+<li>提供Web界面展示MySQL复制的拓扑关系及状态，通过Web可更改MySQL实例的复制关系和部分配置信息</li>
+<li>同时也提供命令行和api接口，方便运维管理。</li>
+<li>相对比MHA来看最重要的是解决了管理节点的单点问题，其通过raft协议保证本身的高可用。</li>
+</ul>
+<h3 id="特点">特点</h3>
+<ul>
+<li>自动发现MySQL的复制拓扑，并且在web上展示。</li>
+<li>重构复制关系，可以在web进行拖图来进行复制关系变更。</li>
+<li>检测主异常，并可以自动或手动恢复，通过Hooks进行自定义脚本。</li>
+<li>支持命令行和web界面管理复制。</li>
+</ul>
+<h3 id="功能限制">功能限制</h3>
+<ul>
+<li>slave不能手动提升为master</li>
+<li>不支持多源复制</li>
+<li>不支持并行复制</li>
+<li>不支持与PXC联合使用</li>
+</ul>
+<h3 id="注意事项">注意事项</h3>
+<ul>
+<li>对主机名依赖严重，习惯用ip来管理实例的，需要注意确保主机名可解析</li>
+<li>主从拓扑结果目前不支持两个实例互为主备或环形结构</li>
+<li>自动故障转移，只负责将主从切换了，把从设置为主，其他的变更（dns或proxy变更以及运维信息的变更等需要自己写hook脚本）</li>
+</ul>
+<h2 id="orchestrator的工作原理">orchestrator的工作原理</h2>
+<h3 id="orchestrator的探测机制">orchestrator的探测机制</h3>
+<ul>
+<li>orchestrator会每隔InstancePollSeconds（默认5s）时间用以下SQL去被监控的实例上读取实例状态</li>
+</ul>
+<pre><code class="language-show" data-lang="show">show global status like 'Uptime'
+select @@global.hostname, ifnull(@@global.report_host, ''), @@global.server_id, @@global.version, @@global.version_comment, @@global.read_only, @@global.binlog_format, @@global.log_bin, @@global.log_slave_updates
+show master status
+show global status like 'rpl_semi_sync_%_status'
+select @@global.gtid_mode, @@global.server_uuid, @@global.gtid_executed, @@global.gtid_purged, @@global.master_info_repository = 'TABLE', @@global.binlog_row_image
+show slave status
+select count(*) &gt; 0 and MAX(User_name) != '' from mysql.slave_master_info
+show slave hosts
+select substring_index(host, ':', 1) as slave_hostname from information_schema.processlist where command IN ('Binlog Dump', 'Binlog Dump GTID')
+SELECT SUBSTRING_INDEX(@@hostname, '.', 1) 
+</code></pre><ul>
+<li>将这些状态信息存入元数据库的database_instance表中</li>
+</ul>
+<pre><code>  mysql&gt; desc database_instance;
++------------------------------------------+-------------------+------+-----+---------------------+-------------------+
+| Field                                    | Type              | Null | Key | Default             | Extra             |
++------------------------------------------+-------------------+------+-----+---------------------+-------------------+
+| hostname                                 | varchar(128)      | NO   | PRI | NULL                |                   |
+| port                                     | smallint unsigned | NO   | PRI | NULL                |                   |
+| last_checked                             | timestamp         | NO   | MUL | CURRENT_TIMESTAMP   | DEFAULT_GENERATED |
+| last_attempted_check                     | timestamp         | NO   |     | 1971-01-01 00:00:00 |                   |
+| last_check_partial_success               | tinyint unsigned  | NO   |     | NULL                |                   |
+| last_seen                                | timestamp         | YES  | MUL | NULL                |                   |
+| uptime                                   | int unsigned      | NO   |     | NULL                |                   |
+| server_id                                | int unsigned      | NO   |     | NULL                |                   |
+| server_uuid                              | varchar(64)       | NO   |     | NULL                |                   |
+| version                                  | varchar(128)      | NO   |     | NULL                |                   |
+| binlog_server                            | tinyint unsigned  | NO   |     | NULL                |                   |
+| read_only                                | tinyint unsigned  | NO   |     | NULL                |                   |
+| binlog_format                            | varchar(16)       | NO   |     | NULL                |                   |
+| log_bin                                  | tinyint unsigned  | NO   |     | NULL                |                   |
+| log_slave_updates                        | tinyint unsigned  | NO   |     | NULL                |                   |
+| binary_log_file                          | varchar(128)      | NO   |     | NULL                |                   |
+| binary_log_pos                           | bigint unsigned   | NO   |     | NULL                |                   |
+| master_host                              | varchar(128)      | NO   | MUL | NULL                |                   |
+| master_port                              | smallint unsigned | NO   |     | NULL                |                   |
+| slave_sql_running                        | tinyint unsigned  | NO   |     | NULL                |                   |
+| slave_io_running                         | tinyint unsigned  | NO   |     | NULL                |                   |
+| replication_sql_thread_state             | tinyint           | NO   |     | 0                   |                   |
+| replication_io_thread_state              | tinyint           | NO   |     | 0                   |                   |
+| has_replication_filters                  | tinyint unsigned  | NO   |     | NULL                |                   |
+| oracle_gtid                              | tinyint unsigned  | NO   |     | NULL                |                   |
+| master_uuid                              | varchar(64)       | NO   |     | NULL                |                   |
+| ancestry_uuid                            | text              | NO   |     | NULL                |                   |
+| executed_gtid_set                        | text              | NO   |     | NULL                |                   |
+| gtid_purged                              | text              | NO   |     | NULL                |                   |
+| gtid_errant                              | text              | NO   |     | NULL                |                   |
+| supports_oracle_gtid                     | tinyint unsigned  | NO   |     | NULL                |                   |
+| mariadb_gtid                             | tinyint unsigned  | NO   |     | NULL                |                   |
+| pseudo_gtid                              | tinyint unsigned  | NO   |     | NULL                |                   |
+| master_log_file                          | varchar(128)      | NO   |     | NULL                |                   |
+| read_master_log_pos                      | bigint unsigned   | NO   |     | NULL                |                   |
+| relay_master_log_file                    | varchar(128)      | NO   |     | NULL                |                   |
+| exec_master_log_pos                      | bigint unsigned   | NO   |     | NULL                |                   |
+| relay_log_file                           | varchar(128)      | NO   |     | NULL                |                   |
+| relay_log_pos                            | bigint unsigned   | NO   |     | NULL                |                   |
+| last_sql_error                           | text              | NO   |     | NULL                |                   |
+| last_io_error                            | text              | NO   |     | NULL                |                   |
+| seconds_behind_master                    | bigint unsigned   | YES  |     | NULL                |                   |
+| slave_lag_seconds                        | bigint unsigned   | YES  |     | NULL                |                   |
+| sql_delay                                | int unsigned      | NO   |     | NULL                |                   |
+| allow_tls                                | tinyint unsigned  | NO   |     | NULL                |                   |
+| num_slave_hosts                          | int unsigned      | NO   |     | NULL                |                   |
+| slave_hosts                              | text              | NO   |     | NULL                |                   |
+| cluster_name                             | varchar(128)      | NO   | MUL | NULL                |                   |
+| suggested_cluster_alias                  | varchar(128)      | NO   | MUL | NULL                |                   |
+| data_center                              | varchar(32)       | NO   |     | NULL                |                   |
+| region                                   | varchar(32)       | NO   |     | NULL                |                   |
+| physical_environment                     | varchar(32)       | NO   |     | NULL                |                   |
+| instance_alias                           | varchar(128)      | NO   |     | NULL                |                   |
+| semi_sync_enforced                       | tinyint unsigned  | NO   |     | NULL                |                   |
+| semi_sync_available                      | tinyint unsigned  | NO   |     | 0                   |                   |
+| replication_depth                        | tinyint unsigned  | NO   |     | NULL                |                   |
+| is_co_master                             | tinyint unsigned  | NO   |     | NULL                |                   |
+| replication_credentials_available        | tinyint unsigned  | NO   |     | NULL                |                   |
+| has_replication_credentials              | tinyint unsigned  | NO   |     | NULL                |                   |
+| version_comment                          | varchar(128)      | NO   |     |                     |                   |
+| major_version                            | varchar(16)       | NO   |     | NULL                |                   |
+| binlog_row_image                         | varchar(16)       | NO   |     | NULL                |                   |
+| last_discovery_latency                   | bigint            | NO   |     | NULL                |                   |
+| semi_sync_master_enabled                 | tinyint unsigned  | NO   |     | NULL                |                   |
+| semi_sync_master_timeout                 | bigint unsigned   | NO   |     | 0                   |                   |
+| semi_sync_master_wait_for_slave_count    | int unsigned      | NO   |     | 0                   |                   |
+| semi_sync_master_status                  | tinyint unsigned  | NO   |     | 0                   |                   |
+| semi_sync_master_clients                 | int unsigned      | NO   |     | 0                   |                   |
+| semi_sync_replica_status                 | tinyint unsigned  | NO   |     | 0                   |                   |
+| semi_sync_replica_enabled                | tinyint unsigned  | NO   |     | NULL                |                   |
+| gtid_mode                                | varchar(32)       | NO   |     | NULL                |                   |
+| replication_group_name                   | varchar(64)       | NO   |     |                     |                   |
+| replication_group_is_single_primary_mode | tinyint unsigned  | NO   |     | 1                   |                   |
+| replication_group_member_state           | varchar(16)       | NO   |     |                     |                   |
+| replication_group_member_role            | varchar(16)       | NO   |     |                     |                   |
+| replication_group_members                | text              | NO   |     | NULL                |                   |
+| replication_group_primary_host           | varchar(128)      | NO   |     |                     |                   |
+| replication_group_primary_port           | smallint unsigned | NO   |     | 0                   |                   |
++------------------------------------------+-------------------+------+-----+---------------------+-------------------+
+</code></pre><ul>
+<li>每隔InstancePollSeconds秒从元数据库中获取每个instance的状态，展示在web界面上</li>
+</ul>
+<h3 id="orchestrator的探测判定">orchestrator的探测判定</h3>
+<ul>
+<li>如果隔InstancePollSeconds时间拉取实例状态失败，无法获取到最新的实例状态，也就无法用上面这条insert将实例状态存入到元数据库中</li>
+<li>那么orchestrator会按下面的方式更新元数据库：
+<ul>
+<li>1.每隔InstancePollSeconds时间更新database_instance表的last_checked和last_check_partial_success字段
+<ul>
+<li><code>update database_instance set last_checked = NOW(), last_check_partial_success = 0 where hostname = '{被监控主机}' and port = {被监控主机port}</code></li>
+</ul>
+</li>
+<li>2.每隔InstancePollSeconds+1s时间更新database_instance表的last_attempted_check字段
+<ul>
+<li><code> update database_instance set last_attempted_check = NOW() where hostname = '{被监控主机}' and port = {被监控主机port}</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>接下来orchestrator按以下方式判断被监控的实例是否正常
+<ul>
+<li>1.每隔InstancePollSeconds时间通过如下方式判断某个instance是否正常
+<code>select ifnull(last_checked &lt;= last_seen, 0) as is_last_check_valid from database_instance where hostname = '{被监控主机}' and port = {被监控主机port} order by hostname, port;</code></li>
+<li>2.如果是master instance
+<ul>
+<li>2.1 首先，o每秒通过类似于如下方式判断master instance是否正常
+<code> SELECT MIN(master_instance.last_checked &lt;= master_instance.last_seen and master_instance.last_attempted_check &lt;= master_instance.last_seen + interval 6 second) = 1 AS is_last_check_valid from database_instance master_instance GROUP BY master_instance.hostname, master_instance.port;</code></li>
+<li>2.2 如果is_last_check_valid为0，然后需要判断master instance对应的从库是否连得上，并且这些从库是否也连不上主库
+<pre><code>// 整个sql如下
+SELECT master_instance.hostname, master_instance.port, master_instance.read_only AS read_only, MIN(master_instance.data_center) AS data_center, MIN(master_instance.region) AS region, MIN(master_instance.physical_environment) AS physical_environment, MIN(master_instance.master_host) AS master_host, MIN(master_instance.master_port) AS master_port, MIN(master_instance.cluster_name) AS cluster_name, MIN(IFNULL(cluster_alias.alias, master_instance.cluster_name)) AS cluster_alias, MIN( master_instance.last_checked &lt;= master_instance.last_seen and master_instance.last_attempted_check &lt;= master_instance.last_seen + interval 6 second ) = 1 AS is_last_check_valid, MIN(master_instance.last_check_partial_success) as last_check_partial_success, MIN(master_instance.master_host IN ('' , '_') OR master_instance.master_port = 0 OR substr(master_instance.master_host, 1, 2) = '//') AS is_master, MIN(master_instance.is_co_master) AS is_co_master, MIN(CONCAT(master_instance.hostname, ':', master_instance.port) = master_instance.cluster_name) AS is_cluster_master, MIN(master_instance.gtid_mode) AS gtid_mode, COUNT(replica_instance.server_id) AS count_replicas, IFNULL(SUM(replica_instance.last_checked &lt;= replica_instance.last_seen), 0) AS count_valid_slaves, IFNULL(SUM(replica_instance.last_checked &lt;= replica_instance.last_seen AND replica_instance.slave_io_running != 0 AND replica_instance.slave_sql_running != 0), 0) AS count_valid_replicating_slaves, IFNULL(SUM(replica_instance.last_checked &lt;= replica_instance.last_seen AND replica_instance.slave_io_running = 0 AND replica_instance.last_io_error like '%error %connecting to master%' AND replica_instance.slave_sql_running = 1), 0) AS count_replicas_failing_to_connect_to_master, MIN(master_instance.replication_depth) AS replication_depth, GROUP_CONCAT(concat(replica_instance.Hostname, ':', replica_instance.Port)) as slave_hosts, MIN( master_instance.slave_sql_running = 1 AND master_instance.slave_io_running = 0 AND master_instance.last_io_error like '%error %connecting to master%' ) AS is_failing_to_connect_to_master, MIN( master_downtime.downtime_active is not null and ifnull(master_downtime.end_timestamp, now()) &gt; now() ) AS is_downtimed, MIN( IFNULL(master_downtime.end_timestamp, '') ) AS downtime_end_timestamp, MIN( IFNULL(unix_timestamp() - unix_timestamp(master_downtime.end_timestamp), 0) ) AS downtime_remaining_seconds, MIN( master_instance.binlog_server ) AS is_binlog_server, MIN( master_instance.pseudo_gtid ) AS is_pseudo_gtid, MIN( master_instance.supports_oracle_gtid ) AS supports_oracle_gtid, SUM( replica_instance.oracle_gtid ) AS count_oracle_gtid_slaves, IFNULL(SUM(replica_instance.last_checked &lt;= replica_instance.last_seen AND replica_instance.oracle_gtid != 0), 0) AS count_valid_oracle_gtid_slaves, SUM( replica_instance.binlog_server ) AS count_binlog_server_slaves, IFNULL(SUM(replica_instance.last_checked &lt;= replica_instance.last_seen AND replica_instance.binlog_server != 0), 0) AS count_valid_binlog_server_slaves, MIN( master_instance.mariadb_gtid ) AS is_mariadb_gtid, SUM( replica_instance.mariadb_gtid ) AS count_mariadb_gtid_slaves, IFNULL(SUM(replica_instance.last_checked &lt;= replica_instance.last_seen AND replica_instance.mariadb_gtid != 0), 0) AS count_valid_mariadb_gtid_slaves, IFNULL(SUM(replica_instance.log_bin AND replica_instance.log_slave_updates), 0) AS count_logging_replicas, IFNULL(SUM(replica_instance.log_bin AND replica_instance.log_slave_updates AND replica_instance.binlog_format = 'STATEMENT'), 0) AS count_statement_based_loggin_slaves, IFNULL(SUM(replica_instance.log_bin AND replica_instance.log_slave_updates AND replica_instance.binlog_format = 'MIXED'), 0) AS count_mixed_based_loggin_slaves, IFNULL(SUM(replica_instance.log_bin AND replica_instance.log_slave_updates AND replica_instance.binlog_format = 'ROW'), 0) AS count_row_based_loggin_slaves, IFNULL(SUM(replica_instance.sql_delay &gt; 0), 0) AS count_delayed_replicas, IFNULL(SUM(replica_instance.slave_lag_seconds &gt; 10), 0) AS count_lagging_replicas, IFNULL(MIN(replica_instance.gtid_mode), '') AS min_replica_gtid_mode, IFNULL(MAX(replica_instance.gtid_mode), '') AS max_replica_gtid_mode, IFNULL(MAX( case when replica_downtime.downtime_active is not null and ifnull(replica_downtime.end_timestamp, now()) &gt; now() then '' else replica_instance.gtid_errant end ), '') AS max_replica_gtid_errant, IFNULL(SUM( replica_downtime.downtime_active is not null and ifnull(replica_downtime.end_timestamp, now()) &gt; now()), 0) AS count_downtimed_replicas, COUNT(DISTINCT case when replica_instance.log_bin AND replica_instance.log_slave_updates then replica_instance.major_version else NULL end ) AS count_distinct_logging_major_versions FROM database_instance master_instance LEFT JOIN hostname_resolve ON (master_instance.hostname = hostname_resolve.hostname) LEFT JOIN database_instance replica_instance ON (COALESCE(hostname_resolve.resolved_hostname, master_instance.hostname) = replica_instance.master_host AND master_instance.port = replica_instance.master_port) LEFT JOIN database_instance_maintenance ON (master_instance.hostname = database_instance_maintenance.hostname AND master_instance.port = database_instance_maintenance.port AND database_instance_maintenance.maintenance_active = 1) LEFT JOIN database_instance_downtime as master_downtime ON (master_instance.hostname = master_downtime.hostname AND master_instance.port = master_downtime.port AND master_downtime.downtime_active = 1) LEFT JOIN database_instance_downtime as replica_downtime ON (replica_instance.hostname = replica_downtime.hostname AND replica_instance.port = replica_downtime.port AND replica_downtime.downtime_active = 1) LEFT JOIN cluster_alias ON (cluster_alias.cluster_name = master_instance.cluster_name) WHERE database_instance_maintenance.database_instance_maintenance_id IS NULL AND '' IN ('', master_instance.cluster_name) GROUP BY master_instance.hostname, master_instance.port HAVING (MIN( master_instance.last_checked &lt;= master_instance.last_seen and master_instance.last_attempted_check &lt;= master_instance.last_seen + interval 6 second ) = 1 ) = 0 OR (IFNULL(SUM(replica_instance.last_checked &lt;= replica_instance.last_seen AND replica_instance.slave_io_running = 0 AND replica_instance.last_io_error like '%error %connecting to master%' AND replica_instance.slave_sql_running = 1), 0) &gt; 0) OR (IFNULL(SUM(replica_instance.last_checked &lt;= replica_instance.last_seen), 0) &lt; COUNT(replica_instance.server_id) ) OR (IFNULL(SUM(replica_instance.last_checked &lt;= replica_instance.last_seen AND replica_instance.slave_io_running != 0 AND replica_instance.slave_sql_running != 0), 0) &lt; COUNT(replica_instance.server_id) ) OR (MIN( master_instance.slave_sql_running = 1 AND master_instance.slave_io_running = 0 AND master_instance.last_io_error like '%error %connecting to master%' ) ) OR (COUNT(replica_instance.server_id) &gt; 0) ORDER BY is_master DESC , is_cluster_master DESC, count_replicas DESC\G
+</code></pre></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="orchestrator的安装和配置">orchestrator的安装和配置</h2>
+<h3 id="安装环境">安装环境</h3>
+<ul>
+<li>centos7.8服务器三台（虚拟机) 用于部署orchestrator,称为:管理机
+<ul>
+<li>dboop01</li>
+<li>dboop02</li>
+<li>dboop03</li>
+</ul>
+</li>
+<li>一个MySQL8.0集群，用于存放orchestrator的元数据，称为:元数据MySQL
+<ul>
+<li>mysql3347</li>
+</ul>
+</li>
+<li>每个被维护的MySQL实例上都创建了管理员权限的用户dba_orch,称为:MySQL实例</li>
+</ul>
+<h3 id="安装步骤">安装步骤</h3>
+<h4 id="每台管理机上执行以下步骤">每台管理机上执行以下步骤</h4>
+<ul>
+<li>下载最新版orchestrator-3.2.6-1</li>
+</ul>
+<pre><code>cd /data/soft/
+wget &quot;https://github.com/openark/orchestrator/releases/download/v3.2.6/orchestrator-3.2.6-1.x86_64.rpm&quot;
+
+
+rpm -ivh  orchestrator-3.2.6-1.x86_64.rpm #这里产生报错
+error: Failed dependencies:
+        jq &gt;= 1.5 is needed by orchestrator-1:3.2.6-1.x86_64
+
+</code></pre><ul>
+<li>处理报错：jq &gt;= 1.5 is needed by orchestrator-1:3.2.6-1.x86_64</li>
+</ul>
+<pre><code>wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+rpm -ivh epel-release-latest-7.noarch.rpm
+yum install -y jq
+rpm -ivh epel-release-latest-7.noarch.rpm
+</code></pre><ul>
+<li>继续安装orchestrator-3.2.6-1.x86_64</li>
+</ul>
+<pre><code>rpm -ivh  orchestrator-3.2.6-1.x86_64.rpm
+</code></pre><ul>
+<li>完成三台管理机的orchestrator安装</li>
+</ul>
+<h4 id="元数据库实例mysql3347上执行">元数据库实例mysql3347上执行</h4>
+<pre><code>CREATE DATABASE orche;
+
+CREATE USER 'orche_owner'@'%' IDENTIFIED BY '**********';
+
+GRANT ALL PRIVILEGES ON orche.* TO 'orche_owner'@'%';
+
+</code></pre><h4 id="修改配置文件">修改配置文件</h4>
+<pre><code>cp /usr/local/orchestrator/orchestrator-sample.conf.json /etc/orchestrator.conf.json
+
+ vi /etc/orchestrator.conf.json
+
+</code></pre><p>配置内容主要以下</p>
+<pre><code>&quot;MySQLOrchestratorHost&quot;: &quot;元数据库实例ip&quot;,
+&quot;MySQLOrchestratorPort&quot;: 3347,
+&quot;MySQLOrchestratorDatabase&quot;: &quot;orche&quot;,
+&quot;MySQLOrchestratorUser&quot;: &quot;orche_owner&quot;,
+&quot;MySQLOrchestratorPassword&quot;: &quot;*****元数据库实例密码*****&quot;, 
+.........
+&quot;MySQLTopologyUser&quot;: &quot;dba&quot;, 
+&quot;MySQLTopologyPassword&quot;: &quot;****mysql实例管理员密码****&quot;,
+
+........
+&quot;RaftEnabled&quot;: true, 
+&quot;BackendDB&quot;: &quot;mysql&quot;, 
+&quot;RaftBind&quot;: &quot;dboop01&quot;, #这里注意每个节点写本地的ip
+&quot;RaftDataDir&quot;: &quot;/usr/local/orchestrator&quot;, 
+&quot;DefaultRaftPort&quot;: 9108,
+&quot;RaftNodes&quot;: [ 
+ &quot;dboop01&quot;,
+ &quot;dboop02&quot;,
+ &quot;dboop03&quot;
+]
+</code></pre><h3 id="启动">启动</h3>
+<ul>
+<li>三台管理机，依次执行以下命令</li>
+</ul>
+<pre><code>cd /usr/local/orchestrator
+nohup ./orchestrator -config /etc/orchestrator.conf.json http &amp;
+</code></pre><ul>
+<li><code>tail -f nohup.out </code>命令查看启动日志，有报错按提示处理</li>
+</ul>
+<h2 id="orchestrator的管理和使用">orchestrator的管理和使用</h2>
+<h3 id="使用web-界面来管理">使用Web 界面来管理</h3>
+<ul>
+<li>在浏览器里输入三台主机的任意主机的IP加端口（http://dboop01:3000）进入到Web管理界面</li>
+<li>在Clusters导航的Discover里输入任意一台被管理MySQL实例的信息。</li>
+<li>添加完成后，点dashboard就能看到集群，点开集群在网页上查看和操作集群</li>
+<li>这个比较简单，不多解释</li>
+</ul>
+<h3 id="使用api方式来管理">使用API方式来管理</h3>
+<h4 id="命令行工具">命令行工具</h4>
+<ul>
+<li>如果是单机模式的orchestrator，可以直接用orchestrator命令,如果是raft多节点的，会提示</li>
+</ul>
+<pre><code>cd /usr/local/orchestrator
+orchestrator -c clusters
+# 提示报错：FATAL Orchestrator configured to run raft (&quot;RaftEnabled&quot;: true). All access must go through the web API of the active raft node. You may use the orchestrator-client script which has a similar interface to the command line invocation. You may override this with --ignore-raft-setup
+</code></pre><ul>
+<li>这时候有两种方法</li>
+</ul>
+<pre><code>#方法一
+orchestrator -c clusters --ignore-raft-setup
+
+#方法二
+cd /usr/local/orchestrator/resources/bin
+export ORCHESTRATOR_API=&quot;http://dboop01:9380/api http://dboop02:9380/api http://dboop03:9380/api&quot;  #这个设置建议加在/etc/profile 中
+orchestrator-client -c clusters
+</code></pre><ul>
+<li>建议采用第二种方法</li>
+</ul>
+<h3 id="orchestrator常用命令">orchestrator常用命令</h3>
+<h4 id="a查询信息相关">a.查询信息相关</h4>
+<pre><code># 列出当前探测的所有MySQL集群
+orchestrator-client -c clusters
+ 
+# 列出当前orchestrator探测到的所有MySQL集群别名
+orchestrator-client -c clusters-alias
+
+# 列出当前探测到的所有集群可写的master实例
+orchestrator-client -c all-clusters-masters
+ 
+ 
+# 显示整个集群的拓扑结构
+orchestrator-client -c topology -i mysql-58:3360
+orchestrator-client -c topology -alias mysql-58
+    #这两个命令都会返回
+    mysql-58:3360     [0s,ok,8.0.22,rw,ROW,&gt;&gt;,GTID]
+    + mysql-59:3360   [0s,ok,8.0.22,ro,ROW,&gt;&gt;,GTID]
+      + mysql-60:3360 [0s,ok,8.0.22,ro,ROW,&gt;&gt;,GTID]
+</code></pre><h4 id="b发现和删除实例">b.发现和删除实例</h4>
+<pre><code># 发现一个实例并拓扑其所在的MySQL集群拓扑结构;
+orchestrator-client -c discover -i mysql-59:3360
+
+# 忘记某个实例
+orchestrator-client -c forget -i mysql-59:3360
+
+# 忘记整个集群
+orchestrator-client -c forget-cluster -alias mysql-58
+
+</code></pre><h4 id="c拓扑重构">c.拓扑重构</h4>
+<ul>
+<li>改变主从关系拓扑(对应web页上的拖拉)</li>
+</ul>
+<pre><code>orchestrator-client -c topology -alias mysql-58
+mysql-58:3360     [0s,ok,8.0.22,rw,ROW,&gt;&gt;,GTID]
++ mysql-59:3360   [0s,ok,8.0.22,ro,ROW,&gt;&gt;,GTID]
+  + mysql-60:3360 [0s,ok,8.0.22,ro,ROW,&gt;&gt;,GTID]
+
+#将mysql-59下的所有副本全部挂到mysql-58下
+orchestrator-client -c relocate-replicas -i mysql-59:3360 -d mysql-58:3360      
+
+
+orchestrator-client -c topology -alias mysql-58
+mysql-58:3360   [0s,ok,8.0.22,rw,ROW,&gt;&gt;,GTID]
++ mysql-59:3360 [0s,ok,8.0.22,ro,ROW,&gt;&gt;,GTID]
++ mysql-60:3360 [0s,ok,8.0.22,ro,ROW,&gt;&gt;,GTID]
+
+ 
+# 执行take-siblings操作(将mysql-59的所有兄弟副本,都挂载到mysql-59下，把兄弟级点别成子节点)
+orchestrator-client -c take-siblings -i mysql-59:3360
+
+orchestrator-client -c topology -alias mysql-58
+mysql-58:3360     [0s,ok,8.0.22,rw,ROW,&gt;&gt;,GTID]
++ mysql-59:3360   [0s,ok,8.0.22,ro,ROW,&gt;&gt;,GTID]
+  + mysql-60:3360 [0s,ok,8.0.22,ro,ROW,&gt;&gt;,GTID]
+
+
+
+# 现在59作为60的主，调换主从关系
+# 即将mysql-60作为 mysql-59的master -i指定要操作的实例
+orchestrator-client -c take-master -i mysql-60:3360
+
+orchestrator-client -c topology -alias mysql-58
+mysql-58:3360     [0s,ok,8.0.22,rw,ROW,&gt;&gt;,GTID]
++ mysql-60:3360   [0s,ok,8.0.22,ro,ROW,&gt;&gt;,GTID]
+  + mysql-59:3360 [0s,ok,8.0.22,ro,ROW,&gt;&gt;,GTID]
+
+
+
+#可写
+orchestrator-client -c set-writeable -i mysql-59:3360
+
+
+#只读
+orchestrator-client -c set-read-only -i mysql-59:3360
+
+
+# 查看谁最合适做备库
+orchestrator -c  get-candidate-replica  -i mysql-58:3360 --ignore-raft-setup
+
+
+
+# 搜索实例：search
+orchestrator-client -c search -i mysql-3360
+
+# 打印指定实例的主库：which-master
+orchestrator-client -c which-master -i mysql-59:3360
+:0 如果查询的实例自己是主库，则返回:0 否则返回主实例
+
+
+# 打印指定实例的从库：which-replicas
+orchestrator-client -c which-replicas -i mysql-58:3360
+
+# 打印指定主实例从库异常的列表：which-broken-replicas
+orchestrator-client -c which-broken-replicas -i mysql-58:3360
+
+
+# 给出一个实例或则集群别名，打印出该实例所在集群下的所有其他实例。which-cluster-instances
+orchestrator-client -c which-cluster-instances -i mysql-58:3360
+
+
+# 指定实例/集群名或则所有所在集群的可写实例，：which-cluster-master
+orchestrator-client -c which-cluster-master -i mysql-58:3360
+
+# 打印出所有实例：all-clusters-masters，每个集群返回一个
+orchestrator-client -c all-clusters-masters
+
+# 打印出所有实例：all-instances
+orchestrator-client -c all-instances
+
+#打印出集群中可以作为pt-online-schema-change操作的副本列表：which-cluster-osc-replicas
+orchestrator-client -c which-cluster-osc-replicas -i mysql-58:3360
+
+#打印出所有在维护（downtimed）的实例：downtimed
+orchestrator-client -c downtimed
+
+</code></pre><h2 id="orchestrator的自动故障转移">orchestrator的自动故障转移</h2>
+<h3 id="集群初始状态">集群初始状态</h3>
+<ul>
+<li>58节点为当前主节点</li>
+<li>59节点为正常从节点</li>
+<li>60节点的同步状态异常
+<img src="/img/2022auto/2022-10-21-10-36-30.png" alt="集群初始状态"></li>
+</ul>
+<h3 id="手动停止主节点58">手动停止主节点（58）</h3>
+<ul>
+<li>@58node <code>service mysqld3360 stop </code></li>
+<li>集群状态:</li>
+</ul>
+<p><img src="/img/2022auto/2022-10-21-11-06-57.png" alt="集群状态"></p>
+<ul>
+<li>59成为主节点，58做下线处理
+<img src="/img/2022auto/2022-10-21-13-53-29.png" alt="集群状态"></li>
+</ul>
+<h3 id="重新上线58节点">重新上线58节点</h3>
+<ul>
+<li>@58node <code>service mysqld3360 start </code></li>
+<li>集群分裂成两个</li>
+</ul>
+<p><img src="/img/2022auto/2022-10-21-14-03-33.png" alt="集群分裂成两个"></p>
+<ul>
+<li>
+<p>此时把58节点设置成59的从</p>
+</li>
+<li>
+<p><code>mysql -h node58 -P3360 -e &quot;change master to master_host='node59',master_port=3360,MASTER_AUTO_POSITION=1; start slave&quot;</code></p>
+</li>
+<li>
+<p>集群恢复成1个，58加入了59的集群，但状态是可写的
+<img src="/img/2022auto/2022-10-21-14-06-42.png" alt="集群恢复成1个"></p>
+</li>
+</ul>
+<blockquote>
+<p>以上模拟了一次主节点意外down掉后，59节点自动接管的流程</p>
+</blockquote>
+<h2 id="自定义hook脚本">自定义hook脚本</h2>
+<ul>
+<li>不管是自动的故障切换，还是手工发起的主从变更，orchestraotor在切换主从状态后，需要触发hook脚本来完成高可用架构变更</li>
+</ul>
+<h3 id="自定义hook脚本的目标">自定义hook脚本的目标</h3>
+<ul>
+<li>确定切换类型，是否安全，如果不安全可以回滚切换</li>
+<li>发出报警通知，发出切换结果通知</li>
+<li>完成高可用架构变更通知给使用方
+<ul>
+<li>Proxy修改:使用Proxy的切换proxy信息</li>
+<li>DNS修改:使用dns做解析的，修改dns记录</li>
+<li>中间件修改:使用中件间的</li>
+<li>使用etcd,zk做通知的 ，变更etcd或zk</li>
+<li>&hellip;</li>
+</ul>
+</li>
+<li>完成dba维护的基础信息变更</li>
+<li>检查切换完成程度，业务恢复状况</li>
+</ul>
+<h3 id="hook的类型">hook的类型</h3>
+<ul>
+<li>OnFailureDetectionProcesses：当检测故障转移现象时执行（在决定是否进行故障转移之前）。</li>
+<li>PreGracefulTakeoverProcesses：graceful master takeover时执行，在master变成read-only之前立即执行。</li>
+<li>PreFailoverProcesses：在orch进行恢复操作之前立即执行。在这个过程中任何的失败（非零退出代码）都会终止恢复。提示：这使得有机会根据系统的某些内部状态中止恢复。</li>
+<li>PostMasterFailoverProcesses：在主恢复成功结束时执行。</li>
+<li>PostIntermediateMasterFailoverProcesses：在中间主恢复成功结束时执行。</li>
+<li><!-- raw HTML omitted -->PostFailoverProcesses<!-- raw HTML omitted -->：在任何成功的恢复结束时执行（包括以及补充到PostMasterFailoverProcesses、PostIntermediateMasterFailoverProcesses）。</li>
+<li>PostUnsuccessfulFailoverProcesses：在任何不成功的恢复结束时执行。</li>
+<li>PostGracefulTakeoverProcesses：在有计划地、优雅地主库切换的时候会执行，在旧主库位于新主库之后执行。</li>
+</ul>
+<h3 id="切换shell脚本范例">切换shell脚本（范例）</h3>
+<h4 id="shell脚本-usrlocalorchestratorchangemastersh">shell脚本 /usr/local/orchestrator/changemaster.sh</h4>
+<pre><code>#!/bin/bash
+
+failureType=$1
+failureCluster=$2
+failedHost=$3
+failedPort=$4
+successorHost=$5
+successorPort=$6
+
+#VIP切换、Proxy修改、DNS修改、中间件修改、LVS修改
+if [[ $failureType == &quot;DeadMaster&quot; ]]; then	 
+echo ' ${failureCluster}发生了${failureType} 故障切换. 原主机(${failedHost}:${failedPort})切换到新主机(${successorHost}:${successorPort})' &gt;&gt; /tmp/recovery.log
+elif [[ $isitdead == &quot;DeadIntermediateMasterWithSingleSlaveFailingToConnect&quot; ]]; then	
+echo ' ${failureCluster}发生了${failureType} 故障切换. 原主机(${failedHost}:${failedPort})切换到新主机(${successorHost}:${successorPort})' &gt;&gt; /tmp/recovery.log
+elif [[ $isitdead == &quot;DeadIntermediateMaster&quot; ]]; then
+echo ' ${failureCluster}发生了${failureType} 故障切换. 原主机(${failedHost}:${failedPort})切换到新主机(${successorHost}:${successorPort})' &gt;&gt; /tmp/recovery.log     
+fi
+
+# 修改cmdb
+
+#  发送报警信息
+
+</code></pre><h4 id="修改etcorchestratorconfjson-中的hook定义">修改/etc/orchestrator.conf.json 中的hook定义</h4>
+<pre><code>  &quot;PostMasterFailoverProcesses&quot;: [
+    &quot;/usr/local/orchestrator/changemaster.sh {failureType}   {failureCluster} {failedHost} {failedPort} {successorHost} {successorPort} &quot;
+  ],
+
+</code></pre><h2 id="总结">总结</h2>
+<ul>
+<li>orchestartor的安装使用比较简单</li>
+<li>相对于经典的mha,orchestrator出现得晚,功能更丰富，使用更方便</li>
+<li>自定义参数和api丰富，是比较理想的替代mha的组件</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/10/17</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/mysql%E5%A4%8D%E5%88%B6">mysql复制</a> <a href="/categories/raft">raft</a> <a href="/categories/%E9%AB%98%E5%8F%AF%E7%94%A8">高可用</a> <a href="/categories/proxy">proxy</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

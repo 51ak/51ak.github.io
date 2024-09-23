@@ -1,0 +1,352 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>图数据库nebula性能监控| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">图数据库nebula性能监控</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#目的">目的</a></li>
+    <li><a href="#1指标筛选">1.指标筛选</a>
+      <ul>
+        <li><a href="#最终挑选了以下指标">最终，挑选了以下指标</a></li>
+      </ul>
+    </li>
+    <li><a href="#2编写收集代码python">2.编写收集代码（Python）</a></li>
+    <li><a href="#3性能评价">3.性能评价</a>
+      <ul>
+        <li><a href="#4配置一张报表进行集中展示">4.配置一张报表，进行集中展示</a></li>
+        <li><a href="#最终效果">最终效果</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="目的">目的</h2>
+<p>nebulaGraph官方自带的Nebula Dashboard 监控工具里的监控指标和筛选粒度已经足够丰富。但基于以下原因，还是在此基础上自己做了层监控</p>
+<ul>
+<li>缺少关键指标的定义，对除DBA以外的用户不友好。我们希望把性能数据让研发同学也能看到</li>
+<li>缺少一个对所有服务器的横向对比和集中展示Dashboard</li>
+<li>与我们现有的DBA监控不在一个平台，需要多平台切换使用</li>
+<li>没有性能指标评分，同样的指标，没有给出是否合格的标准和提示</li>
+<li>官方已经提供了可以直接读取性能数据的接口 http://%s/stats，在些基础上二次开发监控的难度会很低，预估开发工作量1pd ,实际开发工作量1.5pd</li>
+</ul>
+<h2 id="1指标筛选">1.指标筛选</h2>
+<p>官方提供的性能接口里有几百项指标，我们从graph,storage,rockdb 三个层面，筛选了60几个重点的，需要关注的指标，筛选的依据是</p>
+<ul>
+<li>是否能从指标定位到资源或性能问题（响应时间等）</li>
+<li>是否在排查问题出现时，有助于定位异常（命令次数，qps等)</li>
+<li>是否有类似的指标已经存在。</li>
+</ul>
+<h3 id="最终挑选了以下指标">最终，挑选了以下指标</h3>
+<p><img src="/img/2022/nebulamonitor01.png" alt="nebula性能监控—指标项" title="nebula性能监控—指标项"></p>
+<h2 id="2编写收集代码python">2.编写收集代码（Python）</h2>
+<p>这部分因为有官方接口，所以直接请求就可以了</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+<span style="color:#66d9ef">for</span> nodeid,nodehost <span style="color:#f92672">in</span> grpahlist:
+    dict_result<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>get_nebula_stats(nodehost)
+    <span style="color:#75715e">#入库 dict_result</span>
+
+
+  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_nebula_stats</span>(self,nodehost)
+    dict_result<span style="color:#f92672">=</span>{} 
+    urlstr<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;http://</span><span style="color:#e6db74">%s</span><span style="color:#e6db74">/stats?format=json&#39;</span><span style="color:#f92672">%</span>(nodehost,)
+    mlist<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>get_urldata(urlstr)           
+    <span style="color:#66d9ef">for</span> dictc <span style="color:#f92672">in</span> mlist:
+        <span style="color:#66d9ef">for</span> k,v <span style="color:#f92672">in</span> dictc<span style="color:#f92672">.</span>items():
+            <span style="color:#66d9ef">if</span> k <span style="color:#f92672">in</span> dict_graph:
+                keyname<span style="color:#f92672">=</span>dict_graph[k][<span style="color:#ae81ff">0</span>]
+                dict_result[keyname]<span style="color:#f92672">=</span>v
+    <span style="color:#66d9ef">return</span> dict_result
+</code></pre></div><h2 id="3性能评价">3.性能评价</h2>
+<p>这是非常重要的一步，沿用我在2005年做的数据库性能模型的方法（参考：https://github.com/51ak/DatabaseRating/）</p>
+<ul>
+<li>对我们的每一项指标，我们需要对其取值范围进行判断，给其打分：优，良，中，劣。 标记为:weight</li>
+<li>对每一项指标，对其权重做标记（0-5）,标记为：height</li>
+<li>由weight和height计算出这个实例的健康程度</li>
+<li>但是我们的nebula服务只有一个集群，不需要太细化，所以我们只做了weight标记</li>
+</ul>
+<p>做weight标记的逻辑是定义如下的一个区间列表</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> dict_graph<span style="color:#f92672">=</span>{
+        <span style="color:#e6db74">&#34;num_active_queries.sum.60&#34;</span>:(<span style="color:#e6db74">&#34;num_active_queries&#34;</span>,(<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">10</span>,<span style="color:#ae81ff">50</span>,<span style="color:#ae81ff">1000000</span>)),
+<span style="color:#e6db74">&#34;num_active_sessions.sum.60&#34;</span>:(<span style="color:#e6db74">&#34;num_active_sessions&#34;</span>,(<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">10</span>,<span style="color:#ae81ff">50</span>,<span style="color:#ae81ff">1000000</span>)),
+<span style="color:#e6db74">&#34;num_opened_sessions.rate.60&#34;</span>:(<span style="color:#e6db74">&#34;num_opened_sessions&#34;</span>,(<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">100</span>,<span style="color:#ae81ff">500</span>,<span style="color:#ae81ff">10000</span>,<span style="color:#ae81ff">10000000</span>)),
+<span style="color:#e6db74">&#34;num_queries.rate.60&#34;</span>:(<span style="color:#e6db74">&#34;num_queries_rate&#34;</span>,(<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">100</span>,<span style="color:#ae81ff">500</span>,<span style="color:#ae81ff">10000</span>,<span style="color:#ae81ff">10000000</span>)),
+<span style="color:#e6db74">&#34;num_queries.sum.60&#34;</span>:(<span style="color:#e6db74">&#34;num_queries_sum&#34;</span>,(<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5000</span>,<span style="color:#ae81ff">50000</span>,<span style="color:#ae81ff">900000</span>,<span style="color:#ae81ff">100000000</span>)),
+<span style="color:#e6db74">&#34;num_sentences.rate.60&#34;</span>:(<span style="color:#e6db74">&#34;num_sentences_rate&#34;</span>,(<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">100</span>,<span style="color:#ae81ff">500</span>,<span style="color:#ae81ff">10000</span>,<span style="color:#ae81ff">10000000</span>)),
+<span style="color:#e6db74">&#34;num_sentences.sum.60&#34;</span>:(<span style="color:#e6db74">&#34;num_sentences_sum&#34;</span>,(<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5000</span>,<span style="color:#ae81ff">50000</span>,<span style="color:#ae81ff">900000</span>,<span style="color:#ae81ff">100000000</span>)),
+<span style="color:#e6db74">&#34;query_latency_us.p95.60&#34;</span>:(<span style="color:#e6db74">&#34;query_latency_us_p95&#34;</span>,(<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">30000</span>,<span style="color:#ae81ff">100000</span>,<span style="color:#ae81ff">500000</span>,<span style="color:#ae81ff">10000000000</span>)),
+<span style="color:#e6db74">&#34;query_latency_us.avg.60&#34;</span>:(<span style="color:#e6db74">&#34;query_latency_us_avg&#34;</span>,(<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">30000</span>,<span style="color:#ae81ff">100000</span>,<span style="color:#ae81ff">500000</span>,<span style="color:#ae81ff">10000000000</span>)),
+<span style="color:#e6db74">&#34;num_queries_hit_memory_watermark.sum.60&#34;</span>:(<span style="color:#e6db74">&#34;num_queries_hit_memory_watermark&#34;</span>,(<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">100</span>,<span style="color:#ae81ff">5000</span>,<span style="color:#ae81ff">90000</span>,<span style="color:#ae81ff">100000000</span>)),
+<span style="color:#e6db74">&#34;num_query_errors.rate.60&#34;</span>:(<span style="color:#e6db74">&#34;num_query_errors&#34;</span>,(<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">100</span>,<span style="color:#ae81ff">5000</span>,<span style="color:#ae81ff">90000</span>,<span style="color:#ae81ff">100000000</span>)),
+<span style="color:#e6db74">&#34;num_slow_queries.sum.60&#34;</span>:(<span style="color:#e6db74">&#34;num_slow_queries&#34;</span>,(<span style="color:#f92672">-</span><span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">50</span>,<span style="color:#ae81ff">500</span>,<span style="color:#ae81ff">5000</span>,<span style="color:#ae81ff">100000000</span>))
+        }
+</code></pre></div><p>对每一个值，对其区间进行判断，如果第一区间，则是优，以此类推。所以对应的采集程序就变成了</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_nebula_stats</span>(self,nodehost)
+    dict_result<span style="color:#f92672">=</span>{} 
+    urlstr<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;http://</span><span style="color:#e6db74">%s</span><span style="color:#e6db74">/stats?format=json&#39;</span><span style="color:#f92672">%</span>(nodehost,)
+    mlist<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>get_urldata(urlstr)           
+    <span style="color:#66d9ef">for</span> dictc <span style="color:#f92672">in</span> mlist:
+        <span style="color:#66d9ef">for</span> k,v <span style="color:#f92672">in</span> dictc<span style="color:#f92672">.</span>items():
+            <span style="color:#66d9ef">if</span> k <span style="color:#f92672">in</span> dict_graph:
+                keyname<span style="color:#f92672">=</span>dict_graph[k][<span style="color:#ae81ff">0</span>]
+                keyvalueweightlist<span style="color:#f92672">=</span>dict_graph[k][<span style="color:#ae81ff">1</span>]
+                <span style="color:#66d9ef">if</span> v<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">0</span>:
+                    v<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+                value<span style="color:#f92672">=</span>float(v)
+                valueweight<span style="color:#f92672">=</span>self<span style="color:#f92672">.</span>func_checkweight(value,keyvalueweightlist) 
+                dict_result[keyname]<span style="color:#f92672">=</span>v
+                dict_result[f<span style="color:#e6db74">&#34;{keyname}_weight&#34;</span>]<span style="color:#f92672">=</span>valueweight
+    <span style="color:#66d9ef">return</span> dict_result
+</code></pre></div><h3 id="4配置一张报表进行集中展示">4.配置一张报表，进行集中展示</h3>
+<p>在我们的dboop平台上增加一张报表配置。</p>
+<p><img src="/img/2022/nebulamonitor03.png" alt="nebula性能监控—后台配置" title="nebula性能监控—后台配置"></p>
+<p>代码如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml">
+
+<span style="color:#f92672">&lt;page&gt;</span>
+
+<span style="color:#75715e">&lt;!-- 自定义表头，可省略,默认是列名，如需要自定义宽度或表格头，写html格式 --&gt;</span>
+  <span style="color:#f92672">&lt;tableheader&gt;</span><span style="color:#75715e">&lt;![CDATA[
+</span><span style="color:#75715e">  &lt;tr style=&#34;height:25px;&#34;&gt;
+</span><span style="color:#75715e">&lt;th colspan=&#34;1&#34; style=&#34;border-bottom:0&#34;&gt; &lt;/th&gt;
+</span><span style="color:#75715e">&lt;th colspan=&#34;4&#34; style=&#34;border-bottom:0&#34;&gt;&lt;h3&gt;主机&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th colspan=&#34;4&#34; style=&#34;border-bottom:0&#34;&gt;&lt;h3&gt;网络&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th colspan=&#34;2&#34; style=&#34;border-bottom:0&#34;&gt;&lt;h3&gt;活跃&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th colspan=&#34;3&#34; style=&#34;border-bottom:0&#34;&gt;&lt;h3&gt;每秒&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th colspan=&#34;2&#34; style=&#34;border-bottom:0&#34;&gt;&lt;h3&gt;响应时间&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th colspan=&#34;4&#34; style=&#34;border-bottom:0&#34;&gt;&lt;h3&gt;1分钟指标&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;/tr&gt;
+</span><span style="color:#75715e">  &lt;tr style=&#34;height:25px;&#34;&gt;
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;Graph服务&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;CPU&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;内存&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;IOWait&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;磁盘空间&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;进流量&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;出流量&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;TcpWait&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;Tcp连接&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;查询&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;进程&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;QPS&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;语句PS&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;打开会话&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;P95(毫秒)&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;平均(毫秒)&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;查询数&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;内存溢出&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;错误次数&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">&lt;th&gt;&lt;h3&gt;慢查询&lt;/h3&gt;&lt;/th&gt;
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">&lt;/tr&gt;
+</span><span style="color:#75715e">
+</span><span style="color:#75715e"> ]]&gt;</span>
+  <span style="color:#f92672">&lt;/tableheader&gt;</span>  
+  
+
+  <span style="color:#f92672">&lt;viewtype&gt;</span>table<span style="color:#f92672">&lt;/viewtype&gt;</span>
+   <span style="color:#f92672">&lt;connstr&gt;</span>link:cnpg3rzn2x********byenoa<span style="color:#f92672">&lt;/connstr&gt;</span>
+  <span style="color:#f92672">&lt;sqlstr&gt;</span><span style="color:#75715e">&lt;![CDATA[
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">select 
+</span><span style="color:#75715e">case when left(h.hosttype,1)=&#39;物&#39; then 
+</span><span style="color:#75715e">concat(n.ipstr,&#39; &lt;span class=&#34;f_1&#34;&gt;物&lt;/span&gt;&#39;)
+</span><span style="color:#75715e"> else concat(n.ipstr,&#39; &lt;span  class=&#34;f_2&#34;&gt;虚&lt;/span&gt;&#39;)
+</span><span style="color:#75715e"> end as &#39;IP&#39;,
+</span><span style="color:#75715e">            format_dash(`cpu`,`cpu_weight`,&#39;d203qtapmhv1ywbojc579lkrgx&#39;,&#39;cpu&#39;,&#39;host&#39;,a.hostid,&#39;percent&#39;) as &#39;cpu&#39;,
+</span><span style="color:#75715e">            format_dash(`mempercent`,`mempercent_weight`,&#39;d203qtapmhv1ywbojc579lkrgx&#39;,&#39;mempercent&#39;,&#39;host&#39;,a.hostid,&#39;percent&#39;) as &#39;mempercent&#39;,
+</span><span style="color:#75715e">            format_dash(`iowait`,`iowait_weight`,&#39;dl4bzsk7pfg89v1uyoq2x0j65c&#39;,&#39;iowait&#39;,&#39;host&#39;,a.hostid,&#39;&#39;) as &#39;iowait&#39;, 
+</span><span style="color:#75715e">case when `diskused_data` is null or `diskused_data`&lt;0 then 
+</span><span style="color:#75715e">   format_dash(`diskused_root`,`diskused_root_weight`,&#39;d203qtapmhv1ywbojc579lkrgx&#39;,&#39;diskused_root&#39;,&#39;host&#39;,a.hostid,&#39;percent&#39;)
+</span><span style="color:#75715e">else 
+</span><span style="color:#75715e">   format_dash(`diskused_data`,`diskused_data_weight`,&#39;d203qtapmhv1ywbojc579lkrgx&#39;,&#39;diskused_data&#39;,&#39;host&#39;,a.hostid,&#39;percent&#39;)
+</span><span style="color:#75715e">end as &#39;diskused_data&#39;,
+</span><span style="color:#75715e">            format_dash(`network_in`,`network_in_weight`,&#39;dl4bzsk7pfg89v1uyoq2x0j65c&#39;,&#39;network_in&#39;,&#39;host&#39;,a.hostid,&#39;bytes&#39;) as &#39;network_in&#39;,
+</span><span style="color:#75715e">            format_dash(`network_out`,`network_out_weight`,&#39;dl4bzsk7pfg89v1uyoq2x0j65c&#39;,&#39;network_out&#39;,&#39;host&#39;,a.hostid,&#39;bytes&#39;) as &#39;network_out&#39;,
+</span><span style="color:#75715e">            format_dash(`tcp_wait`,`tcp_wait_weight`,&#39;dl4bzsk7pfg89v1uyoq2x0j65c&#39;,&#39;tcp_wait&#39;,&#39;host&#39;,a.hostid,&#39;floor&#39;) as &#39;tcp_wait&#39;,
+</span><span style="color:#75715e">            format_dash(`tcp_count`,`tcp_count_weight`,&#39;dl4bzsk7pfg89v1uyoq2x0j65c&#39;,&#39;tcp_count&#39;,&#39;host&#39;,a.hostid,&#39;floor&#39;) as &#39;tcp_count&#39;,
+</span><span style="color:#75715e">format_dash(`num_active_queries`,`num_active_queries_weight`,&#39;day9kl2pm1wbts8c0xzhvfnueq&#39;,&#39;num_active_queries&#39;,&#39;graph&#39;,b.graphid,&#39;floor&#39;) as &#39;num_active_queries&#39;,
+</span><span style="color:#75715e">format_dash(`num_active_sessions`,`num_active_sessions_weight`,&#39;day9kl2pm1wbts8c0xzhvfnueq&#39;,&#39;num_active_sessions&#39;,&#39;graph&#39;,b.graphid,&#39;floor&#39;) as &#39;num_active_sessions&#39;,
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">format_dash(`num_queries_rate`,`num_queries_rate_weight`,&#39;day9kl2pm1wbts8c0xzhvfnueq&#39;,&#39;num_queries_rate&#39;,&#39;graph&#39;,b.graphid,&#39;floor&#39;) as &#39;num_queries_rate&#39;,
+</span><span style="color:#75715e">format_dash(`num_sentences_rate`,`num_sentences_rate_weight`,&#39;day9kl2pm1wbts8c0xzhvfnueq&#39;,&#39;num_sentences_rate&#39;,&#39;graph&#39;,b.graphid,&#39;floor&#39;) as &#39;num_sentences_rate&#39;,
+</span><span style="color:#75715e">format_dash(`num_opened_sessions`,`num_opened_sessions_weight`,&#39;day9kl2pm1wbts8c0xzhvfnueq&#39;,&#39;num_opened_sessions&#39;,&#39;graph&#39;,b.graphid,&#39;floor&#39;) as &#39;num_opened_sessions&#39;,
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">format_dash(`query_latency_us_p95`/1000,`query_latency_us_p95_weight`,&#39;day9kl2pm1wbts8c0xzhvfnueq&#39;,&#39;query_latency_us_p95&#39;,&#39;graph&#39;,b.graphid,&#39;floor&#39;) as &#39;query_latency_us_p95&#39;,
+</span><span style="color:#75715e">format_dash(`query_latency_us_avg`/1000,`query_latency_us_avg_weight`,&#39;day9kl2pm1wbts8c0xzhvfnueq&#39;,&#39;query_latency_us_avg&#39;,&#39;graph&#39;,b.graphid,&#39;floor&#39;) as &#39;query_latency_us_avg&#39;,
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">format_dash(`num_queries_sum`,`num_queries_sum_weight`,&#39;day9kl2pm1wbts8c0xzhvfnueq&#39;,&#39;num_queries_sum&#39;,&#39;graph&#39;,b.graphid,&#39;floor&#39;) as &#39;num_queries_sum&#39;,
+</span><span style="color:#75715e">format_dash(`num_queries_hit_memory_watermark`,`num_queries_hit_memory_watermark_weight`,&#39;day9kl2pm1wbts8c0xzhvfnueq&#39;,&#39;num_queries_hit_memory_watermark&#39;,&#39;graph&#39;,b.graphid,&#39;floor&#39;) as &#39;num_queries_hit_memory_watermark&#39;,
+</span><span style="color:#75715e">format_dash(`num_query_errors`,`num_query_errors_weight`,&#39;day9kl2pm1wbts8c0xzhvfnueq&#39;,&#39;num_query_errors&#39;,&#39;graph&#39;,b.graphid,&#39;floor&#39;) as &#39;num_query_errors&#39;,
+</span><span style="color:#75715e">format_dash(`num_slow_queries`,`num_slow_queries_weight`,&#39;day9kl2pm1wbts8c0xzhvfnueq&#39;,&#39;num_slow_queries&#39;,&#39;graph&#39;,b.graphid,&#39;floor&#39;) as &#39;num_slow_queries&#39;
+</span><span style="color:#75715e">from  dboop.linknode n 
+</span><span style="color:#75715e">join dboop.linkhost h on n.hostid=h.hostid
+</span><span style="color:#75715e">left join wc_host a on a.hostid=n.hostid  and a._timestamp&gt;DATE_SUB(NOW(), INTERVAL 15 MINUTE)
+</span><span style="color:#75715e">left join wc_nebula_graph b on n.instanceid=b.graphid  and b._timestamp&gt;DATE_SUB(NOW(), INTERVAL 15 MINUTE)
+</span><span style="color:#75715e">where  h.usetype=&#39;nebula&#39; and h.ontype=9 and n.clustertype like &#39;%g%&#39;
+</span><span style="color:#75715e">;
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">]]&gt;</span>
+  
+  <span style="color:#f92672">&lt;/sqlstr&gt;</span> 
+  
+  
+ <span style="color:#f92672">&lt;title2&gt;</span>Nebula Graph性能<span style="color:#f92672">&lt;/title2&gt;</span>
+
+  <span style="color:#f92672">&lt;width&gt;</span>1250px<span style="color:#f92672">&lt;/width&gt;</span>
+<span style="color:#f92672">&lt;/page&gt;</span>
+
+
+</code></pre></div><h3 id="最终效果">最终效果</h3>
+<p><img src="/img/2022/nebulamonitor02.png" alt="nebula性能监控—后台配置" title="nebula性能监控—后台配置"></p>
+<p>我们得到了一个</p>
+<ul>
+<li>集中在DBA平台里的，统一风格，统一管理的</li>
+<li>可以实时展示所有nebula服务器的重点指标的</li>
+<li>可以对比历史数据的（指标详情页的绿色虚线是历史数据算出来的预测线）</li>
+<li>已经做过数据标识和评定的性能指标的DashBoard</li>
+</ul>
+<p>我们付出了</p>
+<ul>
+<li>1.25pd的工作量（主要用于指标筛选和标准判断）</li>
+<li>性能数据的存储空间（这里有了MySQL存储)</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/06/23</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/nosql">nosql</a> <a href="/categories/%E7%9B%91%E6%8E%A7">监控</a> <a href="/categories/nebula">nebula</a> <a href="/categories/dashboard">dashboard</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

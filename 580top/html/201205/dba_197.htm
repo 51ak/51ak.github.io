@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>sqlserver三种分页方式性能比较</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="liwu_items表，createtime列建立聚集索引<br/>第一种，sqlserver2005特有的分页语法<br/>declare@pageint<br/>declare@pagesizeint<br/>set@page=2<br/>set@pagesize=12<br/><br/>setstatisticsioon<br/>selectasqlserver三种分页方式性能比较" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识">基础知识</a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA">高可用性和HA</a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化"><span class="zc_666">性能与优化</span></a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决">故障与解决</a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserveryouhua/l_4_1.htm">性能与优化</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>sqlserver三种分页方式性能比较</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   Liwu_Items表，CreateTime列建立聚集索引<br />第一种，sqlserver2005特有的分页语法<br />declare @page int<br />declare @pagesize int<br />set @page = 2<br />set @pagesize = 12 <br /><br />SET STATISTICS IO on<br />SELECT  a.* FROM (<br />SELECT ROW_NUMBER() OVER (ORDER BY b.CreateTime DESC) AS [ROW_NUMBER], b.* <br />   FROM [dbo].[Liwu_Items] AS b   ) AS a<br />   WHERE a.[ROW_NUMBER] BETWEEN @pagesize + 1 AND (@page*@pagesize)<br />   ORDER BY a.[ROW_NUMBER]　　结果：<br />(12 行受影响)<br />表 'Liwu_Items'。扫描计数 1，逻辑读取 7 次，物理读取 0 次，预读 0 次，lob 逻辑读取 0 次，lob 物理读取 0 次，lob 预读 0 次。　　逻辑读是7次<br />执行计划：<br /><br />主要开销都在聚集索引扫描了。<br />第二种，用两个top分别正序和倒序排列，共另个子查询来实现分页，<br />declare @page int<br />declare @pagesize int<br />set @page = 2<br />set @pagesize = 12<br /><br />SET STATISTICS IO on<br />select * from (<br />    select top (@pagesize) * from <br />        (select top (@page*@pagesize) * from Liwu_Items order by CreateTime desc) a<br />    order by CreateTime asc) b <br /> order by CreateTime desc　　结果<br />(12 行受影响)<br />表 'Liwu_Items'。扫描计数 1，逻辑读取 7 次，物理读取 0 次，预读 317 次，lob 逻辑读取 0 次，lob 物理读取 0 次，lob 预读 0 次。　　执行计划<br /><br />执行计划和第一种差不多，但两个排序占的资源挺多的。<br />第三种，最垃圾的一种，用not in字句实现的，如下<br />declare @page int<br />declare @pagesize int<br />set @page = 2<br />set @pagesize = 12<br /><br />SET STATISTICS IO on<br />select top(@pagesize) * from Liwu_Items<br />    where ItemId not in(    <br />    select top((@page-1)*@pagesize) ItemId from Liwu_Items order by CreateTime desc)<br />order by CreateTime Desc结果<br />(12 行受影响)<br />表 'Worktable'。扫描计数 1，逻辑读取 70 次，物理读取 0 次，预读 0 次，lob 逻辑读取 0 次，lob 物理读取 0 次，lob 预读 0 次。<br />表 'Liwu_Items'。扫描计数 2，逻辑读取 18 次，物理读取 0 次，预读 0 次，lob 逻辑读取 0 次，lob 物理读取 0 次，lob 预读 0 次。　　性能最差，对两个表进行处理，逻辑读都很高，汗。<br />执行计划<br /><br />这执行计划都看不懂，嵌套循环和表假脱机占了很大的资源。<br /><br />总结:第二种分页方法和第一种分页方法效率差不多，但第二种可用于老版本的sqlserver甚至access，最后一种别用。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

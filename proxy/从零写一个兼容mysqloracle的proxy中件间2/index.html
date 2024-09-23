@@ -1,0 +1,267 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>从零写一个兼容MySQL/Oracle的Proxy中件间（二）:SQL捕获和改写| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">从零写一个兼容MySQL/Oracle的Proxy中件间（二）:SQL捕获和改写</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#0前言">0.前言</a></li>
+    <li><a href="#1昨天我们实现了以下功能">1.昨天我们实现了以下功能]</a></li>
+    <li><a href="#步骤一从oracle通信包中分解出sql语句">步骤一：从Oracle通信包中分解出SQL语句</a>
+      <ul>
+        <li><a href="#1写一个python脚本用来连接并执行两个sql">1.写一个Python脚本，用来连接并执行两个SQL</a></li>
+        <li><a href="#2在本地启用一个1106端口的服务拦截到oracle请求并在找到特定两种head头的包解析其中的sql">2.在本地启用一个1106端口的服务，拦截到Oracle请求。并在找到特定两种head头的包，解析其中的SQL</a></li>
+        <li><a href="#3执行python脚本">3.执行Python脚本</a></li>
+      </ul>
+    </li>
+    <li><a href="#步骤2sql改写">步骤2:SQL改写</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <p>续上一篇： <a href="https://www.dboop.com/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B42/">从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》</a></p>
+<h2 id="0前言">0.前言</h2>
+<p>昨天的文字里写开发这个中间件的原由和要解决的问题，有朋友留言</p>
+<p><em>网上有现成的开源中间件为啥不用</em>。</p>
+<blockquote>
+<p>答：网上有很多MySQL的中件间，Oralce目前还没有可以免费使用的中件间. 这可能就是开源和闭源的差别。</p>
+</blockquote>
+<p><em>Oracle自带的功能已经可以实现想要的功能（高可用/审计日志）</em></p>
+<blockquote>
+<p>答：</p>
+<ul>
+<li>Oracle官方的高可用方案RAC，无疑是非常非常非常优秀的,但我们现有的硬件不支持做跨机房RAC,以及我们迁移时需要proxy中间层来降低业务中断时间。</li>
+<li>Oracle的审计日志太笨重/不支持慢日志/不支持SQL黑名单。</li>
+</ul>
+</blockquote>
+<h2 id="1昨天我们实现了以下功能">1.昨天我们实现了以下功能]</h2>
+<!-- raw HTML omitted -->
+<ul>
+<li>捕获了Oracle通信协议中的用户登录包</li>
+<li>抓到了用户传用户名和密码的内容（密码是加密串）</li>
+<li>同时通过对比，确定了用户发送SQL请求的通信包</li>
+</ul>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<ul>
+<li>SQL日志：分析这些包，把SQL语句拿出来，记到日志里。</li>
+<li>SQL改写：用户发起的SQL 经过中间层改写到了服务端收到的是另一个SQL执行返回结果。</li>
+</ul>
+<!-- raw HTML omitted -->
+<p>开始动手：</p>
+<h2 id="步骤一从oracle通信包中分解出sql语句">步骤一：从Oracle通信包中分解出SQL语句</h2>
+<p>已知有以下两种head的包是在传递SQL</p>
+<pre><code>0x1 0xf 0x0 0x0 0x6 0x0 0x0 0x0 0x0 0x0 0x11 0x6b 0x4 0xa5 0x10 0x0 0x0 0x35 0x1c 0x0 0x0 0x1 0x0 0x0 0x0 0x3 0x5e 0x5 0x61 0x80 0x0 0x0 0x0 0x0 0x0 0x0 0xfe 0xff 0xff 0xff 
+0x1 0x0 0x0 0x0 0x6 0x0 0x0 0x0 0x0 0x0 0x3 0x5e 0x6 0x61 0x80 0x0 0x0 0x0 0x0 0x0 0x0 0xfe 0xff 0xff 0xff 0xff 0xff 0xff 0xff 0x24 0x0 0x0 0x0 0xfe 0xff 0xff 0xff 0xff 0xff 0xff 
+</code></pre><h3 id="1写一个python脚本用来连接并执行两个sql">1.写一个Python脚本，用来连接并执行两个SQL</h3>
+<pre><code>#!/usr/bin/env python
+## coding: utf-8
+import cx_Oracle
+
+
+conn = cx_Oracle.connect('dboopreader/dbooppassword@127.0.0.1:1106/tlionrdb')
+print(&quot;连接成功&quot;)
+curs = conn.cursor()
+sql = 'select 1 from dual'
+curs.execute(sql)
+for result in curs:
+    print(f&quot;执行sql[ select 1 from dual ]返回{str(result)}&quot;)
+sql = 'select 5 from dual'
+curs.execute(sql)
+for result in curs:
+    print(f&quot;执行sql[ select 5 from dual ]返回{str(result)}&quot;)
+curs.close()
+conn.close()
+print(&quot;连接关闭&quot;)
+
+</code></pre><h3 id="2在本地启用一个1106端口的服务拦截到oracle请求并在找到特定两种head头的包解析其中的sql">2.在本地启用一个1106端口的服务，拦截到Oracle请求。并在找到特定两种head头的包，解析其中的SQL</h3>
+<p>代码如下：</p>
+<pre><code>if eqByte(bLogininfo[0:], buffer[0:20]) {
+          log.Printf(&quot;抓到:%s--&gt;%s的用户登录包\n&quot;, sqlInfo.client, sqlInfo.server)
+          log.Printf(&quot;%s\n&quot;, getLogininfo(buffer[58:260]))
+        } else if eqByte(sqlfinfo[3:11], buffer[3:11]) || eqByte(sql2info[3:11], buffer[3:11]) {
+          log.Printf(&quot;抓到:%s--&gt;%s的用户SQL包\n&quot;, sqlInfo.client, sqlInfo.server)
+          sqlstr := getSQLinfo(buffer[180:])
+          log.Printf(&quot;SQL:%s\n&quot;, sqlstr)
+        } else {
+          log.Printf(&quot;抓到:%s到%s包\n&quot;, sqlInfo.client, sqlInfo.server)
+          //printBufferHead(buffer, 40)
+        }
+        
+ func getSQLinfo(buffer []byte) string {
+  var bufferNew bytes.Buffer
+  for _, v := range buffer {
+    if v &lt; 0x20 {
+      continue
+    } else if v == 0x80 {
+      break
+    } else if v &gt; 0 {
+      bufferNew.WriteString(string(v))
+    }
+  }
+  return bufferNew.String()
+}     
+</code></pre><h3 id="3执行python脚本">3.执行Python脚本</h3>
+<p><img src="/img/2022/proxy0201.png" alt="proxy测试代码"></p>
+<p><img src="/img/2022/proxy0202.png" alt="proxy运行代码"></p>
+<p>这里有个不太严谨的地方，用<code>0x80</code>当成SQL终止的标识，可能不一定准，但我目前分析的包都没问题，</p>
+<p>一个简单的SQL日志功能就完成了</p>
+<h2 id="步骤2sql改写">步骤2:SQL改写</h2>
+<p>既然可以记录用户请求的SQL，是不是可以改写这个包，以实现拦截部分指定SQL，改写指定的表（例如把 user表的请求，改写成user01）</p>
+<p>这块有点复杂，先试一个简单的</p>
+<p>把用户的请求:select 1 from dual;</p>
+<p>改写成 :select 2 from dual;</p>
+<p>这样用户select  1，结果返回了2，是不是很崩溃？？图片</p>
+<p>续着上一段代码，增加了改写SQL部分</p>
+<pre><code>if eqByte(bLogininfo[0:], buffer[0:20]) {
+    log.Printf(&quot;抓到:%s--&gt;%s的用户登录包\n&quot;, sqlInfo.client, sqlInfo.server)
+    log.Printf(&quot;%s\n&quot;, getLogininfo(buffer[58:260]))
+  } else if eqByte(sqlfinfo[3:11], buffer[3:11]) || eqByte(sql2info[3:11], buffer[3:11]) {
+    log.Printf(&quot;抓到:%s--&gt;%s的用户SQL包\n&quot;, sqlInfo.client, sqlInfo.server)
+    sqlstr := getSQLinfo(buffer[180:])
+    log.Printf(&quot;SQL:%s\n&quot;, sqlstr)
+    if strings.Contains(sqlstr, &quot;select 1&quot;) {
+      //如果发现sql里有select 1 将它改写成 select 2
+      bIndex, eIndex := getSQLIndex(buffer[0:])
+      for j := bIndex; j &lt; eIndex; j++ {
+        if buffer[j] == 0x31 {
+          log.Printf(&quot;这里%d用户发起的select 1,替换成了 select 2&quot;, j)
+          buffer[j] = 0x32 //这里把用户发起的select 1,替换成了 select 2
+          break
+          }
+        }
+      }
+  
+  } else {
+    log.Printf(&quot;抓到:%s到%s包\n&quot;, sqlInfo.client, sqlInfo.server)
+    //printBufferHead(buffer, 40)
+  }
+
+</code></pre><p><img src="/img/2022/proxy0203.png" alt="proxy运行代码2"></p>
+<p>这样我们就通过在中间层拦截用户的SQL，并改写了它。</p>
+<p>今天就写到这了，还有些其他的工作要处理，明天继续。</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/01/06</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/oracle">oracle</a> <a href="/categories/proxy">proxy</a> <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A3%E7%90%86">数据库代理</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

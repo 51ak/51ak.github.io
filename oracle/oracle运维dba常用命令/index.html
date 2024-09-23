@@ -1,0 +1,394 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Oracle运维DBA常用命令集合| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Oracle运维DBA常用命令集合</span></h1>
+</div>
+
+
+  <main>
+    <pre><code>-- 写在开始
+linesize/pagesize
+set linesize 9999
+set pagesize 9999
+
+</code></pre><p>查看ORACLE SID</p>
+<pre><code>select * from v$instance
+
+select instance_name,host_name from v$instance;
+</code></pre><p>查看数据库的运行天数</p>
+<pre><code>select INSTANCE_NAME,round(sysdate-STARTUP_TIME) run_day from gv$instance;
+</code></pre><p>查看alert log</p>
+<pre><code>show parameter dump;
+</code></pre><p>查看当前DB的scn</p>
+<pre><code>select dbms_flashback.get_system_change_number from dual;
+select current_scn from v$database;
+</code></pre><p>scn转时间戳</p>
+<pre><code>select scn_to_timestamp(991159) scn from dual;
+</code></pre><p>时间转换为scn</p>
+<pre><code>select timestamp_to_scn(to_timestamp('2019-01-27 18:19:20.123456789','YYYY-MM-DD HH24:MI:SS.FF')) scn from dual; 
+</code></pre><p>scn和时间的对应关系</p>
+<pre><code>select scn,to_char(time_dp,'yyyy-mm-dd hh24:mi:ss') time from sys.smon_scn_time where rownum&lt;10 order by 1,2;
+</code></pre><p>查看数据库所有用户及用户状态</p>
+<pre><code>-- SYSADM用户是线上应用用户
+select USERNAME,ACCOUNT_STATUS from dba_users;
+select current_scn from v$database;
+</code></pre><p>查看存储过程数量</p>
+<pre><code>select owner,count(*) from all_procedures group by owner order by count(*) desc;
+</code></pre><p>查看系统最大session</p>
+<pre><code>show parameter session
+</code></pre><p>查看表空间使用率</p>
+<pre><code>set linesize 120
+set pagesize 9999
+col PCT_FREE for a10
+col PCT_USED for a10
+
+SELECT a.tablespace_name,round(total/1024/1024) &quot;Total M&quot;,
+round(free/1024/1024) &quot;Free M&quot;,ROUND((total-free)/total,4)*100 &quot;USED%&quot;
+FROM (SELECT tablespace_name,SUM(bytes) free FROM
+DBA_FREE_SPACE
+GROUP BY tablespace_name ) a,
+(SELECT tablespace_name,SUM(bytes) total FROM DBA_DATA_FILES
+GROUP BY tablespace_name) b
+WHERE a.tablespace_name=b.tablespace_name
+ORDER BY 4;
+</code></pre><p>查看数据库中最大的十张table</p>
+<pre><code>-- 查看SYSADM用户最大的二十张表
+col tablename for a100
+select * from ( select owner||'.'||segment_name as tablename, owner,sum(t.bytes/1024/1024) MB_TOT  from dba_segments t where t.segment_type='TABLE' and t.owner='SYSADM' group by  owner,segment_name order by sum(t.bytes/1024/1024) desc)t  where rownum &lt;20;
+</code></pre><p>查看占用数据库空间最大的十个对象</p>
+<pre><code>LOBINDEX、INDEX PARTITION、TABLE SUBPARTITION、ROLLBACK、TABLE PARTITION、NESTED TABLE、LOB、PARTITION、LOBSEGMENT、INDEX、TABLE、TYPE2 UNDO、CLUSTER
+set lines 132
+set pages 999
+col owner for a15
+col segment_name for a25
+col partition_name for a15
+
+select * from (
+select owner,segment_name,segment_type,partition_name,
+sum(bytes)/1024/1024 mb_tot
+from dba_segments
+group by owner,segment_name,segment_type,partition_name
+order by sum(extents) desc )
+where rownum&lt;=10;
+</code></pre><p>查看当前最大连接数</p>
+<pre><code>select count(*) from v$bgprocess
+</code></pre><p>查看系统最大进程数</p>
+<pre><code>show parameter process
+</code></pre><p>查看当前连接到数据库的用户</p>
+<pre><code>-- 查看当前数据库的连接数
+select INST_ID,count(*) from gv$session group by inst_id;
+等价
+select count(*) from v$session;
+
+-- 查看当前数据库的活跃连接数
+select count(*) from v$session where status='ACTIVE';
+</code></pre><p>查看当前数据库建立的会话情况</p>
+<pre><code>select sid,serial#,username,program,machine,status from v$session;
+</code></pre><p>查看当前的等待事件</p>
+<pre><code>col wait_class for a20
+set lines 200 pages 200
+col event for a60
+select event,count(*),wait_class from v$session_wait group by event,wait_class order by 3;
+</code></pre><p>锁表查询</p>
+<pre><code>锁查询
+-- 锁表查询的代码有以下的形式
+select count(*) from v$locked_object;
+select * from v$locked_object;
+
+-- 查看哪个表被锁
+select b.owner,b.object_name,a.session_id,a.locked_mode from v$locked_object a,dba_objects b where b.object_id = a.object_id;
+
+-- 查看是哪个session引起的
+select b.username,b.sid,b.serial#,logon_time from v$locked_object a,v$session b where a.session_id = b.sid order by b.logon_time;
+
+-- 杀掉对应进程执行命令
+alter system kill session'1025,41';                -- 其中1025为sid,41为serial#.
+</code></pre><p>查数据库阻塞，解除阻塞</p>
+<pre><code>--  脚本1 以查看数据库有无阻塞
+set pages 1000 
+ set lines 120 
+ set heading off 
+ column w_proc format a50 tru 
+ column instance format a20 tru 
+ column inst format a28 tru 
+ column wait_event format a50 tru 
+ column p1 format a16 tru 
+ column p2 format a16 tru 
+ column p3 format a15 tru 
+ column Seconds format a50 tru 
+ column sincelw format a50 tru 
+ column blocker_proc format a50 tru 
+ column fblocker_proc format a50 tru 
+ column waiters format a50 tru 
+ column chain_signature format a100 wra 
+ column blocker_chain format a100 wra 
+
+ SELECT * 
+ FROM (SELECT 'Current Process: '||osid W_PROC, 'SID '||i.instance_name INSTANCE, 
+ 'INST #: '||instance INST,'Blocking Process: '||decode(blocker_osid,null,'&lt;none&gt;',blocker_osid)|| 
+ ' from Instance '||blocker_instance BLOCKER_PROC, 
+ 'Number of waiters: '||num_waiters waiters, 
+ 'Final Blocking Process: '||decode(p.spid,null,'&lt;none&gt;', 
+ p.spid)||' from Instance '||s.final_blocking_instance FBLOCKER_PROC, 
+ 'Program: '||p.program image, 
+ 'Wait Event: ' ||wait_event_text wait_event, 'P1: '||wc.p1 p1, 'P2: '||wc.p2 p2, 'P3: '||wc.p3 p3, 
+ 'Seconds in Wait: '||in_wait_secs Seconds, 'Seconds Since Last Wait: '||time_since_last_wait_secs sincelw, 
+ 'Wait Chain: '||chain_id ||': '||chain_signature chain_signature,'Blocking Wait Chain: '||decode(blocker_chain_id,null, 
+ '&lt;none&gt;',blocker_chain_id) blocker_chain 
+ FROM v$wait_chains wc, 
+ gv$session s, 
+ gv$session bs, 
+ gv$instance i, 
+ gv$process p 
+ WHERE wc.instance = i.instance_number (+) 
+ AND (wc.instance = s.inst_id (+) and wc.sid = s.sid (+) 
+ and wc.sess_serial# = s.serial# (+)) 
+ AND (s.final_blocking_instance = bs.inst_id (+) and s.final_blocking_session = bs.sid (+)) 
+ AND (bs.inst_id = p.inst_id (+) and bs.paddr = p.addr (+)) 
+ AND ( num_waiters &gt; 0 
+ OR ( blocker_osid IS NOT NULL 
+ AND in_wait_secs &gt; 10 ) ) 
+ ORDER BY chain_id, 
+ num_waiters DESC) 
+ WHERE ROWNUM &lt; 101; 
+ 
+ -- 脚本2 查看阻塞
+ SELECT s.sid, s.serial#, s.username, s.osuser, p.spid, s.machine, p.terminal, s.program 
+ FROM v$session s, v$process p 
+ WHERE s.paddr = p.addr and spid = '&lt;Final Blocking process&gt;'; 
+ 
+ -- 脚本3 解除阻塞
+ ALTER SYSTEM KILL SESSION 'sid , serial#'; 
+</code></pre><p>查询应用的连接数SQL</p>
+<pre><code>SELECT b.MACHINE, b.PROGRAM, COUNT (*) FROM v$process a, v$session b WHERE a.ADDR = b.PADDR AND b.USERNAME IS NOT NULL GROUP BY b.MACHINE, b.PROGRAM ORDER BY COUNT (*) DESC;
+</code></pre><p>查看当前有哪些用户正在使用数据</p>
+<pre><code>select osuser,a.username,cpu_time/executions/1000000||'s',sql_fulltext,machine from v$session a,v$sqlarea b where a.sql_address = b.address order by cpu_time/executions desc;
+</code></pre><p>查实时占用资源较多的SQL</p>
+<pre><code>-- 1. 先通过top命令查看产用资源较多的spid号
+-- 2.查询当前耗时的会话ID，用户名，sqlID等
+set lines 200
+col MACHINE for a20
+col username for a15
+col PROGRAM for a25
+select sid,serial#,machine,username,program,sql_hash_value,sql_id,
+to_char(logon_time,'yyyy/mm/dd hh24:mi:ss') as login_time from v$session
+where paddr in (select addr from v$process where spid in ('5648612','256523'));
+
+-- 3. 如果上一步sql_id或者 hash_value不为空，则可用v$sqlarea查出当前正在使用的sql
+select sql_text
+from v$sqltext_with_newlines
+where hash_value = &amp;hash_value
+order by piece;
+select * from v$sql where sql_id='';
+
+-- 或者执行 sql (CSDN网友提供)
+SELECT sql_text
+  FROM v$sqltext a
+WHERE (a.hash_value, a.address) IN
+       (SELECT DECODE(sql_hash_value, 0, prev_hash_value, sql_hash_value),
+               DECODE(sql_hash_value, 0, prev_sql_addr, sql_address)
+          FROM v$session b
+         WHERE b.paddr = (SELECT addr FROM v$process c WHERE c.spid = '&amp;pid'))
+ORDER BY piece ASC;
+</code></pre><p>清理用户下的连接进程</p>
+<pre><code>alter system kill session '204,4609';
+
+修改processes和sessions值
+SQL&gt; alter system set processes=300 scope=spfile;
+系统已更改。
+SQL&gt; alter system set sessions=335 scope=spfile;
+系统已更改。
+
+修改processes和sessions值必须重启oracle服务器才能生效 ORACLE的连接数(sessions)与其参数文件中的进程数(process)有关，它们的关系如下：
+sessions=(1.1*process+5)
+</code></pre><p>查看数据库目录</p>
+<pre><code>-- 查看数据库目录，包括DIR_DP、XMLDIR、ORACLE_OCM_CONFIG_DIR、DATA_PUMP_DIR、ORACLE_OCM_CONFIG_DIR2
+select * from all_directories;
+
+-- 查看闪回区
+show parameter db_recovery;
+</code></pre><p>查看实例名、创建日期和归档模式</p>
+<pre><code>select name,created,log_mode from v$database;
+
+查看所有用户
+</code></pre><p>select * from dba_users;
+select * from all_users;
+select * from user_users;</p>
+<pre><code>权限
+</code></pre><p>select * from dba_sys_privs;
+select * from user_sys_privs;
+select * from role_sys_privs;
+select * from dba_tab_privs;
+select * from all_tab_privs;
+select * from user_tab_privs;
+select * from dba_role_privs;
+select * from user_role_privs;
+select * from V$PWFILE_USERS;
+select name from sys.system_privilege_map;</p>
+<p>SELECT privilege FROM dba_sys_privs WHERE grantee = &lsquo;DATAUSER&rsquo; UNION SELECT privilege FROM dba_sys_privs WHERE grantee IN (SELECT granted_role FROM dba_role_privs WHERE grantee = &lsquo;DATAUSER&rsquo;);</p>
+<pre><code>查看日志目录
+</code></pre><p>SQL&gt; select value from v$diag_info where name =&lsquo;Diag Trace&rsquo;;</p>
+<h2 id="value">VALUE</h2>
+<p>/oracle/db/diag/rdbms/hcmprd/HCMPRD/trace</p>
+<pre><code>表空间
+</code></pre><p>空间空间
+select tablespace_name,file_id,block_id,bytes,blocks from dba_free_space;</p>
+<p>col FILE_NAME for a70;
+select tablespace_name,file_id,bytes/1024/1024/1024 as &ldquo;GB&rdquo;,file_name from dba_data_files order by bytes desc;</p>
+<p>&ndash; 查看表空间是否自动扩展
+select file_id,file_name,tablespace_name,autoextensible,increment_by from dba_data_files order by file_id desc;</p>
+<pre><code>## 账号
+
+查看账号状态
+</code></pre><p>select username,account_status,profile from dba_users order by account_status desc;</p>
+<pre><code>为账户解锁
+</code></pre><p>&ndash; 锁定账户
+alter user SCOTT account lock;
+&ndash; 解锁账户
+alter user SCOTT account unlock;</p>
+<pre><code>设置密码
+</code></pre><p>&ndash; 修改密码
+alter user username identified by password;</p>
+<p>&ndash; 使用用户密码连接
+connect system/manager</p>
+<pre><code>
+生成awr报告
+```@?/rdbms/admin/ashrpt.sql
+</code></pre><p>oracle去除字段内空格、换行符</p>
+<p>首先我们要知道这些特殊符号的ascii定义：</p>
+<ul>
+<li>制表符 chr(9)</li>
+<li>换行符 chr(10)</li>
+<li>回车符 chr(13)</li>
+</ul>
+<pre><code class="language---" data-lang="--">update ORGANIZATION set name  = replace(name,chr(10),'');
+
+update ORGANIZATION set name  = replace(name,chr(13),'');
+
+-- 去掉字段两边的空格：
+update ORGANIZATION set name  = trim(name);
+
+-- 去掉字段中间的空格：
+update ORGANIZATION set name = replace(name,' ','');```</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/03/30</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/oracle">oracle</a> <a href="/categories/%E8%BF%90%E7%BB%B4sql">运维SQL</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E8%BD%AC%E8%BD%BD">转载</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

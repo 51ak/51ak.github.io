@@ -1,0 +1,224 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SQLSERVER聚集索引的整理（重建）的必要性测试</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="SQLSERVER在日常DBA工作中有一项叫索引整理一般整理的多为非聚集索引问题：聚集索引是否需要整理？在什么情况下需要整理？整理的效果如何？有没有负面作用？测试环境:WIN2003+SQL2008R2测试表:wkf_test存放12767550条记录,wkf_test_all表是该表的备份1.首先来次DBCC结果如下:DBCSQLSERVER聚集索引的整理（重建）的必要性测试" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识">基础知识</a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA">高可用性和HA</a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化"><span class="zc_666">性能与优化</span></a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决">故障与解决</a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserveryouhua/l_4_1.htm">性能与优化</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>SQLSERVER聚集索引的整理（重建）的必要性测试</h1></div>
+					<div id="atSource"> 作者：[51ak ] </div>
+					
+                    <div id="viewcontent">
+                   <font face="Arial">
+<p>SQLSERVER&nbsp; 在日常DBA工作中有一项叫索引整理</p>
+<p>一般整理的多为非聚集索引</p>
+<p>问题：聚集索引是否需要整理？在什么情况下需要整理？整理的效果如何？有没有负面作用？</p>
+<p><br />
+测试环境:WIN2003+SQL2008R2<br />
+测试表:wkf_test 存放12767550条记录,wkf_test_all表是该表的备份</p>
+<p>1.首先来次DBCC结果如下:<br />
+&nbsp;&nbsp;DBCC SHOWCONTIG 正在扫描 'wkf_test' 表...<br />
+&nbsp;&nbsp;表: 'wkf_test' (725577623)；索引 ID: 1，数据库 ID: 6<br />
+&nbsp;&nbsp;已执行 TABLE 级别的扫描。<br />
+&nbsp;&nbsp;- 扫描页数................................: 64860<br />
+&nbsp;&nbsp;- 扫描区数..............................: 8142<br />
+&nbsp;&nbsp;- 区切换次数..............................: 8145<br />
+&nbsp;&nbsp;- 每个区的平均页数........................: 8.0<br />
+&nbsp;&nbsp;- 扫描密度 [最佳计数:实际计数].......: 99.53% [8108:8146]<br />
+&nbsp;&nbsp;- 逻辑扫描碎片 ..................: 0.38%<br />
+&nbsp;&nbsp;- 区扫描碎片 ..................: 0.07%<br />
+&nbsp;&nbsp;- 每页的平均可用字节数........................: 20.6<br />
+&nbsp;&nbsp;- 平均页密度(满).....................: 99.75%</p>
+<p><br />
+2.删除1部分连续数据，注意看页数相应减少，页密度保持不动<br />
+delete from dbo.wkf_test where id between 50 and 2767550<br />
+&nbsp;&nbsp;表: 'wkf_test' (725577623)；索引 ID: 1，数据库 ID: 6<br />
+&nbsp;&nbsp;已执行 TABLE 级别的扫描。<br />
+&nbsp;&nbsp;- 扫描页数................................: 50803<br />
+&nbsp;&nbsp;- 扫描区数..............................: 6377<br />
+&nbsp;&nbsp;- 区切换次数..............................: 6377<br />
+&nbsp;&nbsp;- 每个区的平均页数........................: 8.0<br />
+&nbsp;&nbsp;- 扫描密度 [最佳计数:实际计数].......: 99.58% [6351:6378]<br />
+&nbsp;&nbsp;- 逻辑扫描碎片 ..................: 0.38%<br />
+&nbsp;&nbsp;- 区扫描碎片 ..................: 0.02%<br />
+&nbsp;&nbsp;- 每页的平均可用字节数........................: 20.8<br />
+&nbsp;&nbsp;- 平均页密度(满).....................: 99.74%</p>
+<p>3.删除奇数数据，亮点来了，页数保持不变的同时，页密度大幅下降&nbsp; '（此时数据表性能很差）'<br />
+&nbsp;&nbsp;delete from dbo.wkf_test where id%2=0<br />
+&nbsp;&nbsp;DBCC SHOWCONTIG 正在扫描 'wkf_test' 表...<br />
+&nbsp;&nbsp;表: 'wkf_test' (725577623)；索引 ID: 1，数据库 ID: 6<br />
+&nbsp;&nbsp;已执行 TABLE 级别的扫描。<br />
+&nbsp;&nbsp;- 扫描页数................................: 50803<br />
+&nbsp;&nbsp;- 扫描区数..............................: 6377<br />
+&nbsp;&nbsp;- 区切换次数..............................: 6377<br />
+&nbsp;&nbsp;- 每个区的平均页数........................: 8.0<br />
+&nbsp;&nbsp;- 扫描密度 [最佳计数:实际计数].......: 99.58% [6351:6378]<br />
+&nbsp;&nbsp;- 逻辑扫描碎片 ..................: 0.38%<br />
+&nbsp;&nbsp;- 区扫描碎片 ..................: 0.02%<br />
+&nbsp;&nbsp;- 每页的平均可用字节数........................: 4060.2<br />
+&nbsp;&nbsp;- 平均页密度(满).....................: 49.84%</p>
+<p><br />
+4.REBUILD一下聚集索引,以90的填充率后,页数大量下降(约50%)，密度90 <br />
+&nbsp;&nbsp;ALTER INDEX ALL ON wkf_test REBUILD WITH (FILLFACTOR = 90, SORT_IN_TEMPDB = ON, STATISTICS_NORECOMPUTE = ON,ONLINE = ON);<br />
+&nbsp;&nbsp;DBCC SHOWCONTIG 正在扫描 'wkf_test' 表...<br />
+&nbsp;&nbsp;表: 'wkf_test' (725577623)；索引 ID: 1，数据库 ID: 6<br />
+&nbsp;&nbsp;已执行 TABLE 级别的扫描。<br />
+&nbsp;&nbsp;- 扫描页数................................: 28064<br />
+&nbsp;&nbsp;- 扫描区数..............................: 3546<br />
+&nbsp;&nbsp;- 区切换次数..............................: 3569<br />
+&nbsp;&nbsp;- 每个区的平均页数........................: 7.9<br />
+&nbsp;&nbsp;- 扫描密度 [最佳计数:实际计数].......: 98.26% [3508:3570]<br />
+&nbsp;&nbsp;- 逻辑扫描碎片 ..................: 0.38%<br />
+&nbsp;&nbsp;- 区扫描碎片 ..................: 1.83%<br />
+&nbsp;&nbsp;- 每页的平均可用字节数........................: 793.8<br />
+&nbsp;&nbsp;- 平均页密度(满).....................: 90.19%</p>
+<p><br />
+5.再把奇数数据补回来。--运行时间 01:36<br />
+&nbsp;&nbsp;set identity_insert [dbo].[wkf_test] on <br />
+&nbsp;&nbsp;INSERT INTO [dbo].[wkf_test](id,[usernmae],[tablename])&nbsp; <br />
+&nbsp;&nbsp;SELECT&nbsp; * from wkf_test_all where id%2=0<br />
+&nbsp;&nbsp;set identity_insert [dbo].[wkf_test] off<br />
+6.此时的DBCC结果显示 数据表页数再次暴涨.很显然数据是追上去的而不是塞上去的,古怪的现象是数据页变得稀了。注意这个细节，马上的步骤会有怪异的现象发生<br />
+&nbsp;&nbsp;DBCC SHOWCONTIG 正在扫描 'wkf_test' 表...<br />
+&nbsp;&nbsp;表: 'wkf_test' (725577623)；索引 ID: 1，数据库 ID: 6<br />
+&nbsp;&nbsp;已执行 TABLE 级别的扫描。<br />
+&nbsp;&nbsp;- 扫描页数................................: 82431<br />
+&nbsp;&nbsp;- 扫描区数..............................: 10338<br />
+&nbsp;&nbsp;- 区切换次数..............................: 59658<br />
+&nbsp;&nbsp;- 每个区的平均页数........................: 8.0<br />
+&nbsp;&nbsp;- 扫描密度 [最佳计数:实际计数].......: 17.27% [10304:59659]<br />
+&nbsp;&nbsp;- 逻辑扫描碎片 ..................: 68.19%<br />
+&nbsp;&nbsp;- 区扫描碎片 ..................: 0.29%<br />
+&nbsp;&nbsp;- 每页的平均可用字节数........................: 2429.9<br />
+&nbsp;&nbsp;- 平均页密度(满).....................: 69.98%</p>
+<p>7.好吧，现在再把刚才&quot;追&quot;上去的数据再删了，理论上应该回退到4的结果。但是现实情况是页数不变。继续变稀。理解一下：后被的数据不被SQLSERVER理解为连续的方式&quot;追&quot;上去的<br />
+&nbsp;&nbsp;delete from dbo.wkf_test where id%2=0<br />
+&nbsp;&nbsp;表: 'wkf_test' (725577623)；索引 ID: 1，数据库 ID: 6<br />
+&nbsp;&nbsp;已执行 TABLE 级别的扫描。<br />
+&nbsp;&nbsp;- 扫描页数................................: 75403<br />
+&nbsp;&nbsp;- 扫描区数..............................: 9485<br />
+&nbsp;&nbsp;- 区切换次数..............................: 58521<br />
+&nbsp;&nbsp;- 每个区的平均页数........................: 7.9<br />
+&nbsp;&nbsp;- 扫描密度 [最佳计数:实际计数].......: 16.11% [9426:58522]<br />
+&nbsp;&nbsp;- 逻辑扫描碎片 ..................: 73.90%<br />
+&nbsp;&nbsp;- 区扫描碎片 ..................: 0.69%<br />
+&nbsp;&nbsp;- 每页的平均可用字节数........................: 5377.4<br />
+&nbsp;&nbsp;- 平均页密度(满).....................: 33.56%</p>
+<p>8.那么我们再把数据补回去一次，很好，SQLSERVER发现了上次的&ldquo;空&rdquo;，把数据原生态补回去了。而且INSERT性能明显强过整理过的那次（时间是第一次耗时的1/3）<br />
+&nbsp;&nbsp;set identity_insert [dbo].[wkf_test] on <br />
+&nbsp;&nbsp; INSERT INTO [dbo].[wkf_test]<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (id,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [usernmae]<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ,[tablename])&nbsp; <br />
+&nbsp;&nbsp;SELECT&nbsp; * from wkf_test_all where id%2=0<br />
+&nbsp;&nbsp;set identity_insert [dbo].[wkf_test] off<br />
+&nbsp;&nbsp;--00:33<br />
+&nbsp;&nbsp;DBCC SHOWCONTIG 正在扫描 'wkf_test' 表...<br />
+&nbsp;&nbsp;表: 'wkf_test' (725577623)；索引 ID: 1，数据库 ID: 6<br />
+&nbsp;&nbsp;已执行 TABLE 级别的扫描。<br />
+&nbsp;&nbsp;- 扫描页数................................: 82431<br />
+&nbsp;&nbsp;- 扫描区数..............................: 10337<br />
+&nbsp;&nbsp;- 区切换次数..............................: 59660<br />
+&nbsp;&nbsp;- 每个区的平均页数........................: 8.0<br />
+&nbsp;&nbsp;- 扫描密度 [最佳计数:实际计数].......: 17.27% [10304:59661]<br />
+&nbsp;&nbsp;- 逻辑扫描碎片 ..................: 68.22%<br />
+&nbsp;&nbsp;- 区扫描碎片 ..................: 0.30%<br />
+&nbsp;&nbsp;- 每页的平均可用字节数........................: 2429.9<br />
+&nbsp;&nbsp;- 平均页密度(满).....................: 69.98%</p>
+<p><br />
+9.再REBULID一下.这个没什么说的了，顺利到指定的90<br />
+&nbsp;&nbsp;ALTER INDEX ALL ON wkf_test<br />
+&nbsp;&nbsp;REBUILD WITH (FILLFACTOR = 90, SORT_IN_TEMPDB = ON,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; STATISTICS_NORECOMPUTE = ON,ONLINE = ON);<br />
+&nbsp;&nbsp;DBCC SHOWCONTIG 正在扫描 'wkf_test' 表...<br />
+&nbsp;&nbsp;表: 'wkf_test' (725577623)；索引 ID: 1，数据库 ID: 6<br />
+&nbsp;&nbsp;已执行 TABLE 级别的扫描。<br />
+&nbsp;&nbsp;- 扫描页数................................: 63932<br />
+&nbsp;&nbsp;- 扫描区数..............................: 8078<br />
+&nbsp;&nbsp;- 区切换次数..............................: 8097<br />
+&nbsp;&nbsp;- 每个区的平均页数........................: 7.9<br />
+&nbsp;&nbsp;- 扫描密度 [最佳计数:实际计数].......: 98.69% [7992:8098]<br />
+&nbsp;&nbsp;- 逻辑扫描碎片 ..................: 0.25%<br />
+&nbsp;&nbsp;- 区扫描碎片 ..................: 4.51%<br />
+&nbsp;&nbsp;- 每页的平均可用字节数........................: 790.4<br />
+&nbsp;&nbsp;- 平均页密度(满).....................: 90.23%<br />
+&nbsp;&nbsp;</p>
+<p>10.delete from dbo.wkf_test where id between 50 and 10767550<br />
+&nbsp;&nbsp;DBCC SHOWCONTIG 正在扫描 'wkf_test' 表...<br />
+&nbsp;&nbsp;表: 'wkf_test' (725577623)；索引 ID: 1，数据库 ID: 6<br />
+&nbsp;&nbsp;已执行 TABLE 级别的扫描。<br />
+&nbsp;&nbsp;- 扫描页数................................: 11234<br />
+&nbsp;&nbsp;- 扫描区数..............................: 1420<br />
+&nbsp;&nbsp;- 区切换次数..............................: 1421<br />
+&nbsp;&nbsp;- 每个区的平均页数........................: 7.9<br />
+&nbsp;&nbsp;- 扫描密度 [最佳计数:实际计数].......: 98.80% [1405:1422]<br />
+&nbsp;&nbsp;- 逻辑扫描碎片 ..................: 0.27%<br />
+&nbsp;&nbsp;- 区扫描碎片 ..................: 14.37%<br />
+&nbsp;&nbsp;- 每页的平均可用字节数........................: 791.6<br />
+&nbsp;&nbsp;- 平均页密度(满).....................: 90.22%</p>
+<p>总结如下：<br />
+以IDENTITY(1,1)为聚集索引时。<br />
+如果连续的删除大量索引在这些索引以有序的方式进行排列时(是不是有点绕口？)会被数据库引擎识别，将这一串页从页链中删除。无需做聚集索引的整理工作<br />
+如果不连续的删除，则数据页被保存，页密度被稀释<br />
+如果整理后填充了原有的页空间，则数据会追加到新页中，而不是分裂旧页，此时INSERT效率会下降，因为要新开页<br />
+反之如果删除后没有整理释放页空间，则补回来的数据会加到原有的位置（可能会引起页分裂），在补回去的数据不超过旧有数据的情况下。INSERT效率会比较快</p>
+</font>
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+	
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

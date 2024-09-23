@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Oracle切换为归档模式的流程</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="不废话，直接如题了。<br/>查看当前数据库模式连接进入数据库，键入以下命令：<br/>&nbsp;sql&gt;archiveloglist;可查看当前数据库的模式，若“数据库日志模式&nbsp;&nbsp;&nbsp;非存档模式”则有必要进行以下的切换流程。<br/>在切换之前，请确保以下参数的设置log_archive_dest_n参数设置归档日志目标，其中n用数字替换。在oOracle切换为归档模式的流程" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a href="../Oracle/l_7_1.htm" class="hover"　title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../Oraclezhishi/l_8_1.htm" title="Oracle基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../Oracleha/l_9_1.htm" title="Oracle高可用性和HA">高可用性和HA</a>|</li><li><a  href="../Oracleyouhua/l_10_1.htm" title="Oracle性能与优化">性能与优化</a>|</li><li><a  href="../Oracleguzhang/l_11_1.htm" title="Oracle故障与解决">故障与解决</a>|</li><li><a  href="../Oraclebi/l_12_1.htm" title="Oracle商业应用">Oracle商业应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../Oracle/l_7_1.htm">Oracle</a>&nbsp;&gt;&nbsp;<a href="../Oraclezhishi/l_8_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>Oracle切换为归档模式的流程</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   不废话，直接如题了。<br />查看当前数据库模式连接进入数据库，键入以下命令：<br />&nbsp;SQL&gt; archive log list;可查看当前数据库的模式，若“数据库日志模式&nbsp;&nbsp;&nbsp; 非存档模式”则有必要进行以下的切换流程。<br />在切换之前，请确保以下参数的设置log_archive_dest_n 参数设置归档日志目标，其中n用数字替换。在<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>9i中n的范围是1~5，在<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>10g中n可以取值1~10。设置方式如下：<br />&nbsp;SQL&gt; alter system set log_archive_dest_1="location=path" scope=both;其中，path是存储归档日志文件的文件夹路径。最后的scope=both是为了将设置应用到当前数据库实例，以及将参数设置保存到SPFILE中，数据库重启时直接加载SPFILE中的参数信息。<br />可以设置多个归档日志目标。设置多个目标，在进行归档的时候归档日志文件可以同时保存成多个归档版本，设置多个目标是个好习惯，虽然在问题出现之前似乎没有必要^_^<br />关闭数据库&nbsp;SQL&gt; shutdown immediate关闭数据库一般不会出现什么问题，但在数据库投入使用之后，关闭数据库必须是迫不得已的（即使你是故意关闭它也要表现得很迫不得已，呵呵）——最好确保关闭是没有人正在使用数据库，要不然，有你等的^_^。<br />启动数据库为挂起（mount）状态SQL&gt; startup mount行至此步，真正的问题才出现。mount了无数次始终startup不上，说是监听程序无法监听到你当前的例程了。当然，如果监听程序配置得当，此类问题是不会在这里出现的。既然是监听程序出现问题，那么就从这里入手进行解决。在<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>数据库的安装目录下（路径可能如：E:\<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>\product\10.2.0\db_1\NETWORK\ADMIN）可以找到listener.ora这种参数文件，可用记事本打开它们进行编辑和保存。当然直接手工修改这个文件并非明智之举，因为其中的括号可以扼杀你无数的脑细胞。在安装<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>时一般都会默认安装Net Manager这个组件，它可以帮助你轻松地配置监听程序的烦人参数：<br /><a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a> Net配置 》监听程序 》LISTENER，在窗体右边最上边的下拉框中选择“数据库服务”。如果你尚未监听数据库服务，那么这就是你解决问题的关键所在。添加数据库，全局数据库和SID设置为与tnsnames.ora文件中的SERVICE_NAME相同的值（注：tnsnames.ora文件与listener.ora文件在同一个目录下）。保存，则在listener.ora中就会多出一些设置，如下：<br />SID_LIST_LISTENER&nbsp;=&nbsp;&nbsp;(SID_LIST&nbsp;=&nbsp;&nbsp;&nbsp;&nbsp;(SID_DESC&nbsp;=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(GLOBAL_DBNAME&nbsp;=&nbsp;ORCL)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a href="../../html/Oracle/l_7_1.htm" title="ORACLE" >ORACLE</a>_HOME&nbsp;=&nbsp;E:\<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>\product\10.2.0\db_1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(SID_NAME&nbsp;=&nbsp;ORCL)&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;&nbsp;)红色部分正式监听程序中未配置完整的内容，现在配置好它，则以上无法使数据库进入挂起状态的问题就可以解决了。注意，以上假设tnsnames.ora文件中的SERVICE_NAME就是ORCL。当然，配置好监听程序参数后并未马上应用到监听程序中，我们还需要重新载入监听程序，进入命令行：<br />&nbsp;C:\&gt;lsnrctl&nbsp;LSNRCTL&gt;&nbsp;reload重新连接一次数据库，则结果是“已连接到空闲例程”。此时再startup mount，则可顺利进入挂起状态。<br />在挂起状态的数据库例程中切换模式&nbsp;SQL&gt;&nbsp;alter&nbsp;system&nbsp;archivelog;提示“数据库已更改”。在打开数据库后，用archive log list可以查看当前模式：数据库日志模式&nbsp;&nbsp;&nbsp; 存档模式。<br />打开数据库&nbsp;SQL&gt;&nbsp;alter&nbsp;database&nbsp;open;挂起状态的数据库并非真实可用的状态，只有打开的数据库才是运行中可使用的例程。<br />结尾工作打开自动归档<br />&nbsp;SQL&gt;&nbsp;alter&nbsp;system&nbsp;set log_archive_start = true; scope=both;手工归档;<br />&nbsp;SQL&gt;&nbsp;alter&nbsp;system&nbsp;switch logfile; --可进行手工归档检测以上设置是否已经被应用到当前数据库中设置快闪区大小<br />&nbsp;SQL&gt;&nbsp;alter&nbsp;system&nbsp;set&nbsp;db_recovery_file_dest_size=5368709102;&nbsp; --5G<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>问题在切换模式的过程中我还碰到一个问题，即在我用写字板打开SPFILE时无意中按了保存。小小的保存带来大大的问题，SPFILE是一种二进制文件，写字板虽然能打开正常浏览大部分内容却无法读取文件中第一行的文件标识（正常情况下用写字板打开文件第一行是乱码，关键啊）。保存，得，SPFILE就被改成普通文本了，人是好读了，但<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>不认识。没办法，重新建一个呗。<br />重建SPFILE需要系统中的PFILE。PFILE好的地方是它是文本文件^_^一般在建数据库的同时就已经创建了它，它所在的路径可能如下：E:\<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>\product\10.2.0\admin\orcl\pfile\。在此路径下有一个以init.ora.为文件名开头的文件，该文件的文件名结尾的部分是一串数字（默认情况下）。以sysdba的身份连接到数据库空闲例程（没有SPFILE数据库无法启动打开，只能连接到空闲例程如：conn / as sysdba），重建SPFILE的命令如下：<br />&nbsp;SQL&gt;&nbsp;create&nbsp;spfile='E:\<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>\product\10.2.0\db_1\dbs\SPFILEORCL.ORA'&nbsp;from&nbsp;pfile='E:\<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>\product\10.2.0\admin\orcl\pfile\init.ora.************';若重建成功，则提示“文件已创建”。创建新的SPFILE后数据库就能正常启动了，但是，以后请记住用系统命令alter system set...... scope=spfile;去修改SPFILE的内容。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mysql主要配置参数2:key_buffer_size 键缓冲</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="Mysql主要参数在优化MySQL时，有两个配置参数是最重要的，即table_cache和key_buffer_size。而具体到应用环境还有个查询参数query_cache_size直接影响查询性能。下面主要是整理的关于下面三个参数的文章1．table_cache表缓存2．key_buffer_size键缓冲3．query_cache_size查询缓存4．其他参数5．Mysql主要配置参数2:key_buffer_size 键缓冲" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识">基础知识</a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化"><span class="zc_666">性能与优化</span></a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlyouhua/l_16_1.htm">性能与优化</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>Mysql主要配置参数2:key_buffer_size 键缓冲</h1></div>
+					<div id="atSource"> 作者：[51ak ] </div>
+					
+                    <div id="viewcontent">
+                   <p><font face="Arial"><a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a>主要参数<br />
+在优化MySQL时，有两个配置参数是最重要的，即table_cache和key_buffer_size。而具体到应用环境还有个查询参数query_cache_size直接影响查询性能。下面主要是整理的关于下面三个参数的文章<br />
+1．<a href="../../html/201203/dba_22.htm">table_cache 表缓存</a><br />
+2．<a href="../../html/201203/dba_23.htm">key_buffer_size 键缓冲</a><br />
+3．<a href="../../html/201203/dba_24.htm">query_cache_size查询缓存</a><br />
+4．<a href="../../html/201203/dba_25.htm"><a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>参数</a><br />
+5．<a href="../../html/201203/dba_26.htm">参考文章</a></font></p>
+<p><font face="Arial">首先，在了解这些参数设置前需要明确的概念是<br />
+&bull; 什么是<a href="../../html/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/l_13_1.htm" title="MYSQL" >MYSQL</a>的缓存：在内存中预留的块<br />
+&bull; 访问内存中的数据快于访问磁盘上的数据。<br />
+&bull; 把数据保存在内存中更重要的是可以减少磁盘IO操作。<br />
+&bull; 当数据变化(update insert delete...)时对应的缓存就失效<br />
+&bull; 内存是有限的</font></p>
+<font face="Arial">
+<p><br />
+2、key_buffer_size 键缓冲<br />
+# 指定用于索引的缓冲区大小，增加它可得到更好的索引处理性能。<br />
+# 对于内存在4GB左右的服务器该参数可设置为256M或384M。<br />
+# 注意：该参数值设置的过大反而会是服务器整体效率降低！<br />
+# key_buffer_size指定索引缓冲区的大小，它决定索引处理的速度，尤其是索引读的速度。通过检查状态值Key_read_requests和Key_reads，可以知道# key_buffer_size设置是否合理。比例key_reads / key_read_requests应该尽可能的低，至少是1:100，1:1000更好（上述状态值可以使用SHOW STATUS LIKE &lsquo;key_read%&rsquo;获得）。<br />
+# key_buffer_size只对MyISAM表起作用。即使你不使用MyISAM表，但是内部的临时磁盘表是MyISAM表，也要使用该值。可以使用检查状态值# created_tmp_disk_tables得知详情。<br />
+# 对于1G内存的机器，如果不使用MyISAM表，推荐值是16M（8-64M）。<br />
+# 案例1：健康状况<br />
+# key_buffer_size &ndash; 402649088 (384M)<br />
+# key_read_requests &ndash; 597579931<br />
+# key_reads - 56188<br />
+# 案例2：警报状态<br />
+# key_buffer_size &ndash; 16777216 (16M)<br />
+# key_read_requests &ndash; 597579931<br />
+# key_reads - 53832731<br />
+# 案例1中比例低于1:10000，是健康的情况；案例2中比例达到1:11，警报已经拉响。<br />
+索引块是缓冲的并且被所有的线程共享。key_buffer_size是用于索引块的缓冲区大小，增加它可得到更好处理的索引(对所有读和多重写)，到你能负担得起那样多。如果你使它太大，系统将开始换页并且真的变慢了。默认数值是8388600(8M)，我的MySQL主机有2GB内存，所以我把它改为402649088(400MB)。<br />
+<div class="sabrosus"><span class="disabled">首页</span><span class="disabled">上一页</span><span class="current">1</span><a href='dba_23_2.htm' title='第2页'>2</a><a href='dba_23_3.htm' title='第3页'>3</a><a href='dba_23_2.htm' title='下一页'>下一页</a><a href='dba_23_3.htm' title='尾页'>尾页</a><input type="hidden" value="1" id="page">&nbsp;&nbsp;<strong>分页：1/3页</strong></div>
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+	
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

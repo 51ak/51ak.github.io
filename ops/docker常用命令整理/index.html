@@ -1,0 +1,423 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>docker安装和常用命令| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">docker安装和常用命令</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装">安装</a>
+      <ul>
+        <li><a href="#安装需要的软件包">安装需要的软件包</a></li>
+        <li><a href="#设置yum源">设置yum源</a></li>
+        <li><a href="#可以查看所有仓库中所有docker版本并选择特定版本安装">可以查看所有仓库中所有docker版本，并选择特定版本安装</a></li>
+        <li><a href="#安装docker">安装docker</a></li>
+        <li><a href="#验证安装是否成功">验证安装是否成功</a></li>
+        <li><a href="#如果遇到报错">如果遇到报错:</a></li>
+      </ul>
+    </li>
+    <li><a href="#常用命令">常用命令</a>
+      <ul>
+        <li><a href="#查找镜像">查找镜像</a></li>
+        <li><a href="#利用镜像启动后进行修改">利用镜像启动后进行修改</a></li>
+        <li><a href="#创建镜像">创建镜像</a></li>
+        <li><a href="#查看镜像">查看镜像</a></li>
+        <li><a href="#创建一个新的容器并运行">创建一个新的容器并运行</a></li>
+        <li><a href="#查看运行中的容器">查看运行中的容器</a></li>
+        <li><a href="#查看所有容器">查看所有容器</a></li>
+        <li><a href="#进入容器内部">进入容器内部</a></li>
+        <li><a href="#重新启动容器">重新启动容器</a></li>
+        <li><a href="#停止容器">停止容器</a></li>
+        <li><a href="#启动容器">启动容器</a></li>
+        <li><a href="#删除容器">删除容器</a></li>
+        <li><a href="#删除本地镜像">删除本地镜像</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="安装">安装</h2>
+<ul>
+<li>centos7 安装</li>
+</ul>
+<h3 id="安装需要的软件包">安装需要的软件包</h3>
+<ul>
+<li>yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的</li>
+</ul>
+<pre><code>yum install -y yum-utils device-mapper-persistent-data lvm2
+</code></pre><h3 id="设置yum源">设置yum源</h3>
+<pre><code>yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+</code></pre><h3 id="可以查看所有仓库中所有docker版本并选择特定版本安装">可以查看所有仓库中所有docker版本，并选择特定版本安装</h3>
+<pre><code> yum list docker-ce --showduplicates | sort -r
+
+Loading mirror speeds from cached hostfile
+Loaded plugins: fastestmirror
+docker-ce.x86_64            3:24.0.5-1.el7                      docker-ce-stable
+docker-ce.x86_64            3:24.0.4-1.el7                      docker-ce-stable
+docker-ce.x86_64            3:24.0.3-1.el7                      docker-ce-stable
+docker-ce.x86_64            3:24.0.2-1.el7                      docker-ce-stable
+docker-ce.x86_64            3:24.0.1-1.el7                      docker-ce-stable
+docker-ce.x86_64            3:24.0.0-1.el7                      docker-ce-stable
+docker-ce.x86_64            3:23.0.6-1.el7                      docker-ce-stable
+docker-ce.x86_64            3:23.0.5-1.el7                      docker-ce-stable
+docker-ce.x86_64            3:23.0.4-1.el7                      docker-ce-stable
+docker-ce.x86_64            3:23.0.3-1.el7                      docker-ce-stable
+docker-ce.x86_64            3:23.0.2-1.el7                      docker-ce-stable
+docker-ce.x86_64            3:23.0.1-1.el7                      docker-ce-stable
+docker-ce.x86_64            3:23.0.0-1.el7                      docker-ce-stable
+docker-ce.x86_64            3:20.10.9-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:20.10.8-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:20.10.7-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:20.10.6-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:20.10.5-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:20.10.4-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:20.10.3-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:20.10.24-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:20.10.2-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:20.10.23-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:20.10.22-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:20.10.21-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:20.10.20-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:20.10.19-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:20.10.18-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:20.10.17-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:20.10.16-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:20.10.15-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:20.10.14-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:20.10.1-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:20.10.13-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:20.10.12-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:20.10.11-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:20.10.10-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:20.10.0-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:19.03.9-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:19.03.8-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:19.03.7-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:19.03.6-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:19.03.5-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:19.03.4-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:19.03.3-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:19.03.2-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:19.03.15-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:19.03.14-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:19.03.1-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:19.03.13-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:19.03.12-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:19.03.11-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:19.03.10-3.el7                    docker-ce-stable
+docker-ce.x86_64            3:19.03.0-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:18.09.9-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:18.09.8-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:18.09.7-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:18.09.6-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:18.09.5-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:18.09.4-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:18.09.3-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:18.09.2-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:18.09.1-3.el7                     docker-ce-stable
+docker-ce.x86_64            3:18.09.0-3.el7                     docker-ce-stable
+docker-ce.x86_64            18.06.3.ce-3.el7                    docker-ce-stable
+docker-ce.x86_64            18.06.2.ce-3.el7                    docker-ce-stable
+docker-ce.x86_64            18.06.1.ce-3.el7                    docker-ce-stable
+docker-ce.x86_64            18.06.0.ce-3.el7                    docker-ce-stable
+docker-ce.x86_64            18.03.1.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            18.03.0.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.12.1.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.12.0.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.09.1.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.09.0.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.06.2.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.06.1.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.06.0.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.03.3.ce-1.el7                    docker-ce-stable
+docker-ce.x86_64            17.03.2.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.03.1.ce-1.el7.centos             docker-ce-stable
+docker-ce.x86_64            17.03.0.ce-1.el7.centos             docker-ce-stable
+Available Packages
+</code></pre><h3 id="安装docker">安装docker</h3>
+<pre><code>yum install docker-ce  #最新稳定版
+也可以安装指定版本：
+yum install docker-ce-&lt;version&gt;  # 例如：yum install 18.06.2.ce-3.el7
+</code></pre><h3 id="验证安装是否成功">验证安装是否成功</h3>
+<ul>
+<li>有client和service两部分表示docker安装启动都成功了</li>
+</ul>
+<pre><code>docker version
+
+</code></pre><h3 id="如果遇到报错">如果遇到报错:</h3>
+<ul>
+<li>Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?</li>
+<li>原因：此时已确定Docker本身已经安装正常。 问题原因是因为docker服务没有启动，所以在相应的/var/run/ 路径下找不到docker的进程。</li>
+<li>执行：<code>systemctl start docker</code> 启动docker服务，</li>
+<li>此时,<code>docker version</code>:</li>
+</ul>
+<pre><code>Client: Docker Engine - Community
+ Version:           24.0.5
+ API version:       1.43
+ Go version:        go1.20.6
+ Git commit:        ced0996
+ Built:             Fri Jul 21 20:39:02 2023
+ OS/Arch:           linux/amd64
+ Context:           default
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          24.0.5
+  API version:      1.43 (minimum version 1.12)
+  Go version:       go1.20.6
+  Git commit:       a61e2b4
+  Built:            Fri Jul 21 20:38:05 2023
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+  Version:          1.6.22
+  GitCommit:        8165feabfdfe38c65b599c4993d227328c231fca
+ runc:
+  Version:          1.1.8
+  GitCommit:        v1.1.8-0-g82f18fe
+ docker-init:
+  Version:          0.19.0
+  GitCommit:        de40ad0
+</code></pre><h2 id="常用命令">常用命令</h2>
+<pre><code>常用列表
+# docker run：运行一个容器。
+# docker ps：列出正在运行的容器。
+# docker images：列出本地的镜像。
+# docker build：构建一个镜像。
+# docker pull：拉取一个镜像。
+# docker push：推送一个镜像到 Docker Hub。
+# docker stop：停止一个正在运行的容器。
+# docker rm：删除一个容器。
+# docker rmi：删除一个镜像。
+# docker exec：在一个正在运行的容器中执行命令。
+</code></pre><h3 id="查找镜像">查找镜像</h3>
+<ul>
+<li>从官方注册服务器（https://hub.docker.com）的仓库中pull下CentOS的镜像，</li>
+<li>每个仓库会有多个镜像，用tag标示，如果不加tag，默认使用latest镜像：</li>
+</ul>
+<pre><code>docker search centos    # 查看centos镜像是否存在
+docker pull centos    # 利用pull命令获取镜像
+
+Using default tag: latest
+latest: Pulling from library/centos
+08d48e6f1cff: Pull complete
+Digest: sha256:b2f9d1c0ff5f87a4743104d099a3d561002ac500db1b9bfa02a783a46e0d366c
+Status: Downloaded newer image for centos:latest
+
+docker images    # 查看当前系统中的images信息
+
+REPOSITORY      TAG            IMAGE ID       CREATED        SIZE
+centos          latest         0584b3d2cf6d   9 days ago     196.5 MB
+
+</code></pre><h3 id="利用镜像启动后进行修改">利用镜像启动后进行修改</h3>
+<ul>
+<li>利用commit提交更新后的副本</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-docker" data-lang="docker"><span style="color:#f92672">[</span>root@dboop.com /<span style="color:#f92672">]</span><span style="color:#75715e">#    # 这里命令行形式变了，表示已经进入了一个新环境</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#f92672">[</span>root@dboop.com /<span style="color:#f92672">]</span><span style="color:#75715e"># git --version    # 此时的容器中没有git</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>bash: git: command not found<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#f92672">[</span>root@dboop.com /<span style="color:#f92672">]</span><span style="color:#75715e"># yum install git    # 利用yum安装git</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>......<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#f92672">[</span>root@dboop.com /<span style="color:#f92672">]</span><span style="color:#75715e"># git --version   # 此时的容器中已经装有git了</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>git version 1.8.3.1<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><ul>
+<li>exit退出该容器，然后查看docker中运行的程序（容器）：</li>
+</ul>
+<pre><code>[root@xxx ~]# docker ps -a
+CONTAINER ID  IMAGE    COMMAND      CREATED   STATUS   PORTS    NAMES
+dboop.com  centos:latest &quot;/bin/bash&quot;  9 minutes ago   Exited (0) 3 minutes ago      
+
+这里将容器转化为一个镜像，即执行commit操作，完成后可使用docker images查看：
+[root@xxx ~]# docker commit -m &quot;centos with git&quot; -a &quot;test&quot; dboop.com 51ak/centos:git
+
+[root@xxx ~]# docker images
+REPOSITORY       TAG    IMAGE ID         CREATED             SIZE
+51ak/centos      git    ********     ********       ********
+centos           latest ********       ********         ********
+其中，-m指定说明信息；-a指定用户信息；dboop.com代表容器的id；xianhu/centos:git指定目标镜像的用户名、仓库名和 tag 信息。
+[root@test2 /]# git --version
+git version 1.8.3.1
+利用exit退出容器。注意此时Docker引擎中就有了两个容器，可使用docker ps -a查看。
+</code></pre><h3 id="创建镜像">创建镜像</h3>
+<pre><code>docker build -f ./Dockerfile -t dboopdemo:v0.1 .
+
+参数说明
+
+-f：指定DockerFile文件的路径
+
+-t：镜像的名字及标签
+
+</code></pre><h3 id="查看镜像">查看镜像</h3>
+<pre><code>docker images | grep {你要找的名字}
+
+</code></pre><h3 id="创建一个新的容器并运行">创建一个新的容器并运行</h3>
+<pre><code>docker run -p 8089:8089 --name dboopdemo -d dboopdemo:v0.1
+
+参数说明
+
+-p：指定端口映射。格式为，主机端口：容器端口
+
+-d：后台运行容器，返回容器id
+
+</code></pre><h3 id="查看运行中的容器">查看运行中的容器</h3>
+<pre><code>docker ps | grep dboop
+</code></pre><h3 id="查看所有容器">查看所有容器</h3>
+<pre><code>docker ps -a
+</code></pre><h3 id="进入容器内部">进入容器内部</h3>
+<pre><code>docker exec -it 421d73849794 /bin/bash
+
+参数说明
+
+-it：开启交互模式终端
+
+421d73849794：容器ID
+</code></pre><h3 id="重新启动容器">重新启动容器</h3>
+<pre><code>docker restart 421d73849794
+
+421d73849794：容器ID
+
+</code></pre><h3 id="停止容器">停止容器</h3>
+<pre><code>docker stop 421d73849794
+
+</code></pre><h3 id="启动容器">启动容器</h3>
+<pre><code>docker start 421d73849794
+
+</code></pre><h3 id="删除容器">删除容器</h3>
+<pre><code>docker rm -f 421d73849794
+
+参数说明
+
+-f：强制删除
+
+</code></pre><h3 id="删除本地镜像">删除本地镜像</h3>
+<pre><code>docker rmi -f dboopdemo:v0.1
+
+参数说明
+
+-f：强制删除
+
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/08/27</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E8%BF%90%E7%BB%B4">运维</a> <a href="/categories/centos">centos</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

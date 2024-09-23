@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>从零写一个兼容MySQL/Oracle的Proxy中件间（四）:性能测试和改进| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">从零写一个兼容MySQL/Oracle的Proxy中件间（四）:性能测试和改进</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1过去的三个文章我们实现了以下功能">1.过去的三个文章我们实现了以下功能]</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <p>续：
+<a href="https://www.dboop.com/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B41/">从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》</a>
+<a href="https://www.dboop.com/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B42/">从零写一个兼容MySQL/Oracle的Proxy中件间（二）:SQL捕获和改写</a>
+<a href="https://www.dboop.com/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B43/">从零写一个兼容MySQL/Oracle的Proxy中件间（三）:MySQL协议捕获和转发</a></p>
+<h2 id="1过去的三个文章我们实现了以下功能">1.过去的三个文章我们实现了以下功能]</h2>
+<!-- raw HTML omitted -->
+<ul>
+<li>Oracle登录捕获：捕获了Oracle通信协议中的用户登录包</li>
+<li>Oracle用户解析：抓到了用户传用户名和密码的内容（密码是加密串）</li>
+<li>SQL请求包：同时通过对比，确定了用户发送SQL请求的通信包</li>
+<li>OracleSQL日志：分析这些包，把SQL语句拿出来，记到日志里。</li>
+<li>OracleSQL改写：用户发起的SQL 经过中间层改写到了服务端收到的是另一个SQL执行返回结果。</li>
+<li>MySQL兼容：增加配置文件，使中间件可以支持两种数据库</li>
+<li>MySQL协议解析：将经过proxy的MySQL包里的SQL语句解析出来，记录到日志</li>
+</ul>
+<!-- raw HTML omitted -->
+<p>在没更新的这几天里我又偷偷完成了配置变更等小功能。现在中件间其实已经在理论上可以发布使用了</p>
+<p>在投入使用前，在测试环境对这个半成品的中件间做了些基准测试。</p>
+<p>在测试环境上生成了5张表，每张表200万行数据，对其进行直连和proxy模式压测。</p>
+<p>以下是测试报告：
+<img src="/img/2022/proxybench01.png" alt="dboop数据库proxy测试报告"></p>
+<p>结论是：<!-- raw HTML omitted -->加了Proxy，性能下降了14% ，在情理之中，一般的SQL中间层因为多了层中转，响应时间会降低20ms左右。tps/qps在不做连接池的情况下会下降10%。
+<!-- raw HTML omitted --></p>
+<p>分析性能下降的原因：</p>
+<p>因为在proxy存把经过的网络包都拆开来分析其中的内容，且把SQL语句存在日志里，这些步骤是比较费资源和时间的。</p>
+<p>为了提升Proxy性能，降低中间层的性能影响，我们加了个配置参数</p>
+<pre><code>cat /data/proxy/conf/proxy3308.cnf
+[basic]
+logfile = /data/proxy/log/3308.log
+daemon = true
+
+[proxy]
+proxytype = mysql
+bind = 0.0.0.0:3308
+server = 127.0.0.2:3308
+isssl = false
+iscatchquery = false  #增加是否“拆包” false时，Proxy进入高性能模式
+iscatchlogin = false
+maxsquerylsize = 16384
+</code></pre><p>当 <code>iscatchquery</code>=false时，Proxy进入高性能模式</p>
+<pre><code>if Iscatchquery {
+    #只有iscatchquery为true时才解析包。
+    switch ProxyType {
+    case &quot;mysql&quot;:
+      log.Printf(&quot;mysql:sqlPipeMySQL\n&quot;)
+      sqlPipeMySQL(srcCon, dstCon)
+    case &quot;oracle&quot;:
+      log.Printf(&quot;oracle:sqlPipeOracle\n&quot;)
+      sqlPipeOracle(srcCon, dstCon)
+    }
+  } else {
+    sqlPipeAuto(srcCon, dstCon)
+  }
+</code></pre><p>修改配置，让proxy处于高性能模式，继续压测，结果如下：
+<img src="/img/2022/proxybench02.png" alt="dboop数据库proxy测试报告"></p>
+<p>结论：<!-- raw HTML omitted -->在低并发时性能有所下降，在高并发时SQL响应时间会减少，性能超过了直连数据库。（为了确认这个结果，做了7，8次类似的压测，结果一致）</p>
+<p>在高性能模式下，Proxy和直连数据库相比性能下降不明显，在SQL日志捕获模式下，Proxy和直连数据库有14%的性能损失。
+<!-- raw HTML omitted --></p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/01/18</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/oracle">oracle</a> <a href="/categories/proxy">proxy</a> <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BB%A3%E7%90%86">数据库代理</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

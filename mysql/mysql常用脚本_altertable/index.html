@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL常用脚本_AlterTable| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL常用脚本_AlterTable</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#速记">速记</a></li>
+    <li><a href="#增">增</a></li>
+    <li><a href="#删">删</a></li>
+    <li><a href="#改">改</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="速记">速记</h2>
+<ul>
+<li>当修改表结构的时候有三种选项:</li>
+<li><code>ALTER TABLE t1 ALTER COLUMN ...</code></li>
+<li><code>ALTER TABLE t1 CHANGE COLUMN ...</code></li>
+<li><code>ALTER TABLE t1 MODIFY COLUMN ...</code></li>
+<li>容易记混</li>
+<li>一般我们这样记</li>
+<li>Change column 无所不能</li>
+<li>Modify column 不能给列改名,其他都行</li>
+<li>Alter Column 最弱,改点默认值什么的(但是他也有好处,非常快和安全)</li>
+</ul>
+<h2 id="增">增</h2>
+<ul>
+<li>增加列(单列)</li>
+</ul>
+<pre><code>ALTER TABLE t1 ADD col-name col-type comment 'xxx';
+</code></pre><ul>
+<li>增加列(多列)</li>
+</ul>
+<pre><code>ALTER TABLE t1 ADD col-name col-type comment 'xxx', ADD col-name col-type(col-length) comment 'xxx';
+</code></pre><ul>
+<li>增加表字段并指明字段放置为第一列</li>
+</ul>
+<pre><code>ALTER TABLE t1 add col-name col-type COMMENT 'sss' FIRST;
+</code></pre><ul>
+<li>增加表字段并指明字段放置为特定列后面</li>
+</ul>
+<pre><code>ALTER TABLE t1 add col-name col-type after col-name-1;
+</code></pre><h2 id="删">删</h2>
+<ul>
+<li>删除列</li>
+</ul>
+<pre><code>ALTER TABLE t1  DROP col-name;
+</code></pre><ul>
+<li>删除表中主键</li>
+</ul>
+<pre><code>Alter TABLE t1】 drop primary key
+</code></pre><h2 id="改">改</h2>
+<ul>
+<li>修改字段类型</li>
+</ul>
+<pre><code>- 使用MODIFY修改字段类型
+ALTER TABLE t1 modify column col-name col-type;
+- 使用CHANGE修改字段类型
+ALTER TABLE t1 change col-name col-name col-type;
+</code></pre><ul>
+<li>修改列名</li>
+</ul>
+<pre><code>使用CHANGE修改字段名称
+ALTER TABLE t1 change old-col-name new-col-name col-type;
+</code></pre><ul>
+<li>修改表名</li>
+</ul>
+<pre><code>- 重命名表1
+ALTER TABLE t1 RENAME 【表新名字】
+- 重命名表2
+RENAME TABLE t1 to new-table-name;
+</code></pre><ul>
+<li>修改默认值</li>
+</ul>
+<pre><code>- 为字段设置NULL和DEFAULT
+ALTER TABLE t1 modify col-name col-type not null default 100;
+
+- 修改字段的默认值
+ALTER TABLE t1 alter col-name set default 10000;
+
+-字段删除默认值 
+ALTER TABLE t1 alter col-name drop default;
+
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2021/04/12</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC">常用脚本</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%9F%BA%E7%A1%80">基础</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

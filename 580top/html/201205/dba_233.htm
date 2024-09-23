@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SQL 2008的变更数据捕获</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="介绍:sql&nbsp;server&nbsp;2008变更数据捕获<br/>sqlserver2008的cdc函数读取激活了cdc的每个表所关联的事务日志来记录系统表中的变更。它将这些文件写到同一个数据库的系统表中，这些系统表是可以通过直接查询或系统函数来访问的。<br/>让我们看些示例代码并看看每一步有什么改变。<br/>使用示例代码来跟踪可变部分<br/>首先，我们从一个全新的数SQL 2008的变更数据捕获" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识">基础知识</a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA"><span class="zc_666">高可用性和HA</span></a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化">性能与优化</a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决">故障与解决</a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserverha/l_3_1.htm">高可用性和HA</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>SQL 2008的变更数据捕获</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   介绍:SQL&nbsp;Server&nbsp;2008变更数据捕获<br />SQL Server 2008的CDC函数读取激活了CDC的每个表所关联的事务日志来记录系统表中的变更。它将这些文件写到同一个数据库的系统表中，这些系统表是可以通过直接查询或系统函数来访问的。<br />让我们看些示例代码并看看每一步有什么改变。<br />使用示例代码来跟踪可变部分<br />首先，我们从一个全新的数据库开始。要跟踪这些变更，打开对象浏览器并展开这些文件夹：<br />· Databases<br />·&nbsp;SQLServer&nbsp;Agent | Jobs<br />· (数据库创建之后)Security | Roles | Database Roles<br />· (数据库创建之后)Programmability | Stored Procedures | System Stored Procedures<br />· (数据库创建之后)Programmability | Functions | Table-valued Functions<br />创建数据库<br />CREATE DATABASE TestCdc<br />这为我们创建了新数据库，但是没有新作业。展开Tables文件夹和System Tables文件夹。现在是空的。<br />在数据库TestCdc上激活变更数据捕获<br />USE TestCdc<br />-- Turn on Change Data Capture at database level<br />EXEC sys.sp_cdc_enable_db<br />这个步骤需要一些时间。现在刷新System Tables文件夹。现在它下面有6个系统表：<br />· cdc.captured_columns<br />· cdc.change_tables<br />· cdc.ddl_history<br />· cdc.index_columns<br />· cdc.lsn_time_mapping<br />· dbo.systranschemas<br />注意，其中的5个是“cdc” schema 部分的。<br />在sys.all_objects表中还有四个新的看起来很奇怪的“SQL inline table-valued function”登录：<br />· fn_cdc_get_all_changes_&#9702;...&#9702;<br />· fn_cdc_get_all_changes_...<br />· fn_cdc_get_net_changes_&#9702;...&#9702;<br />· fn_cdc_get_net_changes_...<br />(我使用了非比例字体，用“&#9702;”来标记空格，使得很清楚地看到在这些名称中有嵌入的空格。)<br />下面是会返回这些函数的查询：<br />SELECT&nbsp;[name] FROM sys.all_objects WHERE [name] LIKE '%...%'<br />还有更多的新存储过程<br />· sp_batchinsert_lsn_time_mapping<br />· sp_ins_dummy_lsn_time_mapping<br />· sp_ins_instance_enabling_lsn_time_mapping<br />· sp_ins_lsn_time_mapping<br />现在还没有新的作业或角色。<br />创建新的Schema和用户表<br />CREATE SCHEMA MySchema<br />CREATE TABLE MySchema.Person (<br />PersonID int IDENTITY PRIMARY KEY,<br />FirstName varchar(32) NOT NULL,<br />LastName varchar(32) NOT NULL,<br />UpdateCt int NOT NULL DEFAULT 0<br />)<br />上面的代码创建了一个新的用户表，但是这个表还没有激活CDC。<br />这个步骤不影响我们所跟踪的函数/存储过程/角色列表。<br />为新的用户表激活CDC<br />EXEC sys.sp_cdc_enable_table<br />@source_schema = N'MySchema',<br />@source_name = N'Person',<br />@role_name = N'ChangeData<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>Role',<br />@supports_net_changes = 1<br />这会为新的用户表激活CDC。刷新上面所列的文件夹。我们现在有了<br />· 一个新的系统表(cdc.MySchema_Person_CT)<br />· 两个新的作业(cdc.TestCdc_capture和cdc.TestCdc_cleanup)<br />· 一个新的数据库角色(ChangeData<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>Role)<br />· 两个新的表值型函数<br />o fn_cdc_get_all_changes_MySchema_Person<br />o fn_cdc_get_net_changes_MySchema_Person<br />· 三个新的存储过程：<br />o sp_batchinsert_389576426<br />o sp_insdel_389576426<br />o sp_upd_389576426<br />你可以获得这些存储过程(sp_helptext 'cdc.sp_batchinsert_389576426' 【你的数字可能不一样】)的文本。很明显这个存储过程被生成了，而且是专用于这个用户表的。<br />如果你为第二个表激活了CDC，那么你将获得另一组的sp_batchinsert_n、sp_insdel_n和sp_upd_n存储过程。<br />系统表cdc.MySchema_Person_CT<br />这个表具有以下字段：<br />· __$start_lsn<br />· __$end_lsn<br />· __$seqval<br />· __$operation<br />· __$update_mask<br />· PersonID<br />· FirstName<br />· LastName<br />· UpdateCt<br />作业cdc.TestCdc_capture<br />当你研究这个捕捉作业时，你会发现它是很有趣的。从sysjobs，我们可以看出这个作业是属于sa的，是在“REPL-LogReader”分类中，并有一个“CDC Log Scan Job”的描述。<br />从sysjobsteps，我们看到它有两个步骤：<br /><br />读过这些细节之后，接下来有两个步骤，但是我们将保留第二个，直到我们插入了一些数据之后再执行<br />sp_helptext N'sys.sp_MScdc_capture_job'<br />SELECT * FROM sys.dm_cdc_log_scan_sessions<br />存储过程Psys.sp_MScdc_capture_job和sys.sp_cdc_scan<br />sys.sp_MScdc_capture_job是开始整个CDC过程的存储过程。它首先进行一些安全检查，然后调用sys.sp_cdc_scan，这将进行实质的工作。sys.sp_cdc_scan执行变更数据捕获日志扫描操作。<br />默认情况下，sys.sp_cdc_scan在每个循环间进行五秒钟的延迟。在每个常规的循环中，它调用sp_replcmds。(这是个复制存储过程。使用默认(1)调用这个存储过程会返回等待分配的下一个事务。在这个存储过程中，默认@maxtrans是500。)<br />最后，它从sys.dm_cdc_log_scan_sessions读取来准备调用sp_sqlagent_log_jobhistory，从而记录作业历史信息。<br />数据库角色ChangeData<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>Role<br />如果你打开新的ChangeData<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>Role角色的属性窗口，那么你会看到这个角色属于“cdc”，并且具有对上面所列的两个表值型函数的SELECT权限，除此之外没有其它权限。<br />总结<br />研究这些细节使我们了解了Server 2008的CDC是怎样执行的。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

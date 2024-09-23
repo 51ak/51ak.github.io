@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>图数据库nebula源码编译安装| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">图数据库nebula源码编译安装</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#环境准备">环境准备</a>
+      <ul>
+        <li><a href="#硬件要求">硬件要求</a></li>
+      </ul>
+    </li>
+    <li><a href="#环境依赖针对centos7">环境依赖（针对centos7)</a></li>
+    <li><a href="#yum安装准备">yum安装准备</a></li>
+    <li><a href="#gcc-升级">gcc++ 升级</a></li>
+    <li><a href="#cmake升级">cmake升级</a></li>
+    <li><a href="#编译nebula">编译nebula</a>
+      <ul>
+        <li><a href="#编译异常处理">编译异常处理</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="环境准备">环境准备</h2>
+<p>当前机器环境centos7</p>
+<h3 id="硬件要求">硬件要求</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">要求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">CPU</td>
+<td style="text-align:left">架构	x86_64</td>
+</tr>
+<tr>
+<td style="text-align:left">内存</td>
+<td style="text-align:left">4 GB</td>
+</tr>
+<tr>
+<td style="text-align:left">硬盘</td>
+<td style="text-align:left">10 GB，SSD</td>
+</tr>
+</tbody>
+</table>
+<h2 id="环境依赖针对centos7">环境依赖（针对centos7)</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">软件名称</th>
+<th style="text-align:left">版本</th>
+<th style="text-align:left">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">glibc</td>
+<td style="text-align:left">2.17 及以上</td>
+<td style="text-align:left">执行命令ldd &ndash;version检查版本。</td>
+</tr>
+<tr>
+<td style="text-align:left">g++</td>
+<td style="text-align:left">8.5.0 及以上</td>
+<td style="text-align:left">执行命令g++ -v检查版本。</td>
+</tr>
+<tr>
+<td style="text-align:left">cmake</td>
+<td style="text-align:left">3.14.0 及以上</td>
+<td style="text-align:left">执行命令cmake &ndash;version检查版本。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="yum安装准备">yum安装准备</h2>
+<pre><code>cd /etc/yum.repos.d/
+mv CentOS-Base.repo CentOS-Base.repo.back
+wget -O CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+yum clean all
+yum makecache
+
+yum update
+yum install -y make \
+                 m4 \
+                 git \
+                 wget \
+                 unzip \
+                 xz \
+                 readline-devel \
+                 ncurses-devel \
+                 zlib-devel \
+                 gcc \
+                 gcc-c++ \
+                 cmake \
+                 curl \
+                 redhat-lsb-core \
+                 bzip2
+</code></pre><h2 id="gcc-升级">gcc++ 升级</h2>
+<pre><code> g++ --version
+
+wget http://mirror.centos.org/centos/7/extras/x86_64/Packages/centos-release-scl-rh-2-3.el7.centos.noarch.rpm
+wget http://mirror.centos.org/centos/7/extras/x86_64/Packages/centos-release-scl-2-3.el7.centos.noarch.rpm
+rpm -ivh centos-*.rpm
+yum install devtoolset-9-gcc-c++
+source /opt/rh/devtoolset-9/enable
+</code></pre><h2 id="cmake升级">cmake升级</h2>
+<pre><code>cmake --version
+wget https://cmake.org/files/v3.17/cmake-3.17.0.tar.gz
+tar -zxvf cmake-3.17.0.tar.gz
+cd cmake-3.17.0
+./bootstrap
+gmake
+make install
+</code></pre><h2 id="编译nebula">编译nebula</h2>
+<p>cmake -DCMAKE_INSTALL_PREFIX=/usr/local/nebula -DENABLE_TESTING=OFF -DENABLE_ASAN=ON -DCMAKE_BUILD_TYPE=Release ..</p>
+<h3 id="编译异常处理">编译异常处理</h3>
+<ul>
+<li>
+<p>如果发现  Bzip2 doesn&rsquo;t exist 报错</p>
+<pre><code>CMake Error at cmake/FindBzip2.cmake:31 (message):
+  Bzip2 doesn't exist
+Call Stack (most recent call first):
+  cmake/nebula/ThirdPartyConfig.cmake:94 (find_package)
+</code></pre><ul>
+<li>检查bzip2是否安装</li>
+<li>如果已安装，注掉ThirdPartyConfig.cmake的第94行</li>
+</ul>
+<pre><code></code></pre></li>
+</ul>
+<p>vim ../cmake/nebula/ThirdPartyConfig.cmake
+94 # find_package(Bzip2 REQUIRED)</p>
+<pre><code>
+</code></pre><p>make -j4</p>
+<p>make install</p>
+<pre><code></code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/06/29</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/nosql">nosql</a> <a href="/categories/nebula">nebula</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

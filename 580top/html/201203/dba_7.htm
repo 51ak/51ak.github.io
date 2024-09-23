@@ -1,0 +1,318 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>几个查询SQLSERVER表信息的脚本</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="/*几个查询表信息的脚本*/SELECTTableName=CASEWHENC.column_id=1THENO.nameELSEN''END,TableDesc=ISNULL(CASEWHENC.column_id=1THENPTB.[value]END,N''),Column_id=C.column_id,ColumnNa几个查询SQLSERVER表信息的脚本" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA">高可用性和HA</a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化">性能与优化</a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决">故障与解决</a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserverzhishi/l_2_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>几个查询SQLSERVER表信息的脚本</h1></div>
+					<div id="atSource"> 作者：[51ak ] </div>
+					
+                    <div id="viewcontent">
+                   <div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">/*几个查询表信息的脚本*/</span></div>
+<div style="text-align: left;" align="left" />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">SELECT</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">TableName</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: blue; font-size: 9pt;">CASE</span><span style="font-size: 9pt;"> <span style="color: blue;">WHEN</span> <span style="color: teal;">C</span><span style="color: gray;">.</span><span style="color: teal;">column_id</span><span style="color: gray;">=</span>1 <span style="color: blue;">THEN</span> <span style="color: teal;">O</span><span style="color: gray;">.</span><span style="color: teal;">name</span> <span style="color: blue;">ELSE</span> <span style="color: red;">N''</span> <span style="color: blue;">END</span><span style="color: gray;">,</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">TableDesc</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: fuchsia; font-size: 9pt;">ISNULL</span><span style="color: gray; font-size: 9pt;">(</span><span style="color: blue; font-size: 9pt;">CASE</span><span style="font-size: 9pt;"> <span style="color: blue;">WHEN</span> <span style="color: teal;">C</span><span style="color: gray;">.</span><span style="color: teal;">column_id</span><span style="color: gray;">=</span>1 <span style="color: blue;">THEN</span> <span style="color: teal;">PTB</span><span style="color: gray;">.</span><span style="color: teal;">[value]</span> <span style="color: blue;">END</span><span style="color: gray;">,</span><span style="color: red;">N''</span><span style="color: gray;">),</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">Column_id</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: teal; font-size: 9pt;">C</span><span style="color: gray; font-size: 9pt;">.</span><span style="color: teal; font-size: 9pt;">column_id</span><span style="color: gray; font-size: 9pt;">,</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">ColumnName</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: teal; font-size: 9pt;">C</span><span style="color: gray; font-size: 9pt;">.</span><span style="color: teal; font-size: 9pt;">name</span><span style="color: gray; font-size: 9pt;">,</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">PrimaryKey</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: fuchsia; font-size: 9pt;">ISNULL</span><span style="color: gray; font-size: 9pt;">(</span><span style="color: teal; font-size: 9pt;">IDX</span><span style="color: gray; font-size: 9pt;">.</span><span style="color: teal; font-size: 9pt;">PrimaryKey</span><span style="color: gray; font-size: 9pt;">,</span><span style="color: red; font-size: 9pt;">N''</span><span style="color: gray; font-size: 9pt;">),</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">[IDENTITY]</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: blue; font-size: 9pt;">CASE</span><span style="font-size: 9pt;"> <span style="color: blue;">WHEN</span> <span style="color: teal;">C</span><span style="color: gray;">.</span><span style="color: teal;">is_identity</span><span style="color: gray;">=</span>1 <span style="color: blue;">THEN</span> <span style="color: red;">N'</span></span><span style="color: red; font-size: 9pt;">&radic;</span><span style="color: red; font-size: 9pt;">'</span><span style="color: blue; font-size: 9pt;">ELSE</span><span style="font-size: 9pt;"> <span style="color: red;">N''</span> <span style="color: blue;">END</span><span style="color: gray;">,</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">Computed</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: blue; font-size: 9pt;">CASE</span><span style="font-size: 9pt;"> <span style="color: blue;">WHEN</span> <span style="color: teal;">C</span><span style="color: gray;">.</span><span style="color: teal;">is_computed</span><span style="color: gray;">=</span>1 <span style="color: blue;">THEN</span> <span style="color: red;">N'</span></span><span style="color: red; font-size: 9pt;">&radic;</span><span style="color: red; font-size: 9pt;">'</span><span style="color: blue; font-size: 9pt;">ELSE</span><span style="font-size: 9pt;"> <span style="color: red;">N''</span> <span style="color: blue;">END</span><span style="color: gray;">,</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">Type</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: teal; font-size: 9pt;">T</span><span style="color: gray; font-size: 9pt;">.</span><span style="color: teal; font-size: 9pt;">name</span><span style="color: gray; font-size: 9pt;">,</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">Length</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: teal; font-size: 9pt;">C</span><span style="color: gray; font-size: 9pt;">.</span><span style="color: teal; font-size: 9pt;">max_length</span><span style="color: gray; font-size: 9pt;">,</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">Precision</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: teal; font-size: 9pt;">C</span><span style="color: gray; font-size: 9pt;">.</span><span style="color: blue; font-size: 9pt;">precision</span><span style="color: gray; font-size: 9pt;">,</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">Scale</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: teal; font-size: 9pt;">C</span><span style="color: gray; font-size: 9pt;">.</span><span style="color: teal; font-size: 9pt;">scale</span><span style="color: gray; font-size: 9pt;">,</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">NullAble</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: blue; font-size: 9pt;">CASE</span><span style="font-size: 9pt;"> <span style="color: blue;">WHEN</span> <span style="color: teal;">C</span><span style="color: gray;">.</span><span style="color: teal;">is_nullable</span><span style="color: gray;">=</span>1 <span style="color: blue;">THEN</span> <span style="color: red;">N'</span></span><span style="color: red; font-size: 9pt;">&radic;</span><span style="color: red; font-size: 9pt;">'</span><span style="color: blue; font-size: 9pt;">ELSE</span><span style="font-size: 9pt;"> <span style="color: red;">N''</span> <span style="color: blue;">END</span><span style="color: gray;">,</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">[Default]</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: fuchsia; font-size: 9pt;">ISNULL</span><span style="color: gray; font-size: 9pt;">(</span><span style="color: teal; font-size: 9pt;">D</span><span style="color: gray; font-size: 9pt;">.</span><span style="color: blue; font-size: 9pt;">definition</span><span style="color: gray; font-size: 9pt;">,</span><span style="color: red; font-size: 9pt;">N''</span><span style="color: gray; font-size: 9pt;">),</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">ColumnDesc</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: fuchsia; font-size: 9pt;">ISNULL</span><span style="color: gray; font-size: 9pt;">(</span><span style="color: teal; font-size: 9pt;">PFD</span><span style="color: gray; font-size: 9pt;">.</span><span style="color: teal; font-size: 9pt;">[value]</span><span style="color: gray; font-size: 9pt;">,</span><span style="color: red; font-size: 9pt;">N''</span><span style="color: gray; font-size: 9pt;">),</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">IndexName</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: fuchsia; font-size: 9pt;">ISNULL</span><span style="color: gray; font-size: 9pt;">(</span><span style="color: teal; font-size: 9pt;">IDX</span><span style="color: gray; font-size: 9pt;">.</span><span style="color: teal; font-size: 9pt;">IndexName</span><span style="color: gray; font-size: 9pt;">,</span><span style="color: red; font-size: 9pt;">N''</span><span style="color: gray; font-size: 9pt;">),</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">IndexSort</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: fuchsia; font-size: 9pt;">ISNULL</span><span style="color: gray; font-size: 9pt;">(</span><span style="color: teal; font-size: 9pt;">IDX</span><span style="color: gray; font-size: 9pt;">.</span><span style="color: teal; font-size: 9pt;">Sort</span><span style="color: gray; font-size: 9pt;">,</span><span style="color: red; font-size: 9pt;">N''</span><span style="color: gray; font-size: 9pt;">),</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">Create_Date</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: teal; font-size: 9pt;">O</span><span style="color: gray; font-size: 9pt;">.</span><span style="color: teal; font-size: 9pt;">Create_Date</span><span style="color: gray; font-size: 9pt;">,</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">Modify_Date</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: teal; font-size: 9pt;">O</span><span style="color: gray; font-size: 9pt;">.</span><span style="color: teal; font-size: 9pt;">Modify_date</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">FROM</span><span style="font-size: 9pt;"> <span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">columns</span> <span style="color: teal;">C</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">INNER</span><span style="font-size: 9pt;"> <span style="color: gray;">JOIN</span> <span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">objects</span> <span style="color: teal;">O</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">ON</span><span style="font-size: 9pt;"> <span style="color: teal;">C</span><span style="color: gray;">.</span><span style="color: teal;">[object_id]</span><span style="color: gray;">=</span><span style="color: teal;">O</span><span style="color: gray;">.</span><span style="color: teal;">[object_id]</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">AND</span><span style="font-size: 9pt;"> <span style="color: teal;">O</span><span style="color: gray;">.</span><span style="color: blue;">type</span><span style="color: gray;">=</span><span style="color: red;">'U'</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">AND</span><span style="font-size: 9pt;"> <span style="color: teal;">O</span><span style="color: gray;">.</span><span style="color: teal;">is_ms_shipped</span><span style="color: gray;">=</span>0</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">INNER</span><span style="font-size: 9pt;"> <span style="color: gray;">JOIN</span> <span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">types</span> <span style="color: teal;">T</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">ON</span><span style="font-size: 9pt;"> <span style="color: teal;">C</span><span style="color: gray;">.</span><span style="color: teal;">user_type_id</span><span style="color: gray;">=</span><span style="color: teal;">T</span><span style="color: gray;">.</span><span style="color: teal;">user_type_id</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">LEFT</span><span style="font-size: 9pt;"> <span style="color: gray;">JOIN</span> <span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">default_constraints</span> <span style="color: teal;">D</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">ON</span><span style="font-size: 9pt;"> <span style="color: teal;">C</span><span style="color: gray;">.</span><span style="color: teal;">[object_id]</span><span style="color: gray;">=</span><span style="color: teal;">D</span><span style="color: gray;">.</span><span style="color: teal;">parent_object_id</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">AND</span><span style="font-size: 9pt;"> <span style="color: teal;">C</span><span style="color: gray;">.</span><span style="color: teal;">column_id</span><span style="color: gray;">=</span><span style="color: teal;">D</span><span style="color: gray;">.</span><span style="color: teal;">parent_column_id</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">AND</span><span style="font-size: 9pt;"> <span style="color: teal;">C</span><span style="color: gray;">.</span><span style="color: teal;">default_object_id</span><span style="color: gray;">=</span><span style="color: teal;">D</span><span style="color: gray;">.</span><span style="color: teal;">[object_id]</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">LEFT</span><span style="font-size: 9pt;"> <span style="color: gray;">JOIN</span> <span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">extended_properties</span> <span style="color: teal;">PFD</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">ON</span><span style="font-size: 9pt;"> <span style="color: teal;">PFD</span><span style="color: gray;">.</span><span style="color: teal;">class</span><span style="color: gray;">=</span>1 </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">AND</span><span style="font-size: 9pt;"> <span style="color: teal;">C</span><span style="color: gray;">.</span><span style="color: teal;">[object_id]</span><span style="color: gray;">=</span><span style="color: teal;">PFD</span><span style="color: gray;">.</span><span style="color: teal;">major_id</span> </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">AND</span><span style="font-size: 9pt;"> <span style="color: teal;">C</span><span style="color: gray;">.</span><span style="color: teal;">column_id</span><span style="color: gray;">=</span><span style="color: teal;">PFD</span><span style="color: gray;">.</span><span style="color: teal;">minor_id</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">-- AND PFD.name='Caption' -- </span><span style="color: green; font-size: 9pt;">字段说明对应的描述名称(一个字段可以添加多个不同name的描述)</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">LEFT</span><span style="font-size: 9pt;"> <span style="color: gray;">JOIN</span> <span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">extended_properties</span> <span style="color: teal;">PTB</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">ON</span><span style="font-size: 9pt;"> <span style="color: teal;">PTB</span><span style="color: gray;">.</span><span style="color: teal;">class</span><span style="color: gray;">=</span>1 </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">AND</span><span style="font-size: 9pt;"> <span style="color: teal;">PTB</span><span style="color: gray;">.</span><span style="color: teal;">minor_id</span><span style="color: gray;">=</span>0 </span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">AND</span><span style="font-size: 9pt;"> <span style="color: teal;">C</span><span style="color: gray;">.</span><span style="color: teal;">[object_id]</span><span style="color: gray;">=</span><span style="color: teal;">PTB</span><span style="color: gray;">.</span><span style="color: teal;">major_id</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">-- AND PFD.name='Caption' -- </span><span style="color: green; font-size: 9pt;">表说明对应的描述名称(一个表可以添加多个不同name的描述) bitsCN.Com网管联盟</span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">LEFT</span><span style="font-size: 9pt;"> <span style="color: gray;">JOIN</span> <span style="color: green;">-- </span></span><span style="color: green; font-size: 9pt;">索引及主键信息</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">(</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">SELECT</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">IDXC</span><span style="color: gray; font-size: 9pt;">.</span><span style="color: teal; font-size: 9pt;">[object_id]</span><span style="color: gray; font-size: 9pt;">,</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">IDXC</span><span style="color: gray; font-size: 9pt;">.</span><span style="color: teal; font-size: 9pt;">column_id</span><span style="color: gray; font-size: 9pt;">,</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">Sort</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: blue; font-size: 9pt;">CASE</span><span style="font-size: 9pt;"> <span style="color: fuchsia;">INDEXKEY_PROPERTY</span><span style="color: gray;">(</span><span style="color: teal;">IDXC</span><span style="color: gray;">.</span><span style="color: teal;">[object_id]</span><span style="color: gray;">,</span><span style="color: teal;">IDXC</span><span style="color: gray;">.</span><span style="color: teal;">index_id</span><span style="color: gray;">,</span><span style="color: teal;">IDXC</span><span style="color: gray;">.</span><span style="color: teal;">index_column_id</span><span style="color: gray;">,</span><span style="color: red;">'IsDescending'</span><span style="color: gray;">)</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">WHEN</span><span style="font-size: 9pt;"> 1 <span style="color: blue;">THEN</span> <span style="color: red;">'DESC'</span> <span style="color: blue;">WHEN</span> 0 <span style="color: blue;">THEN</span> <span style="color: red;">'ASC'</span> <span style="color: blue;">ELSE</span> <span style="color: red;">''</span> <span style="color: blue;">END</span><span style="color: gray;">,</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">PrimaryKey</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: blue; font-size: 9pt;">CASE</span><span style="font-size: 9pt;"> <span style="color: blue;">WHEN</span> <span style="color: teal;">IDX</span><span style="color: gray;">.</span><span style="color: teal;">is_primary_key</span><span style="color: gray;">=</span>1 <span style="color: blue;">THEN</span> <span style="color: red;">N'</span></span><span style="color: red; font-size: 9pt;">&radic;</span><span style="color: red; font-size: 9pt;">'</span><span style="color: blue; font-size: 9pt;">ELSE</span><span style="font-size: 9pt;"> <span style="color: red;">N''</span> <span style="color: blue;">END</span><span style="color: gray;">,</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: teal; font-size: 9pt;">IndexName</span><span style="color: gray; font-size: 9pt;">=</span><span style="color: teal; font-size: 9pt;">IDX</span><span style="color: gray; font-size: 9pt;">.</span><span style="color: teal; font-size: 9pt;">Name</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">FROM</span><span style="font-size: 9pt;"> <span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">indexes</span> <span style="color: teal;">IDX</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">INNER</span><span style="font-size: 9pt;"> <span style="color: gray;">JOIN</span> <span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">index_columns</span> <span style="color: teal;">IDXC</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">ON</span><span style="font-size: 9pt;"> <span style="color: teal;">IDX</span><span style="color: gray;">.</span><span style="color: teal;">[object_id]</span><span style="color: gray;">=</span><span style="color: teal;">IDXC</span><span style="color: gray;">.</span><span style="color: teal;">[object_id]</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">AND</span><span style="font-size: 9pt;"> <span style="color: teal;">IDX</span><span style="color: gray;">.</span><span style="color: teal;">index_id</span><span style="color: gray;">=</span><span style="color: teal;">IDXC</span><span style="color: gray;">.</span><span style="color: teal;">index_id</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">LEFT</span><span style="font-size: 9pt;"> <span style="color: gray;">JOIN</span> <span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">key_constraints</span> <span style="color: teal;">KC</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">ON</span><span style="font-size: 9pt;"> <span style="color: teal;">IDX</span><span style="color: gray;">.</span><span style="color: teal;">[object_id]</span><span style="color: gray;">=</span><span style="color: teal;">KC</span><span style="color: gray;">.</span><span style="color: teal;">[parent_object_id]</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">AND</span><span style="font-size: 9pt;"> <span style="color: teal;">IDX</span><span style="color: gray;">.</span><span style="color: teal;">index_id</span><span style="color: gray;">=</span><span style="color: teal;">KC</span><span style="color: gray;">.</span><span style="color: teal;">unique_index_id</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">INNER</span><span style="font-size: 9pt;"> <span style="color: gray;">JOIN</span> <span style="color: green;">-- </span></span><span style="color: green; font-size: 9pt;">对于一个列包含多个索引的情况,只显示第个索引信息</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">(</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">SELECT</span><span style="font-size: 9pt;"> <span style="color: teal;">[object_id]</span><span style="color: gray;">,</span> <span style="color: teal;">Column_id</span><span style="color: gray;">,</span> <span style="color: teal;">index_id</span><span style="color: gray;">=</span><span style="color: fuchsia;">MIN</span><span style="color: gray;">(</span><span style="color: teal;">index_id</span><span style="color: gray;">)</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">FROM</span><span style="font-size: 9pt;"> <span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">index_columns</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">GROUP</span><span style="font-size: 9pt;"> <span style="color: blue;">BY</span> <span style="color: teal;">[object_id]</span><span style="color: gray;">,</span> <span style="color: teal;">Column_id</span> </span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">)</span><span style="font-size: 9pt;"> <span style="color: teal;">IDXCUQ</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">ON</span><span style="font-size: 9pt;"> <span style="color: teal;">IDXC</span><span style="color: gray;">.</span><span style="color: teal;">[object_id]</span><span style="color: gray;">=</span><span style="color: teal;">IDXCUQ</span><span style="color: gray;">.</span><span style="color: teal;">[object_id]</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">AND</span><span style="font-size: 9pt;"> <span style="color: teal;">IDXC</span><span style="color: gray;">.</span><span style="color: teal;">Column_id</span><span style="color: gray;">=</span><span style="color: teal;">IDXCUQ</span><span style="color: gray;">.</span><span style="color: teal;">Column_id</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">AND</span><span style="font-size: 9pt;"> <span style="color: teal;">IDXC</span><span style="color: gray;">.</span><span style="color: teal;">index_id</span><span style="color: gray;">=</span><span style="color: teal;">IDXCUQ</span><span style="color: gray;">.</span><span style="color: teal;">index_id</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">)</span><span style="font-size: 9pt;"> <span style="color: teal;">IDX</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">ON</span><span style="font-size: 9pt;"> <span style="color: teal;">C</span><span style="color: gray;">.</span><span style="color: teal;">[object_id]</span><span style="color: gray;">=</span><span style="color: teal;">IDX</span><span style="color: gray;">.</span><span style="color: teal;">[object_id]</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">AND</span><span style="font-size: 9pt;"> <span style="color: teal;">C</span><span style="color: gray;">.</span><span style="color: teal;">column_id</span><span style="color: gray;">=</span><span style="color: teal;">IDX</span><span style="color: gray;">.</span><span style="color: teal;">column_id</span> </span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: green; font-size: 9pt;">--WHERE O.name=N'customer' -- </span><span style="color: green; font-size: 9pt;">如果只查询指定表,加上此条件</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">ORDER</span><span style="font-size: 9pt;"> <span style="color: blue;">BY</span> <span style="color: teal;">O</span><span style="color: gray;">.</span><span style="color: teal;">name</span><span style="color: gray;">,</span><span style="color: teal;">C</span><span style="color: gray;">.</span><span style="color: teal;">column_id</span> </span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">use</span><span style="font-size: 9pt;"> <span style="color: teal;">DB_sql_error</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">Ｓelect</span><span style="font-size: 9pt;"> <span style="color: gray;">*</span> <span style="color: blue;">from</span> <span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">dm_db_index_usage_stats</span></span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">Ｓelect</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">o</span><span style="color: gray;">.</span><span style="color: teal;">name</span><span style="color: gray;">,</span><span style="color: green;">--</span></span><span style="color: green; font-size: 9pt;">表名</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">s</span><span style="color: gray;">.</span><span style="color: teal;">name</span><span style="color: gray;">,</span><span style="color: green;">--</span></span><span style="color: green; font-size: 9pt;">统计信息的名称</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">auto_created</span><span style="color: gray;">,</span><span style="color: green;">--</span></span><span style="color: green; font-size: 9pt;">统计信息是否由查询处理器自动创建</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">user_created</span><span style="color: green;">--</span></span><span style="color: green; font-size: 9pt;">统计信息是否由用户显示创建</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">from</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">stats</span> <span style="color: teal;">s</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">inner</span><span style="font-size: 9pt;"> <span style="color: gray;">join</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: lime;">sysobjects</span> <span style="color: teal;">o</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">on</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">s</span><span style="color: gray;">.</span><span style="color: fuchsia;">object_id</span><span style="color: gray;">=</span><span style="color: teal;">o</span><span style="color: gray;">.</span><span style="color: teal;">id</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">where</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">o</span><span style="color: gray;">.</span><span style="color: teal;">name</span><span style="color: gray;">=</span><span style="color: red;">'</span></span><span style="color: red; font-size: 9pt;">表名'</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">go</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">use</span><span style="font-size: 9pt;"> <span style="color: blue;">master</span></span></div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left">&nbsp;</div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">Ｓelect</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">o</span><span style="color: gray;">.</span><span style="color: teal;">name</span><span style="color: gray;">,</span><span style="color: green;">--</span></span><span style="color: green; font-size: 9pt;">表名</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">s</span><span style="color: gray;">.</span><span style="color: teal;">name</span><span style="color: gray;">,</span><span style="color: green;">--</span></span><span style="color: green; font-size: 9pt;">统计信息的名称</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">sc</span><span style="color: gray;">.</span><span style="color: teal;">stats_column_id</span><span style="color: gray;">,</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">c</span><span style="color: gray;">.</span><span style="color: teal;">name</span><span style="color: green;">---</span></span><span style="color: green; font-size: 9pt;">列名</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">from</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">stats_columns</span> <span style="color: teal;">sc</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">inner</span><span style="font-size: 9pt;"> <span style="color: gray;">join</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: lime;">sysobjects</span> <span style="color: teal;">o</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">on</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">sc</span><span style="color: gray;">.</span><span style="color: fuchsia;">object_id</span><span style="color: gray;">=</span><span style="color: teal;">o</span><span style="color: gray;">.</span><span style="color: teal;">id</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">inner</span><span style="font-size: 9pt;"> <span style="color: gray;">join</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">stats</span> <span style="color: teal;">s</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">on</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">sc</span><span style="color: gray;">.</span><span style="color: teal;">stats_id</span><span style="color: gray;">=</span><span style="color: teal;">s</span><span style="color: gray;">.</span><span style="color: teal;">stats_id</span> <span style="color: gray;">and</span> <span style="color: teal;">sc</span><span style="color: gray;">.</span><span style="color: fuchsia;">object_id</span><span style="color: gray;">=</span><span style="color: teal;">s</span><span style="color: gray;">.</span><span style="color: fuchsia;">object_id</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: gray; font-size: 9pt;">inner</span><span style="font-size: 9pt;"> <span style="color: gray;">join</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: lime;">sys</span><span style="color: gray;">.</span><span style="color: lime;">columns</span> <span style="color: teal;">c</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">on</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">sc</span><span style="color: gray;">.</span><span style="color: teal;">column_id</span><span style="color: gray;">=</span><span style="color: teal;">c</span><span style="color: gray;">.</span><span style="color: teal;">column_id</span> <span style="color: gray;">and</span> <span style="color: teal;">sc</span><span style="color: gray;">.</span><span style="color: fuchsia;">object_id</span><span style="color: gray;">=</span><span style="color: teal;">c</span><span style="color: gray;">.</span><span style="color: fuchsia;">object_id</span></span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="color: blue; font-size: 9pt;">where</span></div>
+<br />
+<div style="text-align: left;" align="left"><span style="font-size: 9pt;">&nbsp;<span style="color: teal;">o</span><span style="color: gray;">.</span><span style="color: teal;">name</span><span style="color: gray;">=</span><span style="color: red;">'</span></span><span style="color: red; font-size: 9pt;">表名'</span></div>
+<br />
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+	
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

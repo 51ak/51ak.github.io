@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Canal常用配置项整理| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Canal常用配置项整理</span></h1>
+</div>
+
+
+  <main>
+    <h2 id="配置模板">配置模板</h2>
+<pre><code>#################################################
+# 支持gtid的实例，应该打开了。以前我们默认是false
+canal.instance.gtidon=true
+
+# 源服务器的连接串
+canal.instance.master.address=mysql3308.dboop.com:3308
+canal.instance.dbUsername=canalreader
+canal.instance.dbPassword={password}
+canal.instance.connectionCharset = UTF-8
+canal.instance.enableDruid=false
+
+# 下面这些项需要留空，有且只有需要丢了数据，重新指定binlog点的时候才配置，别乱写
+canal.instance.master.journal.name=
+canal.instance.master.position=
+canal.instance.master.timestamp=
+canal.instance.master.gtid=
+
+
+
+# 启用或禁用时间序列数据库 (TSDB) 功能，用于存储 Canal 的元数据。
+# 这个还挺重要的，强烈建议打开，这个在表结构变更时有用，具体可以看看原理
+# 可以不写canal.instance.tsdb.url，默认保存在本地${canal.file.data.dir:../conf}/${canal.instance.destination:}路径下
+canal.instance.tsdb.enable=true
+#canal.instance.tsdb.url=jdbc:mysql://127.0.0.1:3306/canal_tsdb
+#canal.instance.tsdb.dbUsername=canal
+#canal.instance.tsdb.dbPassword=canal
+
+
+
+
+# 过滤器,perl的正则表达式.用逗号分割，可以写多个
+canal.instance.filter.regex=db01\\..*,db02\\..*
+#canal.instance.filter.black.regex=
+
+# 我们往kafka推消息的配置
+canal.mq.topic=secCanal3308
+canal.mq.partitionsNum=1 #我们用一个区，如果是分区
+#canal.mq.partitionsNum=3
+#canal.mq.partitionHash=test.table:id^name,.*\\..*
+
+# 下面几个如果行里有大json，超过1M有报错时，可以增加maxRequestSize
+#canal.mq.canalBatchSize = 500
+#canal.mq.batchSize = 81920
+#canal.mq.partitionsNum=1
+#canal.mq.maxRequestSize = 2097152
+#################################################
+
+</code></pre><h2 id="我们没用到的配置项">我们没用到的配置项</h2>
+<pre><code># 我们不依赖与canal做这个切换，这里用不着,事实上这几项也确实不好用
+# 也有可能是我们没用明白
+#canal.instance.standby.address =
+#canal.instance.standby.journal.name =
+#canal.instance.standby.position =
+#canal.instance.standby.timestamp =
+#canal.instance.standby.gtid=
+
+
+
+</code></pre><h2 id="报错处理">报错处理：</h2>
+<ul>
+<li>服务端报错：The message is  bytes when serialized which is larger than the maximum request size</li>
+</ul>
+<pre><code>ERROR c.a.o.canal.connector.kafka.producer.CanalKafkaProducer - java.util.concurrent.ExecutionException: org.apache.kafka.common.errors.RecordTooLargeException: The message is 1333054 bytes when serialized which is larger than the maximum request size you have configured with the max.request.size configuration.
+</code></pre><blockquote>
+<p>处理：增加canal.mq.maxRequestSize ，默认是1M,改成2M试试</p>
+</blockquote>
+<pre><code>canal.mq.maxRequestSize = 2097152
+</code></pre><ul>
+<li>客户端报错： the group has already rebalanced and assigned the partitions to another member</li>
+</ul>
+<pre><code>CommitFailedError: Commit cannot be completed since the group has already
+            rebalanced and assigned the partitions to another member.
+            This means that the time between subsequent calls to poll()
+            was longer than the configured max_poll_interval_ms, which
+            typically implies that the poll loop is spending too much
+            time message processing. You can address this either by
+            increasing the rebalance timeout with max_poll_interval_ms,
+            or by reducing the maximum size of batches returned in poll()
+            with max_poll_records.
+</code></pre><blockquote>
+<p>调整kafka的分区数和<code>canal.mq.partitionsNum</code>为同一个值，报错通常是canal的分区数大于kafka实际的分区数</p>
+</blockquote>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2024/09/07</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E8%BF%90%E7%BB%B4">运维</a> <a href="/categories/centos">centos</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

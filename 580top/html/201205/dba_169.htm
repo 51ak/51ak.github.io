@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySQL实例：MySQL优化实例</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="在apache,&nbsp;php,&nbsp;mysql的体系架构中，mysql对于性能的影响最大，也是关键的核心部分。对于discuz!论坛程序也是如此，mysql的设置是否合理优化，直接影响到论坛的速度和承载量！同时，mysql也是优化难度最大的一个部分，不但需要理解一些mysql专业知识，同时还需要长时间的观察统计并且根据经验进行判断，然后设置合理的参数。<br/>下面我们了解一下mysMySQL实例：MySQL优化实例" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识">基础知识</a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化"><span class="zc_666">性能与优化</span></a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlyouhua/l_16_1.htm">性能与优化</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>MySQL实例：MySQL优化实例</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   在Apache,&nbsp;PHP,&nbsp;MySQL的体系架构中，MySQL对于性能的影响最大，也是关键的核心部分。对于Discuz!论坛程序也是如此，MySQL的设置是否合理优化，直接影响到论坛的速度和承载量！同时，MySQL也是优化难度最大的一个部分，不但需要理解一些MySQL专业知识，同时还需要长时间的观察统计并且根据经验进行判断，然后设置合理的参数。<br />下面我们了解一下MySQL优化的一些基础，MySQL的优化我分为两个部分，一是服务器物理硬件的优化；二是MySQL编译安装时的优化和自身(my.cnf)配置文件的优化。<br />(1) 服务器硬件对MySQL性能的影响<br />a) 磁盘寻道能力（磁盘I/O）,以目前高转速SCSI硬盘(7200转/秒)为例，这种硬盘理论上每秒寻道7200次，这是物理特性决定的，没有办法改变。MySQL每秒钟都在进行大量、复杂的查询操作，对磁盘的读写量可想而知。所以，通常认为磁盘I/O是制约MySQL性能的最大因素之一，对于日均访问量在100万PV以上的Discuz!论坛，由于磁盘I/O的制约，MySQL的性能会非常低下！解决这一制约因素可以考虑以下几种解决方案：<br />使用RAID-0+1磁盘阵列，注意不要尝试使用RAID-5，MySQL在RAID-5磁盘阵列上的效率不会像你期待的那样快； 抛弃传统的硬盘，使用速度更快的闪存式存储设备。经过Discuz!公司技术工程的测试，使用闪存式存储设备可比传统硬盘速度高出6－10倍左右。<br />b) CPU 对于MySQL应用，推荐使用S.M.P.架构的多路对称CPU，例如：可以使用两颗Intel Xeon 3.6GHz的CPU。<br />c) 物理内存对于一台使用MySQL的Database Server来说，服务器内存建议不要小于2GB，推荐使用4GB以上的物理内存。<br />(2) MySQL自身因素当解决了上述服务器硬件制约因素后，让我们看看MySQL自身的优化是如何操作的。对MySQL自身的优化主要是对其源码编译和配置文件my.cnf中的各项参数进行优化调整。下面我们介绍一些对性能影响较大的参数。<br />a)<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>源码编译时的优化:<br />1. -static 13%&nbsp;&nbsp;&nbsp; --with-client-ldflags=-all-static&nbsp;&nbsp; --with-<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d-ldflags=-all-static静态链接提高13%性能<br />2. -pgcc 1%&nbsp;&nbsp; CFLAGS="-O3 -mpentiumpro -mstack-align-double" CXX=gcc \&nbsp;&nbsp;&nbsp; CXXFLAGS="-O3 -mpentiumpro -mstack-align-double \&nbsp;&nbsp;&nbsp; -felide-constructors -fno-exceptions -fno-rtti"如果是Inter处理器，使用pgcc提高1%性能<br />3. Unix Socket 7.5%&nbsp;&nbsp; --with-unix-socket-path=/usr/local/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/tmp/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>.sock使用unix套接字链接提高7.5%性能，所以在windows下<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>性能肯定不如unix下面<br />4. --enable-assembler&nbsp;允许使用汇编模式(优化性能)<br />编译代码:CFLAGS="-O3" CXX=gcc CXXFLAGS="-O3 -felide-constructors -fno-exceptions -fno-rtti -fomit-frame-pointer -ffixed-ebp" ./configure --prefix=/usr/local/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> --enable-assembler --with-innodb --with-<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d-ldflags=-all-static --with-client-ldflags=-all-static --with-unix-socket-path=/usr/local/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/tmp/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>.sock --with-charset=utf8 --with-collation=utf8_general_ci --with-extra-charsets=all<br />b)由于my.cnf文件的优化设置是与服务器硬件配置息息相关的，因而我们指定一个假想的服务器硬件环境：<br />CPU: 2颗Intel Xeon 2.4GHz<br />内存: 4GB DDR<br />硬盘: SCSI 73GB<br />下面，我们根据以上硬件配置结合一份已经优化好的my.cnf进行说明：<br /># vi /etc/my.cnf以下只列出my.cnf文件中[<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d]段落中的内容，<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>段落内容对MySQL运行性能影响甚微，因而姑且忽略。<br />[<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d]port = 3306serverid = 1&nbsp;socket = /tmp/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>.sockskip-locking# 避免MySQL的外部锁定，减少出错几率增强稳定性。skip-name-resolve#禁止MySQL对外部连接进行DNS解析，使用这一选项可以消除MySQL进行DNS解析的时间。但需要注意，如果开启该选项，则所有远程主机连接授权都要使用IP地址方式，否则MySQL将无法正常处理连接请求！<br />back_log = 384指定MySQL可能的连接数量。当MySQL主线程在很短的时间内接收到非常多的连接请求，该参数生效，主线程花费很短的时间检查连接并且启动一个新线程。 back_log参数的值指出在MySQL暂时停止响应新请求之前的短时间内多少个请求可以被存在堆栈中。 如果系统在一个短时间内有很多连接，则需要增大该参数的值，该参数值指定到来的TCP/IP连接的侦听队列的大小。不同的操作系统在这个队列大小上有它自己的限制。 试图设定back_log高于你的操作系统的限制将是无效的。默认值为50。对于Linux系统推荐设置为小于512的整数。<br />key_buffer_size = 32M# key_buffer_size这对MyISAM表来说非常重要。如果只是使用MyISAM表，可以把它设置为可用内存的 30-40%。合理的值取决于索引大小、数据量以及负载 -- 记住，MyISAM表会使用操作系统的缓存来缓存数据，因此需要留出部分内存给它们，很多情况下数据比索引大多了。尽管如此，需要总是检查是否所有的 key_buffer 都被利用了 -- .MYI 文件只有 1GB，而 key_buffer 却设置为 4GB 的情况是非常少的。这么做太浪费了。如果你很少使用MyISAM表，那么也保留低于 16-32MB 的key_buffer_size 以适应给予磁盘的临时表索引所需。<br />innodb_buffer_pool_size = 2.4G&nbsp;#这对Innodb表来说非常重要。Innodb相比MyISAM表对缓冲更为敏感。MyISAM可以在默认的 key_buffer_size 设置下运行的可以，然而Innodb在默认的innodb_buffer_pool_size 设置下却跟蜗牛似的。由于Innodb把数据和索引都缓存起来，无需留给操作系统太多的内存，因此如果只需要用Innodb的话则可以设置它高达 70-80% 的可用内存。-- 如果你的数据量不大，并且不会暴增，那么无需把innodb_buffer_pool_size 设置的太大了。<br />innodb_additional_pool_size = 20M#这个选项对性能影响并不太多，至少在有差不多足够内存可分配的操作系统上是这样。不过如果你仍然想设置为 20MB(或者更大)，因此就需要看一下Innodb<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>需要分配的内存有多少。<br />innodb_log_file_size = 512M#在高写入负载尤其是大数据集的情况下很重要。这个值越大则性能相对越高，但是要注意到可能会增加恢复时间。我经常设置为64-512MB，根据服务器大小而异。<br />innodb_log_buffer_size =16M#默认的设置在中等强度写入负载以及较短事务的情况下，服务器性能还可以。如果存在更新操作峰值或者负载较大，就应该考虑加大它的值了。如果它的值设置太高了，可能会浪费内存 -- 它每秒都会刷新一次，因此无需设置超过1秒所需的内存空间。通常8-16MB就足够了。越小的系统它的值越小。<br />innodb_flush_logs_at_trx_commit = 2#是否为Innodb比MyISAM慢1000倍而头大?看来也许你忘了修改这个参数了。默认值是 1，这意味着每次提交的更新事务(或者每个事务之外的语句)都会刷新到磁盘中，而这相当耗费资源，尤其是没有电池备用缓存时。很多应用程序，尤其是从 MyISAM转变过来的那些，把它的值设置为 2 就可以了，也就是不把日志刷新到磁盘上，而只刷新到操作系统的缓存上。日志仍然会每秒刷新到磁盘中去，因此通常不会丢失每秒1-2次更新的消耗。如果设置为0就快很多了，不过也相对不安全了 -- MySQL服务器崩溃时就会丢失一些事务。设置为2指挥丢失刷新到操作系统缓存的那部分事务。max_allowed_packet = 4Mthread_stack = 256Ktable_cache = 128Ksort_buffer_size = 6M#查询排序时所能使用的缓冲区大小。注意：该参数对应的分配内存是每连接独占！如果有100个连接，那么实际分配的总共排序缓冲区大小为100 × 6 ＝ 600MB。所以，对于内存在4GB左右的服务器推荐设置为6-8M。<br />read_buffer_size = 4M#读查询操作所能使用的缓冲区大小。和sort_buffer_size一样，该参数对应的分配内存也是每连接独享！<br />join_buffer_size = 8M#联合查询操作所能使用的缓冲区大小，和sort_buffer_size一样，该参数对应的分配内存也是每连接独享！<br />myisam_sort_buffer_size = 64Mtable_cache = 512#打开一个表的开销可能很大。例如MyISAM把MYI文件头标志该表正在使用中。你肯定不希望这种操作太频繁，所以通常要加大缓存数量，使得足以最大限度地缓存打开的表。它需要用到操作系统的资源以及内存，对当前的硬件配置来说当然不是什么问题了。如果你有200多个表的话，那么设置为 1024 也许比较合适(每个线程都需要打开表)，如果连接数比较大那么就加大它的值。我曾经见过设置为100,000的情况。<br />thread_cache_size = 64#线程的创建和销毁的开销可能很大，因为每个线程的连接/断开都需要。我通常至少设置为 16。如果应用程序中有大量的跳跃并发连接并且 Threads_Created 的值也比较大，那么我就会加大它的值。它的目的是在通常的操作中无需创建新线程。<br />query_cache_size = 64M#指定MySQL查询缓冲区的大小。可以通过在MySQL控制台执行以下命令观察：<br /># &gt; SHOW VARIABLES LIKE '%query_cache%';# &gt; SHOW STATUS LIKE 'Qcache%';# 如果Qcache_lowmem_prunes的值非常大，则表明经常出现缓冲不够的情况；如果Qcache_hits的值非常大，则表明查询缓冲使用非常频繁，如果该值较小反而会影响效率，那么可以考虑不用查询缓冲；Qcache_free_blocks，如果该值非常大，则表明缓冲区中碎片很多。<br />tmp_table_size = 256Mmax_connections = 768#指定MySQL允许的最大连接进程数。如果在访问论坛时经常出现Too Many Connections的错误提 示，则需要增大该参数值。<br />max_connect_errors = 10000000wait_timeout = 10#指定一个请求的最大连接时间，对于4GB左右内存的服务器可以设置为5-10。<br />thread_concurrency = 8#该参数取值为服务器逻辑CPU数量×2，在本例中，服务器有2颗物理CPU，而每颗物理CPU又支持H.T超线程，所以实际取值为4 × 2 ＝ 8<br />skip-networking#开启该选项可以彻底关闭MySQL的TCP/IP连接方式，如果WEB服务器是以远程连接的方式访问MySQL数据库服务器则不要开启该选项！否则将无法正常连接！<br />show status 命令含义如下:aborted_clients 客户端非法中断连接次数aborted_connects 连接<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>失败次数com_xxx xxx命令执行次数,有很多条connections 连接<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>的数量Created_tmp_disk_tables 在磁盘上创建的临时表Created_tmp_tables 在内存里创建的临时表Created_tmp_files 临时文件数Key_read_requests The number of requests to read a key block from the cacheKey_reads The number of physical reads of a key block from diskMax_used_connections 同时使用的连接数Open_tables 开放的表Open_files 开放的文件Opened_tables 打开的表Questions 提交到server的查询数Sort_merge_passes 如果这个值很大,应该增加my.cnf中的sort_buffer值Uptime 服务器已经工作的秒数提升性能的建议:1.如果opened_tables太大,应该把my.cnf中的table_cache变大2.如果Key_reads太大,则应该把my.cnf中key_buffer_size变大.可以用Key_reads/Key_read_requests计算出cache失败率3.如果Handler_read_rnd太大,则你写的SQL语句里很多查询都是要扫描整个表,而没有发挥索引的键的作用4.如果Threads_created太大,就要增加my.cnf中thread_cache_size的值.可以用Threads_created/Connections计算cache命中率5.如果Created_tmp_disk_tables太大,就要增加my.cnf中tmp_table_size的值,用基于内存的临时表代替基于磁盘的<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

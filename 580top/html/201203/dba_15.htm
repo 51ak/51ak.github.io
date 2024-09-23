@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>查询自动优化带来的负面影响--where条件执件顺序被打乱</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="一般查SQL前一天SQL日志文件个数的语句如果条件1为=则顺序执行withsras(SELECTphysical_device_name,RIGHT(physical_device_name,CHARINDEX('\',REVERSE(physical_device_name))-1)ast1frombackupmediafamilywhereleft(righ查询自动优化带来的负面影响--where条件执件顺序被打乱" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识">基础知识</a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA">高可用性和HA</a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化">性能与优化</a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决"><span class="zc_666">故障与解决</span></a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserverguzhang/l_5_1.htm">故障与解决</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>查询自动优化带来的负面影响--where条件执件顺序被打乱</h1></div>
+					<div id="atSource"> 作者：[51ak ] </div>
+					
+                    <div id="viewcontent">
+                   一般查SQL前一天 SQL日志文件个数的语句
+<div class="cnblogs_code" style="width: 908px; height: 342px;"><img class="code_img_closed" id="code_img_closed_f45118d2-2b02-4eb4-94b3-bbaa5faf5801" style="display: none;" alt="" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" /><img class="code_img_opened" id="code_img_opened_f45118d2-2b02-4eb4-94b3-bbaa5faf5801" alt="" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" /><span class="cnblogs_code_collapse">如果条件1为= 则顺序执行</span>
+<div class="cnblogs_code_hide" id="cnblogs_code_open_f45118d2-2b02-4eb4-94b3-bbaa5faf5801" style="display: block;">
+<pre><div><span style="color: rgb(0, 0, 255);">with</span><span style="color: rgb(0, 0, 0);"> sr <br /></span><span style="color: rgb(0, 0, 255);">as</span><span style="color: rgb(0, 0, 0);"> <br />( <br /></span><span style="color: rgb(0, 0, 255);">SELECT</span><span style="color: rgb(0, 0, 0);"> physical_device_name,</span><span style="color: rgb(128, 128, 128);">RIGHT</span><span style="color: rgb(0, 0, 0);">(physical_device_name,</span><span style="color: rgb(255, 0, 255);">CHARINDEX</span><span style="color: rgb(0, 0, 0);">(</span><span style="color: rgb(255, 0, 0);">'</span><span style="color: rgb(255, 0, 0);">\</span><span style="color: rgb(255, 0, 0);">'</span><span style="color: rgb(0, 0, 0);">,</span><span style="color: rgb(255, 0, 255);">REVERSE</span><span style="color: rgb(0, 0, 0);">(physical_device_name))</span><span style="color: rgb(128, 128, 128);">-</span><span style="color: rgb(128, 0, 0); font-weight: bold;">1</span><span style="color: rgb(0, 0, 0);">) </span><span style="color: rgb(0, 0, 255);">as</span><span style="color: rgb(0, 0, 0);"> t1<br /></span><span style="color: rgb(0, 0, 255);">from</span><span style="color: rgb(0, 0, 0);"> backupmediafamily<br /></span><span style="color: rgb(0, 0, 255);">where</span><span style="color: rgb(0, 0, 0);"><br /></span><span style="color: rgb(128, 128, 128);">left</span><span style="color: rgb(0, 0, 0);">(</span><span style="color: rgb(128, 128, 128);">right</span><span style="color: rgb(0, 0, 0);">(physical_device_name,</span><span style="color: rgb(128, 0, 0); font-weight: bold;">18</span><span style="color: rgb(0, 0, 0);">),</span><span style="color: rgb(128, 0, 0); font-weight: bold;">8</span><span style="color: rgb(0, 0, 0);">)</span><span style="color: rgb(128, 128, 128);">=</span><span style="color: rgb(255, 0, 0);">'</span><span style="color: rgb(255, 0, 0);">20100728</span><span style="color: rgb(255, 0, 0);">'</span><span style="color: rgb(0, 0, 0);">  </span><span style="color: rgb(0, 128, 128);">--</span><span style="color: rgb(0, 128, 128);">这是条件1 ，用来找到符合条件的记录集</span><span style="color: rgb(0, 128, 128);"><br /></span><span style="color: rgb(128, 128, 128);">and</span><span style="color: rgb(0, 0, 0);"> <br /></span><span style="color: rgb(255, 0, 255);">cast</span><span style="color: rgb(0, 0, 0);">(</span><span style="color: rgb(128, 128, 128);">left</span><span style="color: rgb(0, 0, 0);">(</span><span style="color: rgb(128, 128, 128);">right</span><span style="color: rgb(0, 0, 0);">(physical_device_name,</span><span style="color: rgb(128, 0, 0); font-weight: bold;">18</span><span style="color: rgb(0, 0, 0);">),</span><span style="color: rgb(128, 0, 0); font-weight: bold;">12</span><span style="color: rgb(0, 0, 0);">) </span><span style="color: rgb(0, 0, 255);">as</span><span style="color: rgb(0, 0, 0);"> </span><span style="color: rgb(0, 0, 255);">bigint</span><span style="color: rgb(0, 0, 0);">) </span><span style="color: rgb(128, 128, 128);">between</span><span style="color: rgb(0, 0, 0);"> </span><span style="color: rgb(128, 0, 0); font-weight: bold;">201007281600</span><span style="color: rgb(0, 0, 0);"> </span><span style="color: rgb(128, 128, 128);">and</span><span style="color: rgb(0, 0, 0);"> </span><span style="color: rgb(128, 0, 0); font-weight: bold;">201007291559</span><span style="color: rgb(0, 0, 0);"> </span><span style="color: rgb(128, 128, 128);">-</span><span style="color: rgb(0, 0, 0);"> 条件2<br />)<br /></span><span style="color: rgb(0, 0, 255);">Ｓelect</span><span style="color: rgb(0, 0, 0);">  </span><span style="color: rgb(128, 128, 128);">left</span><span style="color: rgb(0, 0, 0);">(t1,</span><span style="color: rgb(255, 0, 255);">len</span><span style="color: rgb(0, 0, 0);">(t1)</span><span style="color: rgb(128, 128, 128);">-</span><span style="color: rgb(128, 0, 0); font-weight: bold;">19</span><span style="color: rgb(0, 0, 0);">) s1,</span><span style="color: rgb(255, 0, 255);">count</span><span style="color: rgb(0, 0, 0);">(</span><span style="color: rgb(128, 0, 0); font-weight: bold;">1</span><span style="color: rgb(0, 0, 0);">) s2 </span><span style="color: rgb(0, 0, 255);">from</span><span style="color: rgb(0, 0, 0);"> sr </span><span style="color: rgb(0, 0, 255);">group</span><span style="color: rgb(0, 0, 0);"> </span><span style="color: rgb(0, 0, 255);">by</span><span style="color: rgb(0, 0, 0);"> </span><span style="color: rgb(128, 128, 128);">left</span><span style="color: rgb(0, 0, 0);">(t1,</span><span style="color: rgb(255, 0, 255);">len</span><span style="color: rgb(0, 0, 0);">(t1)</span><span style="color: rgb(128, 128, 128);">-</span><span style="color: rgb(128, 0, 0); font-weight: bold;">19</span><span style="color: rgb(0, 0, 0);">) <br /><br /></span></div></pre>
+</div>
+</div>
+<p>但是正常的需求是跨天的（时区+8的问题）</p>
+<p>换成IN条件后变成 在SQL2008中 会自动先执行 条件2&nbsp; （sql2005应该也会这样，因为它也是自动查询优化）</p>
+<p>因为没有执行条件1 就执行2&nbsp; 所以在CAST的时候会出错</p>
+<p><span style="color: rgb(255, 0, 0);">消息 8114，级别 16，状态 5，第 2 行</span><br />
+<span style="color: rgb(255, 0, 0);">从数据类型 nvarchar 转换为 bigint 时出错。</span></p>
+<p>SQL：</p>
+<div class="cnblogs_code" style="width: 926px; height: 344px;"><img class="code_img_closed" id="code_img_closed_e4702533-2b74-4545-97e2-915b64c2ca08" style="display: none;" alt="" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" /><img class="code_img_opened" id="code_img_opened_e4702533-2b74-4545-97e2-915b64c2ca08" alt="" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" /><span class="cnblogs_code_collapse">代码</span>
+<div id="cnblogs_code_open_e4702533-2b74-4545-97e2-915b64c2ca08">
+<pre><div><span style="color: rgb(0, 0, 0);"><br /></span><span style="color: rgb(0, 0, 255);">with</span><span style="color: rgb(0, 0, 0);"> sr <br /></span><span style="color: rgb(0, 0, 255);">as</span><span style="color: rgb(0, 0, 0);"> <br />( <br /></span><span style="color: rgb(0, 0, 255);">SELECT</span><span style="color: rgb(0, 0, 0);"> physical_device_name,</span><span style="color: rgb(128, 128, 128);">RIGHT</span><span style="color: rgb(0, 0, 0);">(physical_device_name,</span><span style="color: rgb(255, 0, 255);">CHARINDEX</span><span style="color: rgb(0, 0, 0);">(</span><span style="color: rgb(255, 0, 0);">'</span><span style="color: rgb(255, 0, 0);">\</span><span style="color: rgb(255, 0, 0);">'</span><span style="color: rgb(0, 0, 0);">,</span><span style="color: rgb(255, 0, 255);">REVERSE</span><span style="color: rgb(0, 0, 0);">(physical_device_name))</span><span style="color: rgb(128, 128, 128);">-</span><span style="color: rgb(128, 0, 0); font-weight: bold;">1</span><span style="color: rgb(0, 0, 0);">) </span><span style="color: rgb(0, 0, 255);">as</span><span style="color: rgb(0, 0, 0);"> t1<br /></span><span style="color: rgb(0, 0, 255);">from</span><span style="color: rgb(0, 0, 0);"> backupmediafamily<br /></span><span style="color: rgb(0, 0, 255);">where</span><span style="color: rgb(0, 0, 0);"><br /></span><span style="color: rgb(128, 128, 128);">left</span><span style="color: rgb(0, 0, 0);">(</span><span style="color: rgb(128, 128, 128);">right</span><span style="color: rgb(0, 0, 0);">(physical_device_name,</span><span style="color: rgb(128, 0, 0); font-weight: bold;">18</span><span style="color: rgb(0, 0, 0);">),</span><span style="color: rgb(128, 0, 0); font-weight: bold;">8</span><span style="color: rgb(0, 0, 0);">) </span><span style="color: rgb(128, 128, 128);">in</span><span style="color: rgb(0, 0, 0);">( </span><span style="color: rgb(255, 0, 0);">'</span><span style="color: rgb(255, 0, 0);">20100728</span><span style="color: rgb(255, 0, 0);">'</span><span style="color: rgb(0, 0, 0);">, </span><span style="color: rgb(255, 0, 0);">'</span><span style="color: rgb(255, 0, 0);">20100729</span><span style="color: rgb(255, 0, 0);">'</span><span style="color: rgb(0, 0, 0);">)  </span><span style="color: rgb(0, 128, 128);">--</span><span style="color: rgb(0, 128, 128);">这是条件1 ，用来找到符合条件的记录集</span><span style="color: rgb(0, 128, 128);"><br /></span><span style="color: rgb(128, 128, 128);">and</span><span style="color: rgb(0, 0, 0);"> <br /></span><span style="color: rgb(255, 0, 255);">cast</span><span style="color: rgb(0, 0, 0);">(</span><span style="color: rgb(128, 128, 128);">left</span><span style="color: rgb(0, 0, 0);">(</span><span style="color: rgb(128, 128, 128);">right</span><span style="color: rgb(0, 0, 0);">(physical_device_name,</span><span style="color: rgb(128, 0, 0); font-weight: bold;">18</span><span style="color: rgb(0, 0, 0);">),</span><span style="color: rgb(128, 0, 0); font-weight: bold;">12</span><span style="color: rgb(0, 0, 0);">) </span><span style="color: rgb(0, 0, 255);">as</span><span style="color: rgb(0, 0, 0);"> </span><span style="color: rgb(0, 0, 255);">bigint</span><span style="color: rgb(0, 0, 0);">) </span><span style="color: rgb(128, 128, 128);">between</span><span style="color: rgb(0, 0, 0);"> </span><span style="color: rgb(128, 0, 0); font-weight: bold;">201007281600</span><span style="color: rgb(0, 0, 0);"> </span><span style="color: rgb(128, 128, 128);">and</span><span style="color: rgb(0, 0, 0);"> </span><span style="color: rgb(128, 0, 0); font-weight: bold;">201007291559</span><span style="color: rgb(0, 0, 0);"> </span><span style="color: rgb(0, 128, 128);">--</span><span style="color: rgb(0, 128, 128);"> 这是条件2,如果条件1 不成立 此句会错</span><span style="color: rgb(0, 128, 128);"><br /></span><span style="color: rgb(0, 0, 0);">)<br /></span><span style="color: rgb(0, 0, 255);">Ｓelect</span><span style="color: rgb(0, 0, 0);">  </span><span style="color: rgb(128, 128, 128);">left</span><span style="color: rgb(0, 0, 0);">(t1,</span><span style="color: rgb(255, 0, 255);">len</span><span style="color: rgb(0, 0, 0);">(t1)</span><span style="color: rgb(128, 128, 128);">-</span><span style="color: rgb(128, 0, 0); font-weight: bold;">19</span><span style="color: rgb(0, 0, 0);">) s1,</span><span style="color: rgb(255, 0, 255);">count</span><span style="color: rgb(0, 0, 0);">(</span><span style="color: rgb(128, 0, 0); font-weight: bold;">1</span><span style="color: rgb(0, 0, 0);">) s2 </span><span style="color: rgb(0, 0, 255);">from</span><span style="color: rgb(0, 0, 0);"> sr </span><span style="color: rgb(0, 0, 255);">group</span><span style="color: rgb(0, 0, 0);"> </span><span style="color: rgb(0, 0, 255);">by</span><span style="color: rgb(0, 0, 0);"> </span><span style="color: rgb(128, 128, 128);">left</span><span style="color: rgb(0, 0, 0);">(t1,</span><span style="color: rgb(255, 0, 255);">len</span><span style="color: rgb(0, 0, 0);">(t1)</span><span style="color: rgb(128, 128, 128);">-</span><span style="color: rgb(128, 0, 0); font-weight: bold;">19</span><span style="color: rgb(0, 0, 0);">) <br /><br /></span></div></pre>
+</div>
+<div class="cnblogs_code_toolbar" /></div>
+<p>解决的办法：</p>
+<p>1。强制WHERE执行顺序 不让数据库引擎自动优化</p>
+<p>2。变换SQL的写法</p>
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+	
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

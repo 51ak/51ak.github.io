@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Oracle中返回结果集的存储介绍</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="google了一篇不错的例子，加了点注解，这样看起来更方便了：）oracle不像sqlserver那样在存储过程中用select就可以返回结果集，而是通过out型的参数进行结果集返回的。实际上是利用refcursor--procedure返回记录集：----------------------声明一个package--------------&nbsp;createorreplacepacOracle中返回结果集的存储介绍" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a href="../Oracle/l_7_1.htm" class="hover"　title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../Oraclezhishi/l_8_1.htm" title="Oracle基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../Oracleha/l_9_1.htm" title="Oracle高可用性和HA">高可用性和HA</a>|</li><li><a  href="../Oracleyouhua/l_10_1.htm" title="Oracle性能与优化">性能与优化</a>|</li><li><a  href="../Oracleguzhang/l_11_1.htm" title="Oracle故障与解决">故障与解决</a>|</li><li><a  href="../Oraclebi/l_12_1.htm" title="Oracle商业应用">Oracle商业应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../Oracle/l_7_1.htm">Oracle</a>&nbsp;&gt;&nbsp;<a href="../Oraclezhishi/l_8_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>Oracle中返回结果集的存储介绍</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   google了一篇不错的例子，加了点注解，这样看起来更方便了：）<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>不像SQLServer那样在存储过程中用Select就可以返回结果集，而是通过Out型的参数进行结果集返回的。实际上是利用REF CURSOR--procedure返回记录集：----------------------声明一个Package--------------&nbsp;CREATE OR REPLACE PACKAGE pkg_test&nbsp;AS&nbsp;TYPE myrctype IS REF CURSOR;&nbsp;PROCEDURE get (p_id NUMBER, p_rc OUT myrctype); --Package中声明名为get 的Procedure(只有接口没内容)END pkg_test;-------------------------------------------------------------------------声明Package Body，即上面Package中的内容，包括Procedure get---------------------&nbsp;CREATE OR REPLACE PACKAGE BODY pkg_test&nbsp;AS&nbsp;PROCEDURE get (p_id NUMBER, p_rc OUT myrctype)&nbsp;IS&nbsp;sqlstr VARCHAR2 (500);&nbsp;BEGIN&nbsp;IF p_id = 0 THEN&nbsp;OPEN p_rc FOR&nbsp;SELECT ID, NAME, sex, address, postcode, birthday&nbsp;FROM student;&nbsp;ELSE&nbsp;sqlstr :=&nbsp;'select id,name,sex,address,postcode,birthday&nbsp;from student where id=:w_id'; --w_id是个参数，--以下 p_rc是个REF CURSOR游标类型，而且是OUT型参数，即可返回一个记录集了。USING p_id就是替换上面SQL中:w_id值拉:)&nbsp;OPEN p_rc FOR sqlstr USING p_id;　END IF;&nbsp;END get;&nbsp;END pkg_test;&nbsp;--function返回记录集的例子，原理和上面相同，而是用function的return值来返回记录集。函数返回记录集:&nbsp;建立带ref cursor定义的包和包体及函数：&nbsp;CREATE OR REPLACE&nbsp;package pkg_test as&nbsp;/* 定义ref cursor类型&nbsp;不加return类型，为弱类型，允许动态sql查询，&nbsp;否则为强类型，无法使用动态sql查询;&nbsp;*/&nbsp;type myrctype is ref cursor;&nbsp;function get(intID number) return myrctype;&nbsp;end pkg_test;&nbsp;/CREATE OR REPLACE&nbsp;package body pkg_test as&nbsp;--函数体&nbsp;function get(intID number) return myrctype is&nbsp;rc myrctype; --定义ref cursor变量&nbsp;sqlstr varchar2(500);&nbsp;begin&nbsp;if intID=0 then&nbsp;--静态测试，直接用select语句直接返回结果&nbsp;open rc for select id,name,sex,address,postcode,birthday from student;&nbsp;else&nbsp;--动态sql赋值，用:w_id来申明该变量从外部获得&nbsp;sqlstr := 'select id,name,sex,address,postcode,birthday from student where id=:w_id';&nbsp;--动态测试，用sqlstr字符串返回结果，用using关键词传递参数&nbsp;open rc for sqlstr using intid;&nbsp;end if;return rc;&nbsp;end get;end pkg_test;
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

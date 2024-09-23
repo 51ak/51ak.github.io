@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>数据库多环境SQL上线| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">数据库多环境SQL上线</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#数据库多环境分类">数据库多环境分类</a>
+      <ul>
+        <li><a href="#mysql数据库按环境区分有以下几种数据库">MySQL数据库按环境区分有以下几种数据库</a></li>
+        <li><a href="#oralce测试环境参考mysql的测试环境">Oralce测试环境参考MySQL的测试环境</a></li>
+      </ul>
+    </li>
+    <li><a href="#数据库多环境上线的问题">数据库多环境上线的问题</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#多环境sql上线流程">多环境SQL上线流程</a>
+      <ul>
+        <li><a href="#步骤1选择数据库">步骤1.选择数据库</a></li>
+        <li><a href="#步骤2填写上线内容">步骤2.填写上线内容</a></li>
+        <li><a href="#步骤3流程审批">步骤3.流程审批</a></li>
+        <li><a href="#步骤4用户执行">步骤4.用户执行</a></li>
+        <li><a href="#步骤5执行结果">步骤5.执行结果</a></li>
+      </ul>
+    </li>
+    <li><a href="#后台配置">后台配置</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="数据库多环境分类">数据库多环境分类</h2>
+<h3 id="mysql数据库按环境区分有以下几种数据库">MySQL数据库按环境区分有以下几种数据库</h3>
+<ol>
+<li><strong>正式环境数据库</strong>：又称生产环境</li>
+<li><strong>验证环境数据库</strong>：上线验证环境，介于测试和生产之间的一个环境</li>
+<li><strong>测试环境数据库</strong>：又细分为</li>
+</ol>
+<ul>
+<li>test0测试环境：默认测试环境</li>
+<li>test1测试环境: test1测试环境简称t1环境，和test0环境是并行关系</li>
+<li>test2,test3&hellip; 未来会有更多的测试环境</li>
+</ul>
+<ol start="4">
+<li><strong>开发环境</strong>：又称Dev环境，用于研发本地调试代码</li>
+</ol>
+<h3 id="oralce测试环境参考mysql的测试环境">Oralce测试环境参考MySQL的测试环境</h3>
+<h2 id="数据库多环境上线的问题">数据库多环境上线的问题</h2>
+<ol>
+<li>SQL上线（建表/改表，改数据等） 需要在每个环境下都提个流程，研发的重复工作量大</li>
+<li>研发可能会忘掉部分环境下执行某个SQL，造成各种环境和线上环境的差异越来越大</li>
+</ol>
+<h4 id="解决方式">解决方式</h4>
+<ol>
+<li>提供一个多环境SQL上线流程，研发可以勾选每次上线要执行的环境</li>
+<li>提供一个多环境数据库表结构对比工具</li>
+<li>提供一个不同环境的数据库对象自动同步工具</li>
+</ol>
+<h2 id="多环境sql上线流程">多环境SQL上线流程</h2>
+<p><strong>这里只演示MySQL多环境上线流程，Oracle的多环境上线流程和这个一模一样</strong></p>
+<h3 id="步骤1选择数据库">步骤1.选择数据库</h3>
+<p><img src="/img/dboop/mutli_online01.png" alt="选择数据库" title="选择数据库"></p>
+<h3 id="步骤2填写上线内容">步骤2.填写上线内容</h3>
+<ul>
+<li><strong>注意1：这里可以自由勾选要执行的数据库环境，红色的是线上环境，绿色的是测试和验证环境，蓝色的是开发环境</strong></li>
+<li><strong>注意2：所有环境都会执行SQL验证，所有环境通过验证，才可以进入下一步</strong></li>
+</ul>
+<p><img src="/img/dboop/mutli_online02.png" alt="填写上线内容" title="填写上线内容"></p>
+<h3 id="步骤3流程审批">步骤3.流程审批</h3>
+<ul>
+<li>如果通过了系统的SQL审核，会出现如下图的界面，进入流程审批</li>
+<li>3.负责人审批是必选步骤</li>
+<li>4.测试审批是用户可选步骤</li>
+<li>5.DBA审批会根据用户提供的SQL内容，系统判定是否有dba介入（建表/改表/大范围修改数据DBA会审批，否则会自动跳过这一步）</li>
+</ul>
+<p><img src="/img/dboop/mutli_online03.png" alt="流程审批" title="流程审批"></p>
+<h3 id="步骤4用户执行">步骤4.用户执行</h3>
+<ul>
+<li>审批完成以后，由发起人自由选择在合适的时间，点击上线按扭</li>
+<li></li>
+</ul>
+<p><img src="/img/dboop/mutli_online04.png" alt="用户执行" title="用户执行"></p>
+<h3 id="步骤5执行结果">步骤5.执行结果</h3>
+<ul>
+<li>执行完成后，会显示每个环境的执行结果。</li>
+<li></li>
+</ul>
+<p><img src="/img/dboop/mutli_online05.png" alt="执行结果" title="执行结果"></p>
+<h2 id="后台配置">后台配置</h2>
+<p>这个流程也是在dboop平台上用xml配置的，后台界面如下</p>
+<p><img src="/img/dboop/mutli_onlineadmin.png" alt="后台配置" title="后台配置"></p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/04/08</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/sql%E4%B8%8A%E7%BA%BF">SQL上线</a> <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B">自动化流程</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

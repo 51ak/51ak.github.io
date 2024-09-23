@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>oracle数据类型</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="当你在数据库中创建数据表的时候，你需要定义表中所有字段的类型。oracle有许多种数据类型以满足你的需要。数据类型大约分为：character,number,date,lob,和raw等类型。虽然oracle8i也允许你自定义数据类型，但是它们是最基本的数据类型。在下面的文章中你将了解到他们在oracle中的用法、限制以及允许值。character数据类型character数oracle数据类型" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a href="../Oracle/l_7_1.htm" class="hover"　title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../Oraclezhishi/l_8_1.htm" title="Oracle基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../Oracleha/l_9_1.htm" title="Oracle高可用性和HA">高可用性和HA</a>|</li><li><a  href="../Oracleyouhua/l_10_1.htm" title="Oracle性能与优化">性能与优化</a>|</li><li><a  href="../Oracleguzhang/l_11_1.htm" title="Oracle故障与解决">故障与解决</a>|</li><li><a  href="../Oraclebi/l_12_1.htm" title="Oracle商业应用">Oracle商业应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../Oracle/l_7_1.htm">Oracle</a>&nbsp;&gt;&nbsp;<a href="../Oraclezhishi/l_8_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>oracle数据类型</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   当你在数据库中创建数据表的时候，你需要定义表中所有字段的类型。<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>有许多种数据类型以满足你的需要。数据类型大约分为：character, number, date, LOB, 和RAW等类型。虽然<a href="../../html/Oracle/l_7_1.htm" title="ORACLE" >ORACLE</a>8i也允许你自定义数据类型，但是它们是最基本的数据类型。在下面的文章中你将了解到他们在<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a> 中的用法、限制以及允许值。　　　　Character 数据类型Character 数据类型用来存储字母数字型数据。当你在<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a> 中定义一个character 数据时，通常需要制定字段的长度，它是该字段的最大长度。<a href="../../html/Oracle/l_7_1.htm" title="ORACLE" >ORACLE</a>提供以下几种character 数据类型：　　　　CHAR() CHAR数据类型是一种有固定长度和最大长度的字符串。存储在数据类型为CHAR字段中的数据将以空格的形式补到最大长度。长度定义在1——2000字节之间。　　当你创建一个CHAR型字段，数据库将保证在这个字段中的所有数据是定义长度，如果某个数据比定义长度短，那么将用空格在数据的右边补到定义长度。如果长度大于定义长度将会触发错误信息。　　　　VARCHAR() varchar型数据是varchar2型数据的快照。　　　　VARCHAR2() varchar2数据类型是一种可变长度的、有最大长度的字母数字型数据。Varchar2类型的字段长度可以达到4000字节，Varchar2类型的变量长度可以达到32676字节。　　　　一个空的varchar2(2000)字段和一个空的varchar2(2)字段所占用的空间是一样的。　　　　NCHAR() 和 NVARCHAR2()　NCHAR() 和 NVARCHAR2()数据类型分别与CHAR() 和 VARCHAR2()类型是相同的，只不过它们用来存储NLS（National Language Support）数据。　　　　LONG　LONG 数据类型是一个遗留下来的而且在将来不会被支持的数据类型。它将被LOB(Large Object)数据类型所代替。　　　　比较规则 Varchar2和char数据类型根据尾部的空格有不同的比较规则。对Char型数据，尾部的空格将被忽略掉，对于Varchar2型数据尾部带空格的数据排序比没有空格的要大些。比如：　　　　Char 型数据：　　　　　　　‘YO’=‘YO　　 ’　　　　Varchar2型数据：　　　　　 ‘YO’&amp;lt;’YO　　 ’　　　　Numberic 数据类型　　　　Numberic 数据类型用来存储负的和正的整数、分数和浮点型数据，范围在-1*10-103 和9.999…99*10125之间，有38位的精确度。标识一个数据超出这个范围时就会出错。　　　　Number( ,) Number数据类型存储一个有p位精确度的s位等级的数据。　　　　DATE 数据类型DATE 数据类型用来存储日期和时间格式的数据。这种格式可以转换为<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>格式的数据去浏览，而且它有专门的函数和属性用来控制和计算。以下的几种信息都包含在DATE数据类型中：　　　　Century　　　　Year　　　　Month　　　　Day　　　　Hour　　　　Minute　　　　Second　　　　LOB 数据类型　　LOB(Large Object) 数据类型存储非结构化数据，比如二进制文件，图形文件，或<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>外部文件。LOB 可以存储到4G字节大小。数据可以存储到数据库中也可以存储到外部数据文件中。LOB数据的控制通过DBMS_LOB 包实现。BLOB, NCLOB, 和CLOB 数据可以存储到不同的表空间中，BFILE存储在服务器上的外部文件中。LOB数据类型有以下几种：　　　　BLOB: 二进制数据　　　　CLOB: 字符型数据　　　　BFILE: 二进制文件　　　　<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>数据类型　　　　ROWID ROWID 数据类型是<a href="../../html/Oracle/l_7_1.htm" title="ORACLE" >ORACLE</a>数据表中的一个伪列，它是数据表中每行数据内在的唯一的标识。
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

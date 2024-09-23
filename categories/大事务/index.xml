@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>大事务 on Classic</title>
+    <link>/categories/%E5%A4%A7%E4%BA%8B%E5%8A%A1/</link>
+    <description>Recent content in 大事务 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 18 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E5%A4%A7%E4%BA%8B%E5%8A%A1/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL复制故障修复_无主键表大事务卡住</title>
+      <link>/mysql/mysql%E5%A4%8D%E5%88%B6%E6%95%85%E9%9A%9C%E8%A7%A3%E5%86%B3_%E5%A4%A7%E4%BA%8B%E5%8A%A1%E5%8D%A1%E4%BD%8F/</link>
+      <pubDate>Fri, 18 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%A4%8D%E5%88%B6%E6%95%85%E9%9A%9C%E8%A7%A3%E5%86%B3_%E5%A4%A7%E4%BA%8B%E5%8A%A1%E5%8D%A1%E4%BD%8F/</guid>
+      <description>0.故障现象 生产环境MySQL复制报警，现象
+ 从库复制延时越来越大,gtid一直停留在固定的地方不变 从库的relaylog越来越大，1G以上，但是增长不明显。 从库当前没有业务访问，不存在资源紧张 主库上最近一段时间没有明显的大批量写入  1.原因定位  从上面的现象卡，基本上可以推断是大事务卡住了， 我看的时候法爷已经把relaylog解出来了，也很明显的看到有很多的delete。 根据以上推断我们去主库上查时间点的日志，发现了： 一个SQL是 delete from t1 where c1=&#39;&#39; 删除了65万行数据 于是问题定位：生产环境的windows机器上有同事用navicat删除了线上MySQL的数据。  简单的一个SQL ，但是因为一些原因综合在一起引起了雪崩
+ 不幸的是：这张表是个没主键的表，导致从库追日志进程卡住，无法正常执行 幸运的是：这些从库没有业务访问，没有造成实际影响  2.安全规范 首先：生产环境的windows机器安装navicat访问数据库这种行为，肯定是不被允许的，
+但是因为“历史原因”我们依然有少量同学（不超过10人）有这种特殊需求。
+原计划是3月底推动消除的，
+经过此事以后，DBA会加快推进禁止在生产环境安装数据库客户端连接数据库这个规范。
+有时候就是这样，觉得这个地方可能有风险，我们排个期来解决，通常就会没等到期限就先暴出来了
+ 问：为什么我们不用限制账号访问来源的方法？ 答：因为一些原因,加ip限制代价太大，且不利于未来的docker虚拟化。
+ 3.问题修复 共有3个从节点，我和另外两个DBA用了三种不同的方式来修复
+方法一：我用的方法，就很暴力的在从库上reset master 再set 跳过这个事务 use db_test; truncate table t1; stop slave ; reset master; set @@GLOBAL.GTID_PURGED=&#39;59939d78-de2d-11eb-ac46-e43d1a074d20:16020676&#39; start slave; 方法二：法爷用了相对温和的方法，模拟一个事务的方法。 use db_test; stop slave; SET gtid_next=&#39;59939d78-de2d-11eb-ac46-e43d1a074d20:16020676&#39; truncate table t1; SET gtid_next=&#39;automatic&#39;; start slave; 我和法爷讨论了一下，相对来说这个是更安全的方法。保证了事务的连续，偷换了一个事务的内容</description>
+    </item>
+    
+  </channel>
+</rss>

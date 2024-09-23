@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>sql server与excel、access数据互导解析</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="1、sqlserver导出为excel：<br/>要用t-sql语句直接导出至excel工作薄，就不得不用借用sqlserver管理器的一个扩展存储过程：xp_cmdshell，此过程的作用为“以操作系统命令行解释器的方式执行给定的命令字符串，并以文本行方式返回任何输出。”下面为定义示例：<br/>2、excel导入sqlserver表：<br/>在sqlserver中，有定义一个sql server与excel、access数据互导解析" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a href="../othersql/l_19_1.htm" class="hover"　title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../nosql/l_20_1.htm" title="NoSQL">NoSQL</a>|</li><li><a  href="../sysbase/l_21_1.htm" title="Sybase">Sybase</a>|</li><li><a  href="../db2/l_22_1.htm" title="DB2">DB2</a>|</li><li><a  href="../access/l_23_1.htm" title="Access"><span class="zc_666">Access</span></a>|</li><li><a  href="../infomix/l_24_1.htm" title="Informix">Informix</a>|</li><li><a  href="../sqlsql/l_25_1.htm" title="其他">其他</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../othersql/l_19_1.htm">其他数据库</a>&nbsp;&gt;&nbsp;<a href="../access/l_23_1.htm">Access</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>sql server与excel、access数据互导解析</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   1、SQL Server导出为Excel：<br />要用T-SQL语句直接导出至Excel工作薄，就不得不用借用SQL Server管理器的一个扩展存储过程：xp_cmdshell，此过程的作用为“以操作系统命令行解释器的方式执行给定的命令字符串，并以文本行方式返 回任何输出。”下面为定义示例：<br />2、Excel导入SQL Server表：<br />在SQL Server中，有定义一个OpenDateSource函数，用于引用那些不经常访问的 OLE DB 数据源，而我们的数据互导操作，就是建立在这个函数之上。<br />首先看一个T-SQL帮助中的示例，描述如下：<br />--下面是个查询的示例，它通过用于 Jet 的 OLE DB 提供程序查询 Excel 电子表格。<br />SELECT *<br />FROM OpenDataSource( 'Microsoft.Jet.OLEDB.4.0',<br />'Data Source="c:Financeaccount.xls";User ID=Admin;PassWord=;Extended PRoperties=Excel 5.0')xactions<br />注：--在password＝；的后面，加个 HDR=NO 的选项, 表示第1行是数据, 默认为YES, 表示第1行是字段名<br />如果你直接引用这个示例进行查询，那么肯定是通不过的。关键在于语句中的两个地方需要修改，一处在于Data Source处，双引号内为Excel表格的实际存放位置，要修改为你想查询的Excel表实际完整路径；二为最后的...xactions，其实这里代 表的是要进行的某些动作，下面会讲，这里修改成用中括号包围的Excel表中工作表名字（加上一个$）就可以了，如[Sheet1$]。当然，还可以将 Excel 5.0改为Excel 8.0，因为5.0是以前的老版本了。<br />下面是实例说明：<br />/**//*1、插入Excel中的资料到现存的sql数据库表中（假设C盘有excel表book2.xls，book2.xls中有个工作表sheet1，sheet1中有两列id和FName；而同时sql数据库中也有一个表test）：*/<br />insert into test SELECT id,FName<br />FROM OpenDataSource('Microsoft.Jet.OLEDB.4.0','Data Source="c:ook2.xls";User ID=Admin;Password=;Extended properties=Excel 8.0')[sheet1$]<br />--如果用select * ，则列的次序会乱，资料内容也会乱，无法插入成功，所以指定列名<br />－－－－－－－－－－－－－－－－－－－－－－－<br />/**//*2、插入excel表中资料到sql数据库并新建一个sql表（excel的定义和内容同上）：*/<br />select convert(int,id)as id,FName into test7<br />FROM OpenDataSource('Microsoft.Jet.OLEDB.4.0','Data Source="c:ook2.xls";User ID=Admin;Password=;Extended properties=Excel 8.0')[sheet1$]<br />--在select 列中最好用convert进行显示类型转换，否则资料类型会不如预期。<br />特别注意！！！：1）如果是从数据库中导出的exel表，例如从jobs表导出的exel文件mytest.xls工作表默认是jobs上面例子中的[sheet1$] 应改为[jobs$]<br />2）如果出现“服务器: 消息 7399，级别 16，状态 1，行 1<br />OLE DB 提供程序 'MICROSOFT.JET.OLEDB.4.0' 报错。提供程序未给出有关错误的任何信息。”<br />上面这个错误是因为你的EXECL 文件被打开着,关掉那个EXCEL文件再试试.<br />3）被导入的exel表第一行要有各列的列名如<br />id name age<br />1 tomclus 35<br />。。。<br />如果没有列名仅仅<br />1 tomclus 35<br />。。。<br />可能会出错<br />如果上面的例子中没有制定所有列，或select*,都会出错，如列不完全，或数据类型布匹<br />SQL Server与Excel的数据互导讲解完了，你明白了吗？而access和Excel的基本一样，只是要去掉Extended properties声明。<br />=======================<br />Delphi示例（導出為excel表）：<br />ADOQ1.Close;<br />ADOQ1.SQL.Clear;<br />sqltrs :=<br />'INSERT INTO CTable (Name1,Sex,ID)'+<br />' SELECT'+<br />' 姓名,性别,身份证号'+<br />' FROM [excel 8.0;database=' + XlsName + '].[sheet1$]';<br />ADOQ1.Parameters.Clear;<br />ADOQ1.ParamCheck:=false;<br />ADOQ1.SQL.Text := sqltrs;<br />ADOQ1.Execsql;<br />//中文字段两边不能有空格<br />另附：（下面的部分内容没有亲自实践）<br />熟悉SQL SERVER 2000的数据库管理员都知道，其DTS可以进行数据的导入导出，其实，我们也可以使用Transact-SQL语句进行导入导出操作。在 Transact-SQL语句中，我们主要使用OpenDataSource函数、OPENROWSET 函数，关于函数的详细说明，请参考SQL联机帮助。利用下述方法，可以十分容易地实现SQL SERVER、ACCESS、EXCEL数据转换，详细说明如下：<br />一、SQL SERVER 和ACCESS的数据导入导出<br />常规的数据导入导出：<br />使用DTS向导迁移你的<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据到SQL Server，你可以使用这些步骤:<br />○1在SQL SERVER企业管理器中的Tools（工具）菜单上，选择Data Transformation<br />○2Services（数据转换服务），然后选择 czdImport Data（导入数据）。<br />○3在Choose a Data Source（选择数据源）对话框中选择Microsoft <a href="../../html/access/l_23_1.htm" title="Access" >Access</a> as the Source，然后键入你的.mdb数据库(.mdb文件扩展名)的文件名或通过浏览寻找该文件。<br />○4在Choose a Destination（选择目标）对话框中，选择Microsoft OLE　DB Prov ider for SQL　Server，选择数据库服务器，然后单击必要的验证方式。<br />○5在Specify Table Copy（指定表格复制）或Query（查询）对话框中，单击Copy tables（复制表格）。<br />○6在Select Source Tables（选择源表格）对话框中，单击Select All（全部选定）。下一步，完成。<br />Transact-SQL语句进行导入导出：<br />1.在SQL SERVER里查询access数据:<br />SELECT *<br />FROM OpenDataSource( 'Microsoft.Jet.OLEDB.4.0',<br />'Data Source="c:DB.mdb";User ID=Admin;Password=')...表名<br />2.将access导入SQL server<br />在SQL SERVER 里运行:<br />SELECT *<br />INTO newtable<br />FROM OPENDATASOURCE ('Microsoft.Jet.OLEDB.4.0',<br />'Data Source="c:DB.mdb";User ID=Admin;Password=' )...表名<br />3.将SQL SERVER表里的数据插入到<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>表中<br />在SQL SERVER 里运行：<br />insert into OpenDataSource( 'Microsoft.Jet.OLEDB.4.0',<br />'Data Source=" c:DB.mdb";User ID=Admin;Password=')...表名<br />(列名1,列名2)<br />select 列名1,列名2 from sql表<br />实例：<br />insert into OPENROWSET('Microsoft.Jet.OLEDB.4.0',<br />'C:db.mdb';'admin';'', Test)<br />select id,name from Test<br /><br />INSERT INTO OPENROWSET('Microsoft.Jet.OLEDB.4.0', 'c: rade.mdb'; 'admin'; '', 表名)<br />SELECT *<br />FROM sqltablename<br />二、SQL SERVER 和EXCEL的数据导入导出<br />1、在SQL SERVER里查询Excel数据:<br />SELECT *<br />FROM OpenDataSource( 'Microsoft.Jet.OLEDB.4.0',<br />'Data Source="c:ook1.xls";User ID=Admin;Password=;Extended properties=Excel 5.0')...[Sheet1$]<br />下面是个查询的示例，它通过用于 Jet 的 OLE DB 提供程序查询 Excel 电子表格。<br />SELECT *<br />FROM OpenDataSource ( 'Microsoft.Jet.OLEDB.4.0',<br />'Data Source="c:Financeaccount.xls";User ID=Admin;Password=;Extended properties=Excel 5.0')...xactions<br />2、将Excel的数据导入SQL server :<br />SELECT * into newtable<br />FROM OpenDataSource( 'Microsoft.Jet.OLEDB.4.0',<br />'Data Source="c:ook1.xls";User ID=Admin;Password=;Extended properties=Excel 5.0')...[Sheet1$]<br />实例:<br />SELECT * into newtable<br />FROM OpenDataSource( 'Microsoft.Jet.OLEDB.4.0',<br />'Data Source="c:Financeaccount.xls";User ID=Admin;Password=;Extended properties=Excel 5.0')...xactions<br />3、将SQL SERVER中查询到的数据导成一个Excel文件<br />T-SQL代码：<br />EXEC master..xp_cmdshell 'bcp 库名.dbo.表名out c:Temp.xls -c -q -S"servername" -U"sa" -P""'<br />参数：S 是SQL服务器名；U是用户；P是密码<br />说明：还可以导出文本文件等多种格式<br />实例:EXEC master..xp_cmdshell 'bcp saletesttmp.dbo.CusAccount out c: emp1.xls -c -q -S"pmserver" -U"sa" -P"sa"'<br />EXEC master..xp_cmdshell 'bcp "SELECT au_fname, au_lname FROM pubs..authors ORDER BY au_lname" queryout C: authors.xls -c -Sservername -Usa -Ppassword'<br />在VB6中应用ADO导出EXCEL文件代码：<br />Dim cn As New ADODB.Connection<br />cn.open "Driver={SQL Server};Server=WEBSVR;DataBase=WebMis;UID=sa;WD=123;"<br />cn.execute "master..xp_cmdshell 'bcp "SELECT col1, col2 FROM 库名.dbo.表名" queryout E:DT.xls -c -Sservername -Usa -Ppassword'"<br /><br />4、在SQL SERVER里往Excel插入数据:<br />insert into OpenDataSource( 'Microsoft.Jet.OLEDB.4.0',<br />'Data Source="c:Temp.xls";User ID=Admin;Password=;Extended properties=Excel 5.0')...table1 (A1,A2,A3) values (1,2,3)<br />T-SQL代码：<br />INSERT INTO<br />OPENDATASOURCE('Microsoft.JET.OLEDB.4.0',<br />'Extended Properties=Excel 8.0;Data source=C: raininginventur.xls')...[Filiale1$]<br />(bestand, produkt) VALUES (20, 'Test')<br />总结：利用以上语句，我们可以方便地将SQL SERVER、ACCESS和EXCEL电子表格软件中的数据进行转换，为我们提供了极大方便！<br />EXEC master..xp_cmdshell 'bcp 库名.dbo.表名out c:Book3.xls -c -q -S"servername" -U"sa" -P""'<br />--参数：S 是SQL服务器名；U是用户名；P是密码,没有就空着<br />--说明：其实用这个过程导出的格式实质上就是文本格式的，不信的话在导出的Excel表中改动一下再保存看看。<br />实际例子与说明如下：<br />/**//*如果要将表整个导出至Excel的话*/<br />EXEC master..xp_cmdshell 'bcp northwind.dbo.orders out c:Book1.xls -c -q -S"(local)" -U"sa" -P""'<br />--注意句中的northwind.dbo.orders，为数据库名＋拥有者＋表名<br />--直接导出用“out”关健字<br />-------------------------------------------<br />/**//*如果要利用查询来导出部分字段至Excel的话*/<br />EXEC master..xp_cmdshell 'bcp "SELECT orderid,cutomerid,freight FROM northwind..orders ORDER BY orderid" queryout C: Book2.xls -c -S"(local)" -U"sa" -P""'<br />--这里在bcp后面加了一个查询语句，并用双引号括起来<br />--利用查询要用“queryout”关键字<br />关于SQL Server与Excel、<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据互导问题的补充：<br />1、将excel中的数据导入sql中时，数字变为科学计数法的解决办法：<br />如：<br />excel中的数据为：8630890<br />导入sql后变为：8.63089e+006<br />注：sql中该字段数据类型为nvchar。<br /><br />可以参考下面的方法转换已经导入的数据,但因精度问题导致的数据不准确不能被处理,另外,excel数据中,如果有前导的0,那么导入后的数据由于是float数字,所以会丢失前导0<br />declare @a float<br />set @a=8.63089e+006<br />select cast(@a as decimal(38))<br />--结果：8630890<br />结合自己的实例，给大家一段代码：<br />file1=request("file")<br /><br />sql="insert into student(studyid,yourname,yourpass,yourclass,courseid) SELECT cast(学号 as decimal(18)),姓名,cast(密码 as decimal(18)),班级,cast(选课班号 as decimal(18)) FROM OpenDataSource('Microsoft.Jet.OLEDB.4.0','Data Source="&amp;file1&amp;";User ID=Admin;Password=;Extended properties=Excel 8.0')...[sheet1$]"<br />conn.Execute sql<br />2、如何得到EXCEL的表名（asp中）：<br />set app=server.CreateObject("Excel.application")<br />app.Workbooks.Open(""&amp;file1&amp;"")<br />for i =1 to app.worksheets.count<br />response.write app.worksheets(i).name<br />next<br />测试的时候，不知什么原因，时好时不好的，有待进一步解决！<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

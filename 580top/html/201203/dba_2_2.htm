@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SQLSERVER 数据库使用规范_第2页</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="这是我自己写的SQLSERVER数据库使用规范，供参考1.表的字义a)尽可能少的使用允许NULL字段b)聚集索引字段应该尽可能的少（不超过3个字段），尽可能的小（不多与200字节）c)鼓励使用GUID字段代替IDENTITY（1，1）自增字段。推荐使用扩展的SQLSERVER 数据库使用规范" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA">高可用性和HA</a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化">性能与优化</a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决">故障与解决</a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserverzhishi/l_2_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>SQLSERVER 数据库使用规范_第2页</h1></div>
+					<div id="atSource"> 作者：[51ak ] </div>
+					
+                    <div id="viewcontent">
+                   </font></div>
+<div align="left"><span>4.<span>&nbsp;&nbsp; </span></span>函数的使用</div>
+<div align="left"><span>a)<span>&nbsp;&nbsp; </span></span>自定义函数可以少用，较多的考虑使用WEB层面处理相应逻辑</div>
+<div align="left"><span>b)<span>&nbsp;&nbsp; </span></span>函数的命名规则： ufn_开头</div>
+<div align="left"><span>5.<span>&nbsp;&nbsp; </span></span>事务的使用</div>
+<div align="left"><span>a)<span>&nbsp;&nbsp; </span></span>对数据一致性要求不高的业务，尽可能少的使用事务</div>
+<div align="left"><span>b)<span>&nbsp;&nbsp; </span></span>查询时如果可以尽可能多的使用 WITH NO LOCK</div>
+<div align="left"><span>c)<span>&nbsp;&nbsp; </span></span>使用事务时，对表的访问顺序在不同的程序中要尽可能的保持一致</div>
+<div align="left"><span>d)<span>&nbsp;&nbsp; </span></span>事务的粒度尽可能的小，长的事务要尽可能的拆分成多个</div>
+<div align="left"><span>e)<span>&nbsp;&nbsp; </span></span>事务中需要用到的一些变量和查询结果，应尽可能的在事务开始之前准备好</div>
+<div align="left"><span>f)<span>&nbsp;&nbsp; </span></span>事务中如果使用到大表（200万）需要优先考虑拆表或分区表</div>
+<div align="left"><span>6.<span>&nbsp;&nbsp; </span></span>链接服务器的使用</div>
+<div align="left"><span>a)<span>&nbsp;&nbsp; </span></span>不建议对异机房的数据进行大量的查询，替代方案是对指定表的复制订阅</div>
+<div align="left"><span>b)<span>&nbsp;&nbsp; </span></span>同机房的链接服务器不允许使用外网IP地址</div>
+<div align="left"><span>c)<span>&nbsp;&nbsp; </span></span>使用链接服务器时，需要考虑到对方服务器变更IP地址时带来的影响</div>
+<div align="left"><span>d)<span>&nbsp;&nbsp; </span></span>原则上不允许更新远程链接服务器的数据，改为在远程服务器上读这边的数据实现更新</div>
+<div align="left"><span>7.<span>&nbsp;&nbsp; </span></span>数据库作业的命名</div>
+<div align="left">分类名(普通，DBA维护，多库,多主机)_数据库名_作业用途的中文说明和运行频率_负责人_4位标识码</div>
+<div align="left"><span>a)<span>&nbsp;&nbsp; </span></span>分类名 可以写多个 例： 多库多主机_[DBA_PFData]_灾备机上统计各从属服务器上的日志延时_张文精_0000</div>
+<div align="left"><span>b)<span>&nbsp;&nbsp; </span></span>数据库名字段的说明</div>
+<div align="left"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; i.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>多库的作业可以用逗号隔开，不要求所有库名都写上，写不全的以&hellip; 结尾</div>
+<div align="left"><span>c)<span>&nbsp;&nbsp; </span></span>标识码说明</div>
+<div align="left"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; i.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>第一位标识码用来标识失败以后是否发送通知：0 不发送 1 发送邮件 2发送短信 3邮件+短信</div>
+<div align="left"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ii.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>第二位标识码用来标识作业的事务级别：</div>
+<div align="left"><span>1.<span>&nbsp;&nbsp; </span></span>0 可随时停止</div>
+<div align="left"><span>2.<span>&nbsp;&nbsp; </span></span>2 可终止，中止后需要重新手工启动该作业</div>
+<div align="left"><span>3.<span>&nbsp;&nbsp; </span></span>5 中止需要负责人确认，否则会产生数据混乱。（紧急情况下，DBA依旧有权在不通知的情况下中止作业）</div>
+<div align="left"><span>4.<span>&nbsp;&nbsp; </span></span>8 不可中止，中止必须负责人确认（请慎用，确认过程产生的时间和<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>意外都将由该作业负责人承担）</div>
+<div align="left"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; iii.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>第三位标识码 预留</div>
+<div align="left"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; iv.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>第四位标识码 预留</div>
+<div align="left"><span>8.<span>&nbsp;&nbsp; </span></span>数据库作业的编写规范</div>
+<div align="left"><span>a)<span>&nbsp;&nbsp; </span></span>作业的业务逻辑应尽可能的写在存储过程中，而不是用大量的SQL语句写到步骤中</div>
+<div align="left"><span>b)<span>&nbsp;&nbsp; </span></span>作业的执行时间</div>
+<div align="left"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; i.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>不允许在上班时间运行和启动有危险操作的SQL作业（包括：长时间锁表，大量资源占用，TRUNCATE表，修改线上表结构）</div>
+<div align="left"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ii.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>尽可能的避免每个整点的前后5分钟内（因为多数的作业会在此时间段运行，避免产生性能冲突）</div>
+<div align="left"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; iii.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>尽可能的避免每天23：40-2：40这个时间段（几乎所有备份作业在此时间段运行）</div>
+<div align="left"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; iv.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>尽可能的避免周末 6：00-8：00 运行作业（系统打补丁升级的会在此时间段运行）</div>
+<div align="left"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>大量 insert,UPDATE，DELETE 的作业建议在 4：00-6：00 运行</div>
+<div align="left"><span>9.<span>&nbsp;&nbsp; </span></span>Join(多表联合)查询</div>
+<div align="left"><span>a)<span>&nbsp;&nbsp; </span></span>不过分迷信3NF,4NF..范式设计,在一些可预计的查询瓶颈处考虑反范式</div>
+<div align="left"><span>b)<span>&nbsp;&nbsp; </span></span>将各子查询先筛选出小范围的行以后再JOIN</div>
+<div align="left"><span>c)<span>&nbsp;&nbsp; </span></span>Join的参与表数量应尽可能的少，最多不能大于7个</div>
+<div align="left"><span>d)<span>&nbsp;&nbsp; </span></span>可以考虑将一部分常用的JOIN固化成物理视图再使用</div>
+<div align="left"><span>e)<span>&nbsp;&nbsp; </span></span>注意联合字段的索引（原则上用与ON的字段必须有索引）</div>
+<div align="left"><span>10.&nbsp;</span>一些约定的书写规范</div>
+<div align="left"><span>a)<span>&nbsp;&nbsp; </span></span>任何地方不能出现 SELECT * FROM,所有查询强制写列名</div>
+<div align="left"><span>b)<span>&nbsp;&nbsp; </span></span>任何时间使用表名，存储过程名，都需要加上架构名（ dbo.）</div>
+<div align="left"><span>c)<span>&nbsp;&nbsp; </span></span>任何用户创建的对象都是属于DBO架构，如有特殊情况，需要邮件知会</div>
+<div align="left"><span>d)<span>&nbsp;&nbsp; </span></span>原则上禁止游标的使用，可替代的方案分别是表变量和临时表</div>
+<div align="left"><span>e)<span>&nbsp;&nbsp; </span></span>原则上不能在SQL语句中使用强制索引（强制索引只允许出现在存储过程中，且需要邮件告知DBA）</div>
+<div align="left"><span>f)<span>&nbsp;&nbsp; </span></span>尽可能少的在列上使用表达式（或函数），会被放弃使用索引（最常见的是对时间字段的处理，请不要对表字段进行函数运算）</div>
+<div align="left"><span>11.&nbsp;</span>有助于提高性能的一些SQL语句书写规范</div>
+<div align="left"><span>a)<span>&nbsp;&nbsp; </span></span>将SQL语句写在存储过程中，而不是SQL语句中</div>
+<div align="left"><span>b)<span>&nbsp;&nbsp; </span></span>Select count(1)&hellip; &gt;0 的效率要低于 IF EXISTS子句</div>
+<div align="left"><span>c)<span>&nbsp;&nbsp; </span></span>注意UNion和Union all 的区别</div>
+<div align="left"><span>d)<span>&nbsp;&nbsp; </span></span>不做无用的ORDER BY ,排序时还要考虑排序字段的索引</div>
+<div align="left"><span>e)<span>&nbsp;&nbsp; </span></span>IN适合于外表大而内表小的情况；EXISTS适合于外表小而内表大的情况</div>
+<div align="left"><span>f)<span>&nbsp;&nbsp; </span></span>不建议触发器的使用，可替代的方案包括CDC和程序处理</div>
+<div align="left"><span>g)<span>&nbsp;&nbsp; </span></span>如果有复杂的字符串处理(如正则匹配)可以考虑使用CLR函数</div>
+<div align="left"><font face="Arial"><div class="sabrosus"><a href='dba_2.htm' title='回到第一页'>首页</a><a href='dba_2.htm' title='上一页'>上一页</a><a href='dba_2.htm' title='第1页'>1</a><span class="current">2</span><a href='dba_2_3.htm' title='第3页'>3</a><a href='dba_2_3.htm' title='下一页'>下一页</a><a href='dba_2_3.htm' title='尾页'>尾页</a><input type="hidden" value="2" id="page">&nbsp;&nbsp;<strong>分页：2/3页</strong></div>
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+	
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

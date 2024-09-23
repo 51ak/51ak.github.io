@@ -1,0 +1,522 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL常用脚本_mysqldump| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL常用脚本_mysqldump</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#常用命令">常用命令</a>
+      <ul>
+        <li><a href="#备份整个实例dump全实例">备份整个实例(dump全实例)</a></li>
+        <li><a href="#备份实例中的用户库用于实例迁移或升级">备份实例中的用户库(用于实例迁移或升级)</a></li>
+        <li><a href="#导出db1db2两个数据库的所有数据">导出db1、db2两个数据库的所有数据</a></li>
+        <li><a href="#导出db1中的a1a2表">导出db1中的a1、a2表</a></li>
+        <li><a href="#导出db1表a1中id1的数据">导出db1表a1中id=1的数据</a></li>
+        <li><a href="#只导出表结构不导出数据--no-data">只导出表结构不导出数据，&ndash;no-data</a></li>
+        <li><a href="#导出指定表数据不要表结构">导出指定表数据（不要表结构）</a></li>
+      </ul>
+    </li>
+    <li><a href="#常见报错">常见报错</a>
+      <ul>
+        <li><a href="#a-partial-dump-from-a-server-that-has-gtids-will-by-default-include-the-gtids-of-all-transactions">A partial dump from a server that has GTIDs will by default include the GTIDs of all transactions</a></li>
+        <li><a href="#mysqldumpcouldnt-execute-select-column_name-json_extracthistogram">mysqldump:Couldn&rsquo;t execute &lsquo;SELECT COLUMN_NAME, JSON_EXTRACT(HISTOGRAM..</a></li>
+      </ul>
+    </li>
+    <li><a href="#mysqldump参数">mysqldump参数</a>
+      <ul>
+        <li><a href="#all-databases---a-全部库">–all-databases , -A (全部库)</a></li>
+        <li><a href="#add-drop-database-drop库">–add-drop-database (drop库)</a></li>
+        <li><a href="#databases--b-指定库">–databases, -B (指定库)</a></li>
+        <li><a href="#no-create-db--n-不创建库">–no-create-db, -n (不创建库)</a></li>
+        <li><a href="#no-create-info--t-不创建表">–no-create-info, -t (不创建表)</a></li>
+        <li><a href="#no-data--d-不导出数据仅结构">–no-data, -d (不导出数据,仅结构)</a></li>
+        <li><a href="#routines--r-存储过程函数">–routines, -R (存储过程/函数)</a></li>
+        <li><a href="#tables-表">–tables (表)</a></li>
+        <li><a href="#triggers-触发器">–triggers (触发器)</a></li>
+        <li><a href="#add-drop-table-drop表">–add-drop-table (drop表)</a></li>
+        <li><a href="#ignore-table-忽略表">–ignore-table (忽略表)</a></li>
+        <li><a href="#add-locks-加锁">–add-locks (加锁)</a></li>
+        <li><a href="#lock-all-tables--x-锁表">–lock-all-tables, -x (锁表)</a></li>
+        <li><a href="#lock-tables--l-锁表">–lock-tables, -l (锁表)</a></li>
+        <li><a href="#single-transaction-一致性">–single-transaction (一致性)</a></li>
+        <li><a href="#compatible-兼容">–compatible (兼容)</a></li>
+        <li><a href="#default-character-set-字符集">–default-character-set (字符集)</a></li>
+        <li><a href="#master-data-主从信息">—master-data (主从信息)</a></li>
+        <li><a href="#events--e-事件">–events, -E (事件)</a></li>
+        <li><a href="#fields-terminated-by-忽略字段">–fields-terminated-by (忽略字段)</a></li>
+        <li><a href="#hex-blob-二进制">–hex-blob (二进制)</a></li>
+        <li><a href="#insert-ignore-重复值">–insert-ignore (重复值)</a></li>
+        <li><a href="#replace-replace-into-">–replace (replace into )</a></li>
+        <li><a href="#extended-insert">—extended-insert</a></li>
+        <li><a href="#log-error-输出日志">–log-error (输出日志)</a></li>
+        <li><a href="#max_allowed_packet">–max_allowed_packet</a></li>
+        <li><a href="#set-charset-字符集">–set-charset (字符集)</a></li>
+        <li><a href="#opt-一些组合">–opt (一些组合)</a></li>
+        <li><a href="#quick--q">–quick, -q</a></li>
+        <li><a href="#result-file--r-指定结果文件">–result-file, -r (指定结果文件)</a></li>
+        <li><a href="#where--w-指定where">–where, -w (指定where)</a></li>
+      </ul>
+    </li>
+    <li><a href="#已dump完成的文件分离指定的库表">已dump完成的文件,分离指定的库表</a></li>
+    <li><a href="#经验值">经验值</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <blockquote>
+<p>如果用loginpath的可以用</p>
+</blockquote>
+<pre><code> mysqldump  --login-path=dba 
+
+ 代替
+
+
+mysqldump -uroot -p123456
+
+</code></pre><h2 id="常用命令">常用命令</h2>
+<h3 id="备份整个实例dump全实例">备份整个实例(dump全实例)</h3>
+<pre><code>mysqldump -uroot -p123456 -h127.0.0.1 -P3306 --single-transaction  --column-statistics=0   --skip_add_locks --skip-lock-tables --master-data=2  -A | gzip &gt; /data/mysqlbackup/dboop_dump`date '+%m-%d-%Y'`.sql.gz
+
+</code></pre><h3 id="备份实例中的用户库用于实例迁移或升级">备份实例中的用户库(用于实例迁移或升级)</h3>
+<pre><code>mysql -uroot -p123456 -h127.0.0.1 -P3306 -e &quot;show databases&quot; |grep -Ev &quot;Database|information_schema|mysql|performance_schema&quot;  | xargs mysqldump -uroot -p123456 -h127.0.0.1 -P3306 --single-transaction  --column-statistics=0   --skip_add_locks --skip-lock-tables --master-data=2 --databases &gt; /data/mysqlbackup/dboop_dump0401.sql
+
+-- 此时mysql.user用户也没有迁移过来,如果需要迁移用户,参考:
+
+https://www.dboop.com/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E7%94%A8%E6%88%B7%E7%9B%B8%E5%85%B3/
+
+</code></pre><h3 id="导出db1db2两个数据库的所有数据">导出db1、db2两个数据库的所有数据</h3>
+<pre><code>mysqldump -uroot -p123456 --set-gtid-purged=OFF  --skip_add_locks --skip-lock-tables --databases db1 db2 &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="导出db1中的a1a2表">导出db1中的a1、a2表</h3>
+<pre><code>mysqldump -uroot -p123456 --set-gtid-purged=OFF  --skip_add_locks --skip-lock-tables --databases db1 --tables a1 a2  &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="导出db1表a1中id1的数据">导出db1表a1中id=1的数据</h3>
+<ul>
+<li>如果多个表的条件相同可以一次性导出多个表</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456 --set-gtid-purged=OFF  --skip_add_locks --skip-lock-tables  --databases db1 --tables a1 --where='id=1'  &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="只导出表结构不导出数据--no-data">只导出表结构不导出数据，&ndash;no-data</h3>
+<pre><code>mysqldump -uroot -p123456 --set-gtid-purged=OFF  --skip_add_locks --skip-lock-tables --no-data  --databases db1 &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="导出指定表数据不要表结构">导出指定表数据（不要表结构）</h3>
+<pre><code>-- 不要表结构
+ mysqldump  -uroot -p123456 --set-gtid-purged=OFF  --skip_add_locks --skip-lock-tables  –no-create-info --databases db1 --tables a1 &gt;/data/mysqlbackup/dboop_dump0401.sql
+-- 要表结构
+ mysqldump  -uroot -p123456 --set-gtid-purged=OFF  --skip_add_locks --skip-lock-tables  --databases db1 --tables a1 &gt;/data/mysqlbackup/dboop_dump0401.sql
+
+</code></pre><h2 id="常见报错">常见报错</h2>
+<h3 id="a-partial-dump-from-a-server-that-has-gtids-will-by-default-include-the-gtids-of-all-transactions">A partial dump from a server that has GTIDs will by default include the GTIDs of all transactions</h3>
+<ul>
+<li>
+<p>出现<code>Warning: A partial dump from a server that has GTIDs will by default include the GTIDs of all transactions, even those that changed suppressed parts of the database. If you don't want to restore GTIDs, pass --set-gtid-purged=OFF. To make a complete dump, pass --all-databases --triggers --routines --events</code></p>
+</li>
+<li>
+<p>原因：
+当前数据库实例中开启了 GTID 功能, 在开启有 GTID 功能的数据库实例中, 导出其中任何一个库, 如果没有显示地指定–set-gtid-purged参数, 都会提示这一行信息. 意思是默认情况下, 导出的库中含有 GTID 信息, 如果不想导出包含有 GTID 信息的数据库, 需要显示地添加–set-gtid-purged=OFF参数.</p>
+</li>
+<li>
+<p>解决：加上参数：–set-gtid-purged=OFF</p>
+</li>
+</ul>
+<h3 id="mysqldumpcouldnt-execute-select-column_name-json_extracthistogram">mysqldump:Couldn&rsquo;t execute &lsquo;SELECT COLUMN_NAME, JSON_EXTRACT(HISTOGRAM..</h3>
+<ul>
+<li>出现mysqldump:Couldn&rsquo;t execute &lsquo;SELECT COLUMN_NAME, JSON_EXTRACT(HISTOGRAM, &lsquo;$.&ldquo;number-of-buckets-specified&rdquo;') FROM information_schema.COLUMN_STATISTICS</li>
+<li>原因：MySQL8.0+的mysqldump默认启用了一个新标志，通过 -column-statistics=0来禁用他</li>
+<li>解决： 加上参数：&ndash;column-statistics=0</li>
+</ul>
+<h2 id="mysqldump参数">mysqldump参数</h2>
+<ul>
+<li>因为mysqldump可能会有很多自定义的需求,所以把它重要的参数总结如下:</li>
+<li>使用方式</li>
+</ul>
+<pre><code>mysqldump -h主机名 -P端口 -u用户名 -p密码 参数1 参数2.... &gt; 备份文件.sql
+
+</code></pre><h3 id="all-databases---a-全部库">–all-databases , -A (全部库)</h3>
+<ul>
+<li>导出全部数据库。</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  --all-databases  &gt; /data/mysqlbackup/dboop_dump0401.sql
+
+mysqldump -uroot -p123456  -A  &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="add-drop-database-drop库">–add-drop-database (drop库)</h3>
+<ul>
+<li>在create数据库之前先DROP DATABASE</li>
+<li>默认关闭，所以一般在导入时需要保证数据库已存在。。
+mysqldump -uroot -p123456  -A &ndash;add-drop-database &gt; /data/mysqlbackup/dboop_dump0401.sql</li>
+</ul>
+<h3 id="databases--b-指定库">–databases, -B (指定库)</h3>
+<ul>
+<li>指定要备份的数据库</li>
+<li>参数后面所有名字参量都被看作数据库名。</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  --databases test1 test2  &gt; /data/mysqlbackup/all2.sql
+</code></pre><h3 id="no-create-db--n-不创建库">–no-create-db, -n (不创建库)</h3>
+<ul>
+<li>只导出数据，而不添加CREATE DATABASE 语句。</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  --host=localhost -A --no-create-db &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="no-create-info--t-不创建表">–no-create-info, -t (不创建表)</h3>
+<ul>
+<li>只导出数据，而不添加CREATE TABLE 语句。</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  --host=localhost -A --no-create-info &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="no-data--d-不导出数据仅结构">–no-data, -d (不导出数据,仅结构)</h3>
+<ul>
+<li>不导出任何数据，只导出数据库表结构。</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  --host=localhost -A --no-data &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="routines--r-存储过程函数">–routines, -R (存储过程/函数)</h3>
+<ul>
+<li>除了导出数据，还要导出存储过程，自定义函数。</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  --host=localhost -A --routines &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="tables-表">–tables (表)</h3>
+<ul>
+<li>覆盖-databases(-B)参数</li>
+<li>需要指定导出的表名</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  --host=localhost --databases test1 --tables hd_acl_entry &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="triggers-触发器">–triggers (触发器)</h3>
+<ul>
+<li>除了导出数据，还要导出触发器</li>
+<li>默认启用，用-skip-triggers禁用它。</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  --host=localhost -A --triggers &gt; /data/mysqlbackup/dboop_dump0401.sql
+
+mysqldump -uroot -p123456  --host=localhost -A -skip-triggers &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="add-drop-table-drop表">–add-drop-table (drop表)</h3>
+<ul>
+<li>在每个CREATE TABLE语句前添加DROP TABLE语句</li>
+<li>默认开启。</li>
+</ul>
+<pre><code># 默认添加drop语句
+mysqldump -uroot -p123456  -A &gt; /data/mysqlbackup/dboop_dump0401.sql
+
+# 取消drop语句 
+mysqldump -uroot -p123456  -A --skip-add-drop-table  &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="ignore-table-忽略表">–ignore-table (忽略表)</h3>
+<ul>
+<li>不导出指定表。</li>
+<li>指定忽略多个表时，需要重复多次，每次一个表。每个表必须同时指定数据库和表名。</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  --host=localhost -A --ignore-table=test1.a1  --ignore-table=test1.a2 &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="add-locks-加锁">–add-locks (加锁)</h3>
+<ul>
+<li>备份数据库表时锁定数据库表</li>
+<li>默认为打开状态，使用–skip-add-locks取消选项</li>
+</ul>
+<pre><code># 默认添加LOCK语句
+mysqldump -uroot -p123456  -A  &gt; /data/mysqlbackup/dboop_dump0401.sql
+
+# 取消LOCK语句 
+mysqldump -uroot -p123456  -A --skip-add-locks   &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="lock-all-tables--x-锁表">–lock-all-tables, -x (锁表)</h3>
+<ul>
+<li>锁定所有库中所有的表。这是通过在整个dump的过程中持有全局读锁来实现的。</li>
+<li>自动关闭-single-transaction 和-lock-tables 选项。</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  --host=localhost -A --lock-all-tables &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="lock-tables--l-锁表">–lock-tables, -l (锁表)</h3>
+<ul>
+<li>对所有表加读锁。</li>
+<li>默认是打开的，用–skip-lock-tables来关闭</li>
+<li>当导出多个数据库时，–lock-tables分别为每个数据库锁定表。因此，该选项不能保证导出文件中的表在数据库之间的逻辑一致性。不同数据库表的导出状态可以完全不同。</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  --host=localhost -A --lock-tables &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="single-transaction-一致性">–single-transaction (一致性)</h3>
+<ul>
+<li>通过将导出操作封装在一个事务内,保证导出数据的一致性。</li>
+<li>只有当表使用支持MVCC的存储引擎（目前只有InnoDB）时才可以工作。其他引擎不能保证导出是一致的</li>
+<li>当开启这个选项，要确保导出文件有效(正确的表数据和二进制日志位置)，就要保证没有其他连接会执行如下语句,因为这些语句会导致一致性快照失效</li>
+</ul>
+<pre><code>ALTER TABLE
+DROP TABLE
+RENAME TABLE
+TRUNCATE TABLE
+会自动关闭–lock-tables
+mysqldump -uroot -p123456  --host=localhost -A --single-transaction &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="compatible-兼容">–compatible (兼容)</h3>
+<ul>
+<li>导出的数据将和其它数据库或旧版本的MySQL相兼容，它并不保证能完全兼容，而是尽量兼容。</li>
+<li>值可以为ansi、mysql323、mysql40、postgresql、oracle、mssql、db2、maxdb、no_key_options、no_tables_options、no_field_options等</li>
+</ul>
+<pre><code># 要使用几个值，用逗号将它们隔开。
+mysqldump -uroot -p123456  -A --compatible=ansi  &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="default-character-set-字符集">–default-character-set (字符集)</h3>
+<ul>
+<li>设置默认字符集</li>
+<li>默认值为utf8</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  -A --default-character-set=utf8 &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="master-data-主从信息">—master-data (主从信息)</h3>
+<ul>
+<li>该选项将当前服务器的binlog的位置和文件名追加到输出文件中。</li>
+<li>设置为1时：将会输出CHANGE MASTER 命令</li>
+<li>设置为2时：输出的CHANGE MASTER命令前添加注释信息。</li>
+<li>该选项将打开-lock-all-tables 选项，除非-single-transaction也被指定。</li>
+<li>该选项自动关闭-lock-tables选项。</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456   -A --master-data=2  &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="events--e-事件">–events, -E (事件)</h3>
+<ul>
+<li>除了导出数据，还要导出事件</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  -A --events &gt; /data/mysqlbackup/event.sql
+</code></pre><h3 id="fields-terminated-by-忽略字段">–fields-terminated-by (忽略字段)</h3>
+<ul>
+<li>导出文件中忽略给定字段。</li>
+<li>与-tab选项一起使用，不能用于-databases和-all-databases选项</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  dboop table1 --tab=&quot;/data/mysqlbackup/&quot; --fields-terminated-by=&quot;nickname&quot;  
+</code></pre><h3 id="hex-blob-二进制">–hex-blob (二进制)</h3>
+<ul>
+<li>使用十六进制格式导出二进制字符串字段。</li>
+<li>如果有二进制数据就必须使用该选项。</li>
+<li>影响到的字段类型有BINARY、VARBINARY、BLOB。</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  -A --hex-blob &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="insert-ignore-重复值">–insert-ignore (重复值)</h3>
+<ul>
+<li>在插入行时使用INSERT IGNORE语句.</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  --host=localhost -A --insert-ignore &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="replace-replace-into-">–replace (replace into )</h3>
+<ul>
+<li>使用REPLACE INTO 取代INSERT INTO</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  --host=localhost -A --replace &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="extended-insert">—extended-insert</h3>
+<ul>
+<li>使用具有多个VALUES列的INSERT语法。</li>
+<li>这样使导出文件更小，并加速导入时的速度。</li>
+<li>默认为打开状态，使用-skip-extended-insert取消选项。</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  -A &gt; /data/mysqlbackup/dboop_dump0401.sql
+
+# 取消选项 
+mysqldump -uroot -p123456 -A --skip-extended-insert &gt; /data/mysqlbackup/dboop_dump0401.sql
+
+</code></pre><h3 id="log-error-输出日志">–log-error (输出日志)</h3>
+<ul>
+<li>附加警告和错误信息到给定文件</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456    -A --log-error=/data/mysqlbackup/error_log.err  &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="max_allowed_packet">–max_allowed_packet</h3>
+<ul>
+<li>设置服务器发送和接受的最大包长度。</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  -A --max_allowed_packet=10240 &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="set-charset-字符集">–set-charset (字符集)</h3>
+<ul>
+<li>将SET NAMES default_character_set加到输出中</li>
+<li>默认为打开状态，使用–skip-set-charset关闭选项。</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  --host=localhost -A &gt; /data/mysqlbackup/dboop_dump0401.sql
+
+ 
+mysqldump -uroot -p123456  --host=localhost -A --skip-set-charset &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="opt-一些组合">–opt (一些组合)</h3>
+<ul>
+<li>等同于下面的所有操作</li>
+</ul>
+<pre><code>–add-drop-table
+–add-locks
+–create-options
+–quick
+–extended-insert
+–lock-tables
+–set-charset
+–disable-keys
+
+默认开启, 可以用-skip-opt禁用
+mysqldump -uroot -p123456  --host=localhost -A --opt &gt; /data/mysqlbackup/dboop_dump0401.sql
+
+mysqldump -uroot -p123456  --host=localhost -A -skip-opt &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="quick--q">–quick, -q</h3>
+<ul>
+<li>不缓冲查询，直接导出到标准输出。</li>
+<li>适用于转储大的表</li>
+<li>默认为打开状态，使用-skip-quick取消该选项。</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  --host=localhost -A &gt; /data/mysqlbackup/dboop_dump0401.sql
+
+ 
+mysqldump -uroot -p123456  --host=localhost -A --skip-quick &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="result-file--r-指定结果文件">–result-file, -r (指定结果文件)</h3>
+<ul>
+<li>直接输出到指定文件中。</li>
+<li>该选项应该用在使用回车换行对（\r\n）换行的系统上（例如：DOS，Windows）。</li>
+<li>该选项确保只有一行被使用。</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456 --host=localhost -A -result-file=/data/mysqlbackup/result_file.txt &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h3 id="where--w-指定where">–where, -w (指定where)</h3>
+<ul>
+<li>只转储给定的WHERE条件选择的记录。</li>
+<li>注意:如果条件包含命令解释符专用空格或字符，一定要将条件引用起来。</li>
+</ul>
+<pre><code>mysqldump -uroot -p123456  --host=localhost -A --where=&quot;id='1'&quot;  &gt; /data/mysqlbackup/dboop_dump0401.sql
+</code></pre><h2 id="已dump完成的文件分离指定的库表">已dump完成的文件,分离指定的库表</h2>
+<ul>
+<li>脚本准备</li>
+</ul>
+<pre><code>cd /data/soft
+wget  https://www.dboop.com/download/mysqldumpsplitter.sh
+</code></pre><ul>
+<li>从mysqldump中提取单个数据库：</li>
+</ul>
+<pre><code>sh mysqldumpsplitter.sh --source dboop_dump0401.sql --extract DB --match_str dboop
+</code></pre><ul>
+<li>
+<p>上面的命令将从指定的“dboop_dump0401.sql”sql文件为指定的数据库创建sql，并将其以压缩格式存储到dboop.sql.gz。</p>
+</li>
+<li>
+<p>从mysqldump中提取单个表：</p>
+</li>
+</ul>
+<pre><code>sh mysqldumpsplitter.sh --source dboop_dump0401.sql --extract TABLE --match_str tbtest1
+</code></pre><ul>
+<li>
+<p>上面的命令将从指定的“dboop_dump0401.sql”mysqldump文件为指定的表创建sql，并将其以压缩格式存储到tbtest1.sql.gz。</p>
+</li>
+<li>
+<p>从mysqldump中提取所有数据库：</p>
+</li>
+</ul>
+<pre><code>sh mysqldumpsplitter.sh --source dboop_dump0401.sql --extract ALLDBS
+</code></pre><p>上面的命令将从指定的“dboop_dump0401.sql”mysqldump文件中提取所有数据库，并将其以压缩格式存储到单个以库名命名的gz文件中。</p>
+<ul>
+<li>从mysqldump中提取所有表：</li>
+</ul>
+<pre><code>sh mysqldumpsplitter.sh --source dboop_dump0401.sql --extract ALLTABLES
+</code></pre><ul>
+<li>上面的命令将从指定的“dboop_dump0401.sql”mysqldump文件中提取所有表，并将其以压缩格式存储到单个命名的gz文件中。</li>
+</ul>
+<h2 id="经验值">经验值</h2>
+<ul>
+<li>mysql实例大小:23G</li>
+<li>mysqldump主机:4c+8G (和实例在同一个虚拟机)</li>
+<li>dump备份用时:6分钟</li>
+<li>dump文件还原时间:80分钟</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2021/04/04</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC">常用脚本</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%9F%BA%E7%A1%80">基础</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

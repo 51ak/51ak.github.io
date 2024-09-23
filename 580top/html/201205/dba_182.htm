@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySQL复制功能中得到一举三得的好处</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="我们这里讲解一下mysql数据库中的复制问题，你会发现我们可以从中得到不少好处。在mysql数据库中，支持单项、异步复制。在复制过程中，一个服务器充当主服务器，而另外一台服务器充当从服务器。如下图所示。此时主服务器会将更新信息写入到一个特定的二进制文件中。并会维护文件的一个索引用来跟踪日志循环。这个日志可以记录并发送到从服务器的更新中去。当一台从服务器连接到主服务器时，从服务器会通知主服器从服务器MySQL复制功能中得到一举三得的好处" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识">基础知识</a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA"><span class="zc_666">高可用性和HA</span></a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化">性能与优化</a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlha/l_15_1.htm">高可用性和HA</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>MySQL复制功能中得到一举三得的好处</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   我们这里讲解一下MySQL数据库中的复制问题，你会发现我们可以从中得到不少好处。在MySQL数据库中，支持单项、异步复制。在复制过程中，一个服务器充当主服务器，而另外一台服务器充当从服务器。如下图所示。此时主服务器会将更新信息写入到一个特定的二进制文件中。并会维护文件的一个索引用来跟踪日志循环。这个日志可以记录并发送到从服务器的更新中去。当一台从服务器连接到主服务器时，从服务器会通知主服器从服务器的日志文件中读取最后一次成功更新的位置。然后从服务器会接收从那个时刻起发生的任何更新，然后锁住并等到主服务器通知新的更新。　　这就是MySQL服务器数据库复制原理的基本说明。作为数据库管理员，对于这个原理只要有几个基本的了解即可。<br />&nbsp;▲其需要关注的是，我们可以从这个复制功能中得到哪些实惠？<br />　　好处一：实现服务器负载均衡<br />　　通过服务器复制功能，可以在主服务器和从服务器之间实现负载均衡。即可以通过在主服务器和从服务器之间切分处理客户查询的负荷，从而得到更好的客户相应时间。通常情况下，数据库管理员会有两种思路。<br />　　一是在主服务器上只实现数据的更新操作。包括数据记录的更新、删除、新建等等作业。而不关心数据的查询作业。数据库管理员将数据的查询请求全部转发到从服务器中。这在某些应用中会比较有用。如某些应用，像基金净值预测的网站。其数据的更新都是有管理员更新的，即更新的用户比较少。而查询的用户数量会非常的多。此时就可以设置一台主服务器，专门用来数据的更新。同时设置多台从服务器，用来负责用户信息的查询。将数据更新与查询分别放在不同的服务器上进行，即可以提高数据的安全性，同时也缩短应用程序的响应时间、提高系统的性能。<br />　　二是在主服务器上与从服务器切分查询的作业。在这种思路下，主服务器不单单要完成数据的更新、删除、插入等作业，同时也需要负担一部分查询作业。而从服务器的话，只负责数据的查询。当主服务器比较忙时，部分查询请求会自动发送到从服务器重，以降低主服务器的工作负荷。当然，像修改数据、插入数据、删除数据等语句仍然会发送到主服务器中，以便主服务器和从服务器数据的同步。<br />　　要在数据库之间实现负载的均衡，其关键点就是数据同步的时间。如果主服务器与从服务器之间数据的更新时间比较长，此时从主服务器中查询得到的数据就会同从从服务器中得到的数据有差异。而如果同步的时间比较短，如实现同步复制，对网络带宽、服务器设备等就有比较高的要求。<br />　　可见这个同步的时间选择直接关系到其应用的效果。那么这个同步的时间应该选择多少呢?这没有一个固定的答案。主要是看用户的需要。如用户对数据的及时性要求并不是很高，或者数据更新的频率不是很高，那么这个同步的时间可以稍微长一点。但是如果这个数据的及时性要求很高，如股票的价格等等，此时就需要能够实现同步更新。所以具体要看企业实际的应用才能够决定采用什么样的同步时间。<br />　　在采取这个应用时，需要注意MySQL数据库的复制是单向的。即只能够将数据从主服务器复制到从服务器，而不能够将数据从从服务器发生到主服务器。这也就是说，数据库管理员不能够在从服务器上更新数据，否则的话，就可能会与主服务器上的数据产生冲突。默认情况下，系统会自动利用主服务器上的数据来更新从服务器上的数据。即在从服务器上所做的任何更改，到时候都会失效。如果是用户的请求，一般不用担心。系统会自动判断用户的请求是查询请求还是数据更新请求。并自动根据请求的类型转发到不同的服务器上。主要是数据库管理员，不要手痒痒，手动去更新从服务器上的数据。否则的话，就会导致从服务器与主服务器之间数据的冲突。<br />　　好处二：通过复制实现数据的异地备份<br />　　如上图所示，可以定期的将数据从主服务器上复制到从服务器上，这无疑是先了数据的异地备份。在传统的备份体制下，是将数据备份在本地。此时备份作业与数据库服务器运行在同一台设备上，当备份作业运行时就会影响到服务器的正常运行。有时候会明显的降低服务器的性能。同时，将备份数据存放在本地，也不是很安全。如硬盘因为电压等原因被损坏或者服务器被失窃，此时由于备份文件仍然存放在硬盘上，数据库管理员无法使用备份文件来恢复数据。这显然会给企业带来比较大的损失。<br />　　而如果使用复制来实现对数据的备份，就可以在从服务器上对数据进行备份。此时不仅不会干扰主服务气的正常运行，而且在备份过程中主服务器可以继续处理相关的更新作业。同时在数据复制的同时，也实现了对数据的异地备份。除非主服务器和从服务器的两块硬盘同时损坏了，否则的话数据库管理员就可以在最短时间内恢复数据，减少企业的由此带来的损失。<br />　　在通过这种方式进行异地备份时，主要需要注意如下二个细节：<br />　　一是数据更新的时间。如果要采取这种方式进行备份，那么对于数据同步的时间，要小于等于数据备份的周期。只有如此，才能够确保最近更新的数据被正确的备份。此时即使主服务器出现了故障，用户丢失的也只是最近一个备份周期的数据。<br />　　二是从服务器上硬盘的空间。根据一般用户的心态，从服务器的配置往往比主服务器要低。但是现在从服务器要承担起数据备份的任务，为此对于硬盘的空间要求就要比主服务器要高。其不但要能够存储主服务器上的数据，而且还要对其进行备份。为此一般要求，从服务器上的存储空间是主服务器上的两倍。否则的话，就容易出现磁盘空间不足而导致备份作业失败。<br />　　好处三：提高数据库系统的可用性<br />　　数据库复制功能实现了主服务器与从服务器之间数据的同步，增加了数据库系统的可用性。当主服务器出现问题时，数据库管理员可以马上让从服务器作为主服务器，用来数据的更新与查询服务。然后回过头来再仔细的检查主服务器的问题。此时一般数据库管理员也会采用两种手段。<br />　　一是主服务器故障之后，虽然从服务器取代了主服务器的位置，但是对于主服务器可以采取的操作仍然做了一些限制。如仍然只能够进行数据的查询，而不能够进行数据的更新、删除等操作。这主要是从数据的安全性考虑。如现在一些银行系统的升级，在升级的过程中，只能够查询余额而不能够取钱。这是同样的道理。<br />　　二是从服务器真正变成了主服务器。当从服务器切换为主服务器之后，其地位完全与原先的主服务器相同。此时可以实现对数据的查询、更新、删除等操作。为此就需要做好数据的安全性工作。即数据的安全策略，要与原先的主服务器完全相同。否则的话，就可能会留下一定的安全隐患。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

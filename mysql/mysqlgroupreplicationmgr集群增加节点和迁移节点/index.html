@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL Group Replication(MGR集群)增加节点和迁移节点| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL Group Replication(MGR集群)增加节点和迁移节点</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#环境">环境</a></li>
+    <li><a href="#修改host">修改host</a></li>
+    <li><a href="#旧实例上增加seed">旧实例上增加seed</a></li>
+    <li><a href="#加入新节点1284">加入新节点1(2.84)</a>
+      <ul>
+        <li><a href="#安装插件">安装插件</a></li>
+        <li><a href="#修改配置文件">修改配置文件：</a></li>
+        <li><a href="#停原主从复制">停原主从复制</a></li>
+        <li><a href="#重启实例">重启实例</a></li>
+        <li><a href="#新节点加入">新节点加入</a></li>
+      </ul>
+    </li>
+    <li><a href="#继续添加节点如果不是立即切换和迁移请保证集群中的节点数为奇数">继续添加节点（如果不是立即切换和迁移，请保证集群中的节点数为奇数）</a></li>
+    <li><a href="#删除节点232">删除节点(2.32）</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <blockquote>
+<p>MySQL Group Replication 多主结构的3节点需要切到另外三个节点上，任务需要先加3个节点到集群中，再删掉原来的3个节点。</p>
+</blockquote>
+<h2 id="环境">环境</h2>
+<ul>
+<li>
+<p>原实例：</p>
+<ul>
+<li>172.0.2.30:3309</li>
+<li>172.0.2.31:3309</li>
+<li>172.0.2.32:3309</li>
+</ul>
+</li>
+<li>
+<p>新实例：</p>
+<ul>
+<li>172.0.2.83:3309</li>
+<li>172.0.2.84:3309</li>
+<li>172.0.2.85:3309</li>
+</ul>
+</li>
+</ul>
+<h2 id="修改host">修改host</h2>
+<pre><code>- 修改6台主机的/etc/hosts
+172.0.2.30  dba-mysql3309-230 dba-mysql3309-230.dboop.com
+172.0.2.31  dba-mysql3309-231 dba-mysql3309-231.dboop.com
+172.0.2.32  dba-mysql3309-232 dba-mysql3309-232.dboop.com
+172.0.2.83  dba-mysql3309-83 dba-mysql3309-83.dboop.com
+172.0.2.84  dba-mysql3309-84 dba-mysql3309-84.dboop.com
+172.0.2.85  dba-mysql3309-85 dba-mysql3309-85.dboop.com
+</code></pre><h2 id="旧实例上增加seed">旧实例上增加seed</h2>
+<ul>
+<li>检查状态</li>
+</ul>
+<pre><code>mysqlw -h 172.0.2.30 -P 3309 -e  &quot;show global variables like 'group_replication_group_seeds'&quot;;
+mysqlw -h 172.0.2.31 -P 3309 -e  &quot;show global variables like 'group_replication_group_seeds'&quot;;
+mysqlw -h 172.0.2.32 -P 3309 -e  &quot;show global variables like 'group_replication_group_seeds'&quot;;
+</code></pre><ul>
+<li>检查集群状态</li>
+</ul>
+<pre><code>mysqlw -h 172.0.2.30 -P 3309 -e  &quot; SELECT * FROM performance_schema.replication_group_members &quot;;
+mysqlw -h 172.0.2.31 -P 3309 -e  &quot; SELECT * FROM performance_schema.replication_group_members &quot;;
+mysqlw -h 172.0.2.32 -P 3309 -e  &quot; SELECT * FROM performance_schema.replication_group_members &quot;;
+</code></pre><ul>
+<li>修改seed</li>
+</ul>
+<pre><code>mysqlw -h 172.0.2.30 -P 3309 -e &quot;set global group_replication_group_seeds='172.0.2.30:33095,172.0.2.31:33095,172.0.2.32:33095,172.0.2.83:33095,172.0.2.84:33095,172.0.2.85:33095'&quot;
+mysqlw -h 172.0.2.31 -P 3309 -e &quot;set global group_replication_group_seeds='172.0.2.30:33095,172.0.2.31:33095,172.0.2.32:33095,172.0.2.83:33095,172.0.2.84:33095,172.0.2.85:33095'&quot;
+mysqlw -h 172.0.2.32 -P 3309 -e &quot;set global group_replication_group_seeds='172.0.2.30:33095,172.0.2.31:33095,172.0.2.32:33095,172.0.2.83:33095,172.0.2.84:33095,172.0.2.85:33095'&quot;
+</code></pre><ul>
+<li>检查状态</li>
+</ul>
+<pre><code>mysqlw -h 172.0.2.30 -P 3309 -e  &quot;show global variables like 'group_replication_group_seeds'&quot;;
+mysqlw -h 172.0.2.31 -P 3309 -e  &quot;show global variables like 'group_replication_group_seeds'&quot;;
+mysqlw -h 172.0.2.32 -P 3309 -e  &quot;show global variables like 'group_replication_group_seeds'&quot;;
+</code></pre><h2 id="加入新节点1284">加入新节点1(2.84)</h2>
+<h3 id="安装插件">安装插件</h3>
+<pre><code>mysqlw -h 172.0.2.84 -P 3309 -e &quot;show plugins&quot; |grep &quot;group_replication&quot; #检查是否安装
+mysqlw -h 172.0.2.84 -P 3309 -e &quot;install plugin group_replication soname 'group_replication.so'&quot;;
+mysqlw -h 172.0.2.84 -P 3309 -e &quot;show plugins&quot; |grep &quot;group_replication&quot; 
+</code></pre><h3 id="修改配置文件">修改配置文件：</h3>
+<ul>
+<li>vim /data/mysql3309/my.cnf</li>
+<li>注意要修改：group_replication_local_address</li>
+</ul>
+<pre><code>#add group replic
+relay_log = relay
+binlog_checksum = NONE
+master_info_repository = table
+relay_log_info_repository = table
+slave_parallel_type = LOGICAL_CLOCK
+slave_parallel_workers = 8
+slave_preserve_commit_order = 1
+transaction_write_set_extraction = XXHASH64
+plugin_load_add = 'group_replication.so'
+group_replication_unreachable_majority_timeout=10
+group_replication_exit_state_action = offline_mode
+loose-group_replication_group_name = &quot;e0dbceb7-f505-11eb-91ee-e43d1a075b40&quot;
+loose-group_replication_start_on_boot = 0
+loose-group_replication_local_address = &quot;172.0.2.84:33095&quot;
+loose-group_replication_group_seeds = &quot;172.0.2.30:33095,172.0.2.31:33095,172.0.2.32:33095,172.0.2.83:33095,172.0.2.84:33095,172.0.2.85:33095&quot;
+loose-group_replication_bootstrap_group = 0
+#mutli master
+loose-group_replication_single_primary_mode=0　　
+loose-group_replication_enforce_update_everywhere_checks=1　　
+</code></pre><h3 id="停原主从复制">停原主从复制</h3>
+<pre><code>mysqlw -h 172.0.2.84 -P 3309 -e &quot;show slave status \G&quot;
+mysqlw -h 172.0.2.84 -P 3309 -e &quot;stop slave &quot;
+mysqlw -h 172.0.2.84 -P 3309 -e &quot;reset slave all&quot;
+mysqlw -h 172.0.2.84 -P 3309 -e &quot;show slave status \G&quot;
+</code></pre><h3 id="重启实例">重启实例</h3>
+<ul>
+<li>注意是重启新节点2.84</li>
+</ul>
+<pre><code>service mysqld3309 restart
+</code></pre><h3 id="新节点加入">新节点加入</h3>
+<pre><code>mysqlw -h 172.0.2.84 -P 3309 -e &quot;start GROUP_REPLICATION USER='repl2', PASSWORD='repl.dba6'&quot;
+mysqlw -h 172.0.2.84 -P 3309 -e &quot; SELECT * FROM performance_schema.replication_group_members &quot;;
+mysqlw -h 172.0.2.84 -P 3309 -e  &quot;SELECT * FROM performance_schema.replication_connection_status \G&quot;;
+</code></pre><ul>
+<li>检查集群状态</li>
+</ul>
+<pre><code>mysqlw -h 172.0.2.30 -P 3309 -e  &quot; SELECT * FROM performance_schema.replication_group_members &quot;;
+mysqlw -h 172.0.2.31 -P 3309 -e  &quot; SELECT * FROM performance_schema.replication_group_members &quot;;
+mysqlw -h 172.0.2.32 -P 3309 -e  &quot; SELECT * FROM performance_schema.replication_group_members &quot;;
+
+
+mysqlw -h 172.0.2.30 -P 3309 -e &quot;show processlist&quot;
+mysqlw -h 172.0.2.31 -P 3309 -e &quot;show processlist&quot;
+mysqlw -h 172.0.2.32 -P 3309 -e &quot;show processlist&quot;
+</code></pre><h2 id="继续添加节点如果不是立即切换和迁移请保证集群中的节点数为奇数">继续添加节点（如果不是立即切换和迁移，请保证集群中的节点数为奇数）</h2>
+<p>&hellip;.</p>
+<h2 id="删除节点232">删除节点(2.32）</h2>
+<ul>
+<li>修改seed</li>
+</ul>
+<pre><code>mysqlw -h 172.0.2.30 -P 3309 -e &quot;set global group_replication_group_seeds='172.0.2.30:33095,172.0.2.31:33095,172.0.2.83:33095,172.0.2.84:33095,172.0.2.85:33095'&quot;
+mysqlw -h 172.0.2.31 -P 3309 -e &quot;set global group_replication_group_seeds='172.0.2.30:33095,172.0.2.31:33095,172.0.2.83:33095,172.0.2.84:33095,172.0.2.85:33095'&quot;
+mysqlw -h 172.0.2.32 -P 3309 -e &quot;set global group_replication_group_seeds='172.0.2.30:33095,172.0.2.31:33095,172.0.2.83:33095,172.0.2.84:33095,172.0.2.85:33095'&quot;
+mysqlw -h 172.0.2.83 -P 3309 -e &quot;set global group_replication_group_seeds='172.0.2.30:33095,172.0.2.31:33095,172.0.2.83:33095,172.0.2.84:33095,172.0.2.85:33095'&quot;
+mysqlw -h 172.0.2.84 -P 3309 -e &quot;set global group_replication_group_seeds='172.0.2.30:33095,172.0.2.31:33095,172.0.2.83:33095,172.0.2.84:33095,172.0.2.85:33095'&quot;
+mysqlw -h 172.0.2.85 -P 3309 -e &quot;set global group_replication_group_seeds='172.0.2.30:33095,172.0.2.31:33095,172.0.2.83:33095,172.0.2.84:33095,172.0.2.85:33095'&quot;
+</code></pre><ul>
+<li>停2.32</li>
+</ul>
+<pre><code>mysqlw -h 172.0.2.32 -P 3309 -e &quot;stop GROUP_REPLICATION&quot;
+
+</code></pre><ul>
+<li>检查集群状态</li>
+</ul>
+<pre><code>mysqlw -h 172.0.2.30 -P 3309 -e  &quot; SELECT * FROM performance_schema.replication_group_members &quot;;
+mysqlw -h 172.0.2.31 -P 3309 -e  &quot; SELECT * FROM performance_schema.replication_group_members &quot;;
+mysqlw -h 172.0.2.32 -P 3309 -e  &quot; SELECT * FROM performance_schema.replication_group_members &quot;;
+
+
+mysqlw -h 172.0.2.30 -P 3309 -e &quot;show processlist&quot;
+mysqlw -h 172.0.2.31 -P 3309 -e &quot;show processlist&quot;
+mysqlw -h 172.0.2.32 -P 3309 -e &quot;show processlist&quot;
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/04/06</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/mysql%E5%A4%8D%E5%88%B6">mysql复制</a> <a href="/categories/%E9%AB%98%E5%8F%AF%E7%94%A8">高可用</a> <a href="/categories/proxy">proxy</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

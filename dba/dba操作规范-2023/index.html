@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DBA操作规范-2023| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">DBA操作规范-2023</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#基本规范意识">基本规范意识</a></li>
+    <li><a href="#服务器操作">服务器操作</a></li>
+    <li><a href="#新建数据库选型">新建数据库选型</a></li>
+    <li><a href="#数据库操作">数据库操作</a></li>
+    <li><a href="#流程与工单">流程与工单</a></li>
+    <li><a href="#权限操作">权限操作</a></li>
+    <li><a href="#敏感数据保护">敏感数据保护</a></li>
+    <li><a href="#值班制度">值班制度</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="基本规范意识">基本规范意识</h2>
+<ul>
+<li>所有操作应该遵循下述原则:</li>
+<li>故障优先:当发生线上故障时,需立即暂停原有的工作安排,部分流程规范要求可以适度简化,优先故障恢复</li>
+<li>事前通知:影响业务的操作，必须事先和DBA团队负责人确认影响范围。在钉钉里发《运维变更通知》</li>
+<li>业务低峰:有潜在业务影响的操作，需和业务方沟通业务低峰执行</li>
+<li>备份先行:所有操作，必须事前做好备份,给快速回滚创造条件。包括但不限于：配置文件变更，数据变更,文件删除</li>
+</ul>
+<h2 id="服务器操作">服务器操作</h2>
+<ul>
+<li>连接数据库服务器统一走jumpserver平台</li>
+<li>在生产数据库服务器上安装任何软件需经过DBA负责人确认</li>
+<li>拷贝大于50G的文件，注意和网络部门确认</li>
+<li>生产环境的数据库服务器删除大于500G的文件，需留意IO影响</li>
+</ul>
+<h2 id="新建数据库选型">新建数据库选型</h2>
+<ul>
+<li>优先MySQL数据库，原则上Oracle,SQLServer,PG,不再支持新建实例和数据库</li>
+<li>新建数据库实例需要明确版本,用一键安装脚本完成安装，同时做好实例的备份计划</li>
+<li>新数据库选择端口，应考虑：同业务优先，测试和生产同端口</li>
+</ul>
+<h2 id="数据库操作">数据库操作</h2>
+<ul>
+<li>参见《MySQL开发和操作规范》,《Oracle_SQL标准规范》</li>
+</ul>
+<h2 id="流程与工单">流程与工单</h2>
+<ul>
+<li>流程优先:已经做完自动化流程的日常工作，必须走流程，禁止绕开自动化流程的手动操作</li>
+<li>工单补充:一些没有自动化流程的工作或特殊操作,须提交DBA工单，不认可：口头沟通,微信,钉钉</li>
+<li>与其他部门的协作与沟通也应遵守相应的流程规范要求，例运维部门要求的服务器和网络变更流程规范</li>
+</ul>
+<h2 id="权限操作">权限操作</h2>
+<ul>
+<li>root,dba账号作为特殊账号不可以配置在业务中，不可以提供给非DBA人员使用或测试</li>
+<li>业务新申请账号原则上统一走DBA流程，禁止手动创建账号和密码</li>
+<li>用于运维的用户账号，例如：备份账号backupuser,主从同步账号repluser可以手动创建</li>
+<li>任何新建账号注意弱密码问题：要求12个字符串的随机字符串</li>
+<li>禁止在生产测试申请开通个人帐号，业务和研发查询数据库只能通过DBA平台的页面</li>
+<li>原则上不提供给研发人员明文数据库账号和密码，只提供加密后的密码串，统一配置nacos</li>
+</ul>
+<h2 id="敏感数据保护">敏感数据保护</h2>
+<ul>
+<li>敏感数据包括但不限于：真实姓名、手机号码、邮箱地址、家庭住址、身份证号、银行卡号、交易记录、账号密码等；</li>
+<li>严禁私自查询与工作无关的用户或业务数据，包括但不限于：客户信息,员工信息,人力信息,oa信息,财务信息；</li>
+<li>禁止在内部群发邮件、群聊、Github、技术分享时泄露敏感数据，比如密码等；</li>
+<li>从生产环境同步数据到测试环境，需要和DBA负责人确认：数据量级，是否脱敏</li>
+<li>原则上不支持帮业务和研发人员手动导数据的需求，此类需求走DBA平台的在线查询，离线查询 以及大数据库部门的导出</li>
+</ul>
+<h2 id="值班制度">值班制度</h2>
+<ul>
+<li>值班参考《dba值班表》的排班，每天的值班时间是9:00~次日8:59</li>
+<li>当天值班在非工作时间，要求外出带上可随时联网的笔记本。发生故障时15分钟以内可以联网处理问题</li>
+<li>当天值班DBA优先处理流程与工单,非工作时间可以用钉钉的DBA模块完成快速审批</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/10/07</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/dba">DBA</a> <a href="/categories/%E5%B7%A5%E4%BD%9C%E6%8A%80%E8%83%BD">工作技能</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

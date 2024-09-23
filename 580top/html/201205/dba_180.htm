@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySQL学习教程：MySQL数据库性能的检查和调优方法</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="本文所介绍内容配图过宽，查看图片地址查看原图。<br/>我们都知道当mysql数据库遇到严重性能问题时，一般都有这么几种可能：<br/>1、索引没有建好；2、sql写法过于复杂；3、配置错误；4、机器实在负荷不了；<br/>1、索引没有建好<br/>如果看到mysql消耗的cpu很大，可以用mysql的client工具来检查。<br/>在linux下执行<br/>/usr/local/MySQL学习教程：MySQL数据库性能的检查和调优方法" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识">基础知识</a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化"><span class="zc_666">性能与优化</span></a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlyouhua/l_16_1.htm">性能与优化</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>MySQL学习教程：MySQL数据库性能的检查和调优方法</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   本文所介绍内容配图过宽，查看图片地址查看原图。<br />我们都知道当MySQL数据库遇到严重性能问题时，一般都有这么几种可能：<br />1、索引没有建好；2、sql写法过于复杂；3、配置错误；4、机器实在负荷不了；<br />1、索引没有建好<br />如果看到<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>消耗的cpu很大，可以用<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>的client工具来检查。<br />在<a href="../../html/linux/l_31_1.htm" title="linux" >linux</a>下执行<br />/usr/local/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/bin/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> -hlocalhost -uroot -p<br />输入密码，如果没有密码，则不用-p参数就可以进到客户端界面中。<br />看看当前的运行情况<br />show full processlist<br />可以多运行几次<br />这个命令可以看到当前正在执行的sql语句，它会告知执行的sql、数据库名、执行的状态、来自的客户端ip、所使用的帐号、运行时间等信息<br />在我的cache后端，这里面大部分时间是看不到显示任何sql语句的，我认为这样才算比较正常。如果看到有很多sql语句，那么这台<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>就一定会有性能问题<br />如果出现了性能问题，则可以进行分析：<br />1、是不是有sql语句卡住了？<br />这是出现比较多的情况，如果数据库是采用myisam，那么有可能有一个写入的线程会把数据表给锁定了，如果这条语句不结束，则其它语句也无法运行。<br />查看processlist里的time这一项，看看有没有执行时间很长的语句，要留意这些语句。<br />2、大量相同的sql语句正在执行<br />如果出现这种情况，则有可能是该sql语句执行的效率低下，同样要留意这些语句。<br />然后把你所怀疑的语句统统集合一下，用desc（explain）来检查这些语句。<br />首先看看一个正常的desc输出：<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; desc&nbsp;select&nbsp;* from imgs where imgid=1651768337;&nbsp;<br />1 row in set (0.00 sec)<br />注意key、rows和Extra这三项，这条语句返回的结果说明了该sql会使用PRIMARY主键索引来查询，结果集数量为1条，Extra没有显示，证明没有用到排序或<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>操作。由此结果可以推断，<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>会从索引中查询imgid=1651768337这条记录，然后再到真实表中取出所有字段，是很简单的操作。<br />key是指明当前sql会使用的索引，<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>执行一条简单语句时只能使用到一条索引，注意这个限制；rows是返回的结果集大小，结果集就是使用该索引进行一次搜索的所有匹配结果；Extra一般会显示查询和排序的方式，。<br />如果没有使用到key，或者rows很大而用到了filesort排序，一般都会影响到效率，例如：<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; desc select * from imgs where userid="7mini" order by clicks desc limit 10;&nbsp;<br />1 row in set (0.00 sec)<br />这条sql结果集会有12506条，用到了filesort，所以执行起来会非常消耗效率的。这时<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>执行时会把整个表扫描一遍，一条一条去找到匹配userid="7mini"的记录，然后还要对这些记录的clicks进行一次排序，效率可想而知。真实执行时如果发现还比较快的话，那是因为服务器内存还足够将12506条比较短小的记录全部读入内存，所以还比较快，但是并发多起来或者表大起来的话，效率问题就严重了。<br />这时我把userid加入索引：<br />create index userid on imgs (userid);<br />然后再检查：<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; desc select * from imgs where userid="7mini" order by clicks desc limit 10;&nbsp;<br />1 row in set (0.00 sec)<br />嗯，这时可以看到<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>使用了userid这个索引搜索了，用userid索引一次搜索后，结果集有8条。然后虽然使用了filesort一条一条排序，但是因为结果集只有区区8条，效率问题得以缓解。<br />但是，如果我用别的userid查询，结果又会有所不同：<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; desc select * from imgs where userid="admin" order by clicks desc limit 10;&nbsp;<br />1 row in set (0.00 sec)<br />这个结果和userid="7mini"的结果基本相同，但是<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>用userid索引一次搜索后结果集的大小达到2944条，这2944条记录都会加入内存进行filesort，效率比起7mini那次来说就差很多了。这时可以有两种办法可以解决，第一种办法是再加一个索引和判断条件，因为我只需要根据点击量取最大的10条数据，所以有很多数据我根本不需要加进来排序，比如点击量小于10的，这些数据可能占了很大部分。<br />我对clicks加一个索引，然后加入一个where条件再查询：<br />create index clicks on imgs(clicks);<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; desc select * from imgs where userid="admin" order by clicks desc limit 10;&nbsp;<br />1 row in set (0.00 sec)<br />这时可以看到possible_keys变成了userid,clicks，possible_keys是可以匹配的所有索引，<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>会从possible_keys中自己判断并取用其中一个索引来执行语句，值得注意的是，<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>取用的这个索引未必是最优化的。这次查询<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>还是使用userid这个索引来查询的，并没有按照我的意愿，所以结果还是没有什么变化。改一下sql加上use index强制<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>使用clicks索引：<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; desc select * from imgs use index (clicks) where userid='admin' and clicks&gt;10 order by clicks desc limit 10&nbsp;<br />1 row in set (0.00 sec)<br />这时<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>用到了clicks索引进行查询，但是结果集比userid还要大！看来还要再进行限制：<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; desc select * from imgs use index (clicks) where userid='admin' and clicks&gt;1000 order by clicks desc limit 10&nbsp;<br />1 row in set (0.00 sec)<br />加到1000的时候结果集变成了312条，排序效率应该是可以接受。<br />不过，采用换索引这种优化方式需要取一个采样点，比如这个例子中的1000这个数字，这样，对userid的每个数值，都要去找一个采样点，这样对程序来说是很难办的。如果按1000取样的话，那么userid='7mini'这个例子中，取到的结果将不会是8条，而是2条，给用户造成了困惑。<br />当然还有另一种办法，加入双索引：<br />create index userid_clicks on imgs (userid, clicks)<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; desc select * from imgs where userid="admin" order by clicks desc limit 10;&nbsp;<br />1 row in set (0.00 sec)<br />这时可以看到，结果集还是2944条，但是Extra中的filesort不见了。这时<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>使用userid_clicks这个索引去查询，这不但能快速查询到userid="admin"的所有记录，并且结果是根据clicks排好序的！所以不用再把这个结果集读入内存一条一条排序了，效率上会高很多。<br />但是用多字段索引这种方式有个问题，如果查询的sql种类很多的话，就得好好规划一下了，否则索引会建得非常多，不但会影响到数据insert和update的效率，而且数据表也容易损坏。<br />以上是对索引优化的办法，因为原因可能会比较复杂，所以写得比较的长，一般好好优化了索引之后，<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>的效率会提升n个档次，从而也不需要考虑增加机器来解决问题了。<br />但是，<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>甚至所有数据库，可能都不好解决limit的问题。在<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>中，limit 0,10只要索引合适，是没有问题的，但是limit 100000,10就会很慢了，因为<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>会扫描排好序的结果，然后找到100000这个点，取出10条返回。要找到100000这个点，就要扫描100000条记录，这个循环是比较耗时的。不知道会不会有什么好的算法可以优化这个扫描引擎，我冥思苦想也想不出有什么好办法。对于limit，目前直至比较久远的将来，我想只能通过业务、程序和数据表的规划来优化，我想到的这些优化办法也都还没有一个是万全之策，往后再讨论。<br />2、sql写法过于复杂<br />sql写法假如用到一些特殊的功能，比如groupby、或者多表联合查询的话，<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>用到什么方式来查询也可以用desc来分析，我这边用复杂sql的情况还不算多，所以不常分析，暂时就没有好的建议。<br />3、配置错误<br />配置里主要参数是key_buffer、sort_buffer_size/myisam_sort_buffer_size，这两个参数意思是：<br />key_buffer=128M：全部表的索引都会尽可能放在这块内存区域内，索引比较大的话就开稍大点都可以，我一般设为128M，有个好的建议是把很少用到并且比较大的表想办法移到别的地方去，这样可以显著减少<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>的内存占用。sort_buffer_size=1M：单个线程使用的用于排序的内存，查询结果集都会放进这内存里，如果比较小，<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>会多放几次，所以稍微开大一点就可以了，重要是优化好索引和查询语句，让他们不要生成太大的结果集。<br />另外一些配置：thread_concurrency=8：这个配置标配=cpu数量x2interactive_timeout=30wait_timeout=30：这两个配置使用10-30秒就可以了，这样会尽快地释放内存资源，注意：一直在使用的连接是不会断掉的，这个配置只是断掉了长时间不动的连接。query_cache：这个功能不要使用，现在很多人看到cache这几个字母就像看到了宝贝，这是不唯物主义的。<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>的query_cache在每次表数据有变化的时候都会重新清理连至该表的所有缓存，如果更新比较频繁，query_cache不但帮不上忙，而且还会对效率影响很大。这个参数只适合只读型的数据库，如果非要用，也只能用query_cache_type=2自行用SQL_CACHE指定一些sql进行缓存。max_connections：默认为100，一般情况下是足够用的，但是一般要开大一点，开到400-600就可以了，能超过600的话一般就有效率问题，得另找对策，光靠增加这个数字不是办法。<br />其它配置可以按默认就可以了，个人觉得问题还不是那么的大，提醒一下：1、配置虽然很重要，但是在绝大部分情况下都不是效率问题的罪魁祸首。2、<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>是一个数据库，对于数据库最重要考究的不应是效率，而是稳定性和数据准确性。<br />4、机器实在负荷不了<br />如果做了以上调整，服务器还是不能承受，那就只能通过架构级调整来优化了。<br />1、<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>同步。<br />通过<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>同步功能将数据同步到数台从数据库，由主数据库写入，从数据库提供读取。<br />我个人不是那么乐意使用<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>同步，因为这个办法会增加程序的复杂性，并常常会引起数据方面的错误。在高负荷的服务中，死机了还可以快速重启，但数据错误的话要恢复就比较麻烦。<br />2、加入缓存<br />加入缓存之后，就可以解决并发的问题，效果很明显。如果是实时系统，可以考虑用刷新缓存方式使缓存保持最新。<br />在前端加入squid的架构比较提倡使用，在命中率比较高的应用中，基本上可以解决问题。<br />如果是在程序逻辑层里面进行缓存，会增加很多复杂性，问题会比较多而且难解决，不建议在这一层面进行调整。<br />3、程序架构调整，支持同时连接多个数据库<br />如果web加入缓存后问题还是比较严重，只能通过程序架构调整，把应用拆散，用多台的机器同时提供服务。<br />如果拆散的话，对业务是有少许影响，如果业务当中有部分功能必须使用所有的数据，可以用一个完整库+n个分散库这样的架构，每次修改都在完整库和分散库各操作一次，或定期整理完整库。<br />当然，还有一种最笨的，把数据库整个完完整整的做拷贝，然后程序每次都把完整的sql在这些库执行一遍，访问时轮询访问，我认为这样要比<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>同步的方式安全。<br />4、使用 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> proxy 代理<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> proxy 可以通过代理把数据库中的各个表分散到数台服务器，但是它的问题是没有能解决热门表的问题，如果热门内容散在多个表中，用这个办法是比较轻松就能解决问题。<br />我没有用过这个软件也没有认真查过，不过我对它的功能有一点点怀疑，就是它怎么实现多个表之间的联合查询？如果能实现，那么效率如何呢？<br />5、使用memcachedb<br />数据库换用支持<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>的memcachedb，是可以一试的想法，从memcachedb的实现方式和层面来看对数据没有什么影响，不会对用户有什么困扰。<br />为我现在因为数据库方面问题不多，没有试验过这个玩意。不过，只要它支持<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>的大部分主要的语法，而且本身稳定，可用性是无需置疑的。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

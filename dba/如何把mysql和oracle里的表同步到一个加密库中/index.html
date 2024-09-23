@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>如何把MySQL和Oracle里的表同步到一个加密库中| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">如何把MySQL和Oracle里的表同步到一个加密库中</span></h1>
+</div>
+
+
+  <main>
+    <h2 id="如图">如图</h2>
+<p><img src="/img/2022auto/2024-04-24-16-32-18.png" alt="如何把MySQL和Oracle里的表同步到一个加密库中"></p>
+<h2 id="加密配置元信息表">加密配置元信息表</h2>
+<pre><code>
+REATE TABLE `encrypt_baseinfo` (
+  `from_linkname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '来源数据库信息',
+  `from_linktype` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'mysql' COMMENT 'mysql,oracle,mongo',
+  `from_connstr` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '127.0.0.1;3306;u_test;password;db_test;',
+  `to_linkname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '目标数据库信息',
+  `to_linktype` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'mysql' COMMENT 'mysql,oracle,mongo',
+  `to_connstr` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '127.0.0.1;3306;u_test;password;db_test;',
+  `kafka_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'kafka_name',
+  `kafka_groupid` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'kakfak_groupid',
+  `kakfak_offset` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'kakfak_auto_offset_reset',
+  PRIMARY KEY (`from_linkname`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='加密字段基础信息表'
+
+ CREATE TABLE `encrypt_col_info` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID、主键',
+  `service_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '服务信息',
+  `db_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '数据库信息',
+  `tab_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '表名',
+  `col_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '列名',
+  `sub_col_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'json_key信息',
+  `col_type` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '字段类型',
+  `col_desc` varchar(5000) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '列名描述信息',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
+  `linkname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `sec_type` tinyint NOT NULL DEFAULT '0' COMMENT '加密类型：0，1：卡号，2：身份证，3：手机，4：地址',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='加密字段信息表'
+
+</code></pre><h3 id="判断配置表里的数据类型是否正确的快速方法">判断配置表里的数据类型是否正确的快速方法</h3>
+<pre><code> select concat('mysqlw -h ',replace(linkname,'my','mysql'),'-w.corp.dboop.com -P ',replace(linkname,'my',''),' ',db_name, ' -e &quot;select ','''',col_type,''' as coltype,',col_name ,' from ',tab_name ,' where length(',col_name,')&gt;5 limit 2&quot;')  from encrypt_col_info where linkname='my3344' ;
+
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2024/04/24</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B">自动化流程</a> <a href="/categories/dba">DBA</a> <a href="/categories/%E7%94%BB%E5%9B%BE">画图</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

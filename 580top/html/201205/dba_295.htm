@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>概括SQL Server实时查询Oracle数据库</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="这里介绍然而，当部分资料是放在oracle数据库服务器的时候，这就可能带给您许多挑战。举例来说，光是设定连结服务器就不是一件容易的事。假定您现在拥有一个以microsoft.net为架构的网络订购系统，但是品管维护系统却仍然使用一套旧式的oracle数据库应用程序。当您的顾客在产品保固期间下了产品更换之类的订单，则该笔订单将不收取任何费用。此时您需要从oracle数据库得到实时的查询结果。概括SQL Server实时查询Oracle数据库" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a href="../Oracle/l_7_1.htm" class="hover"　title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../Oraclezhishi/l_8_1.htm" title="Oracle基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../Oracleha/l_9_1.htm" title="Oracle高可用性和HA">高可用性和HA</a>|</li><li><a  href="../Oracleyouhua/l_10_1.htm" title="Oracle性能与优化">性能与优化</a>|</li><li><a  href="../Oracleguzhang/l_11_1.htm" title="Oracle故障与解决">故障与解决</a>|</li><li><a  href="../Oraclebi/l_12_1.htm" title="Oracle商业应用">Oracle商业应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../Oracle/l_7_1.htm">Oracle</a>&nbsp;&gt;&nbsp;<a href="../Oraclezhishi/l_8_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>概括SQL Server实时查询Oracle数据库</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   这里介绍然而，当部分资料是放在<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库服务器的时候，这就可能带给您许多挑战。举例来说，光是设定连结服务器就不是一件容易的事。 　　假定您现在拥有一个以Microsoft .NET为架构的网络订购系统，但是品管维护系统却仍然使用一套旧式的<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库应用程序。当您的顾客在产品保固期间下了产品更换之类的订单，则该笔订单将不收取任何费用。此时您需要从<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库得到实时的查询结果。借着建立连结服务器的方式(linked server)，您将可以从SQL Server实时查询出位于<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库的顾客资料，找出谁是您既有的客户。　　当您的资料分散在不同的SQL Server数据库时，藉由连结服务器可让您执行跨服务器之分布式查询。当所有的数据库服务器都是SQL Server，则连结服务器的设定十分容易，而且在SQL Server线上手册中就涵盖了您所需要了解的所有事项。然而，当部分资料是放在<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库服务器的时候，这就可能带给您许多挑战。举例来说，光是设定连结服务器就不是一件容易的事。您必须了解到：即是您要在SQL Server的EnterPRise Manager设定一个<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>连结服务器，这台SQL Server对<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>来说就是一个客户端。所以您必须在SQL Server所在的服务器成功地安装并组态<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>之客户端软件。因为<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>提供的产品只支持<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a> 8以后的数据库，所以我假设您正在使用的都是<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a> 8以后的数据库。在<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a> Net8函式库则提供了SQL Server所需要的客户端软件。　　译者注1：　　设定连接服务器时是利用 Microsoft所提供的OLE DB Provider for <a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>，使用的<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>网络函式库为SQL*Net 2.3.3.0.4或是以后的版本，不过这是<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a> 7.3数据库所提供的。换句话说，要设定<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库为SQL Server的连接服务器时，<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库只要是7.3.3.4以后的版本，并搭配适当的SQL*Net或是Net 8 函式库即可。　　资料来源：　　1. <a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a> 7 Server Getting Started release 7.3.4　　2. SQL Server Books Online: OLE DB Provider for <a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>　　在 <a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库中，一个schema即代表着SQL Server专家们所熟知的单一数据库(译者注2)。连接至<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库时，您必须提供schema名称、密码以及主机联机字符串(host string)。每一个特定的<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>帐户都拥有一个<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a> schema，而且只能有一个schema。所以schema名称其实就等于该schema拥有者的帐户名称。您可以查询<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>的资料字典 (Data dictionary)以得到更多有关schema的内容。　　至于 <a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>联机字符串又可称为服务名称(service name)或是系统识别资料(Systen Identifier，SID)。我们所谓的SQL Server数据库个体(instance)在<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>则称为数据库(database)。所以安装<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a> Server时，安装程序<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a> Universal Installer(为一个图形接口之安装程序，与SQL Server的Setup程序类似)将会询问您SID名称为何，以作为<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库之名称。　　译者注2：　　这个部分原作者所提到schema的解释有点问题。<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a> schema可视为同一个使用者所拥有的所有数据库对象(schema objects)之集合。举例来说，使用者scott所建立的EMP table其完整名称为SCOTT.EMP，而SCOTT就是EMP的schema名称。所以schema name其实就是一个<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库之使用者帐号。但是绝对不能拿来跟数据库相提并论!因为SQL Server的数据库架构包含了data files与log files，但是<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>的schema objects只存在于tablespace中。为了避免部分读者产生混淆，特此说明。　　如果您在Windows操作系统上安装<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a> Server时设定SID为Ora817(与本篇文章的范例相同)，则在系统内将会有一个名称为<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>ServiceORA817的服务。
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

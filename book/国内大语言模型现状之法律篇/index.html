@@ -1,0 +1,376 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>国内大语言模型现状之法律篇| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">国内大语言模型现状之法律篇</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#发展时间线">发展时间线</a></li>
+    <li><a href="#国内法律大语言模型现状">国内法律大语言模型现状</a></li>
+    <li><a href="#国内法律行业的大语言模型对比">国内法律行业的大语言模型对比</a></li>
+    <li><a href="#国内法律大模型介绍">国内法律大模型介绍</a>
+      <ul>
+        <li><a href="#chatlaw-法律大模型">ChatLaw-法律大模型</a></li>
+        <li><a href="#lawgpt基于中文法律知识的大语言模型">LaWGPT：基于中文法律知识的大语言模型</a></li>
+        <li><a href="#lexilaw中文法律大模型">LexiLaw：中文法律大模型</a></li>
+        <li><a href="#獬豸lawgpt_zh-中文法律对话语言模型">獬豸(LawGPT_zh): 中文法律对话语言模型</a></li>
+        <li><a href="#lawyer-llama中文法律llama">Lawyer LLaMA：中文法律LLaMA</a></li>
+        <li><a href="#韩非hanfei">韩非(HanFei)</a></li>
+        <li><a href="#lychee_law-律知">lychee_law-律知</a></li>
+        <li><a href="#智海-录问wisdominterrogatory">智海-录问(wisdomInterrogatory)</a></li>
+        <li><a href="#disc-lawllm">DISC-LawLLM</a></li>
+        <li><a href="#夫子明察司法大模型">夫子•明察司法大模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#法律ai应用">法律AI应用</a>
+      <ul>
+        <li><a href="#1-metalaw秘塔--收费">1. MetaLaw（秘塔）&ndash;收费</a></li>
+        <li><a href="#2通义法睿">2.通义法睿</a></li>
+        <li><a href="#3得理法搜">3.得理法搜</a></li>
+        <li><a href="#4星火法律咨询">4.星火法律咨询</a></li>
+        <li><a href="#5其他法律ai">5.其他法律ai</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="发展时间线">发展时间线</h2>
+<ul>
+<li>2022年11月30日,国外OPenAI公司的ChatGPT发布，大语言模型开始普及</li>
+<li>2023年2月，国内ChatGPT开始进入国内视野大量媒体报道</li>
+<li>2023年5月开始，基于开源ai大语言模型上用国内的法律条文和案例训练的国产法律大模型开始发布（以高校为主）</li>
+<li>2023年底。随着llama模型升级，国产法律大模型更加智能，同时商业化落地产品开始出现</li>
+<li>2024年由案例检索，合同审查为典型应用场景的国内法律AI产品开始推广应用</li>
+</ul>
+<h2 id="国内法律大语言模型现状">国内法律大语言模型现状</h2>
+<ul>
+<li><img src="/img/2022auto/2024-04-23-16-05-23.png" alt="国内法律大语言模型现状"></li>
+</ul>
+<h2 id="国内法律行业的大语言模型对比">国内法律行业的大语言模型对比</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">大模型名称</th>
+<th style="text-align:left">日期</th>
+<th style="text-align:left">发布人</th>
+<th style="text-align:left">基础模型</th>
+<th style="text-align:left">推荐指数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">ChatLaw</td>
+<td style="text-align:left">2023-06-28</td>
+<td style="text-align:left">北京大学深圳信息工程学院</td>
+<td style="text-align:left">Anima-33B</td>
+<td style="text-align:left">4星</td>
+</tr>
+<tr>
+<td style="text-align:left">LaWGPT</td>
+<td style="text-align:left">2023-04-12</td>
+<td style="text-align:left">南京大学</td>
+<td style="text-align:left">LLaMA</td>
+<td style="text-align:left">4星</td>
+</tr>
+<tr>
+<td style="text-align:left">LexiLaw</td>
+<td style="text-align:left">2023-05-16</td>
+<td style="text-align:left">清华大学</td>
+<td style="text-align:left">ChatGlM 6B</td>
+<td style="text-align:left">2星</td>
+</tr>
+<tr>
+<td style="text-align:left">獬豸(LawGPT_zh)</td>
+<td style="text-align:left">2023-04-09</td>
+<td style="text-align:left">上海交通大学</td>
+<td style="text-align:left">ChatGlM 6B</td>
+<td style="text-align:left">3星</td>
+</tr>
+<tr>
+<td style="text-align:left">Lawyer LLaMA</td>
+<td style="text-align:left">2023-04-13</td>
+<td style="text-align:left">北京大学</td>
+<td style="text-align:left">LLaMA</td>
+<td style="text-align:left">2星</td>
+</tr>
+<tr>
+<td style="text-align:left">韩非(HanFei)</td>
+<td style="text-align:left">2023-05-30</td>
+<td style="text-align:left">香港中文大学</td>
+<td style="text-align:left">LLaMA</td>
+<td style="text-align:left">1星</td>
+</tr>
+<tr>
+<td style="text-align:left">lychee_law-律知</td>
+<td style="text-align:left">2023-07-13</td>
+<td style="text-align:left">德国萨尔大学,中国南京大学</td>
+<td style="text-align:left">GLM-10B</td>
+<td style="text-align:left">1星</td>
+</tr>
+<tr>
+<td style="text-align:left">智海-录问</td>
+<td style="text-align:left">2023-08-08</td>
+<td style="text-align:left">浙江大学,ali达摩院,华院计算</td>
+<td style="text-align:left">Baichuan-7B</td>
+<td style="text-align:left">1星</td>
+</tr>
+<tr>
+<td style="text-align:left">DISC-LawLLM</td>
+<td style="text-align:left">2023-09-26</td>
+<td style="text-align:left">复旦大学</td>
+<td style="text-align:left">Baichuan-13B-Base</td>
+<td style="text-align:left">1星</td>
+</tr>
+<tr>
+<td style="text-align:left">夫子•明察</td>
+<td style="text-align:left">2023-08-31</td>
+<td style="text-align:left">山东大学,浪潮云,中国政法大学</td>
+<td style="text-align:left">ChatGLM</td>
+<td style="text-align:left">1星</td>
+</tr>
+</tbody>
+</table>
+<h2 id="国内法律大模型介绍">国内法律大模型介绍</h2>
+<h3 id="chatlaw-法律大模型">ChatLaw-法律大模型</h3>
+<ul>
+<li>地址：https://github.com/PKU-YuanGroup/ChatLaw</li>
+<li><img src="/img/2022auto/2024-04-23-10-37-02.png" alt="ChatLaw-法律大模型"></li>
+<li>简介：由北大开源的一系列法律领域的大模型，包括ChatLaw-13B（基于姜子牙Ziya-LLaMA-13B-v1训练而来），ChatLaw-33B（基于Anima-33B训练而来，逻辑推理能力大幅提升），ChatLaw-Text2Vec，使用93w条判决案例做成的数据集基于BERT训练了一个相似度匹配模型，可将用户提问信息和对应的法条相匹配。</li>
+</ul>
+<h3 id="lawgpt基于中文法律知识的大语言模型">LaWGPT：基于中文法律知识的大语言模型</h3>
+<ul>
+<li>地址：https://github.com/pengxiao-song/LaWGPT</li>
+<li><img src="/img/2022auto/2024-04-23-10-37-43.png" alt="LaWGPT"></li>
+<li>简介：该系列模型在通用中文基座模型（如 Chinese-LLaMA、ChatGLM 等）的基础上扩充法律领域专有词表、大规模中文法律语料预训练，增强了大模型在法律领域的基础语义理解能力。在此基础上，构造法律领域对话问答数据集、中国司法考试数据集进行指令精调，提升了模型对法律内容的理解和执行能力。</li>
+</ul>
+<h3 id="lexilaw中文法律大模型">LexiLaw：中文法律大模型</h3>
+<ul>
+<li>地址：https://github.com/CSHaitao/LexiLaw</li>
+<li><img src="/img/2022auto/2024-04-23-10-38-15.png" alt="LexiLaw"></li>
+<li>简介：LexiLaw 是一个基于 ChatGLM-6B微调的中文法律大模型，通过在法律领域的数据集上进行微调。该模型旨在为法律从业者、学生和普通用户提供准确、可靠的法律咨询服务，包括具体法律问题的咨询，还是对法律条款、案例解析、法规解读等方面的查询。</li>
+</ul>
+<h3 id="獬豸lawgpt_zh-中文法律对话语言模型">獬豸(LawGPT_zh): 中文法律对话语言模型</h3>
+<ul>
+<li>地址：https://github.com/LiuHC0428/LAW-GPT</li>
+<li><img src="/img/2022auto/2024-04-23-10-38-47.png" alt="獬豸"></li>
+<li>简介: 本项目开源的中文法律通用模型由ChatGLM-6B LoRA 16-bit指令微调得到。数据集包括现有的法律问答数据集和基于法条和真实案例指导的self-Instruct构建的高质量法律文本问答，提高了通用语言大模型在法律领域的表现，提高了模型回答的可靠性和专业程度。</li>
+</ul>
+<h3 id="lawyer-llama中文法律llama">Lawyer LLaMA：中文法律LLaMA</h3>
+<ul>
+<li>地址：https://github.com/AndrewZhe/lawyer-llama</li>
+<li><img src="/img/2022auto/2024-04-23-10-39-13.png" alt="Lawyer LLaMA"></li>
+<li>简介：开源了一系列法律领域的指令微调数据和基于LLaMA训练的中文法律大模型的参数。Lawyer LLaMA 首先在大规模法律语料上进行了continual pretraining。在此基础上，借助ChatGPT收集了一批对中国国家统一法律职业资格考试客观题（以下简称法考）的分析和对法律咨询的回答，利用收集到的数据对模型进行指令微调，让模型习得将法律知识应用到具体场景中的能力。</li>
+</ul>
+<h3 id="韩非hanfei">韩非(HanFei)</h3>
+<ul>
+<li>地址: <a href="https://github.com/siat-nlp/HanFei">https://github.com/siat-nlp/HanFei</a></li>
+<li><img src="/img/2022auto/2024-04-23-10-39-41.png" alt="韩非(HanFei)"></li>
+<li>简介: HanFei-1.0(韩非)是国内首个全参数训练的法律大模型，参数量7b，主要功能包括：法律问答、多轮对话、撰写文章、检索等。</li>
+</ul>
+<h3 id="lychee_law-律知">lychee_law-律知</h3>
+<ul>
+<li>地址：https://github.com/davidpig/lychee_law</li>
+<li><img src="/img/2022auto/2024-04-23-10-40-14.png" alt="lychee_law-律知"></li>
+<li>简介：该项目由德国萨尔大学团队和中国南京大学团队合作开发，开源一系列中文司法领域大模型，如Law-GLM-10B: 基于 GLM-10B 模型, 在 30GB 中文法律数据上进行指令微调得到的。</li>
+</ul>
+<h3 id="智海-录问wisdominterrogatory">智海-录问(wisdomInterrogatory)</h3>
+<ul>
+<li>地址：https://github.com/zhihaiLLM/wisdomInterrogatory</li>
+<li><img src="/img/2022auto/2024-04-23-10-41-07.png" alt="智海-录问"></li>
+<li>简介：该项目由浙江大学、阿里巴巴达摩院以及华院计算三家单位共同设计研发的法律大模型，基于baichuan-7b进行了法律领域数据的二次预训练与指令微调，并设计了知识增强的推理流程。</li>
+</ul>
+<h3 id="disc-lawllm">DISC-LawLLM</h3>
+<ul>
+<li>地址：https://github.com/FudanDISC/DISC-LawLLM</li>
+<li><img src="/img/2022auto/2024-04-23-10-41-39.png" alt="DISC-LawLLM"></li>
+<li>简介：该项目由由复旦大学数据智能与社会计算实验室 (Fudan-DISC) 开发并开源的法律领域大模型，包括数据集，基于 Baichuan-13B-Base 进行微调的模型，且增加了检索增强模块。</li>
+</ul>
+<h3 id="夫子明察司法大模型">夫子•明察司法大模型</h3>
+<ul>
+<li>地址：https://github.com/irlab-sdu/fuzi.mingcha</li>
+<li><img src="/img/2022auto/2024-04-23-10-42-11.png" alt="夫子•明察司法大模型"></li>
+<li>简介：该项目由是由山东大学、浪潮云、中国政法大学联合研发，以 ChatGLM 为大模型底座，基于海量中文无监督司法语料（包括各类判决文书、法律法规等）与有监督司法微调数据（包括法律问答、类案检索）训练的中文司法大模型。该模型支持法条检索、案例分析、三段论推理判决以及司法对话等功能</li>
+</ul>
+<h2 id="法律ai应用">法律AI应用</h2>
+<h3 id="1-metalaw秘塔--收费">1. MetaLaw（秘塔）&ndash;收费</h3>
+<ul>
+<li>地址：https://www.meta.law/</li>
+<li><img src="/img/2022auto/2024-04-23-16-07-59.png" alt="MetaLaw"></li>
+<li>MetaLaw是一个案例检索的工具网站（meta.law），其检索逻辑为“争议焦点——类案判决——类案判决AI总结、判决引用法条”。其核心优点是：相关案例检索</li>
+<li>今年2月份一位律师朋友出“巨资”要求写一个AI案例检索应用。尝试了几个版本，效果都不好。（她甚至威胁要收回前期的订金）后来当秘塔AI开始商用的时候，试用的时候我们一致认可这个产品就是我们想做而没有做成功的ai案例检索应用。甚至比我们想象中的还要更加优秀。</li>
+<li>类似的案例检索产品还有：</li>
+<li>火眼AI助手</li>
+<li>北大法宝,威科先行,法信,律商网等常规检索（非AI）</li>
+<li>无讼</li>
+<li>得理法搜</li>
+</ul>
+<h3 id="2通义法睿">2.通义法睿</h3>
+<ul>
+<li>地址：https://tongyi.aliyun.com/farui</li>
+<li><img src="/img/2022auto/!%5B%E9%80%9A%E4%B9%89%E6%B3%95%E7%9D%BF%5D(/img/2022auto/2024-04-23-16-16-56.png).png" alt="通义法睿"></li>
+<li>通义法睿是阿里云旗下AI法律顾问,拥有法律领域理解和推理能力,能够基于自然语言与人对话、回答法律问题、推送裁判类案、辅助案情分析、生成法律文书、检索法律知识。</li>
+<li>背靠阿里ai全家桶，利用阿里通义千问能力的一个法律方向的助手。现在还有点弱，未来看阿里的资源投入了</li>
+</ul>
+<h3 id="3得理法搜">3.得理法搜</h3>
+<ul>
+<li>地址：https://data.delilegal.com/</li>
+<li><img src="/img/2022auto/2024-04-23-16-22-53.png" alt="得理法搜"></li>
+<li>得理法搜是由深圳得理科技有限公司联合中科院先进院-得理法律人工智能实验室历经5年潜心研发推出的“AI驱动的法律数据智能引擎”。内含有1.3亿+篇裁判文书、300万+条法律法规、500万+法律知识、3.5亿+域名数据、6000万+商标数据、7000万+专利数据、200万+行业资讯等海量数据。在海量的数据基础上，得理法搜可进行专业的法律检索，内嵌的小理AI可基于自然语言与人对话，回答法律问题、生成法律文书。</li>
+</ul>
+<h3 id="4星火法律咨询">4.星火法律咨询</h3>
+<ul>
+<li>地址：https://data.delilegal.com/</li>
+<li><img src="/img/2022auto/2024-04-23-16-22-27.png" alt="星火法律咨询"></li>
+<li>星火法律咨询提供了一个基于讯飞星火法律大模型的AI法律咨询服务，由科大讯飞研发。以下是该产品的一些关键特点和信息：
+<ul>
+<li>AI专属顾问：利用讯飞星火法律大模型，为用户提供专业的法律咨询服务。</li>
+<li>法律问答效果行业领先：通过全量法律法规、海量案例及问答数据训练，提供专业的法律依据和分析建议。</li>
+<li>全案由覆盖：服务覆盖各种法律案由，满足不同法律咨询需求。</li>
+<li>自定义知识库及功能插件：允许用户根据需要定制法律知识库和相关功能。</li>
+<li>全场景灵活适配：提供Web、H5、外呼等多种产品形态，支持互联网SaaS及私有化部署，适用于不同的法律咨询场景。</li>
+</ul>
+</li>
+</ul>
+<h3 id="5其他法律ai">5.其他法律ai</h3>
+<ul>
+<li>法唠AI：法律咨询  <a href="https://chatlaw.cn/">https://chatlaw.cn/</a></li>
+<li>海瑞智法：法律对话 <a href="https://www.hairuilegal.cn/">https://www.hairuilegal.cn/</a></li>
+<li>一码千言：法律文书生成 <a href="https://ai.okwords.cn/">https://ai.okwords.cn/</a></li>
+<li>法小开：法务助理 <a href="https://www.huashikai.com/">https://www.huashikai.com/</a></li>
+<li>GenieAI：法律文档助手 <a href="https://www.genieai.co/">https://www.genieai.co/</a></li>
+<li>LawGeex：合同助手 <a href="https://www.lawgeex.com/">https://www.lawgeex.com/</a></li>
+<li>&hellip;</li>
+</ul>
+<h2 id="总结">总结</h2>
+<ul>
+<li>在2024年4月，国内的AI法律应用开始步入商业化运营阶段。</li>
+<li>我们注意到，国内自训练的法律大模型开始享受来自国外开源基础模型升级带来的智能加速。然而，也有一部分由于资金短缺而开始落后于版本更新的法律大模型。</li>
+<li>当前商业化成功的国内法律大模型主要应用在案例检索、文书生成以及合同审查等领域。</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2024/04/23</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a> <a href="/categories/chatgpt">chatgpt</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

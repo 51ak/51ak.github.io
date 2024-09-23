@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>windowsCluster集群脑裂问题最佳实践| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">windowsCluster集群脑裂问题最佳实践</span></h1>
+</div>
+
+
+<nav id="TableOfContents"></nav>
+
+  <main>
+    <h1 id="故障描述">故障描述</h1>
+<ul>
+<li>WinSvr2008R2/Windows 故障转移集群 意外中断1分钟左右后自行恢复</li>
+<li>导致SQLServer alwayson集群 中断访问，连接卡住无法提供访问</li>
+</ul>
+<h1 id="错误日志">错误日志</h1>
+<p>从日志上来看，当时应该在这个时段节点dboopawo91和dboopawo92两台服务器发生了网络错误，我们看到在日志中显示，两台服务器互相联不通对方了，所以在他们的日志中显示，由于这些机器都无法联通，所以他们都被从群集中踢出。</p>
+<pre><code>------------------------------------------------------------------------------
+
+节点dboopawo91报由于网络问题联系上不dboopawo92。
+---------------------
+11/06/2015          12:13:02 AM         Critical    dboopawo91.server.dboop.com      1135       Microsoft-Windows-FailoverClustering                Node Mgr              NT AUTHORITY\SYSTEM           Cluster node 'dboopawo92' was removed from the active failover cluster membership. The Cluster service on this node may have stopped. This could also be due to the node having lost communication with other active nodes in the failover cluster. Run the Validate a Configuration wizard to check your network configuration. If the condition persists, check for hardware or software errors related to the network adapters on this node. Also check for failures in any other network components to which the node is connected such as hubs, switches, or bridges.                                            
+
+ 
+
+dboopawo91群集日志显示连接到node 5失败是由于远程端通道被关闭.
+---------
+
+Line 12347: 0050dba0.0050b590::2015/11/06-16:06:05.079 INFO  [IM] Marking Route from 192.168.110.51:~3343~ to 192.168.110.84:~3343~ as down
+
+Line 16204: 0050dba0.0050b590::2015/11/06-16:12:54.023 INFO  [IM] Marking Route from 192.168.110.51:~3343~ to 192.168.110.85:~3343~ as down
+Line 12360: 0050dba0.0050da7c::2015/11/06-16:06:05.079 INFO  [CHANNEL fe80::d1be:1295:374e:f3b1%20:~3343~] graceful close, status (of previous failure, may not indicate problem) ERROR_IO_PENDING(997)
+
+Line 12374: 0050dba0.0050da7c::2015/11/06-16:06:05.079 WARN  [PULLER dboopawo91] ReadObject failed with GracefulClose(1226)' because of 'channel to remote endpoint fe80::d1be:1295:374e:f3b1%20:~3343~ is closed'
+
+Line 12379: 0050dba0.0050da7c::2015/11/06-16:06:05.079 ERR   [NODE] Node 1: Connection to Node 5 is broken. Reason GracefulClose(1226)' because of 'channel to remote endpoint fe80::d1be:1295:374e:f3b1%20:~3343~ is closed'
+
+               
+
+节点dboopawo92报由于网络问题联系上不dboopawo91。
+---------------------
+11/06/2015          12:06:01 AM         Critical    dboopawo92.server.dboop.com      1135       Microsoft-Windows-FailoverClustering                Node Mgr              NT AUTHORITY\SYSTEM           Cluster node 'dboopawo91' was removed from the active failover cluster membership. The Cluster service on this node may have stopped. This could also be due to the node having lost communication with other active nodes in the failover cluster. Run the Validate a Configuration wizard to check your network configuration. If the condition persists, check for hardware or software errors related to the network adapters on this node. Also check for failures in any other network components to which the node is connected such as hubs, switches, or bridges.                                                                           
+
+ 
+
+dboopawo92群集日志显示连接到node 5失败也是由于远程端通道被关闭.
+---------------------------------------------------------
+
+Line 19092: 00000c0c.00001f10::2015/11/06-16:06:05.162 INFO  [IM] Marking Route from 192.168.110.85:~3343~ to 192.168.110.84:~3343~ as down
+
+Line 20958: 00000c0c.00001f10::2015/11/06-16:12:52.163 INFO  [IM] Marking Route from 192.168.110.85:~3343~ to 10.35.18.36:~3343~ as down
+
+Line 21077: 00000c0c.00001f10::2015/11/06-16:12:52.865 INFO  [IM] Marking Route from 192.168.110.85:~3343~ to 10.35.18.36:~3343~ as up
+
+Line 19120: 00000c0c.000021c8::2015/11/06-16:06:05.162 INFO  [CHANNEL fe80::d1be:1295:374e:f3b1%19:~33451~] graceful close, status (of previous failure, may not indicate problem) ERROR_IO_PENDING(997)
+
+Line 19124: 00000c0c.000021c8::2015/11/06-16:06:05.162 WARN  [PULLER dboopawo91] ReadObject failed with GracefulClose(1226)' because of 'channel to remote endpoint fe80::d1be:1295:374e:f3b1%19:~33451~ is closed'
+
+Line 19125: 00000c0c.000021c8::2015/11/06-16:06:05.162 ERR   [NODE] Node 7: Connection to Node 5 is broken. Reason GracefulClose(1226)' because of 'channel to remote endpoint fe80::d1be:1295:374e:f3b1%19:~33451~ is closed'
+
+
+</code></pre><h1 id="定位问题">定位问题</h1>
+<p>1135错误显示网络设备故障，请首先联系网络方检查下相关网络硬件的状态，包括网卡，网线，交换机；</p>
+<p>最终定位于：<!-- raw HTML omitted -->TCP/IP的新特性，比如SNP feature（将cpu的东西offload 到网卡上，减轻cpu 负载，如果兼容性有问题，会产生比较奇怪的问题）
+<!-- raw HTML omitted --></p>
+<h1 id="解决问题-windowscluster集群网络配置最佳实践">解决问题 (windowsCluster集群网络配置最佳实践)</h1>
+<ol>
+<li>按照我们的最佳实践，在节点主机上关闭TCP offloading功能，此操作不需要重启，</li>
+</ol>
+<p><a href="http://support.microsoft.com/kb/951037">http://support.microsoft.com/kb/951037</a></p>
+<p>a.用如下命令查看默认配置</p>
+<pre><code>netsh int tcp show global
+
+-----------------------------
+
+Current status:
+
+TCP Global Parameters
+
+----------------------------------------------
+
+Receive-Side Scaling State  : enabled
+
+Chimney Offload State     : automatic
+
+NetDMA State         : enabled
+</code></pre><p>b.使用管理员权限运行cmd，设置如下。</p>
+<pre><code>netsh int tcp set global chimney=disabled
+
+netsh int tcp set global netdma=disabled
+
+netsh int ip set global taskoffload=disabled
+</code></pre><ol start="2">
+<li>
+<p>对于网络错误的原因，有可能是交换机，网线或者网卡驱动的问题，建议务必升级网卡驱动到最新版本。</p>
+</li>
+<li>
+<p>在群集中，以管理员身份运行powershell命令行，将网段内与跨网段的群集心跳延迟时间分别调到2000ms ,4000ms，并且将心跳丢包临界值调到10次。</p>
+</li>
+</ol>
+<pre><code>Import-module failoverclusters
+
+(get-cluster).SameSubnetThreshold = 10
+
+(get-cluster).CrossSubnetThreshold = 10
+
+(get-cluster).CrossSubnetDelay = 4000
+
+(get-cluster).SameSubnetDelay = 2000
+</code></pre><p>可以使用 get-cluster | fl <em>subnet</em> 检查是否配置成功</p>
+<ol start="4">
+<li>从群集最佳实践来说建议要有一个心跳线来专门用于群集节点间的通信。另外心跳和其它网卡可以不是同一个网段。我们建议用一张专门的网卡用来设置群集就可以了，并且这张网卡不要做成冗余（teaming）.</li>
+</ol>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2020/01/12</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/sqlserver">sqlserver</a> <a href="/categories/windowscluter">windowscluter</a> <a href="/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86">故障处理</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

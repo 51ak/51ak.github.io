@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mysql大批量更新规范文档(批量update/select) | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Mysql大批量更新规范文档(批量update/select)</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+<p>业务上操作一批数据行，包括定期数据清理（delete）、初始化数据（insert）、
+批量数据订正/修复（update）、业务数据导出/查询（select）。以上这些操作
+若是涉及的数据量在 1 万行以下，通常没有问题。但超过一定数量级仍采用一个
+SQL 进行处理，就会导致数据库出现主从延迟、IO 负载大、数据库响应超时甚至
+没有响应的情况。
+所以，对于大数据量（1 万行以上）的数据进行操作时，可以采用批量的方式。
+原则：批量处理数据；事务大小合适；数据处理要可控。
+给 RD 的建议，这些建议都是最安全且高效的，可以保证不影响线上数据库正常
+运行，以及主从同步没有延迟，当然具体量值还要视情况而定：
+对于 insert/update/delete，每次处理 200 行数据，执行 commit，之后 sleep 1
+秒
+对于 select，每次查询 1000 行数据，之后 sleep1 秒
+下面举几个例子来说明如何来做。
+注：例子中都是类 SQL，有些字段不存在，具体 SQL 视表而定，这个不要太较真
+儿。
+###例子 1：数据表 iknow_accuse_user_item 要根据字段 accuse_time 清理 3 个月
+前的数据
+注：accuse_time 必须是索引字段，禁止全表扫描
+#####批量删除方法 1：</p>
+
+<pre><code>begin;
+delete from iknow_accuse_user_item
+where accuse_time &lt; ‘3-month-ago’ limit 200;
+commit;
+select sleep(1);
+</code></pre>
+
+<p>重复上面的代码。。。。
+#####批量删除方法 2：
+首先在备库或者从业务前端获取要删除数据行的主键值，</p>
+
+<pre><code>select itemid
+from iknow_accuse_user_item
+where accuse_time &lt; ‘3-month-ago’ limit 200;
+</code></pre>
+
+<p>然后根据主键 itemid 进行删除，</p>
+
+<pre><code>delete from iknow_accuse_user_item
+where itemid in (…,…); //200 个 itemid
+</code></pre>
+
+<p>最后 sleep 1 秒再重复上面的代码，</p>
+
+<pre><code>select sleep(1);
+</code></pre>
+
+<p>重复上面的代码。。。。
+#####批量删除方法 3：
+首先一次性查询出要清理的数据，并进行排序（可以在mysql或者app端做排序），
+若数据量较大超过 100 万，则需要在备库中提前进行查询</p>
+
+<pre><code>select itemid
+from iknow_accuse_user_item
+where accuse_time &lt; ‘3-month-ago’ order by itemid;
+</code></pre>
+
+<p>然后每次程序取出 200 个，而且这 200 个 itemid 是有序的，这样做是因为 innodb
+表是按照主键 itemid 进行物理存储的，可以保证最大程度的减少 delete 所修改
+的物理块，</p>
+
+<pre><code>delete from iknow_accuse_user_item where itemid in (…,…);
+//200 个 itemid
+</code></pre>
+
+<p>最后 sleep 1 秒再重复上面的代码，</p>
+
+<pre><code>select sleep(1);
+</code></pre>
+
+<p>重复上面的代码。。。。
+#####批量删除方法 4：
+首先根据 accuse_time 字段查找出需要清理的主键 itemid 的范围即最小值和最
+大值，</p>
+
+<pre><code>select min(itemid),max(itemid)
+from iknow_accuse_user_item
+where accuse_time &lt; ‘3-month-ago’;
+</code></pre>
+
+<p>然后根据最小和最大 itemid，进行虚拟分段，每次分段 200 行，虚拟分段即从
+最小 itemid 开始每次取 200 个，这里面可能有些 itemid 根本不存在，但不影响
+整体清理效果且数据库对不存在的值进行查找效率也很高，且这 200 个 itemid
+是有序的</p>
+
+<pre><code>delete from iknow_accuse_user_item where itemid in (…,…);
+//200 个 itemid
+</code></pre>
+
+<p>最后 sleep 1 秒再重复上面的代码，</p>
+
+<pre><code>select sleep(1);
+</code></pre>
+
+<p>重复上面的代码。。。。
+###例子 2：将表 urmap 中部分数据行的 rid 改成 10015，已知需要修复的数据的
+主键 uid 值
+批量更新方法：</p>
+
+<pre><code>begin;
+update urmap set rid=10015 where uid in (…,…); //200 个主键 uid
+commit;
+select sleep(1);
+</code></pre>
+
+<p>重复上面的代码。。。。
+注意：该方法在传入主键 uid 之前可以先排序，每次给最小的 200 个 uid，类似
+上面方法 3
+###例子 3：表 uoperator_good_question 需要追加 200 万数据，具体数据字段值由
+业务给出
+批量插入方法 1：</p>
+
+<pre><code>begin;
+insert into uoperator_good_question (col1,col2,col3,col4,…)
+values
+(val1,val2,val3,val4,…),(val11,val22,val33,val44,…),……,(valn,valn
+,valn,valn); //200 行记录
+commit;
+select sleep(1);
+</code></pre>
+
+<p>重复上面的代码。。。。
+注意：此方法是将 200 行记录写到一个 insert 语句中，mysql 是支持这种语法
+的，减少了 SQL 解析的次数，一般 200 行记录不会导致单个 SQL 过大，控制单个
+SQL 大小在 65MB 之内。
+###例子 4：表 uoperator_good_question 要做业务迁移到新表结构中（同库），且
+不是所有的行数据都要保留，原表同时仍有正常业务写入
+批量插入方法 2：</p>
+
+<pre><code>begin;
+insert into new_t(qid,col1,col2,col3,…)
+select a.qid,a.col1,a.col2,new_col
+from (select qid from uoperator_good_question
+where create_time &lt; ‘2012-02-17’ and other-where
+order by id desc limit N,200) t, uoperator_good_question a
+where t.qid=a.qid;
+commit;
+select sleep(1);
+</code></pre>
+
+<p>重复上面的代码。。。。
+注意：该 SQL 采用分页的方式查询出所需要的数据字段后进行批量插入，分页不
+宜过大，否则共享锁会影响业务写入访问。
+例子 5：表 uoperator_good_question 要做业务迁移到其他存储技术，需要将需
+要的数据导出
+#####批量查询方法 1：</p>
+
+<pre><code>select a.qid,a.col1,a.col2,new_col
+from (select qid from uoperator_good_question
+where create_time &lt; ‘2012-02-17’ and other-where
+order by id desc limit N,200) t, uoperator_good_question a
+where t.qid=a.qid;
+</code></pre>
+
+<p>#####批量查询方法 2：
+首先在备库中查询出需要迁移的数据主键值，并且每次取 200 个，</p>
+
+<pre><code>select qid
+from uoperator_good_question
+where create_time &lt; ‘2012-02-17’ and other-where 
+order by id desc limit N,200;
+</code></pre>
+
+<p>然后在备库中根据 200 个主键值查询出具体的行数据，并写成 IN 列表的模式，</p>
+
+<pre><code>select qid,col1,col2,new_col
+from uoperator_good_question
+where qid in (…,…); //200 个主键 qid
+</code></pre>
+
+</main>
+<h2 class="date">发布日期:2016/02/23</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86">数据库管理</a> <a href="/categories/%E8%A7%84%E8%8C%83">规范</a> <a href="/categories/mysql">mysql</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

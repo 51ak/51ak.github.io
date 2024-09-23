@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>工作技能 on Classic</title>
+    <link>/categories/%E5%B7%A5%E4%BD%9C%E6%8A%80%E8%83%BD/</link>
+    <description>Recent content in 工作技能 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 08 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E5%B7%A5%E4%BD%9C%E6%8A%80%E8%83%BD/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>透明数据加密测试</title>
+      <link>/dba/%E6%95%B0%E6%8D%AE%E5%8A%A0%E5%AF%86%E6%B5%8B%E8%AF%95/</link>
+      <pubDate>Sun, 08 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%95%B0%E6%8D%AE%E5%8A%A0%E5%AF%86%E6%B5%8B%E8%AF%95/</guid>
+      <description>加密环境  MySQL主从实例&amp;ndash;&amp;gt; 主:127.0.2.30:3401,从:127.0.2.30:3402 MySQL空白实例：127.0.2.27:3405 启用127.0.2.30:3401 主实例的闪电加密  加密工具  **透明数据库透明加密  加密规则  ogg_pump 表：pumpid,tablename 两列做列加密 wc_host_arch 表：cpu,network_in 两列做列加密  加密前后对比  访问数据库得到的数据如下   mysqlw -h 127.0.2.30 -P 3401 dbsec -e &amp;quot;select pumpid,tablename from ogg_pump order by pumpid limit 10&amp;quot; +--------+-------------------+ | pumpid | tablename | +--------+-------------------+ | 1 | SYS_DICTIONARY | | 2 | SYS_USR | | 3 | OWN_HI_TASK_FINAL | | 4 | OWN_HI_PROCESS | | 5 | RC_CST_CAR_INFO | | 6 | RC_CST_BSC_INFO | | 7 | RC_XJNP_APPLY | | 8 | HSJ_BASIC | | 9 | HSJ_ENTINV_ITEM | | 10 | HSJ_FR_POSITION | +--------+-------------------+ mysqlw -h 127.</description>
+    </item>
+    
+    <item>
+      <title>DBA操作规范-2023</title>
+      <link>/dba/dba%E6%93%8D%E4%BD%9C%E8%A7%84%E8%8C%83-2023/</link>
+      <pubDate>Sat, 07 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/dba%E6%93%8D%E4%BD%9C%E8%A7%84%E8%8C%83-2023/</guid>
+      <description>基本规范意识  所有操作应该遵循下述原则: 故障优先:当发生线上故障时,需立即暂停原有的工作安排,部分流程规范要求可以适度简化,优先故障恢复 事前通知:影响业务的操作，必须事先和DBA团队负责人确认影响范围。在钉钉里发《运维变更通知》 业务低峰:有潜在业务影响的操作，需和业务方沟通业务低峰执行 备份先行:所有操作，必须事前做好备份,给快速回滚创造条件。包括但不限于：配置文件变更，数据变更,文件删除  服务器操作  连接数据库服务器统一走jumpserver平台 在生产数据库服务器上安装任何软件需经过DBA负责人确认 拷贝大于50G的文件，注意和网络部门确认 生产环境的数据库服务器删除大于500G的文件，需留意IO影响  新建数据库选型  优先MySQL数据库，原则上Oracle,SQLServer,PG,不再支持新建实例和数据库 新建数据库实例需要明确版本,用一键安装脚本完成安装，同时做好实例的备份计划 新数据库选择端口，应考虑：同业务优先，测试和生产同端口  数据库操作  参见《MySQL开发和操作规范》,《Oracle_SQL标准规范》  流程与工单  流程优先:已经做完自动化流程的日常工作，必须走流程，禁止绕开自动化流程的手动操作 工单补充:一些没有自动化流程的工作或特殊操作,须提交DBA工单，不认可：口头沟通,微信,钉钉 与其他部门的协作与沟通也应遵守相应的流程规范要求，例运维部门要求的服务器和网络变更流程规范  权限操作  root,dba账号作为特殊账号不可以配置在业务中，不可以提供给非DBA人员使用或测试 业务新申请账号原则上统一走DBA流程，禁止手动创建账号和密码 用于运维的用户账号，例如：备份账号backupuser,主从同步账号repluser可以手动创建 任何新建账号注意弱密码问题：要求12个字符串的随机字符串 禁止在生产测试申请开通个人帐号，业务和研发查询数据库只能通过DBA平台的页面 原则上不提供给研发人员明文数据库账号和密码，只提供加密后的密码串，统一配置nacos  敏感数据保护  敏感数据包括但不限于：真实姓名、手机号码、邮箱地址、家庭住址、身份证号、银行卡号、交易记录、账号密码等； 严禁私自查询与工作无关的用户或业务数据，包括但不限于：客户信息,员工信息,人力信息,oa信息,财务信息； 禁止在内部群发邮件、群聊、Github、技术分享时泄露敏感数据，比如密码等； 从生产环境同步数据到测试环境，需要和DBA负责人确认：数据量级，是否脱敏 原则上不支持帮业务和研发人员手动导数据的需求，此类需求走DBA平台的在线查询，离线查询 以及大数据库部门的导出  值班制度  值班参考《dba值班表》的排班，每天的值班时间是9:00~次日8:59 当天值班在非工作时间，要求外出带上可随时联网的笔记本。发生故障时15分钟以内可以联网处理问题 当天值班DBA优先处理流程与工单,非工作时间可以用钉钉的DBA模块完成快速审批  </description>
+    </item>
+    
+    <item>
+      <title>vscode在mac上用PyQt5制作窗口应用</title>
+      <link>/ops/python%E5%88%B6%E4%BD%9Cmac%E7%A8%8B%E5%BA%8F/</link>
+      <pubDate>Tue, 20 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/python%E5%88%B6%E4%BD%9Cmac%E7%A8%8B%E5%BA%8F/</guid>
+      <description>环境准备  vscode python3 (我用的是python3.9)  安装PyQt5 pip3 install PyQt5 pip3 install PyQt5-tools VSCode中安装和配置pyqt插件 安装了后点设置
+Qtdesigner：这里写入designer.app的完整路径 {这里写python的安装绝对路径}/site-packages/qt5_applications/Qt/bin/Designer.app/Contents/MacOS/Designer
+至此就完成了环境准备
+设计一个窗体程序 建一个项目文件夹，然后右键新建一个form 打开的design窗口，拖动控件，完成窗体设计 保存窗体到 form1.ui 直接cmd+s 保存即可，这里的form1名字可以随意起
+编译form1.ui到py文件 右键选compile
+这里还可以继续调整生成py文件（如果有需要的话）
+新建一个启动文件 main.py import sys from PyQt5.QtWidgets import QMainWindow,QApplication,QWidget from Ui_form1 import Ui_Dialog #导入你写的界面类 class MyMainWindow(QMainWindow,Ui_Dialog): #这里也要记得改 def __init__(self,parent =None): super(MyMainWindow,self).__init__(parent) self.setupUi(self) if __name__ == &amp;quot;__main__&amp;quot;: app = QApplication(sys.argv) myWin = MyMainWindow() myWin.show() sys.exit(app.exec_()) 调试和生成程序 调试代码 用pyton单应用启动调试main.py ，顺利的话会出现刚刚设计好的窗体。 如果有报错的话，解决它
+安装pyinstall  pip3 install pyinstaller 编译和生成一个可执行文件  sudo pyinstaller --windowed --onefile --clean --noconfirm main.</description>
+    </item>
+    
+    <item>
+      <title>google和twitter的镜像</title>
+      <link>/book/google%E5%92%8Ctwitter%E7%9A%84%E9%95%9C%E5%83%8F/</link>
+      <pubDate>Wed, 13 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/book/google%E5%92%8Ctwitter%E7%9A%84%E9%95%9C%E5%83%8F/</guid>
+      <description>今天在大学的群里，F同学发了一个截图说王思聪在说
+我说这是假消息，因为王思聪的推特账号不是这个sicongwang001名字，然后抓了张图
+对***上网这件事也是有很多人不太擅长，于是做了两个镜像，提供给大家一个随时随地可以访问外网的跳转。
+镜像站如下：
+ Google（用来查资料): 地址就不公开了，有风险，有需要的单独找我吧 Twitter (用来看新闻): 地址就不公开了，有风险，有需要的单独找我吧  enjoy it</description>
+    </item>
+    
+    <item>
+      <title>DBA的工作评价标准</title>
+      <link>/dba/dba%E5%B7%A5%E4%BD%9C%E8%83%BD%E5%8A%9B/</link>
+      <pubDate>Tue, 22 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/dba%E5%B7%A5%E4%BD%9C%E8%83%BD%E5%8A%9B/</guid>
+      <description>每大项有4-5个评价标准，分别给分，卓越(4.5),优秀(4),一般(3.5),待改进(3),较差(2.5) 综合得分计为工作能力得分
+ 这里不区分级别，资深DBA,高级DBA,DBA 按同一标准打分。
+01.责任感和主动性 1:设定工作目标  卓越:有高度的责任感，自己设立挑战目标，并实现目标；在工作责任和任务上挑战自己的极限，为公司创造最大价值 优秀:以极大的责任心去 设立非常挑战性目标；主动要求承担更多责任和工作 一般:给自己设立挑战性目标；严格要求自己；主动要求承担责任和工作 待改进:给自己设立容易达到的目标，不严格要求自己；不主动要求工作和责任 较差:不设立目标，不要求自己；推托工作和责任  2:工作效率效果  卓越:效率非常高，紧迫感非常强，今日事今日毕。全力以赴保证完成任务。树立标准，积极地影响他人 优秀:效率非常高，紧迫感非常强，今日事今日毕。全力以赴保证完成任务 一般:效率高，紧迫感强，在限定时间能完成任务 待改进:做事效率不高，紧迫感不足，有时不能在限定时间能完成，偶尔出错 较差:做事拖沓、无紧迫感、无责任心，不能在限定时间能完成工作，时常出错  3:承担责任  卓越:有自我批评，自我激励的能力；追求卓越，在责任感/主动性上是员工典范 优秀:勇于承认错误而不找借口，积极改正错误；正面积极地影响他人 一般:承认错误不找借口，积极改正错误 待改进:有时不承认错误，有时责怪别人 较差:不承认错误，抱怨和指责别人；态度、言行消极地影响他人  4:奉献精神  卓越:愿意为公司/团队利益而牺牲个人利益 优秀:在任何情况下，关注公司/团队利益多于个人利益 一般:在大多数情况下，关注公司/团队利益多于个人利益 待改进:能平衡个人和公司/团队利益 较差:关注个人利益多于公司和团队  02.解决问题能力 1:解决问题  卓越:洞察工作和流程中的潜在问题，预先就可能出现的问题提出解决方案，避免问题的出现 优秀:解决用户问题时经常能让用户非常满意 一般:解决用户问题时经常能让用户满意 待改进:解决用户问题时有时能让用户满意 较差:不能够解决用户问题，不能让用户满意  2:履行工作职责  卓越:超出职责范围的解决公司面临的困难，并超额完成任务 优秀:能够履行职责并超额完成任务 一般:能够履行职责并完成任务 待改进:有时能够履行职责并完成任务 较差:不能够履行职责并完成任务  3:处理复杂问题  卓越:综合运用逻辑和直觉以获得最好的解决办法；快速和正确地解决问题；认识到产生问题的根本原因,一劳永逸的从系统或流程或人员上彻底解决 优秀:通过分析各种复杂数据，找出关键问题，得出理性的结论并付诸于行动，取得预期目标 一般:能够分析和解决复杂问题；能就新出现的问题提出合理解决办法 待改进:面临复杂问题时所提出方案不是充分必要；但会处理比较简单的问题 较差:在面对复杂问题时需要帮助；做事无轻重缓急  4:态度信心和持续改进  卓越:是某一领域的专家，有必胜信心，永远追求卓越 优秀:把持续改进和提高作为工作和人生态度；面对困难和挑战总是有办法 一般:有不解决问题不罢休的、积极的、有办法态度 待改进:碰到自己无法解决的问题积极向上反映；遇到挫折有时不能快速调解恢复积极心态 较差:对所碰到的问题无动于衷，不向上反映，不去寻求解决方案；遇到挫折容易丧失信心  03.</description>
+    </item>
+    
+  </channel>
+</rss>

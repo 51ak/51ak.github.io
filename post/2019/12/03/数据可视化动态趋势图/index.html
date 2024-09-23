@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>数据可视化:动态趋势图 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">数据可视化:动态趋势图</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+<nav id="TableOfContents">
+<ul>
+<li><a href="#可视化效果">可视化效果</a></li>
+<li><a href="#制作过程">制作过程</a>
+<ul>
+<li><a href="#数据源">数据源：</a></li>
+<li><a href="#制作一张报表">制作一张报表</a>
+<ul>
+<li><a href="#我们看一下完整的报表编辑示意图">我们看一下完整的报表编辑示意图：</a></li>
+<li><a href="#报表内容解释">报表内容解释</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#结语">结语</a></li>
+</ul>
+</nav>
+
+
+<main>
+
+
+<h1 id="可视化效果">可视化效果</h1>
+
+<p><img src="/img/report_timerbar02.png" alt="动态趋势图" title="timebar" /></p>
+
+<p><strong>当然上面的图是不会动的</strong></p>
+
+<p>特意录了段视频，来看看效果：
+ <a href="http://www.dboop.com/img/timebar.mp4">数据库自动化流程的动态展示效果视图http://www.dboop.com/img/timebar.mp4</a></p>
+
+<h1 id="制作过程">制作过程</h1>
+
+<h2 id="数据源">数据源：</h2>
+
+<p>这个可视化效果需要4列 ：
+- 第一列：时间分类（一般是月份,年份）
+- 第二列：时间（一般是小时，天）
+- 第三列：项目分类
+- 第四列：具体的值</p>
+
+<p><em>这里我们用MYSQL数据源中拉取</em>
+<img src="/img/report_timerbar00.png" alt="数据源要求：" title="timebar_datasource" /></p>
+
+<h2 id="制作一张报表">制作一张报表</h2>
+
+<h3 id="我们看一下完整的报表编辑示意图">我们看一下完整的报表编辑示意图：</h3>
+
+<p><img src="/img/report_timerbar01.png" alt="报表编辑：" title="report_timerbar01" /></p>
+
+<h3 id="报表内容解释">报表内容解释</h3>
+
+<pre><code class="language-xml">&lt;page&gt;
+  &lt;viewtype&gt;timebar&lt;/viewtype&gt; &lt;!--定义我们这个图形的类别，在张报表里我们用timebar：动态柱图，还有很多:line,bar,mutibar,map,tree,table,edittable...等可选 --&gt;
+  &lt;connstr&gt;&lt;!--这里写数据库ID,需要提前申请好访问这个DB的权限--&gt;&lt;/connstr&gt;
+  &lt;sqlstr&gt;
+&lt;![CDATA[  
+select  DATE_FORMAT(addtime,'%Y年%m月') as ftitle,DATE_FORMAT(addtime,'%Y-%m-%d')  as addtime,applytype,convert(sum(counts),unsigned) as counts 
+from processlist where addtime between %s and %s
+group by addtime,applytype
+order by addtime
+]]&gt;
+&lt;/sqlstr&gt;
+  &lt;sqlpara&gt;#1&lt;/sqlpara&gt;  &lt;sqlpara&gt;#2&lt;/sqlpara&gt;  &lt;!--这时是给SQL传参--&gt;
+  &lt;title&gt;数据库自动化流程:&lt;/title&gt;  &lt;!--timebar的标题--&gt;
+  &lt;maxdisplay&gt;20&lt;/maxdisplay&gt; &lt;!--最多显示多少项--&gt;
+  &lt;playInterval&gt;100&lt;/playInterval&gt; &lt;!--刷新间隔，单位毫秒，默认是50毫秒--&gt;
+  &lt;height&gt;800px&lt;/height&gt; &lt;!--动态图表的高度，可以不填--&gt;
+&lt;/page&gt;
+
+&lt;para&gt;
+  &lt;name&gt;开始日期&lt;/name&gt;
+  &lt;type&gt;date&lt;/type&gt;
+  &lt;defaultvalue&gt;getdate()-1y&lt;/defaultvalue&gt; &lt;!--定文了一个日期选择框，默认值是一年前的今天 --&gt;
+  &lt;/para&gt;
+&lt;para&gt;
+  &lt;name&gt;结束日期&lt;/name&gt;
+  &lt;type&gt;date&lt;/type&gt;
+  &lt;defaultvalue&gt;getdate()&lt;/defaultvalue&gt;&lt;!--定文了第二个日期选择框，默认值今天 --&gt;
+  &lt;/para&gt;
+
+
+&lt;!--加了一段背景音乐 ，增加报表动态跑动时的氛围 --&gt;
+&lt;audio&gt;
+  &lt;src&gt;/static/download/2.mp3&lt;/src&gt; 
+&lt;attribute&gt;controls loop  autoplay=&quot;autoplay&quot;&lt;/attribute&gt;
+&lt;/audio&gt;
+
+</code></pre>
+
+<h1 id="结语">结语</h1>
+
+<p>通过一条SQL+XML 我们快速的完成了一张数据可视化的展现</p>
+
+<p><strong>不仅如此 ，我们同时还做到了：</strong></p>
+
+<ul>
+<li>针对用户，用户组的权限分配（参加报表编辑下的权限设定）</li>
+<li>手机端的报表展现 （在企业微信中，已分配权限的用户，可以看到这张报表并打开，效果是一样的，只是这个报表建议手机横屏观看</li>
+</ul>
+
+</main>
+<h2 class="date">发布日期:2019/12/03</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8F%AF%E8%A7%86%E5%8C%96">数据库可视化</a> <a href="/categories/dboop">dboop</a> <a href="/categories/python">python</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

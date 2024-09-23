@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mongodb on Classic</title>
+    <link>/categories/mongodb/</link>
+    <description>Recent content in mongodb on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 08 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/mongodb/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>mongodb性能监控指标详细解释</title>
+      <link>/dba/mongodb%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E6%8C%87%E6%A0%87%E8%AF%A6%E7%BB%86%E8%A7%A3%E9%87%8A/</link>
+      <pubDate>Thu, 08 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/mongodb%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E6%8C%87%E6%A0%87%E8%AF%A6%E7%BB%86%E8%A7%A3%E9%87%8A/</guid>
+      <description>常用监控项及说明 当我们监控mongodb实例时，大约有300多项的监控指标，通常我们可以关注以下的20项指标就够了
+   监控项 说明     mongodb_memory 内存占用（MiB）   mongodb_mongod_op_latencies_latency_total 累计操作耗时（毫秒）   mongodb_mongod_op_latencies_ops_total 累计操作次数   mongodb_op_counters_total 累计接收的操作请求次数（即使操作不成功也会增加）   mongodb_connections 连接数   mongodb_mongod_metrics_cursor_open 打开游标数量   mongodb_mongod_metrics_document_total 累计文档操作次数   mongodb_mongod_global_lock_current_queue 当前排队等待获取锁的操作个数   mongodb_mongod_metrics_query_executor_total 查询和查询计划评估过程扫描的（索引或文档）条目总数   mongodb_asserts_total 累计断言错误次数   mongodb_mongod_metrics_get_last_error_wtime_num_total 累计getLastError操作数量   mongodb_mongod_wiredtiger_cache_bytes 当前缓存数据大小（byte）   mongodb_mongod_wiredtiger_cache_bytes_total 写入或读取的缓存数据大小（byte）   mongodb_mongod_wiredtiger_cache_pages 当前缓存页数量   mongodb_mongod_wiredtiger_cache_evicted_total 累计缓存移除页数量   mongodb_extra_info_page_faults_total 累计缺页中断次数   mongodb_ss_network_bytesOut 累计发送网络流量（byte）   mongodb_ss_network_bytesIn 累计接收网络流量（byte）   mongodb_mongod_replset_member_replication_lag 副本集成员主从延迟（秒）    mongodb_memory  mongodb_memory 指标表示 MongoDB 数据库实例使用的内存量。这个指标可以帮助监控系统管理员查看 MongoDB 的内存使用情况，并对系统的内存进行优化。 resident 和virtual resident 指的是进程在物理内存中占用的空间，即进程实际使用的物理内存。 virtual 指的是进程在虚拟内存中占用的空间，即进程所占用的总内存，包括物理内存和交换空间。 通常来说，如果 resident 值很大，说明进程实际使用的物理内存很多，这可能表示系统的内存不足，或者进程的内存使用不合理。如果 virtual 值很大，说明进程占用的总内存很多，这可能表示进程在使用较多的交换空间，或者系统的总内存不足。 总之，resident 和 virtual 指标可以帮助你了解进程对内存的使用情况，从而为进行性能优化提供重要的参考信息。 获取代码：  例：mongodb_memory{job=&amp;quot;mongodb&amp;quot;, service=&amp;quot;mongodb&amp;quot;, team=&amp;quot;dba&amp;quot;, type=&amp;quot;resident&amp;quot;}34957mongodb_memory{job=&amp;quot;mongodb&amp;quot;, service=&amp;quot;mongodb&amp;quot;, team=&amp;quot;dba&amp;quot;, type=&amp;quot;virtual&amp;quot;}49537mongodb_mongod_op_latencies_latency_total   mongodb_mongod_op_latencies_latency_total 指标中的 read、write、command、transactions 分别表示 MongoDB 数据库实例中的不同操作类型的平均响应时间。</description>
+    </item>
+    
+    <item>
+      <title>万物不如MySQL_万物皆可Join</title>
+      <link>/dba/%E4%B8%87%E7%89%A9%E7%9A%86%E5%8F%AFsql/</link>
+      <pubDate>Thu, 25 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E4%B8%87%E7%89%A9%E7%9A%86%E5%8F%AFsql/</guid>
+      <description>当前数据库架构越来越复杂
+  数据库MongoDB,Redis,Es,Kafka,Postgresql&amp;hellip;
+  加上传统的关系型数据库（MySQL,Oracle,SQLServer)
+  你是否因为各种数据库的查询语言不同而头晕眼花，到处撞墙！
+   你是否各种分库分表后，不同的数据库之前没办法join联合查询而一蹶不振   你是否业务同学发给你一个excel，让你查这些订单的明细而不知所措，来回倒腾。   你是否在焦急的等待着BI大数据同事帮你把不同数据源的表都抽到一起才能join出想要的数据？   怎么办？怎么办？ 没办法!!! 拆开的数据库没办法放在一台服务器上 各种数据库也没办法统一成一种 大数据部门的同步任务正在走流程 走完的流程，他们也不能保证数据同步任务不中断 Excel不是数据库不能用SQL 怎么办？怎么办？ 这种混乱就没人能治吗？ 不要让这些问题挡住你前进的脚本 dboop平台的统一查询平台横空出世 不再区分数据库类型 所有的数据库种类都支持MySQL语法 是的，你没有听错 不管什么类型的数据库 统统只需要记住MySQL语法了 Oracle,SQLServer,MongoDB,kafka DBA在运维的每一种数据库 都可以当成MySQL一样使用了  kafka当成MySQL Mongo当成MySQL  而且这些表都是可以互相join ,union 的   现在我们来休验一下这神奇的黑科技 第一步 我们有个这样的excel 第二步 把excel上传到平台上 第三步 得到一个可以查询的excel文件 第四步 用excel join MySQL 这就是我们说的： 几个问题 问题1:查询会不会影响线上业务  绑定了dba的高可用架构系统，可以自动路由到专门给bi取数服务的专用只读实例上。不会对线上应用产生影响 理论上bi抽数进程会和它产生资源抢占，但是因为bi抽数多数是凌晨进行，两个并不冲突
+ 问题2:查询的性能怎样  快，非常快，普通的单表查询0.</description>
+    </item>
+    
+  </channel>
+</rss>

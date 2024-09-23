@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>关系型数据库是怎么工作的6:SQL查询 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">关系型数据库是怎么工作的6:SQL查询</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+<nav id="TableOfContents">
+<ul>
+<li><a href="#查询管理器">查询管理器</a>
+<ul>
+<li><a href="#1-查询解析器">1.查询解析器</a></li>
+<li><a href="#2-查询重写器">2.查询重写器</a></li>
+<li><a href="#3-统计信息">3.统计信息</a></li>
+</ul></li>
+<li><a href="#4-查询优化器">4.查询优化器</a>
+<ul>
+<li><a href="#4-1-索引">4.1 索引</a></li>
+<li><a href="#4-2-访问路径">4.2 访问路径</a>
+<ul>
+<li><a href="#完全扫描full-scan">完全扫描Full scan</a></li>
+<li><a href="#范围扫描range-scan">范围扫描Range Scan</a></li>
+<li><a href="#索引查找-unique-scan">索引查找 Unique scan</a></li>
+<li><a href="#按行id访问-access-by-row-id-备注-书签查找">按行ID访问 Access by row id （备注：书签查找）</a></li>
+<li><a href="#其他路径">其他路径</a></li>
+</ul></li>
+<li><a href="#4-3-join-操作">4.3 Join 操作</a>
+<ul>
+<li><a href="#4-3-1-嵌套循环联接nested-loop-join">4.3.1 嵌套循环联接Nested loop join</a></li>
+<li><a href="#4-3-2-哈希联接hash-join">4.3.2 哈希联接Hash join</a></li>
+<li><a href="#4-3-3-合并联接merge-join">4.3.3 合并联接Merge join</a></li>
+<li><a href="#4-3-4-哪一个是最好的">4.3.4 哪一个是最好的？</a></li>
+</ul></li>
+<li><a href="#4-4-简单的例子">4.4 简单的例子</a></li>
+<li><a href="#4-5-动态编程-启发式的贪婪算法">4.5 <strong>动态编程，启发式的贪婪算法</strong></a>
+<ul>
+<li><a href="#4-5-1-动态编程-dynamic-programming">4.5.1 动态编程 Dynamic Programming</a></li>
+<li><a href="#4-5-2-贪婪算法-greedy-algorithms">4.5.2 贪婪算法 Greedy algorithms</a></li>
+<li><a href="#4-5-3-其他算法">4.5.3 其他算法</a></li>
+<li><a href="#4-5-4-真正的优化器">4.5.4 真正的优化器</a></li>
+</ul></li>
+<li><a href="#4-6-查询计划缓存">4.6 查询计划缓存</a></li>
+<li><a href="#4-7-查询执行器">4.7 查询执行器</a></li>
+</ul></li>
+</ul>
+</nav>
+
+
+<main>
+
+
+<h1 id="查询管理器">查询管理器</h1>
+
+<p><img src="/img/query_manager.png" alt="数据库中的查询管理器" title="数据库中的查询管理器" /></p>
+
+<p>上图标红的部分就是数据库的能力所在.在这里一个写得不好的(最初的)查询语句会被转换为一个高效的可执行代码.然后执行它,并将执行结果返回给客户端管理器.
+这个操作可以分解成:
+- 首先<strong>检查</strong>SQL是否有效
+- 然后<strong>重写</strong>这个SQL,去掉一些没用的操作,加上一些预先优化
+- 然后<strong>优化</strong>SQL,提高性能并转化为可执行的数据访问计划
+- 然后<strong>编译</strong>执行计划
+- 最后,<strong>执行</strong>它</p>
+
+<p>在接下来的部分,我们要讨论的不包含最后两部分(编译和执行),因为他们不重要</p>
+
+<p>想更好的理解本篇文章的内容,建议你后续阅读以下内容:</p>
+
+<ul>
+<li>有关基于成本的优化的初步研究论文（1979年）：<a href="/img/3-selinger79.pdf," title="关系数据库管理系统中的访问路径选择">关系数据库管理系统中的访问路径选择</a>。本文只有12页，中等难度。</li>
+<li><a href="/img/db2-talk.pdf," title="DB2 9.X如何优化查询">DB2 9.X如何优化查询</a> 非常好而深入的介绍</li>
+<li><a href="/img/optimizer.pdf," title="PostgreSQL如何优化查询的很好的演示">PostgreSQL如何优化查询的很好的演示</a> 这是最易于访问的文档，因为它比“让我们看看PostgreSQL使用的算法”更多地是关于“让我们看看PostgreSQL在这些情况下给出的查询计划”。</li>
+<li>有关优化的官方SQLite文档:<a href="https://www.sqlite.org/optoverview.html。易于阅读，因为SQLite使用简单的规则。而且，这是唯一真正说明其工作原理的官方文档。">https://www.sqlite.org/optoverview.html。易于阅读，因为SQLite使用简单的规则。而且，这是唯一真正说明其工作原理的官方文档。</a></li>
+<li><a href="/img/twp-optimizer-with-oracledb-12c-1963236.pdf," title="关于Oracle 12c中的优化的白皮书">关于Oracle 12c中的优化的白皮书</a></li>
+<li>两本关于查询优化的理论课程，来自“数据库系统概念”一书的作者。重点放在磁盘I/O成本方面的读物不错，但在CS方面也需要良好的水平。<a href="/img/ch12.ppt," title="课程1">课程1</a> <a href="/img/ch13.ppt," title="课程2">课程2</a></li>
+<li>我发现另一门理论课程可以访问，但只侧重于联接运算符和磁盘I/O。  <a href="/img/09_joins.pdf," title="课程3">课程3</a></li>
+</ul>
+
+<h2 id="1-查询解析器">1.查询解析器</h2>
+
+<p>每个SQL语句都会发送到解析器，在该处检查语法是否正确。如果查询中有错误，解析器将拒绝该查询。例如，如果您写的是“SLECT…”而不是“SELECT…”，则故事到此结束。</p>
+
+<p>更进一步。它还检查关键字是否以正确的顺序使用。例如，SELECT之前的WHERE将被拒绝。</p>
+
+<p>然后，分析查询中的表和字段。解析器使用数据库的元数据来检查：</p>
+
+<ul>
+<li>表是否存在</li>
+<li>表中的字段是否存在</li>
+<li>是否可以对字段类型进行操作（例如，不能对整数使用substring函数）
+ 
+然后，它检查您是否具有读取（或写入）SQL中的表的权限。同样，这些对表的访问权限由您的DBA设置。</li>
+</ul>
+
+<p>在此解析期间，SQL查询将转换为内部表示形式（通常为树）</p>
+
+<p>如果一切正常，则将内部表示形式发送到查询重写器。</p>
+
+<h2 id="2-查询重写器">2.查询重写器</h2>
+
+<p>在此步骤中，我们已经有了上一步结果的SQL内部表示。重写器的目的是：</p>
+
+<ul>
+<li>预优化查询</li>
+<li>避免不必要的操作</li>
+<li>帮助优化器找到最佳解决方案
+ </li>
+</ul>
+
+<p>重写器在sql查询中执行已知规则的清单。如果查询符合规则模式，则将应用该规则并重写查询。以下是（可选）规则的详尽列表：</p>
+
+<ul>
+<li><strong>视图合并</strong>：如果您在查询中使用视图，则视图将使用该视图的SQL代码进行转换。</li>
+<li><strong>子查询拼合</strong>：很难优化子查询，因此重写器将尝试使用子查询修改查询以删除子查询。
+例如:</li>
+</ul>
+
+<pre><code class="language-SQL">SELECT PERSON.*
+FROM PERSON
+WHERE PERSON.person_key IN
+(SELECT MAILS.person_key
+FROM MAILS
+WHERE MAILS.mail LIKE 'christophe%'); 
+</code></pre>
+
+<p>将被重写为：</p>
+
+<pre><code class="language-SQL">SELECT PERSON.*
+FROM PERSON, MAILS
+WHERE PERSON.person_key = MAILS.person_key
+and MAILS.mail LIKE 'christophe%';
+</code></pre>
+
+<ul>
+<li><strong>删除不必要的运算符</strong>：例如，如果您使用DISTINCT而您拥有一个UNIQUE约束，则DISTINCT关键字将被删除。</li>
+<li><strong>消除冗余连接</strong>：如果由于一个视图中隐藏了一个连接条件而使您拥有两次相同的连接条件，或者由于传递性而导致无用的连接，则将其删除。</li>
+<li><strong>持续的算术运算</strong>：如果您编写需要数学计算的内容，那么在重写过程中将对其进行一次计算。例如，将WHERE AGE&gt; 10 + 2转换为WHERE AGE&gt; 12，然后将TODATE（some date）转换为datetime格式的日期</li>
+<li><strong>（高级）分区修剪</strong>：如果您使用的是分区表，则重写器可以找到要使用的分区。</li>
+<li><strong>（高级）实例化视图重写</strong>：如果您具有与查询中的谓词子集匹配的实例化视图，则重写器将检查该视图是否最新，并修改查询以使用实例化视图而不是原始表。</li>
+<li><strong>（高级）自定义规则</strong>：如果您有用于修改查询的自定义规则（例如Oracle策略），则重写器将执行这些规则</li>
+<li><strong>（高级）Olap转换</strong>：分析/视窗功能，join，汇总&hellip;也都进行了转换（但是我不确定是由重写器还是优化器完成，因为两个过程都非常接近，它必须取决于数据库）。</li>
+</ul>
+
+<p>然后，这个重写的查询将发送到查询优化器，从那里开始变得有趣！</p>
+
+<h2 id="3-统计信息">3.统计信息</h2>
+
+<p>在我们弄清楚数据库是怎么优化一个SQL的前，得先说说统计信息。 因为离开统计信息，数据库系统非常傻。
+如果你不让一个数据库去分析它的数据，它不会去分析且会做出很多非常傻的假设。</p>
+
+<p>数据库需要知道哪些信息呢？</p>
+
+<p>我得（简短的)谈谈数据库和操作系统是怎么处理数据的。它们用的最小的单位称为页或块（默认为4k,8k,16k&hellip;)。这就意味着你只需要一kB的内容也要取一个页出来。如果一页是8KB，那就浪费了7KB.</p>
+
+<p>回到统计信息！当您要求数据库收集统计信息时，它将计算如下值：
+- 表中有多少页，每页有多少行
+- 对于表中的每一列：
+- - 唯一值有多少
+- - 数据值的长度（最小值，最大值，平均值）
+- - 数据范围信息（最小值，最大值，平均值）
+- 有关表索引的信息。</p>
+
+<p>这些统计信息将帮助优化器估计查询的磁盘I/O，CPU和内存使用率。</p>
+
+<p>每列的统计信息是非常重要的。例如,一张表PERSON 会在JOIN 中用到两列：LAST_NAME, FIRST_NAME.有了统计信息，数据库知道FIRST_NAME只有1000个不同的值,而LAST_NAME有1000000个不同的值。
+这样，数据库将会按LAST_NAME, FIRST_NAME 的方式join查询而不是用 FIRST_NAME,LAST_NAME ,因为这样产生的消耗更少，多数情况下LAST_NAME不会相同，大多数时间比较2（3）个LAST_NAME字符就够了。</p>
+
+<p>但是这些是基本统计数据。 您可以要求数据库计算称为直方图的高级统计信息。 直方图是用于统计列中值的分布情况， 例如：
+- 最频繁的那些值
+- 分位数
+- &hellip;
+这些额外的统计信息将帮助数据库找到一个更好的执行计划。特别是对于相等查询（例如：WHERE AGE = 18）或范围查询（例如：WHERE AGE&gt; 10 and  AGE &lt;40），因为数据库会对这些查询所涉及的行数有更好的了解（请注意： 这个概念就是：selectivity 选择性）。</p>
+
+<p>统计信息存储在数据库的元数据中。 例如，您可以查看（未分区的）表的统计信息：
+- Oracle:in USER/ALL/DBA_TABLES 和 USER/ALL/DBA_TAB_COLUMNS
+- DB2:SYSCAT.TABLES 和 SYSCAT.COLUMNS</p>
+
+<p>统计信息必须是最新的。 没有比数据库认为表只有500行而表有1000000行的数据库更糟糕的了。 统计信息的唯一缺点是计算它们需要时间。 这就是为什么大多数数据库默认情况下不会自动计算它们的原因。 数百万的数据难以计算。 在这种情况下，您可以选择仅计算基本统计信息或计算数据库样本的统计信息。</p>
+
+<p>例如，当我在一个项目中处理的每张表中都有亿万行时，我选择只计算10％的统计信息，从而节省了大量时间。但是偶尔也会引起一个错误的决定，因为有时的Oracle 10g从特定表的特定列选择10％的抽样跟整体100％非常不同的（这不太可能发生在有亿万行） 。 错误的统计信息导致查询有时需要8个小时而不是30秒。 此示例说明了统计数据的重要性。</p>
+
+<p>注意：<em>每个数据库都有自己的高级统计信息。 如果您想了解更多信息，请阅读数据库的文档。 话虽如此，我试图了解如何使用统计信息，而我发现的最佳官方文档是PostgreSQL的官方文档。</em>
+<a href="https://www.postgresql.org/docs/9.4/static/row-estimation-examples.html">https://www.postgresql.org/docs/9.4/static/row-estimation-examples.html</a></p>
+
+<h1 id="4-查询优化器">4.查询优化器</h1>
+
+<p>所有现代数据库都使用基于成本的优化（CBO）来优化查询。 通过为每个操作增加一个成本的指标，并通过使用经济的操作路径来获取结果，从而找到降低查询</p>
+
+<p>为了理解基于成本优化工具的工作原理，我认为最好有一个示例来“感觉”该任务的复杂性。 在这一部分中，我将向您介绍join 2个表的3种常用方法，我们将很快看到，即使是简单的join查询也是优化的噩梦。 之后，我们来看看真正的优化器如何完成这项工作。</p>
+
+<p>对于这些联接，我将重点讨论它们的时间复杂度，但是数据库优化器将计算其CPU成本，磁盘I/O成本和内存需求。时间复杂度和CPU成本之间的区别是，时间复杂度成本是非常近似的（这是为像我这样懒惰的家伙准备的）。 对于CPU成本，我将统计每个操作：加法，“if语句”，乘法，迭代…………此外：
+- 每个高级语言代码里的一次操作都对应一定数量的低级CPU操作(不止是1）。
+- 使用不同型号的CPU，如Intel Core i7，Intel Pentium 4，AMD Opteron…，CPU操作的成本（在CPU周期方面）都不相同。 换句话说，它取决于CPU体系结构。</p>
+
+<p>使用时间复杂度更容易（至少对我而言），并且有了它，我们仍然可以理解CBO的概念。 有时我们还是会谈论磁盘I/O，因为它是一个重要的概念。 请记住，瓶颈大多数时候是磁盘I/O，而不是CPU使用率。</p>
+
+<h2 id="4-1-索引">4.1 索引</h2>
+
+<p>前面我们说B+Tree时，我们提到了索引。 请记住：<strong>这些索引已经排好序了</strong>。</p>
+
+<p>仅供参考：还有其他类型的索引，例如位图索引。 它们在CPU，磁盘I/O和内存方面的成本与B+Tree索引的成本不同。</p>
+
+<p>此外，如果可以提高执行计划的成本，许多现代数据库可以临时为当前查询动态创建一个临时索引。</p>
+
+<h2 id="4-2-访问路径">4.2 访问路径</h2>
+
+<p>在应用join运算符之前，首先需要获取数据。 这是获取数据的方法。</p>
+
+<p>注意：<em>由于所有访问路径的真正问题是磁盘I/O，因此我不会过多谈论时间复杂性。</em></p>
+
+<h3 id="完全扫描full-scan">完全扫描Full scan</h3>
+
+<p>如果你看过执行计划的话，应该看过一个词叫(full scan 或者 scan),完全扫描是数据库完全读取一个表或一个索引。 就磁盘I/O而言，表完全扫描显然比索引完全扫描更昂贵。</p>
+
+<h3 id="范围扫描range-scan">范围扫描Range Scan</h3>
+
+<p>还有其他类型的扫描，例如索引范围扫描。 例如，当您使用“ WHERE AGE&gt; 20 AND AGE &lt;40”这样的谓词时，将使用它。当然，您需要在AGE字段上有一个索引才能使用此索引范围扫描。</p>
+
+<p><em>我们已经在文章的前部分，理解了范围查询的时间成本类似于log（N）+ M，其中N是此索引中的数据数，M是该范围内的行数的估计。 感谢统计信息的存在，N和M值都是已知的（注意：M是谓词AGE&gt; 20 AND AGE &lt;40的选择性）。 此外，对于范围扫描，您无需读取完整索引，因此就磁盘I/O而言，它比完整扫描便宜。</em></p>
+
+<h3 id="索引查找-unique-scan">索引查找 Unique scan</h3>
+
+<p>如果您只需要索引中的一个值，则可以使用索引查找</p>
+
+<h3 id="按行id访问-access-by-row-id-备注-书签查找">按行ID访问 Access by row id （备注：书签查找）</h3>
+
+<p>在大多数情况下，如果数据库使用索引，则它将必须查找与索引关联的行。 为此，它将使用按行ID进行的访问。</p>
+
+<p>例如，如果您执行类似</p>
+
+<pre><code class="language-SQL">SELECT LASTNAME, FIRSTNAME from PERSON WHERE AGE = 28
+</code></pre>
+
+<p>如果您有一个索引 person(AGE)，那么优化器将使用该索引查找所有28岁的人，然后它会请求访问表中的关联行，因为索引仅包含有关年龄的信息，而我们需要SELECT的还有姓氏和名字。</p>
+
+<p>如果你想做这样的事情：</p>
+
+<pre><code class="language-SQL">SELECT TYPE_PERSON.CATEGORY from PERSON ,TYPE_PERSON
+WHERE PERSON.AGE = TYPE_PERSON.AGE
+</code></pre>
+
+<p>PERSON上的索引将用于与TYPE_PERSON联接，表PERSON 不再需要按行ID访问，因为您不需要访问PERSON表的信息。</p>
+
+<p>尽管这个行为对于某些访问非常有效，但是此操作的真正问题是磁盘I/O。 如果您需要按行ID进行太多访问，则数据库可能会选择完全扫描</p>
+
+<h3 id="其他路径">其他路径</h3>
+
+<pre><code>我没有列出所有访问路径。 如果您想了解更多信息，可以阅读Oracle文档。 其他数据库的里对于这些术语的名称可能不同，但概念相同。https://docs.oracle.com/database/121/TGSQL/tgsql_optop.htm
+</code></pre>
+
+<h2 id="4-3-join-操作">4.3 Join 操作</h2>
+
+<p>有了访问路径的概念，我们知道如何获取数据，让我们一起看看 join .</p>
+
+<p>我将介绍3个常见的join联接运算符：合并联接Merge Join，哈希联接Hash Join和嵌套循环联接Nested Loop Join。 但是在此之前，我需要介绍新的词汇：inner内部关系和outer外部关系。 关系可以是：
+- 一张表
+- 一个索引
+- 先前操作的中间结果（例如先前join的结果）
+当您合并两个关系时，合并算法对两个关系的管理方式不同。 在本文的其余部分，我将假定：
+- outer关系是左数据集
+- inner关系是右数据集
+例如，A JOIN B是A和B之间的联接，其中A是外部outer关系，B是内部inner关系。</p>
+
+<p>在大多数情况下，A JOIN B的成本与B JOIN A的成本不同。</p>
+
+<p>在这一部分中，我还将假设外部关系包含N个元素，内部关系包含M个元素。 请记住，真正的优化器通过统计信息知道N和M的值。</p>
+
+<p>注意：N和M是关系的基数。</p>
+
+<h3 id="4-3-1-嵌套循环联接nested-loop-join">4.3.1 嵌套循环联接Nested loop join</h3>
+
+<p>嵌套循环联接 nested loop join 是最简单的一种</p>
+
+<p><img src="/img/nested_loop_join.png" alt="嵌套循环联接" title="nested_loop_join" /></p>
+
+<p>处理过程如下:
+- 对于外部关系(左边)中的每一行
+- 您查看内部关系(右边)中的所有行以查看是否有匹配的行</p>
+
+<p>伪代码如下：</p>
+
+<pre><code class="language-c">
+nested_loop_join(array outer, array inner)
+  for each row a in outer
+    for each row b in inner
+      if (match_join_condition(a,b))
+        write_result_in_output(a,b)
+      end if
+    end for
+   end for
+</code></pre>
+
+<p>由于是两次迭代，因此时间复杂度为 O(N*M)</p>
+
+<p>就磁盘I/O而言，对于外部关系（左边）中的N行中的每行，内部循环都需要从内部关系（右边）中读取M行。 该算法需要从磁盘读取N+ N*M行。 但是，如果内部关系足够小，则可以将该部分数据存储在内存中，并且只需进行M + N次读取即可。 通过这种修改，内部关系必须是最小的才有更多的机会放到内存里。</p>
+
+<p>就时间复杂度而言，（右边的M大小）这没有什么区别，但是就磁盘I/O而言，最好两个关系都加载到内存里，只需要读一次。</p>
+
+<p>当然，内部关系可以用索引代替，这对于磁盘I O会更好。</p>
+
+<p>由于此算法非常简单，因此如果内部关系太大而无法容纳在内存中，下面有对磁盘I/O更友好的版本。 思路如下：</p>
+
+<ul>
+<li>不再是逐行读两个关系，</li>
+<li>一堆又一堆地读取它们，并在内存中保留2个堆（来自每个关系）行，</li>
+<li>比较两个堆中的行，并留下匹配的行，</li>
+<li>然后从磁盘加载新堆并进行比较</li>
+<li>以此类推，直到没有堆要加载为止。</li>
+</ul>
+
+<p>算法实行大约如下：</p>
+
+<pre><code class="language-c">// improved version to reduce the disk I/O.
+nested_loop_join_v2(file outer, file inner)
+  for each bunch ba in outer
+  // ba is now in memory
+    for each bunch bb in inner
+        // bb is now in memory
+        for each row a in ba
+          for each row b in bb
+            if (match_join_condition(a,b))
+              write_result_in_output(a,b)
+            end if
+          end for
+       end for
+    end for
+   end for 
+</code></pre>
+
+<p>使用此版本，时间复杂度保持不变，但是磁盘访问次数减少了：
+- 旧版本，算法需要N + N* M访问（每次访问得到一个行）。
+- 新版本中，磁盘访问次数变为number_of_bunches_for（外部）+ number<em>of</em> bundlees_for（外部）* number<em>of</em> Bunches_for（内部）。
+- 如果增加堆的大小，则会减少磁盘访问次数。
+注意：每次磁盘访问都比以前的算法收集更多的数据，但这关系i d ，因为它们是顺序访问（机械磁盘的真正问题是获取第一个数据的时间）。</p>
+
+<h3 id="4-3-2-哈希联接hash-join">4.3.2 哈希联接Hash join</h3>
+
+<p>哈希JOIN更加复杂但是在很多场景下比 <em>嵌套循环联接Nested loop join</em> 性能更好，花费更少。
+hash join in a database</p>
+
+<p><img src="/img/hash_join-624x420.png" alt="哈希联接" title="哈希联接" /></p>
+
+<p>哈希设计思路:
+1）从内部关系（右）中获取所有元素
+2）建立一个内存中的哈希表
+3）一一获取外部关系（左）的所有元素
+4）计算每个元素的哈希值（使用哈希表的哈希函数）以找到内部关系的关联存储区
+5）查找存储桶中的元素与外部表的元素之间是否存在匹配项</p>
+
+<p>在时间复杂度方面，我需要做一些假设来简化问题：</p>
+
+<p>右边的数值分为X个值区
+hash函数针对两种关系几乎均匀地分布散列值。 换句话说，桶里面的元素个数相同。
+左边的元素与存储桶中的所有元素之间的匹配会花费存储桶中的元素数。
+时间复杂度为（M/X）* N + 创建hash表的时间（M）+ 哈希函数花费的时间 * N</p>
+
+<p>如果哈希函数创建了足够多的小型存储桶，则时间复杂度为O（M + N）</p>
+
+<p>这里还有一个哈希联接的版本，它对内存更友好，但对磁盘I/O的友好性更低：
+1）计算内部和外部关系的哈希表
+2）然后将它们放在磁盘上
+3）然后按桶比较2个关系桶（其中一个加载在内存中，另一个逐行读取）</p>
+
+<h3 id="4-3-3-合并联接merge-join">4.3.3 合并联接Merge join</h3>
+
+<p><strong>合并联接是唯一产生排序结果的join。</strong></p>
+
+<p>注意：<em>在简单的合并联接中，没有内部表或外部表这分。 他们都扮演着相同的角色。 但是实际的实现方式会有所不同，例如，在处理重复项时。</em></p>
+
+<p>合并联接可以分为两个步骤：
+- （可选）<strong>对联接操作进行排序</strong>：两个输入都对联接键进行了排序。
+- <strong>合并联接操作</strong>：将排序的输入合并在一起。</p>
+
+<p><strong>步骤1：Sort对联接操作进行排序</strong>
+我们已经讲过合并排序，在个CASE里这是一种好的算法中的合并排序（如果内存不是问题，则不是最优的）。</p>
+
+<p>但是有时数据集已经被排序，例如：
+- 如果表是已经排过序的，例如，join的是一个索引组织的表
+- 如果要join的条件是一个索引
+- 如果join的是一个已经排序的中间结果</p>
+
+<p><strong>步骤2：Merge join合并联接</strong></p>
+
+<p><img src="/img/merge_join.png" alt="合并联接" title="合并联接" /></p>
+
+<p>与我们看到的合并排序的合并操作非常相似。但是这一次，我们没有从两个关系中选择所有元素，而是仅从两个关系中选择了相等的元素。这是想法：</p>
+
+<ul>
+<li>1）您比较2个关系中的两个当前元素（第一次时current = first）</li>
+<li>2）如果它们相等，则将两个元素都放入结果中，然后转到两个关系的下一个元素</li>
+<li>3）如果不是，则转到与最低元素的关系的下一个元素（因为下一个元素可能匹配）</li>
+<li>4）并重复1,2,3，直到到达其中一个关系的最后一个元素。
+之所以可行，是因为两个关系都已排序，因此您无需在这些关系中“往回走”。</li>
+</ul>
+
+<p>此算法是简化版本，因为它无法处理相同数据在两个数组中多次出现（换句话说，多个匹配项）的情况。对于这种情况，实际版本“更复杂”。这就是为什么我选择了简化版本。</p>
+
+<p>如果两个关系都已排序，则时间复杂度为O(N+M)</p>
+
+<p>如果两个关系都需要排序，那么时间复杂度就是两个关系的排序成本: O(N*Log(N) + M*Log(M))</p>
+
+<p>方便CS极客(计算机科学极客）理解 ，这时提供一种可以处理多个匹配项的算法（请注意：我对自己的算法不是100％肯定）：</p>
+
+<pre><code class="language-c">mergeJoin(relation a, relation b)
+  relation output
+  integer a_key:=0;
+  integer b_key:=0;
+  
+  while (a[a_key]!=null or b[b_key]!=null)
+    if (a[a_key] &lt; b[b_key])
+      a_key++;
+    else if (a[a_key] &gt; b[b_key])
+      b_key++;
+    else //Join predicate satisfied
+    //i.e. a[a_key] == b[b_key]
+ 
+      //count the number of duplicates in relation a
+      integer nb_dup_in_a = 1:
+      while (a[a_key]==a[a_key+nb_dup_in_a])
+        nb_dup_in_a++;
+         
+      //count the number of duplicates in relation b
+      integer dup_in_b = 1:
+      while (b[b_key]==b[b_key+nb_dup_in_b])
+        nb_dup_in_b++;
+         
+      //write the duplicates in output
+       for (int i = 0 ; i&lt; nb_dup_in_a ; i++)
+         for (int j = 0 ; i&lt; nb_dup_in_b ; i++)     
+           write_result_in_output(a[a_key+i],b[b_key+j])
+            
+      a_key=a_key + nb_dup_in_a-1;
+      b_key=b_key + nb_dup_in_b-1;
+ 
+    end if
+  end while
+</code></pre>
+
+<h3 id="4-3-4-哪一个是最好的">4.3.4 哪一个是最好的？</h3>
+
+<p>嵌套循环联接Nested loop join,哈希联接Hash join,合并联接Merge join 上面的三种join</p>
+
+<p>如果有最佳的join类型，就不会有多种类型。这个问题非常困难，因为有许多因素起作用，例如：</p>
+
+<ul>
+<li><strong>可用内存量</strong>：如果没有足够的内存，您可以告别强大的哈希联接（至少是完整的内存哈希联接）</li>
+<li><strong>2个数据集的大小</strong>:例如，如果您有一个很大的表而一个很小的表，则嵌套循环联接将比哈希联接要快，因为哈希联接具有昂贵的哈希创建。如果您有2个非常大的表，则嵌套循环联接将占用大量CPU。</li>
+<li><strong>索引的存在</strong>:使用2个B+Tree索引，明智的选择似乎是合并联接</li>
+<li><strong>如果需要对结果进行排序</strong>：即使您正在使用未排序的数据集，您可能仍要使用代价高昂的合并联接（带有排序），因为最后将对结果进行排序,或进你需要的是一个合并联接的结果（比如ORDER BY/GROUP BY/DISTINCT操作隐式/显式地要求排序结果）</li>
+<li><strong>如果关系已经排序</strong>：在这种情况下，合并联接是最佳候选者</li>
+<li><strong>您正在执行的联接类型</strong>：是否是:=联接（即：tableA.col1 = tableB.col2）？inner join ? outer join ?笛卡尔乘积? self-join ？在某些情况下某些联接无法正常工作。</li>
+<li><strong>数据分配(区分度)</strong>：如果加入条件的数据不正确（例如，您以姓来join ，但许多人都使用相同的姓），那么使用哈希联接将是一场灾难，因为哈希函数会创建分布不均的存储桶。</li>
+<li>是否需要<strong>多线程/进程</strong>来运行</li>
+</ul>
+
+<p>更多信息可以看以下几个文档：
+ DB2：<a href="https://www-01.ibm.com/support/knowledgecenter/SSEPGG_9.7.0/com.ibm.db2.luw.admin.perf.doc/doc/c0005311.html">https://www-01.ibm.com/support/knowledgecenter/SSEPGG_9.7.0/com.ibm.db2.luw.admin.perf.doc/doc/c0005311.html</a>
+ ORACLE：<a href="https://docs.oracle.com/cd/B28359_01/server.111/b28274/optimops.htm#i76330">https://docs.oracle.com/cd/B28359_01/server.111/b28274/optimops.htm#i76330</a>
+ SQL Server：<a href="https://technet.microsoft.com/en-us/library/ms191426(v=sql.105).aspx">https://technet.microsoft.com/en-us/library/ms191426(v=sql.105).aspx</a></p>
+
+<h2 id="4-4-简单的例子">4.4 简单的例子</h2>
+
+<p>我们看了三个JOIN操作</p>
+
+<p>现在，我们需要联接5个表才能完整地看到一个人。 一个人有：
+多个 MOBILES
+多个 MAILS
+多个 ADRESSES
+多个 BANK_ACCOUNTS
+换句话说，我们需要快速的得到以下查询：</p>
+
+<pre><code class="language-SQL">SELECT * from PERSON, MOBILES, MAILS,ADRESSES, BANK_ACCOUNTS
+WHERE
+PERSON.PERSON_ID = MOBILES.PERSON_ID
+AND PERSON.PERSON_ID = MAILS.PERSON_ID
+AND PERSON.PERSON_ID = ADRESSES.PERSON_ID
+AND PERSON.PERSON_ID = BANK_ACCOUNTS.PERSON_ID
+</code></pre>
+
+<p>作为查询优化器，我必须找到处理数据的最佳方法。 但是有两个问题：
+1.我应该分别为每个join 使用哪种联接？</p>
+
+<p><em>我有3种可能的联接（哈希联接，合并联接，嵌套联接），可以使用0,1或2个索引（更不用说存在不同类型的索引了）。</em></p>
+
+<p>2.我应该选择什么顺序来计算联接？</p>
+
+<p>例如，下图显示了4个表3个join的不同计划:</p>
+
+<p><img src="/img/join_ordering_problem-624x422.png" alt="join_ordering" title="join_ordering" /></p>
+
+<p>那么，现在我准备这样做：</p>
+
+<ul>
+<li>1）我使用蛮力方法</li>
+</ul>
+
+<p>使用数据库统计信息，我计算出每种可能的计划的成本，然后选择最佳计划。但是有很多可能性。对于给定的联接顺序，每个联接都有3种可能性：HashJoin，MergeJoin，NestedJoin。因此，对于给定的连接顺序，存在*3的4次方*种可能性。join 排序是*二叉树上的置换问题*，并且有（2*4！/（4 + 1）!可能的排序组俣。对于这个非常简化的问题，我最终得到 3的4次方 *（2 * 4）！/（4 + 1）！可能性。</p>
+
+<p>用非极客术语来说，这意味着27 216个可能的计划。如果现在添加使合并联接采用0,1或2个B+树索引的可能性，则可能的计划数变为210000。我是否忘了此查询非常简单？</p>
+
+<ul>
+<li>2）我哭了，放弃了这个方法</li>
+</ul>
+
+<p>这很诱人，但您不会得到结果，我需要钱来还债。</p>
+
+<ul>
+<li>3）我只尝试一些计划，然后选择成本最低的计划。</li>
+</ul>
+
+<p>由于我不是超人，所以我无法计算每个计划的成本。相反，我可以任意选择所有可能计划的子集，计算其成本，然后为您提供此子集的最佳计划。</p>
+
+<ul>
+<li>4）我运用精明的规则来减少可能的计划数量。</li>
+</ul>
+
+<p>有两种类型的规则：
+我可以使用“逻辑”规则来删除无用的可能性，但它们不会过滤很多可能的计划。 例如：“嵌套循环连接的内部关系必须是最小的数据集”
+我接受没有找到最佳解决方案，而是采用更具侵略性的规则来减少大量可能性的想法。 例如：“如果关系很小，请使用嵌套循环联接，不要使用合并联接或哈希联接”</p>
+
+<p>在这个简单的示例中，最终已经有很多种可能性了。 而实际查询可以具有其他关系运算符，例如OUTER JOIN，CROSS JOIN，GROUP BY，ORDER BY，PROJECTION，UNION，INTERSECT，DISTINCT……这意味着更多的可能性。</p>
+
+<p>So, 数据库系统是怎么做的呢?</p>
+
+<h2 id="4-5-动态编程-启发式的贪婪算法">4.5 <strong>动态编程，启发式的贪婪算法</strong></h2>
+
+<p>关系数据库尝试了我刚才所说的多种方法。 优化器的真正工作是在有限的时间内找到一个好的解决方案。</p>
+
+<p><strong>在大多数情况下，优化器找不到最佳解决方案，而是找到“好的”解决方案。</strong></p>
+
+<p>对于小的查询，可以使用蛮力方法。 但是有一种方法可以避免不必要的计算，因此即使是中等查询也可以使用蛮力方法。 这称为动态编程。</p>
+
+<h3 id="4-5-1-动态编程-dynamic-programming">4.5.1 动态编程 Dynamic Programming</h3>
+
+<p>这个词背后的想法是：许多执行计划非常相似。如果您查看以下计划：</p>
+
+<p><img src="/img/overlapping_trees-624x463.png" alt="重叠树优化动态规划" title="重叠树优化动态规划" /></p>
+
+<p>它们共享相同的（A JOIN B）子树。因此，我们不必在每个计划中都计算此子树的成本，而是可以对其进行一次计算，保存计算的成本，然后在再次看到该子树时可以重新使用它。更正式地说，我们正面临一个重复的问题。为了避免对部分结果进行多余的计算，我们记下了这个成本。</p>
+
+<p>使用此技术，而不是 (2*N)!/(N+1)!时间复杂度，我们“仅”有3^N。在我们前面的具有4个联接的示例中，这意味着从336的顺序传递到81。如果您通过8个联接（不大）进行较大的查询，则意味着从57 657 600减少到到6561个。</p>
+
+<p> </p>
+
+<p>对于CS极客，我从这个课程里找到的算法：
+ <a href="/img/ch13.ppt," title="课程2">课程2</a> 。我不会解释该算法，因此只有在您已经知道动态编程或对算法精通的情况下，才能看这个文章：</p>
+
+<pre><code class="language-c">procedure findbestplan(S)
+if (bestplan[S].cost infinite)
+   return bestplan[S]
+// else bestplan[S] has not been computed earlier, compute it now
+if (S contains only 1 relation)
+         set bestplan[S].plan and bestplan[S].cost based on the best way
+         of accessing S  /* Using selections on S and indices on S */
+     else for each non-empty subset S1 of S such that S1 != S
+   P1= findbestplan(S1)
+   P2= findbestplan(S - S1)
+   A = best algorithm for joining results of P1 and P2
+   cost = P1.cost + P2.cost + cost of A
+   if cost &lt; bestplan[S].cost
+       bestplan[S].cost = cost
+      bestplan[S].plan = “execute P1.plan; execute P2.plan;
+                 join results of P1 and P2 using A”
+return bestplan[S]
+
+</code></pre>
+
+<p>对于较大的查询，您仍然可以采用动态编程方法，但是要使用额外的规则（或试探法）来消除可能的选项：</p>
+
+<ul>
+<li>如果我们仅分析某种类型的计划（例如： left-deep 树），则最终得到n*2^n而不是3^n</li>
+</ul>
+
+<p><img src="/img/left-deep-tree-624x415.png" alt="left-deep-tree" title="left-deep-tree" /></p>
+
+<ul>
+<li>如果我们添加逻辑规则来避免针对某些执行计划（例如“如果表作为给定谓词的索引，则不要尝试对表进行合并联接，而只能对索引进行尝试”），那么它将减少可能性的数量而不会损害尽可能最好的解决方案。</li>
+<li>如果我们在工作流上添加规则（例如“在所有其他关系操作之前执行联接操作”），那么它还会减少很多可能性。</li>
+<li>&hellip;</li>
+</ul>
+
+<h3 id="4-5-2-贪婪算法-greedy-algorithms">4.5.2 贪婪算法 Greedy algorithms</h3>
+
+<p>但是对于非常大的查询想要快速得到答案（这里不是说非常快的得到查询结果）的情况，可以使用另一种算法，即贪婪算法。</p>
+
+<p>想法是遵循规则（或启发式）以增量方式构建查询计划。 使用此规则，贪心算法一次找到一个问题的最佳解决方案。 该算法从一个JOIN开始查询计划。 然后，在每个步骤中，算法都会使用相同的规则将新的JOIN添加到查询计划中。</p>
+
+<p>让我们举一个简单的例子。 假设我们有一个查询，其中包含5个表（A，B，C，D和E）上的4个联接。 为了简化问题，我们仅将嵌套联接作为可能的联接。 让我们使用“使用成本最低的联接”规则</p>
+
+<ul>
+<li>我们任意从5张表之一开始（假如我们就选择了A表）</li>
+<li>我们用A来计算每次连接的成本（A是内部还是外部关系）。</li>
+<li>我们发现A JOIN B成本最低。</li>
+<li>然后，我们使用A JOIN B（不管A JOIN B是内部或外部关系）的结果来计算每个连接的成本。</li>
+<li>我们发现（A JOIN B）JOIN C提供了最佳成本。</li>
+<li>然后，我们使用（A JOIN B）JOIN C的结果来计算每个联接的成本。</li>
+<li>…。</li>
+<li>最后我们找到了计划(((A JOIN B) JOIN C) JOIN D) JOIN E)</li>
+</ul>
+
+<p>由于这次是从A任意开始，因此我们可以对B，C，D，E都应用相同的算法。然后，我们以最低的成本保留计划。</p>
+
+<p>顺便说一句，该算法有一个名称：它称为“最近邻居”算法。</p>
+
+<p>这里我不打算深入介绍，但是通过良好的建模和N * log（N）的排序，可以轻松解决此问题。 对于完整的动态编程版本，该算法的成本为O（N*log（N））对O（3^N）。 如果您有20个联接的大型查询，则意味着26 vs 3 486 784 401，这是很大的不同！</p>
+
+<p> 
+该算法的问题在于，我们假设在两个表之间找到最佳联接将给我们带来最佳成本。 但：</p>
+
+<ul>
+<li>A JOIN B是否给出了A，B和C之间的最佳成本</li>
+<li>（A JOIN C）JOIN B可能比（A JOIN B）JOIN C更好的结果。
+为了改善结果，您可以使用不同的规则运行多种贪婪算法，并选用最佳计划。</li>
+</ul>
+
+<h3 id="4-5-3-其他算法">4.5.3 其他算法</h3>
+
+<p><em>如果您已经厌倦了算法，请跳到下一部分，相对于其他内容，这节要说的并不重要</em></p>
+
+<p>对于许多计算机科学研究人员而言，寻找最佳可行方案的问题是一个活跃的研究主题。他们经常尝试为更精确的问题/模式找到更好的解决方案。例如，</p>
+
+<ul>
+<li>如果查询是星型联接（这是某种类型的多联接查询），则某些数据库将使用特定的算法。</li>
+<li>如果查询是并行查询，则某些数据库将使用特定算法</li>
+<li>…
+ 
+还研究了其他算法来代替大型查询的动态编程。贪婪算法属于称为启发式算法的较大家族。贪婪算法遵循规则（或启发式），保留在上一步中找到的解决方案，然后“追加”以找到当前步骤的解决方案。有些算法会遵循规则并逐步应用它，但并不总是保持上一步中找到的最佳解决方案。它们被称为启发式算法。</li>
+</ul>
+
+<p>例如，遗传算法遵循规则，但通常不会保留最后一步的最佳解决方案：</p>
+
+<ul>
+<li>解决方案代表可能的完整查询计划</li>
+<li>在每个步骤中都保留了P个解决方案（即计划），而不是一个解决方案（即计划）。</li>
+<li>0）随机创建P个查询计划</li>
+<li>1）仅保留成本最高的计划</li>
+<li>2）这些最佳计划混合在一起产生P个新计划</li>
+<li>3）P个新计划中的一些是随机修改的</li>
+<li>4）步骤1,2,3重复T次</li>
+<li>5）然后，从最后一个循环的P计划中保留最佳计划。
+您执行的循环越多，计划就会越好。</li>
+</ul>
+
+<p>这是魔术吗？不，这是自然法则：只有适者生存！</p>
+
+<p>仅供参考，遗传算法是在PostgreSQL中实现的，但我无法确定默认情况下是否使用了遗传算法。</p>
+
+<p>数据库中还有其他启发式算法，例如“Simulated Annealing”，“迭代改进”，“两阶段优化”……但是我不知道它们是否目前在企业数据库中使用，或者仅在研究数据库中使用。</p>
+
+<p>有关更多信息，您可以阅读下面的研究文章，该文章提出了更多可能的算法：<a href="http://www.acad.bg/rismim/itc/sub/archiv/Paper6_1_2009.PDF">http://www.acad.bg/rismim/itc/sub/archiv/Paper6_1_2009.PDF</a></p>
+
+<h3 id="4-5-4-真正的优化器">4.5.4 真正的优化器</h3>
+
+<p><em>可以跳到下一部分，相对于其他内容，这节要说的并不重要</em></p>
+
+<p>但是，这一切都是非常理论性的。由于我是开发人员，而不是研究人员，所以我喜欢具体的例子。</p>
+
+<p>让我们看看SQLite优化器是如何工作的。这是一个轻量级的数据库，因此它使用基于贪婪算法的简单优化（带有额外规则）来限制可能性的数量：</p>
+
+<ul>
+<li>SQLite选择从不对CROSS JOIN运算符中的表进行重新排序</li>
+<li>join被实现为嵌套连接</li>
+<li>外部联接始终按它们发生的顺序进行评估</li>
+<li>…</li>
+<li>在3.8.0之前的版本中，SQLite在搜索最佳查询计划时会使用“最近邻居”贪心算法
+<em>等等&hellip;我们刚已经看到了该算法！真是巧合！</em></li>
+<li>从3.8.0版（2015年发布）开始，SQLite在搜索最佳查询计划时使用“ N Nearest Neighbors”贪婪算法。
+<a href="https://www.sqlite.org/queryplanner-ng.html">https://www.sqlite.org/queryplanner-ng.html</a>
+ </li>
+</ul>
+
+<p>让我们看看另一个优化器是如何工作的。 IBM DB2与所有企业数据库一样，但是我将重点介绍这一数据库，因为它是我切换到大数据之前真正使用的最后一个数据库。</p>
+
+<p>如果查看官方文档，就会发现DB2优化器使您可以使用7种不同的优化级别：</p>
+
+<ul>
+<li>对联接使用贪婪算法</li>
+<li>- 0 –最小优化，使用索引扫描和嵌套循环联接，并避免某些查询重写</li>
+<li>- 1 –低优化</li>
+<li>- 2 –全面优化</li>
+<li>使用动态编程进行联接</li>
+<li>- 3 –中度优化和粗略估算</li>
+<li>- 5 –全面优化，结合使用所有启发式技术</li>
+<li>- 7 –类似于5的完全优化，无启发式</li>
+<li>- 9 –最大的优化不遗余力/不考虑所有可能的join 排序，包括笛卡尔积
+我们可以看到DB2使用贪婪算法和动态编程。当然，由于查询优化器是数据库的主要功能，因此它们不会共享使用的启发式方法。</li>
+</ul>
+
+<p>仅供参考，默认级别为5。默认情况下，优化器使用以下特征：</p>
+
+<ul>
+<li>使用所有可用的统计信息，包括常值和分位数统计信息。</li>
+<li>除计算密集型规则（仅在极少数情况下适用）之外，所有查询重写规则（包括具体化的查询表路由）均适用。</li>
+<li>使用动态编程联接枚举，其中：</li>
+<li>- 复合内部关系的有限使用</li>
+<li>- 涉及查找表的星型模式对笛卡尔乘积的使用有限</li>
+<li>考虑了各种各样的访问方法，包读预读清单，索引ANDing（注意：带有索引的特殊操作）和具体化查询表路由。
+缺省情况下，DB2使用受试探法限制的动态编程进行联接排序。</li>
+</ul>
+
+<p>其他条件（GROUP BY，DISTINCT…）由简单规则处理。</p>
+
+<p>Query Plan Cache
+Since the creation of a plan takes time, most databases store the plan into a query plan cache to avoid useless re-computations of the same query plan. It’s kind of a big topic since the database needs to know when to update the outdated plans. The idea is to put a threshold and if the statistics of a table have changed above this threshold then the query plan involving this table is purged from the cache.</p>
+
+<h2 id="4-6-查询计划缓存">4.6 查询计划缓存</h2>
+
+<p>由于创建计划需要时间，因此大多数数据库都将计划存储到查询计划缓存中，以避免对同一查询计划进行无用的重新计算。 这是一个大话题，因为数据库需要知道何时更新过时的计划。 思路是设置一个阈值，如果表的统计信息已更改为超过此阈值，则从高速缓存中清除涉及该表的查询计划。</p>
+
+<h2 id="4-7-查询执行器">4.7 查询执行器</h2>
+
+<p>在这一阶段，我们有一个优化的执行计划。 将该计划编译为可执行代码。 然后，如果我们有足够的资源（内存，CPU），则由查询执行器执行。 计划中的运算符（JOIN，SORT BY…）可以按顺序或并行方式执行； 为了，查询执行程序能过数据管理器进行交互来读写数据，这是本文的下一部分。</p>
+
+<p>本篇文章分以下章节，当前第6节：</p>
+
+<ol>
+<li><a href="https://www.dboop.com/post/2017/09/09/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%841%E5%BC%95%E8%A8%80/">引言</a></li>
+<li><a href="https://www.dboop.com/post/2017/09/10/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%842%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/">时间复杂度</a></li>
+<li><a href="https://www.dboop.com/post/2017/09/11/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%843%E5%90%88%E5%B9%B6%E6%8E%92%E5%BA%8F/">合并排序</a></li>
+<li><a href="https://www.dboop.com/post/2017/09/12/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%844%E6%95%B0%E7%BB%84.%E6%A0%91.%E5%93%88%E5%B8%8C%E8%A1%A8/">数组.树.哈希表</a></li>
+<li><a href="https://www.dboop.com/post/2018/01/02/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%845%E5%9F%BA%E6%9C%AC%E7%BB%84%E4%BB%B6%E4%B9%8B%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%AE%A1%E7%90%86/">客户端管理</a></li>
+<li><a href="https://www.dboop.com/post/2018/01/08/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%846sql%E6%9F%A5%E8%AF%A2/">SQL查询</a></li>
+<li><a href="https://www.dboop.com/post/2018/01/11/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%847%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/">数据管理</a></li>
+</ol>
+
+</main>
+<h2 class="date">发布日期:2018/01/08</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%90%86%E8%AE%BA">数据库理论</a> <a href="/categories/%E7%BF%BB%E8%AF%91">翻译</a> <a href="/categories/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93">关系型数据库</a> <a href="/categories/mysql">mysql</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E8%BD%AC%E8%AF%91">转译</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

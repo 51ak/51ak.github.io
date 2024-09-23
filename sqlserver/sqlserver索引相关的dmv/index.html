@@ -1,0 +1,390 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SQLServer索引相关的DMV| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">SQLServer索引相关的DMV</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#动态管理视图">动态管理视图：</a></li>
+        <li><a href="#1被大量更新却很少被使用的索引">1.被大量更新，却很少被使用的索引</a></li>
+        <li><a href="#2最高维护代价的索引">2.最高维护代价的索引</a></li>
+        <li><a href="#3使用频繁的索引">3.使用频繁的索引</a></li>
+        <li><a href="#4碎片最多的索引">4.碎片最多的索引</a></li>
+        <li><a href="#4完全没有使用的索引自上次sql-server重启后">4.完全没有使用的索引（自上次SQL Server重启后）</a></li>
+        <li><a href="#5查看索引统计的相关信息">5.查看索引统计的相关信息</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h3 id="动态管理视图">动态管理视图：</h3>
+<ul>
+<li>
+<p>sys.dm_db_missing_index_details –返回关于缺失索引的详细信息。</p>
+</li>
+<li>
+<p>sys.dm_db_missing_index_group_stats - 返回缺失索引组的摘要信息</p>
+</li>
+<li>
+<p>sys.dm_db_missing_index_groups – 返回一个具体组的缺失索引的信息。</p>
+</li>
+<li>
+<p>sys.dm_db_missing_index_columns(index_handle) – 返回在一个索引中缺失的数据库表列的信息。这是一个函数，它要求传递index_handle。</p>
+</li>
+<li>
+<p>和大多数动态管理视图的跟踪统计数据一样，当SQL Server实例重启，这些数据被完全清除时，</p>
+</li>
+</ul>
+<p>　　</p>
+<h3 id="1被大量更新却很少被使用的索引">1.被大量更新，却很少被使用的索引</h3>
+<pre><code>SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
+SELECT
+DB_NAME() AS DatabaseName
+, SCHEMA_NAME(o.Schema_ID) AS SchemaName
+, OBJECT_NAME(s.[object_id]) AS TableName
+, i.name AS IndexName
+, s.user_updates
+, s.system_seeks + s.system_scans + s.system_lookups
+AS [System usage]
+INTO #TempUnusedIndexes
+FROM sys.dm_db_index_usage_stats s
+INNER JOIN sys.indexes i ON s.[object_id] = i.[object_id]
+AND s.index_id = i.index_id
+INNER JOIN sys.objects o ON i.object_id = O.object_id
+WHERE 1=2
+EXEC sp_MSForEachDB 'USE [?];
+INSERT INTO #TempUnusedIndexes
+SELECT TOP 20
+DB_NAME() AS DatabaseName
+, SCHEMA_NAME(o.Schema_ID) AS SchemaName
+, OBJECT_NAME(s.[object_id]) AS TableName
+, i.name AS IndexName
+, s.user_updates
+, s.system_seeks + s.system_scans + s.system_lookups
+AS [System usage]
+FROM sys.dm_db_index_usage_stats s
+INNER JOIN sys.indexes i ON s.[object_id] = i.[object_id]
+AND s.index_id = i.index_id
+INNER JOIN sys.objects o ON i.object_id = O.object_id
+WHERE s.database_id = DB_ID()
+AND OBJECTPROPERTY(s.[object_id], ''IsMsShipped'') = 0
+AND s.user_seeks = 0
+AND s.user_scans = 0
+AND s.user_lookups = 0
+AND i.name IS NOT NULL
+ORDER BY s.user_updates DESC'
+SELECT TOP 20 * FROM #TempUnusedIndexes ORDER BY [user_updates] DESC
+DROP TABLE #TempUnusedIndexes
+
+</code></pre><ul>
+<li>这类索引应该被Drop掉</li>
+</ul>
+<h3 id="2最高维护代价的索引">2.最高维护代价的索引</h3>
+<pre><code>SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
+SELECT
+DB_NAME() AS DatabaseName
+, SCHEMA_NAME(o.Schema_ID) AS SchemaName
+, OBJECT_NAME(s.[object_id]) AS TableName
+, i.name AS IndexName
+, (s.user_updates ) AS [update usage]
+, (s.user_seeks + s.user_scans + s.user_lookups) AS [Retrieval usage]
+, (s.user_updates) -
+(s.user_seeks + s.user_scans + s.user_lookups) AS [Maintenance cost]
+, s.system_seeks + s.system_scans + s.system_lookups AS [System usage]
+, s.last_user_seek
+, s.last_user_scan
+, s.last_user_lookup
+INTO #TempMaintenanceCost
+FROM sys.dm_db_index_usage_stats s
+INNER JOIN sys.indexes i ON s.[object_id] = i.[object_id]
+AND s.index_id = i.index_id
+INNER JOIN sys.objects o ON i.object_id = O.object_id
+WHERE 1=2
+EXEC sp_MSForEachDB 'USE [?];
+INSERT INTO #TempMaintenanceCost
+SELECT TOP 20
+DB_NAME() AS DatabaseName
+, SCHEMA_NAME(o.Schema_ID) AS SchemaName
+, OBJECT_NAME(s.[object_id]) AS TableName
+, i.name AS IndexName
+, (s.user_updates ) AS [update usage]
+, (s.user_seeks + s.user_scans + s.user_lookups)
+AS [Retrieval usage]
+, (s.user_updates) -
+(s.user_seeks + user_scans +
+s.user_lookups) AS [Maintenance cost]
+, s.system_seeks + s.system_scans + s.system_lookups AS [System usage]
+, s.last_user_seek
+, s.last_user_scan
+, s.last_user_lookup
+FROM sys.dm_db_index_usage_stats s
+INNER JOIN sys.indexes i ON s.[object_id] = i.[object_id]
+AND s.index_id = i.index_id
+INNER JOIN sys.objects o ON i.object_id = O.object_id
+WHERE s.database_id = DB_ID()
+AND i.name IS NOT NULL
+AND OBJECTPROPERTY(s.[object_id], ''IsMsShipped'') = 0
+AND (s.user_seeks + s.user_scans + s.user_lookups) &gt; 0
+ORDER BY [Maintenance cost] DESC'
+SELECT top 20 * FROM #TempMaintenanceCost ORDER BY [Maintenance cost] DESC
+DROP TABLE #TempMaintenanceCost
+</code></pre><ul>
+<li>同样建议高的应该被Drop掉</li>
+</ul>
+<h3 id="3使用频繁的索引">3.使用频繁的索引</h3>
+<pre><code>--使用频繁的索引
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
+SELECT
+DB_NAME() AS DatabaseName
+, SCHEMA_NAME(o.Schema_ID) AS SchemaName
+, OBJECT_NAME(s.[object_id]) AS TableName
+, i.name AS IndexName
+, (s.user_seeks + s.user_scans + s.user_lookups) AS [Usage]
+, s.user_updates
+, i.fill_factor
+INTO #TempUsage
+FROM sys.dm_db_index_usage_stats s
+INNER JOIN sys.indexes i ON s.[object_id] = i.[object_id]
+AND s.index_id = i.index_id
+INNER JOIN sys.objects o ON i.object_id = O.object_id
+WHERE 1=2
+EXEC sp_MSForEachDB 'USE [?];
+INSERT INTO #TempUsage
+SELECT TOP 20
+DB_NAME() AS DatabaseName
+, SCHEMA_NAME(o.Schema_ID) AS SchemaName
+, OBJECT_NAME(s.[object_id]) AS TableName
+, i.name AS IndexName
+, (s.user_seeks + s.user_scans + s.user_lookups) AS [Usage]
+, s.user_updates
+, i.fill_factor
+FROM sys.dm_db_index_usage_stats s
+INNER JOIN sys.indexes i ON s.[object_id] = i.[object_id]
+AND s.index_id = i.index_id
+INNER JOIN sys.objects o ON i.object_id = O.object_id
+WHERE s.database_id = DB_ID()
+AND i.name IS NOT NULL
+AND OBJECTPROPERTY(s.[object_id], ''IsMsShipped'') = 0
+ORDER BY [Usage] DESC'
+SELECT TOP 20 * FROM #TempUsage ORDER BY [Usage] DESC
+DROP TABLE #TempUsage
+
+
+</code></pre><ul>
+<li>这类索引需要格外注意，不要在优化的时候干掉</li>
+</ul>
+<h3 id="4碎片最多的索引">4.碎片最多的索引</h3>
+<pre><code>SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
+SELECT
+DB_NAME() AS DatbaseName
+, SCHEMA_NAME(o.Schema_ID) AS SchemaName
+, OBJECT_NAME(s.[object_id]) AS TableName
+, i.name AS IndexName
+, ROUND(s.avg_fragmentation_in_percent,2) AS [Fragmentation %]
+INTO #TempFragmentation
+FROM sys.dm_db_index_physical_stats(db_id(),null, null, null, null) s
+INNER JOIN sys.indexes i ON s.[object_id] = i.[object_id]
+AND s.index_id = i.index_id
+INNER JOIN sys.objects o ON i.object_id = O.object_id
+WHERE 1=2
+EXEC sp_MSForEachDB 'USE [?];
+INSERT INTO #TempFragmentation
+SELECT TOP 20
+DB_NAME() AS DatbaseName
+, SCHEMA_NAME(o.Schema_ID) AS SchemaName
+, OBJECT_NAME(s.[object_id]) AS TableName
+, i.name AS IndexName
+, ROUND(s.avg_fragmentation_in_percent,2) AS [Fragmentation %]
+FROM sys.dm_db_index_physical_stats(db_id(),null, null, null, null) s
+INNER JOIN sys.indexes i ON s.[object_id] = i.[object_id]
+AND s.index_id = i.index_id
+INNER JOIN sys.objects o ON i.object_id = O.object_id
+WHERE s.database_id = DB_ID()
+AND i.name IS NOT NULL
+AND OBJECTPROPERTY(s.[object_id], ''IsMsShipped'') = 0
+ORDER BY [Fragmentation %] DESC'
+SELECT top 20 * FROM #TempFragmentation ORDER BY [Fragmentation %] DESC
+DROP TABLE #TempFragmentation
+</code></pre><ul>
+<li>这类索引需要Rebuild,否则会严重拖累数据库性能</li>
+</ul>
+<h3 id="4完全没有使用的索引自上次sql-server重启后">4.完全没有使用的索引（自上次SQL Server重启后）</h3>
+<pre><code>SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
+SELECT
+DB_NAME() AS DatbaseName
+, SCHEMA_NAME(O.Schema_ID) AS SchemaName
+, OBJECT_NAME(I.object_id) AS TableName
+, I.name AS IndexName
+INTO #TempNeverUsedIndexes
+FROM sys.indexes I INNER JOIN sys.objects O ON I.object_id = O.object_id
+WHERE 1=2
+EXEC sp_MSForEachDB 'USE [?];
+INSERT INTO #TempNeverUsedIndexes
+SELECT
+DB_NAME() AS DatbaseName
+, SCHEMA_NAME(O.Schema_ID) AS SchemaName
+, OBJECT_NAME(I.object_id) AS TableName
+, I.NAME AS IndexName
+FROM sys.indexes I INNER JOIN sys.objects O ON I.object_id = O.object_id
+LEFT OUTER JOIN sys.dm_db_index_usage_stats S ON S.object_id = I.object_id
+AND I.index_id = S.index_id
+AND DATABASE_ID = DB_ID()
+WHERE OBJECTPROPERTY(O.object_id,''IsMsShipped'') = 0
+AND I.name IS NOT NULL
+AND S.object_id IS NULL'
+SELECT * FROM #TempNeverUsedIndexes
+ORDER BY DatbaseName, SchemaName, TableName, IndexName
+DROP TABLE #TempNeverUsedIndexes
+</code></pre><ul>
+<li>这类索引应该小心对待，不能一概而论，要看是什么原因导致这种问题</li>
+</ul>
+<h3 id="5查看索引统计的相关信息">5.查看索引统计的相关信息</h3>
+<pre><code>SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
+SELECT
+ss.name AS SchemaName
+, st.name AS TableName
+, s.name AS IndexName
+, STATS_DATE(s.id,s.indid) AS 'Statistics Last Updated'
+, s.rowcnt AS 'Row Count'
+, s.rowmodctr AS 'Number Of Changes'
+, CAST((CAST(s.rowmodctr AS DECIMAL(28,8))/CAST(s.rowcnt AS
+DECIMAL(28,2)) * 100.0)
+AS DECIMAL(28,2)) AS '% Rows Changed'
+FROM sys.sysindexes s
+INNER JOIN sys.tables st ON st.[object_id] = s.[id]
+INNER JOIN sys.schemas ss ON ss.[schema_id] = st.[schema_id]
+WHERE s.id &gt; 100
+AND s.indid &gt; 0
+AND s.rowcnt &gt;= 500
+ORDER BY SchemaName, TableName, IndexName
+</code></pre><ul>
+<li>因为查询计划是根据统计信息来的，索引的选择同样取决于统计信息，所以根据统计信息更新的多寡可以看出数据库的大体状况，20%的自动更新对于大表来说非常慢。</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2020/02/04</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/sqlserver">sqlserver</a> <a href="/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86">故障处理</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

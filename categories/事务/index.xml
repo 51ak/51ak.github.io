@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>事务 on Classic</title>
+    <link>/categories/%E4%BA%8B%E5%8A%A1/</link>
+    <description>Recent content in 事务 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 28 Jul 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E4%BA%8B%E5%8A%A1/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL的事务隔离和MVCC</title>
+      <link>/mysql/mysql%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%92%8Cmvcc/</link>
+      <pubDate>Thu, 28 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%92%8Cmvcc/</guid>
+      <description>0.前言:为什么要写这篇文章？ 事务隔离和mvcc的重要性 不同于很多MySQL的原理，只需要DBA掌握，事务对于研发人员也是必须掌握的知识点和原理。并发程度越高，数据库里的锁和事务越明显，越重要。所以：数据库事务和mvcc是研发和DBA都要熟练掌握的另一方面的原因是现有的资料对mvcc写得不够直观 现有的对mvcc原理的讲解停留在画图阶段，我觉得光画图还不够，要实打实的一个字节一个字节的看MySQL真实的数据文件是怎么实现的。利用自研的MySQL数据文件分析工具（ 参考：innodb存储格式 )。可以很直观的把mvcc实现的底层逻辑给展示出来。
+ 以下两篇文章，可以协助你更好的理解本章节的内容
+  MySQL行格式(compact,redundant,dynamic,compressed) ) MySQ事务id:trx_id )  环境准备  MySQL版本:8.0.22 事务隔离级别:REPEATABLE-READ (默认隔离级别)  建一张表dboopuser并insert几条数据 drop table dboopuser; create table dboopuser( userid int unsigned not null primary key , age smallint unsigned not null default 0, username varchar(20) not null default &#39;&#39;, userimg varchar(255) not null default &#39;&#39; ) ENGINE=InnoDB COMMENT=&#39;测试user表--用于mvcc测试20220727&#39; ; insert into dboopuser(userid,age,username,userimg) values(9527,25,&#39;cccccccccc&#39;,&#39;http://www.dboop.com/img/user/2002_innodbtrx_527.jpg&#39;); insert into dboopuser(userid,age,username,userimg) values(9528,15,&#39;dddddddddddddd&#39;,&#39;http://www.dboop.com/img/user/2002_innodbtrx_528.jpg&#39;); insert into dboopuser(userid,age,username,userimg) values(9529,25,&#39;eeeeeeeeeeeeeeeee&#39;,&#39;http://www.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的事务id:trx_id</title>
+      <link>/mysql/mysql%E7%9A%84%E4%BA%8B%E5%8A%A1id_trx_id/</link>
+      <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84%E4%BA%8B%E5%8A%A1id_trx_id/</guid>
+      <description>什么是事务id(trx_id)  可以理解为MySQL官方存储引擎innodb维护的一个全局自增变量:max_trx_id, 一个6字节长度的整数。(max_trx_id如果一直增长，理论上也是有溢出的可能性的，超过2的48次方后，会重新从0开始，这时候会破坏事务的顺序规则) 每当一个事务开始时，需要申请一个新的trx_id值时，就获取max_trx_id的最新值，然后将max_trx_id值加1。  事务id的作用  主要是用来记录事务开始的顺序 会用在各种事务冲突和mvcc中  如何查看事务id 查看当前事务的trx_id  select TRX_ID from INFORMATION_SCHEMA.INNODB_TRX where TRX_MYSQL_THREAD_ID = CONNECTION_ID() 查看当前的事务id列表（活动)  select TRX_ID from INFORMATION_SCHEMA.INNODB_TRX 查看当前的事务id列表（活动+非活动) 看innodb status 的TRANSACTIONS 部分
+show engine innodb status \G # 找到这一部分 TRANSACTIONS 部分 TRANSACTIONS Trx id counter 2419 -- 当前最大事务 ID Purge done for trx&#39;s n:o &amp;lt; 2419 undo n:o &amp;lt; 0 state: running but idle History list length 0 LIST OF TRANSACTIONS FOR EACH SESSION: ---TRANSACTION 421658589187480, not started 0 lock struct(s), heap size 1136, 0 row lock(s) ---TRANSACTION 421658589186624, not started 0 lock struct(s), heap size 1136, 0 row lock(s) ---TRANSACTION 421658589185768, not started 0 lock struct(s), heap size 1136, 0 row lock(s) 上面是我搭的测试环境，所以没有活跃事务， 需要注意的是几个事务id都非常大（例：421658589187480） 这个后面会解释说明</description>
+    </item>
+    
+  </channel>
+</rss>

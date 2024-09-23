@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Oracles on Classic</title>
+    <link>/oracle/</link>
+    <description>Recent content in Oracles on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 30 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="/oracle/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Centos7安装cx_Oracle驱动</title>
+      <link>/oracle/centos7%E5%AE%89%E8%A3%85cx_oracle%E9%A9%B1%E5%8A%A8/</link>
+      <pubDate>Tue, 30 Jul 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/centos7%E5%AE%89%E8%A3%85cx_oracle%E9%A9%B1%E5%8A%A8/</guid>
+      <description>安装说明  一台cents7的机器上没有安装过oracle python脚本需要调用远程oracle数据库，需要cx_oracle数据库  python3.9 /data/script/datasec/test.py #产生报错 .... File &amp;quot;/data/script/datasec/newSQL.py&amp;quot;, line 3, in &amp;lt;module&amp;gt; import cx_Oracle ModuleNotFoundError: No module named &#39;cx_Oracle&#39;  这个cx_Oracle驱动非常不好装 以下是安装cx_Oracle的标准步骤  安装Oracle客户端  https://www.oracle.com/database/technologies/instant-client/linux-x86-64-downloads.html 在这个网站找到合适的版本，我下的是11.2版本，不同的系统下不同的版本 选择好后，需要用户名密码登陆 下载和安装   wget &amp;quot;https://download.oracle.com/otn/linux/instantclient/11204/oracle-instantclient11.2-basic-11.2.0.4.0-1.x86_64.rpm&amp;quot; rpm -ivh oracle-instantclient11.2-basic-11.2.0.4.0-1.x86_64.rpm  安装完后，会有个目录：  ll /usr/lib/oracle/11.2/client64/lib/ total 183252 -rw-r--r-- 1 root root 53865194 Aug 25 2013 libclntsh.so.11.1 -rw-r--r-- 1 root root 7996693 Aug 25 2013 libnnz11.so -rw-r--r-- 1 root root 1973074 Aug 25 2013 libocci.</description>
+    </item>
+    
+    <item>
+      <title>利用OracleGoldenGate(ogg) 从Oracle同步数据到MySQL</title>
+      <link>/oracle/%E5%88%A9%E7%94%A8oraclegoldengateogg-%E4%BB%8Eoracle%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE%E5%88%B0mysql/</link>
+      <pubDate>Thu, 18 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/%E5%88%A9%E7%94%A8oraclegoldengateogg-%E4%BB%8Eoracle%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE%E5%88%B0mysql/</guid>
+      <description>案例A：增加增量同步 1.增加extract进程 dblogin userid GOLDENGATE@{{ Oracle server url }},password {{ Oracle Password }} register extract E02 database add extract E02,integrated tranlog, begin now add EXTTRAIL /data/ogg19oracle/dirdat/eb, extract E02,MEGABYTES 100 add schematrandata {{ oracle.Schema }} 编辑ogg文件  vim /data/ogg19oracle/dirprm/e02.prm  extract e02 setenv (NLS_LANG=AMERICAN_AMERICA.ZHS16GBK) userid GOLDENGATE@{{ Oracle server url }},password {{ Oracle Password }} exttrail /data/ogg19oracle/dirdat/eb GETUPDATEAFTERS GETUPDATEBEFORES NOCOMPRESSDELETES NOCOMPRESSUPDATES table {{ SCOTT.AAAA }}; table {{ SCOTT.BBBB }}; 2.增加pump进程  add extract p02 exttrailsource /data/ogg19oracle/dirdat/eb add rmttrail /data/ogg19mysql/dirdat/eb, extract p02 3.</description>
+    </item>
+    
+    <item>
+      <title>OracleGoldenGate运维常用命令</title>
+      <link>/oracle/oraclegoldengate%E8%BF%90%E7%BB%B4%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4ogg/</link>
+      <pubDate>Mon, 08 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oraclegoldengate%E8%BF%90%E7%BB%B4%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4ogg/</guid>
+      <description>常用命令 1. 管理(MGR)进程命令 INFO MANAGER 返回有关管理器端口和进程id的信息。 START MANAGER 开启管理进程 STATUS MANAGER 返回管理进程状态 STOP MANAGER 停止管理进程 2. 采集(EXTRACT)进程命令 ADD EXTRACT 添加一个采集组 ALTER EXTRACT 更改采集组的属性 CLEANUP EXTRACT 删除采集组的运行历史记录 DELETE EXTRACT 删除采集组。 INFO EXTRACT 返回有关采集组的信息。 KILL EXTRACT 强制终止采集组。 LAG EXTRACT 返回有关采集延迟的信息。 REGISTER EXTRACT 向Oracle数据库注册采集组START EXTRACT 启动采集组 STATS EXTRACT 返回处理采集的统计信息。 STATUS EXTRACT 返回采集组的状态 STOP EXTRACT 停止采集组。 FORCEAPPEND 允许data pump在现有的初始加载文件上添加新的跟踪文件 UNREGISTER EXTRACT 从Oracle数据库注销采集组。 3. 回放(Replicat)进程命令 ADD REPLICAT 添加一个复制组 ALTER REPLICAT 更改复制组的属性。 CLEANUP REPLICAT 删除复制组的运行历史。 DELETE REPLICAT 删除一个复制组。 INFO REPLICAT 返回关于复制组的信息。 KILL REPLICAT 强制终止一个复制组。 LAG REPLICAT 返回关于复制延迟的信息。 REGISTER REPLICAT 向Oracle数据库注册一个复制组。 START REPLICAT 启动一个复制组。 STATS REPLICAT 返回处理一个复制组的统计信息。 STATUS REPLICAT 返回一个复制组的状态。 STOP REPLICAT 停止复制组。 4.</description>
+    </item>
+    
+    <item>
+      <title>Oracle处理归档日志archivelog空间报警</title>
+      <link>/oracle/oracle%E5%A4%84%E7%90%86%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97archivelog%E7%A9%BA%E9%97%B4%E6%8A%A5%E8%AD%A6/</link>
+      <pubDate>Fri, 29 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E5%A4%84%E7%90%86%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97archivelog%E7%A9%BA%E9%97%B4%E6%8A%A5%E8%AD%A6/</guid>
+      <description>查看归档日志空间占用率  select * from v$flash_recovery_area_usage; --查看空间占用率 select * from v$recovery_file_dest; --查看归档日志的存放地址; show parameter recovery; --查看归档空间大小 增加表空间大小（磁盘空间足够的话） alter system set db_recovery_file_dest_size=250G; --请归档空间增大到250G 删除过期文件 export ORACLE_SID=****** rman target / crosscheck archivelog all; //查看可以所有的归档文件 delete expired archivelog all; //清空过期的归档文件 delete force noprompt ARCHIVELOG ALL COMPLETED BEFORE &#39;trunc(SYSDATE)-90&#39;; //清除90天前的归档文件 quit </description>
+    </item>
+    
+    <item>
+      <title>定时收集Oracle索引信息</title>
+      <link>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86oracle%E7%B4%A2%E5%BC%95%E4%BF%A1%E6%81%AF/</link>
+      <pubDate>Mon, 26 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86oracle%E7%B4%A2%E5%BC%95%E4%BF%A1%E6%81%AF/</guid>
+      <description>需求  把Oracle各实例的索引信息，统一收集存储到一张表里  建表 在dboop库中建表
+ CREATE TABLE `info_indexs` ( `dbid` int NOT NULL DEFAULT &#39;0&#39;, `table_name` varchar(255) NOT NULL DEFAULT &#39;&#39;, `index_name` varchar(255) NOT NULL DEFAULT &#39;&#39;, `index_type` varchar(64) NOT NULL DEFAULT &#39;&#39;, `uniq_type` varchar(64) NOT NULL DEFAULT &#39;&#39;, `num_rows` int NOT NULL DEFAULT 0, `sample_size` int NOT NULL DEFAULT 0, `last_analyzed` datetime null, `column_name` varchar(2000) NOT NULL DEFAULT &#39;&#39;, `cstatus` smallint NOT NULL DEFAULT &#39;1&#39;, `dba_freshtime` datetime NOT NULL DEFAULT &#39;1990-01-01 00:00:00&#39;, PRIMARY KEY (`dbid`,`table_name`,`index_name`), KEY `idx_info_indexs_time` (`dba_freshtime`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ; 实现数据字典收集入库 建Oracle采集任务  &amp;lt;!</description>
+    </item>
+    
+    <item>
+      <title>Oracle增加表审计</title>
+      <link>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1/</link>
+      <pubDate>Wed, 10 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1/</guid>
+      <description>增加表审计 # 查看现在有哪些审计对象 select * from dba_obj_audit_opts; # 开启审计 audit select,update,insert,delete on 用户.表名 by access # 关闭审计 noaudit select,update,insert,delete on 用户.表名 # 查看审计结果 select * from dba_audit_trail 清空审计 sqlplus / as sysdba truncate table sys.aud$; ``</description>
+    </item>
+    
+    <item>
+      <title>定时收集存储过程函数视图信息入库(Oracle,MySQL)</title>
+      <link>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%87%BD%E6%95%B0%E8%A7%86%E5%9B%BE%E4%BF%A1%E6%81%AForaclemysql/</link>
+      <pubDate>Thu, 04 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%87%BD%E6%95%B0%E8%A7%86%E5%9B%BE%E4%BF%A1%E6%81%AForaclemysql/</guid>
+      <description>需求 下午接到运维转来的一个权限申请流程：大数据部门研发要求开通保垒机权限。以方便在保垒机上安装SQL客户端去查看存储过程和视图的内容
+保垒机直连数据库查询，这种不可控的方式，早在去年我就把这个历史问题给禁止掉了，没想到现在还有人要求开通
+经过沟通得知，对方想查看Oracle数据库里的一些老的存储过程的代码。而DBA平台上只有表结构相关的数据字典，没有存储过程和视图的数据字典
+所以，别慌，不就这点需求吗，马上就可以加上。
+ 为什么DBA平台上的数据字典不包括存储过程和视图？ 因为存储过程/函数/视图 也是被我禁掉的，研发人员上线不可以写存储过程和视图。 所以就没想过要在DBA运维平台上做这块功能
+ 但是因为
+ 历史原因，以前的Oracle数据库上已经存在很多的视图和存储过程 第三方原因，公司采购的一些第三方服务和软件，带了存储过程和视图 这些被禁止使用的数据库对象，也需要做统一维护  拆解  这些数据库对象的信息用定时任务收集线上的表结构到本地，存为两份 一份入库，做为快照信息，展示给用户。 一份落本地文件，上传到git，用git做版本管理   为什么不在用户请求查看某个数据库对象的信息时，实时查询给用户？
+ 1.因为历史原因，我们有的库有几万个数据库对象，当用户选择一个库时，list列表加载很慢，所以一开始设计的时候，我们做了快照 2.一份快照，还可以用作数据库对象的git版本管理   建表 在dboop库中建表
+ CREATE TABLE `info_objects` ( `objectid` int NOT NULL AUTO_INCREMENT, `dbid` int NOT NULL DEFAULT &#39;0&#39;, `TABLE_SCHEMA` varchar(64) NOT NULL DEFAULT &#39;&#39;, `object_name` varchar(255) NOT NULL DEFAULT &#39;&#39;, `object_type` varchar(64) NOT NULL DEFAULT &#39;&#39;, `object_text` longtext, `cstatus` smallint NOT NULL DEFAULT &#39;1&#39;, `dba_freshtime` datetime NOT NULL DEFAULT &#39;1990-01-01 00:00:00&#39;, PRIMARY KEY (`objectid`), UNIQUE KEY `idx_infoobjects_id` (`dbid`,`object_name`,`object_type`), KEY `idx_info_objects_time` (`dba_freshtime`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 实现数据字典收集入库 建Oracle采集任务  &amp;lt;!</description>
+    </item>
+    
+    <item>
+      <title>Oracle运维DBA常用命令集合</title>
+      <link>/oracle/oracle%E8%BF%90%E7%BB%B4dba%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Wed, 30 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E8%BF%90%E7%BB%B4dba%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</guid>
+      <description>-- 写在开始 linesize/pagesize set linesize 9999 set pagesize 9999 查看ORACLE SID
+select * from v$instance select instance_name,host_name from v$instance; 查看数据库的运行天数
+select INSTANCE_NAME,round(sysdate-STARTUP_TIME) run_day from gv$instance; 查看alert log
+show parameter dump; 查看当前DB的scn
+select dbms_flashback.get_system_change_number from dual; select current_scn from v$database; scn转时间戳
+select scn_to_timestamp(991159) scn from dual; 时间转换为scn
+select timestamp_to_scn(to_timestamp(&#39;2019-01-27 18:19:20.123456789&#39;,&#39;YYYY-MM-DD HH24:MI:SS.FF&#39;)) scn from dual; scn和时间的对应关系
+select scn,to_char(time_dp,&#39;yyyy-mm-dd hh24:mi:ss&#39;) time from sys.smon_scn_time where rownum&amp;lt;10 order by 1,2; 查看数据库所有用户及用户状态
+-- SYSADM用户是线上应用用户 select USERNAME,ACCOUNT_STATUS from dba_users; select current_scn from v$database; 查看存储过程数量</description>
+    </item>
+    
+    <item>
+      <title>Oracle实时慢日志收集和展示</title>
+      <link>/oracle/oracle%E6%80%8E%E6%A0%B7%E5%AE%9E%E6%97%B6%E6%94%B6%E9%9B%86%E5%B1%95%E7%A4%BA%E6%85%A2%E6%9F%A5%E8%AF%A2/</link>
+      <pubDate>Fri, 11 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E6%80%8E%E6%A0%B7%E5%AE%9E%E6%97%B6%E6%94%B6%E9%9B%86%E5%B1%95%E7%A4%BA%E6%85%A2%E6%9F%A5%E8%AF%A2/</guid>
+      <description>Oracle怎样实时收集展示慢查询？ 当网上搜相关问题或问一个身边的OracleDBA ，通常会有两种类型的答案
+ 看awr报告 扔过来一段SQL脚本。   类似于MySQL的慢日志方案：Slowlog--logstash--&amp;gt;es--&amp;gt;MySQL--&amp;gt;web页
+但Oracle没有现成的slowlog可以用。
+ 所以我们先后采用尝试了以下三种方法。
+方法一：定时收集awr报告 我们去年和黄老师一起尝试了定时生成awr报告，获取topSQL入库后，再收集展示的方法，这个方案需要对OracleAWR的缓存表理解得很深入，黄老师哼哼哧哧花了一个月时间，最终完成了统一收集，并通过web页展示，但总体效果不好。 主要缺点在于
+ 不能做到实时，甚至不能准实时（取决于多长时间生成一次awr报告） 只能每个实例取topSQL 方案呆板且不理性 总结：实现难度大，效果差  方法二：Oracle中间件记录慢查询 去年年底的时候我们在写一个Oracle中件间，业务访问Oracle数据库需要连接到Proxy上，然后在Proxy上记录查询日志，这种方法理论上是完全可以的，但是当我去尝试去实现这个功能的时候发现很困难，因为我们采用了端口中转的方式，可以抓到客户端和服务端的通信包，但是不能对应上这些通信包的对应关系。这就导致计算SQL执行时间这一步没法实现。 然后我们架构组也在做jdbc层的中件间，这个是100%可以轻松实现的，但只适用于java程序，对于非java代码访问数据库就无能为力了 总结：收集得很准，但开发工作量大，需要很长的时间
+方法三：定时直接读取正在执行的SQL 这个方案是我们年前做了一个Oracle长时间无响应SQL的报警功能（超过60秒没执行完的SQL会发钉钉报警），然后一次故障处理时，法爷说这个功能改一下刚好可以做慢查询收集整理。
+于是我们快速的试了下这个方案（代价很小，花了半个小时就完成了，任务配置和报表展示）
+ 新建存放慢SQL信息的表一个字典表/一个慢SQL表（5分钟） 配置一个每分钟去所有Oracle实例上收集的任务（15分钟） 配合已有CMDB信息，完成慢SQL和研发负责人的对应，写一个SQL （5分钟） 用这个SQL配置出来一张可展示的报表，设置成全体研发可见（5分钟） 总结：零开发工作，只要建个表，配置一个定时job和报表，就可以完成，效果不错  得到这样的一张这样的：实时展示Oracle慢查询的报表 &amp;ndash; done</description>
+    </item>
+    
+    <item>
+      <title>Oracle新建A用户默认访问B用户的表和视图</title>
+      <link>/oracle/oracle%E6%96%B0%E5%BB%BAa%E7%94%A8%E6%88%B7%E9%BB%98%E8%AE%A4%E8%AE%BF%E9%97%AEb%E7%94%A8%E6%88%B7%E7%9A%84%E8%A1%A8%E5%92%8C%E8%A7%86%E5%9B%BE/</link>
+      <pubDate>Mon, 03 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E6%96%B0%E5%BB%BAa%E7%94%A8%E6%88%B7%E9%BB%98%E8%AE%A4%E8%AE%BF%E9%97%AEb%E7%94%A8%E6%88%B7%E7%9A%84%E8%A1%A8%E5%92%8C%E8%A7%86%E5%9B%BE/</guid>
+      <description>原因  在oracle 中schema与用户是一一对应的关系 A用户默认访问的是Aschema下的表 业务需求建立用户A可以查询B用户建立的表；会报错：表和视图不存在 以下是解决方法  方案一：改写SQL  A用户查询时带上B用户的schema  select * from A.table 方案二：手动指定current_schema  临时修改A用户的schema，执行下面SQL事件  alter session set current_schema=B; select * from table; 方案三：触发器  增加A用户的登录trigger  create or replace trigger {triggername} after logon on A.schema begin execute immediate &#39;alter session set current_schema=B&#39;; 方案四：增加同义词  增加A用户的同义词  # 用管理账号执行 grant create synonym to A # 用A账号执行 CREATE SYNONYM TEST FOR B.TEST; .... #把所有的表和视图都加上 总结  方法1.</description>
+    </item>
+    
+  </channel>
+</rss>

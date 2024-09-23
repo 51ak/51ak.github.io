@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>详解MySQL数据库安全配置</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="mysql是完全网络化的跨平台关系型数据库系统，同时是具有客户机/服务器体系结构的分布式数据库管理系统。mysql是完全网络化的跨平台关系型数据库系统，同时是具有客户机/服务器体系结构的分布式数据库管理系统。它具有功能强、使用简便、管理方便、运行速度快、安全可靠性强等优点，用户可利用许多语言编写访问mysql数据库的程序，特别是与php更是黄金组合，运用十分广泛。由于mysql是多平详解MySQL数据库安全配置" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识">基础知识</a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化"><span class="zc_666">性能与优化</span></a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlyouhua/l_16_1.htm">性能与优化</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>详解MySQL数据库安全配置</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   MySQL 是完全网络化的跨平台关系型数据库系统，同时是具有客户机/服务器体系结构的分布式数据库管理系统。　　MySQL 是完全网络化的跨平台关系型数据库系统，同时是具有客户机/服务器体系结构的分布式数据库管理系统。它具有功能强、使用简便、管理方便、运行速度快、安全可靠性强等优点，用户可利用许多语言编写访问MySQL 数据库的程序，特别是与php更是黄金组合，运用十分广泛。　　由于MySQL是多平台的数据库，它的默认配置要考虑各种情况下都能适用，所以在我们自己的使用环境下应该进行进一步的安全加固。作为一个MySQL的系统管理员，我们有责任维护MySQL数据库系统的数据安全性和完整性。　　MySQL数据库的安全配置必须从两个方面入手，系统内部安全和外部网络安全，另外我们还将简单介绍编程时要注意的一些问题以及一些小窍门。　　系统内部安全　　首先简单介绍一下MySQL数据库目录结构。MySQL安装好，运行了<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>_db_install脚本以后就会建立数据目录和初始化数据库。如果我们用MySQL源码包安装，而且安装目录是/usr/local/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>，那么数据目录一般会是/usr/local/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/var。数据库系统由一系列数据库组成，每个数据库包含一系列数据库表。MySQL是用数据库名在数据目录建立建立一个数据库目录，各数据库表分别以数据库表名作为文件名，扩展名分别为MYD、MYI、frm的三个文件放到数据库目录中。　　MySQL的授权表给数据库的访问提供了灵活的权限控制，但是如果本地用户拥有对库文件的读权限的话，攻击者只需把数据库目录打包拷走，然后拷到自己本机的数据目录下就能访问窃取的数据库。所以MySQL所在的主机的安全性是最首要的问题，如果主机不安全，被攻击者控制，那么MySQL的安全性也无从谈起。其次就是数据目录和数据文件的安全性，也就是权限设置问题。　　从MySQL主站一些老的binary发行版来看，3.21.xx版本中数据目录的属性是775，这样非常危险，任何本地用户都可以读数据目录，所以数据库文件很不安全。3.22.xx版本中数据目录的属性是770，这种属性也有些危险，本地的同组用户既能读也能写，所以数据文件也不安全。3.23.xx版本数据目录的属性是700，这样就比较好，只有启动数据库的用户可以读写数据库文件，保证了本地数据文件的安全。如果启动MySQL数据库的用户是<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>，那么象如下的目录和文件的是安全的，请注意数据目录及下面的属性：　　shell&gt;ls -l /usr/local/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>　　total 40　　drwxrwxr-x 2 root root 4096 Feb 27 20:07 bin　　drwxrwxr-x 3 root root 4096 Feb 27 20:07 include　　drwxrwxr-x 2 root root 4096 Feb 27 20:07 info　　drwxrwxr-x 3 root root 4096 Feb 27 20:07 lib　　drwxrwxr-x 2 root root 4096 Feb 27 20:07 libexec　　drwxrwxr-x 3 root root 4096 Feb 27 20:07 man　　drwxrwxr-x 6 root root 4096 Feb 27 20:07 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>-test　　drwxrwxr-x 3 root root 4096 Feb 27 20:07 share　　drwxrwxr-x 7 root root 4096 Feb 27 20:07 sql-bench　　drwx------ 4 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 4096 Feb 27 20:07 var　　shell&gt;ls -l /usr/local/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/var　　total 8　　drwx------ 2 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 4096 Feb 27 20:08 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>　　drwx------ 2 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 4096 Feb 27 20:08 test　　shell&gt;ls -l /usr/local/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/var/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>　　total 104　　-rw------- 1 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 0 Feb 27 20:08 columns_PRiv.MYD　　-rw------- 1 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 1024 Feb 27 20:08 columns_priv.MYI　　-rw------- 1 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 8778 Feb 27 20:08 columns_priv.frm　　-rw------- 1 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 302 Feb 27 20:08 db.MYD　　-rw------- 1 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 3072 Feb 27 20:08 db.MYI　　-rw------- 1 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 8982 Feb 27 20:08 db.frm　　-rw------- 1 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 0 Feb 27 20:08 func.MYD　　-rw------- 1 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 1024 Feb 27 20:08 func.MYI　　-rw------- 1 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 8641 Feb 27 20:08 func.frm　　-rw------- 1 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 0 Feb 27 20:08 host.MYD　　-rw------- 1 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 1024 Feb 27 20:08 host.MYI　　-rw------- 1 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 8958 Feb 27 20:08 host.frm　　-rw------- 1 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 0 Feb 27 20:08 tables_priv.MYD　　-rw------- 1 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 1024 Feb 27 20:08 tables_priv.MYI　　-rw------- 1 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 8877 Feb 27 20:08 tables_priv.frm　　-rw------- 1 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 428 Feb 27 20:08 user.MYD　　-rw------- 1 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 2048 Feb 27 20:08 user.MYI　　-rw------- 1 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> 9148 Feb 27 20:08 user.frm　　如果这些文件的属主及属性不是这样，请用以下两个命令修正之：　　shell&gt;chown -R <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>.<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> /usr/local/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/var　　shell&gt;chmod -R go-rwx /usr/local/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/var　　用root用户启动远程服务一直是安全大忌，因为如果服务程序出现问题，远程攻击者极有可能获得主机的完全控制权。MySQL从3.23.15版本开始时作了小小的改动，默认安装后服务要用<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>用户来启动，不允许root用户启动。如果非要用root用户来启动，必须加上--user=root的参数(./safe_<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d --user=root &amp;)。因为MySQL中有LOAD DATA INFILE和SELECT ... INTO OUTFILE的SQL语句，如果是root用户启动了MySQL服务器，那么，数据库用户就拥有了root用户的写权限。不过MySQL还是做了一些限制的，比如LOAD DATA INFILE只能读全局可读的文件，SELECT ... INTO OUTFILE不能覆盖已经存在的文件。　　本地的日志文件也不能忽视，包括shell的日志和MySQL自己的日志。有些用户在本地登陆或备份数据库的时候为了图方便，有时会在命令行参数里直接带了数据库的密码，如：　　shell&gt;/usr/local/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/bin/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>dump -uroot -ptest test&gt;test.sql　　shell&gt;/usr/local/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/bin/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> -uroot -ptest　　这些命令会被shell记录在历史文件里，比如bash会写入用户目录的.bash_history文件，如果这些文件不慎被读，那么数据库的密码就会泄漏。用户登陆数据库后执行的SQL命令也会被MySQL记录在用户目录的.<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>_history文件里。如果数据库用户用SQL语句修改了数据库密码，也会因.<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>_history文件而泄漏。所以我们在shell登陆及备份的时候不要在-p后直接加密码，而是在提示后再输入数据库密码。　　另外这两个文件我们也应该不让它记录我们的操作，以防万一。　　shell&gt;rm .bash_history .<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>_history　　shell&gt;ln -s /dev/null .bash_history　　shell&gt;ln -s /dev/null .<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>_history　　上门这两条命令把这两个文件链接到/dev/null，那么我们的操作就不会被记录到这两个文件里了。　外部网络安全　　MySQL数据库安装好以后，Unix平台的user表是这样的：　　<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; use <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>;　　Database changed　　<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; select Host,User,PassWord,Select_priv,Grant_priv from user;　　+-----------+------+----------+-------------+------------+　　| Host | User | Password | Select_priv | Grant_priv |　　+-----------+------+----------+-------------+------------+　　| localhost | root | | Y | Y |　　| redhat | root | | Y | Y |　　| localhost | | | N | N |　　| redhat | | | N | N |　　+-----------+------+----------+-------------+------------+　　4 rows in set (0.00 sec)　　Windows平台的user表是这样的：　　<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; use <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>;　　Database changed　　<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; select Host,User,Password,Select_priv,Grant_priv from user;　　+-----------+------+----------+-------------+------------+　　| Host | User | Password | Select_priv | Grant_priv |　　+-----------+------+----------+-------------+------------+　　| localhost | root | | Y | Y |　　| % | root | | Y | Y |　　| localhost | | | Y | Y |　　| % | | | N | N |　　+-----------+------+----------+-------------+------------+　　4 rows in set (0.00 sec)　　我们先来看Unix平台的user表。其中redhat只是我试验机的机器名，所以实际上Unix平台的MySQL默认只允许本机才能连接数据库。但是缺省root用户口令是空，所以当务之急是给root用户加上口令。给数据库用户加口令有三种方法：　　1)在shell提示符下用<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>admin命令来改root用户口令:　　shell&gt;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>admin -uroot password test　　这样，MySQL数据库root用户的口令就被改成test了。(test只是举例，我们实际使用的口令一定不能使用这种易猜的弱口令)　　2)用set password修改口令：　　<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; set password for root@localhost=password('test');　　这时root用户的口令就被改成test了。　　3)直接修改user表的root用户口令：　　<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; use <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>;　　<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; update user set password=password('test') where user='root';　　<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; flush privileges;　　这样，MySQL数据库root用户的口令也被改成test了。其中最后一句命令flush privileges的意思是强制刷新内存授权表，否则用的还是缓冲中的口令，这时非法用户还可以用root用户及空口令登陆，直到重启MySQL服务器。　　我们还看到user为空的匿名用户，虽然它在Unix平台下没什么权限，但为了安全起见我们应该删除它：　　<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; delete from user where user='';
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

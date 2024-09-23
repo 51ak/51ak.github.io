@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>sqlserver 触发器教程</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="级联删除，如果要删除主类别表的记录，那么把次类别表所属记录以及这个类别所包含的所有文章内容删除主类别表名：navtion_topsubject主键ftopidchar(36)&nbsp;次类别表名：navtion_nodesubject外键同上&nbsp;内容表名：ttext外键同上&nbsp;复制代码&nbsp;代码如下://-------------代码开始-----------sqlserver 触发器教程" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA">高可用性和HA</a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化">性能与优化</a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决">故障与解决</a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserverzhishi/l_2_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>sqlserver 触发器教程</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   级联删除，如果要删除主类别表的记录，那么把次类别表所属记录以及这个类别所包含的所有文章内容删除主类别表名：Navtion_TopSubject 主键fTopID Char(36)&nbsp;次类别表名：Navtion_NodeSubject 外键同上&nbsp;内容表名：tText 外键同上&nbsp;复制代码&nbsp;代码如下:// ------------- 代码开始 --------------------&nbsp;CREATE TRIGGER [RemoveTopAndNodeText] ON [dbo].[Navtion_TopSubject]&nbsp;INSTEAD OF DELETE&nbsp;AS&nbsp;/* 定义触发器使用的变量 */&nbsp;DECLARE&nbsp;@fTopID Char(36),&nbsp;@fNodeCount Int,&nbsp;@fTextCount Int,&nbsp;@fTopName VarChar&nbsp;/* 把传送的需要删除的fTopID键值赋值给@fTopID变量 */&nbsp;/* 开始事务 */&nbsp;BEGIN TRAN Remove_TopSubject&nbsp;Set @fTopID = (Select&nbsp;fTopID From deleted)&nbsp;Set @fTopName = (Select fTopName From deleted)&nbsp;/* 保存删除前保存点，防止出错 */&nbsp;Save Tran my_Save1&nbsp;/* 首先判断子类表NodeSubject中是否有所属内容 */&nbsp;Set @fNodeCount = (Select Count(*) From Navtion_NodeSubject Where Navtion_NodeSubject.fTopID = @fTopID)&nbsp;If @fNodeCount &gt; 0&nbsp;Begin&nbsp;/* 判断内容表tText是否有所属内容 */&nbsp;Set @fTextCount = (Select Count(*) From tText Where tText.fTopID = @fTopID)&nbsp;If @fTextCount &gt; 0&nbsp;Begin&nbsp;Delete From tText Where tText.fTopID = @fTopID&nbsp;Delete From Navtion_NodeSubject Where fTopID = @fTopID&nbsp;Delete From Navtion_TopSubject Where fTopID = @fTopID&nbsp;End&nbsp;Else&nbsp;Begin&nbsp;Delete From Navtion_NodeSubject Where fTopID = @fTopID&nbsp;Delete From Navtion_TopSubject Where fTopID = @fTopID&nbsp;End&nbsp;End&nbsp;Else&nbsp;Begin&nbsp;Delete From Navtion_TopSubject Where fTopID = @fTopID&nbsp;End&nbsp;If @@Error = 0&nbsp;Commit Transaction&nbsp;Else&nbsp;Begin&nbsp;Rollback Transaction my_Save1&nbsp;Raiserror('删除出现错误，记录：%s及其所属内容没有被删除。',16,1,@fTopName)&nbsp;End&nbsp;//------------------代码结束---------------------&nbsp;一、背景&nbsp;这是我写的一个文章处理系统，分类级别为两级，就是说有两级目录类似这种：&nbsp;新闻&nbsp;--&gt;国内新闻&nbsp;--&gt;国际新闻&nbsp;教程&nbsp;--&gt;Asp教程&nbsp;--&gt;C#教程&nbsp;--&gt;Jsp教程&nbsp;下载&nbsp;--&gt;工具下载&nbsp;--&gt;源代码下载&nbsp;每个文章都属于上面的目录下的一个。&nbsp;这样看，数据库内必须有三个表：主类别表、次类别表、文章内容表。而且，我为了保证数据的完整性，使用了关系（懂SQL&nbsp;Server的知道），这样，假设新闻类下有子类并且每个子类下有文章的话，使用Deltee语句删除类将出现错误，因为违反了数据完整性约束，把类别删除后所属的记录将变为死记录。所以删除主表的记录必须保证这个类别所包含的子类别和内容全部删除。我写的这个触发器的作用就是删除主表类别的触发器，可以在主表类别下有内容的情况下删除主表的记录。&nbsp;二、数据库结构&nbsp;1.主类别表&nbsp;表名：Navtion_TopSubject&nbsp;主健：fTopID 数据类型：Char 大小：36&nbsp;类别名： fTopName 数据类型：VarChar 大小：30&nbsp;2. 次类别表&nbsp;表名：Navtion_NodeSubject&nbsp;主键：fNodeID 数据类型：Char 大小：36&nbsp;外键：fTopID 数据类型：Char 大小：36 （表示此记录所属的主类别）&nbsp;类别名：fNodeName 数据类型：VarChar 大小：30&nbsp;3. 内容表：&nbsp;表名：tText&nbsp;主键：fID 数据类型：Char 大小：36&nbsp;外键1：fTopID 指向主类别表 表示所属的主类别&nbsp;外键2：fNodeID 指向次类别表，表示所属的次类别&nbsp;三、操作流程&nbsp;1. 这个触发器放在主类别表Navtion_TopSubject中，触发条件是Delete语句，如果对这个表执行了删除命令的话，那么将触发此代码的运行。&nbsp;2. 定义触发器接受传递过来的Delete语句，然后根据这个语句来执行代码。&nbsp;3. 标准SQL删除代码如下：&nbsp;DELETE From Navtion_TopSubject Where fYopID = 'aaa' （假设要删除的主类别是新闻，主键编号是aaa）&nbsp;4. 这样我们就可以利用这个aaa来查找次类别表和内容表是否有所属的内容。&nbsp;5. 利用deleted表，这个表是逻辑删除表，相当于Windows系统里面的回收站。Sql Server系统定义：如果一个表里面有触发器，那么任何操作都不直接进行，而是进行逻辑操作。这个操作在Inserted表（插入），Updated表（更新），Deleted表（删除）中进行。就拿Deleted表来说，传递到Sql Server系统中的Del命令，如果有触发器的话，Sql首先复制这个要删除的记录到Deleted表中（这个表是个临时表，只能给触发器用，触发器运行结束后自动删除），我们就可以用此代码：&nbsp;Select fTopID From deleted&nbsp;获得传递到Sql的表Navtion_TopSubject中记录为aaa的主键内容。&nbsp;6. 把这个主键内容存放到变量中，根据这个变量找次类别表，如果没有内容，表示此记录没有任何次类别和文章，可以直接删除。&nbsp;7. 如果次类别表中有内容，那么再用这个变量找内容表中属于aaa的内容，如果有，就删除，再删除次类别表的内容，如果没有，则直接删除次类别表的内容。&nbsp;8. 当次类别表和内容表的记录全部删除干净后，删除主类别表的内容。&nbsp;四、流程定义&nbsp;先查找子类别的数量，赋值给@NodeCount变量，然后判断&nbsp;如果&gt;0&nbsp;则根据@fTopID找tText表的内容赋值给@fTextCount，如果&gt;0则&nbsp;首先删除tText表符合@fTopID内容的所有记录&nbsp;然后删除子类别表Navtion_NodeSubject表中符合@fTopID的所有内容&nbsp;最后删除主类别表Navtion_TopSubject中符合@fTopID的所有内容&nbsp;否则&nbsp;首先删除Navtion_NodeSubject子类别表中符合@fTopID的所有内容&nbsp;然后删除主类别表Navtion_TopSubject中符合@fTopID的所有内容&nbsp;否则&nbsp;仅删除主类别表Navtion_TopSubject中符合@fTopID的所有内容&nbsp;五、代码解释&nbsp;CREATE TRIGGER [RemoveTopAndNodeText] ON [dbo].[Navtion_TopSubject]&nbsp;INSTEAD OF DELETE&nbsp;AS&nbsp;上面的代码是建立触发器的Sql语句，内容：&nbsp;CREATE TRIGGER T-SQL关键字，表示是一个触发器&nbsp;[RemoveTopAndNodeText] 是触发器的名称&nbsp;[dbo].[Navtion_TopSubject] 表示这个触发器属于的表的名称&nbsp;INSTEAD OF 表示这个触发器将屏蔽传递进来的Sql命令，转向执行触发器的命令&nbsp;（多说一句：除了INSTEAD OF关键字，还有 For关键字，表示这个触发器在执行完传递进来的Sql语句后执行触发器内容，一般用在Insert和Update中）&nbsp;DELETE ： 表示此触发器的触发条件是Delete命令，如果对这个表作删除操作，将执行这个触发器的代码。&nbsp;As 表示下面的代码是触发器的代码：&nbsp;-------------------------------------------------------------------&nbsp;/* 定义触发器使用的变量 */&nbsp;DECLARE&nbsp;@fTopID Char,&nbsp;@fNodeCount Int,&nbsp;@fTextCount Int,&nbsp;@fTopName VarChar&nbsp;以上命令是定义触发器使用的变量，DECLARE 命令相当于VBScript的Dim命令，不过这个语句可以定义多变量，不用一个变量一个命令，变量之间用英文逗号分隔。&nbsp;@fTopID 是变量名，SqlServer规定，在SqlServer中使用的变量名前面必须加入@字符。&nbsp;变量后面是变量类型 Char是固定长度的字符串，Int是整数数字类型，VarChar是可变长度的字符串。&nbsp;--------------------------------------------------------------------------&nbsp;/* 把传送的需要删除的fTopID键值赋值给@fTopID变量 */&nbsp;/* 开始事务 */&nbsp;BEGIN TRAN Remove_TopSubject&nbsp;Set @fTopID = (Select fTopID From deleted)&nbsp;/* 保存删除前保存点，防止出错 */&nbsp;Save Tran my_Save1&nbsp;以上代码解释：&nbsp;放在 /* 和 */之间的是程序注释，类似于Html里面的&lt;!-- 和--&gt;&nbsp;BEGIN TRAN Remove_TopSubject 表示开始事务，其中RemoveTopSubject是事务名称。&nbsp;事务就是保证操作成功的一种机制，如果在事务里面出错，那么事务将回滚，不会影响整个系统。&nbsp;举个例子，如果在事务里面定义了3个操作a b c，分别是a 插入一条记录，b 删除一条记录，c 更新一条记录。程序开始执行，如果a 执行成功后开始操作b，b操作出现错误，那么事务开始回滚，插入记录的a将会取消，返回到没有执行这3个操作之前的状态。&nbsp;Set @fTopID = (Select fTopID From deleted)&nbsp;这个是Sql Server的赋值命令，把变量@fTopID的值保存成deleted表中fTopID字段的内容。&nbsp;Set @fTopName = (Select fTopName From deleted)&nbsp;同样的赋值命令，把要删除的主类别的名称赋值给@fTopName变量，在后面的出错语句用。&nbsp;Save Tran my_Save1&nbsp;Save Tran表示保存事务，如果发生错误，则可以用这个保存来恢复。类似于游戏里面的存盘文件。my_Save1是保存名，相当于存盘文件名。&nbsp;接上：&nbsp;Set @fNodeCount = (Select Count(*) From Navtion_NodeSubject Where Navtion_NodeSubject.fTopID = @fTopID)&nbsp;也是一个变量赋值语句，设定@fNodeCount变量保存的是要删除的主表记录（@fTopID变量的内容）所属的次类别表Navtion_NodeSubject中的记录的数量&nbsp;根据主表记录查找<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>表符合条件的这个语句可参考这个帖子：&nbsp;http://www.dw-mx.com/forum/mb_forum/detail2.asp?f2_id=37&amp;f3_id=9022&amp;f3_name=笑望人生&nbsp;--------------------------------------------------------------------&nbsp;If @fNodeCount &gt; 0（作个标记，一级判断）&nbsp;开始判断，如果@fNodeCount大于0，表示欲删除的主类别记录包含有子类别，不能直接删除，必须先删除子类别。&nbsp;但删除子类别必须删除子类别下包含的所有内容（文章）记录，所以我们必须判断是否有内容记录&nbsp;-----------------------------------------------------------------&nbsp;Begin （作个标记，一级Begin）&nbsp;表示If下面执行的多条语句，不懂的可以参考没人性的FAQ帖子&nbsp;--------------------------------------------------------------&nbsp;Set @fTextCount = (Select Count(*) From tText Where tText.fTopID = @fTopID)&nbsp;上面代码继续赋值，@TextCount表示欲删除的主类别记录所包含的所有的内容（文章）记录的数量&nbsp;------------------------------------------&nbsp;If @fTextCount &gt; 0（标记，二级判断）&nbsp;判断记录的数量，大于0表示有记录，这样必须先删除内容表的记录，再删除子类别表的记录，最后删除主类别表的记录，这样才不会出错。&nbsp;Begin （标记 ，二级Beging 一）&nbsp;---------------------------------------------------&nbsp;Delete From tText Where tText.fTopID = @fTopID&nbsp;Delete From Navtion_NodeSubject Where fTopID = @fTopID&nbsp;Delete From Navtion_TopSubject Where fTopID = @fTopID&nbsp;End（标记，二级Begin一的结束命令）&nbsp;上面的语句很简单，首先删除tText表中fTopID符合@fTopID的记录（删除内容表）&nbsp;然后删除Navtion_NodeSubject表符合@fTopID的记录（删除次类别表）&nbsp;最后删除Navtion_TopSubject表符合@fTopID的记录（删除主类别表）&nbsp;----------------------------------------------------&nbsp;Else （标记，二级判断否则，表示@fTextCount=0，指内容表没有记录）&nbsp;--------------------------------------------------------&nbsp;Begin （标记，二级Begin二）&nbsp;Delete From Navtion_NodeSubject Where fTopID = @fTopID&nbsp;Delete From Navtion_TopSubject Where fTopID = @fTopID&nbsp;End （标记，二级Begin二结束）&nbsp;以上代码简单，tText表（内容表）没有记录，那么首先删除次类别表Navtion_NodeSubject中的记录，再删除主类别表Navtion_TopSubject中的记录。&nbsp;------------------------------------&nbsp;End （标记，二级Begin结束）&nbsp;-------------------------------------&nbsp;Else （标记：一级判断否则，表示次类别表没有内容@fNodeCount=0）&nbsp;-------------------------------------------------------------&nbsp;Begin&nbsp;Delete From Navtion_TopSubject Where fTopID = @fTopID&nbsp;End&nbsp;上面代码直接删除主类别表Navtion_TopSubject的记录&nbsp;-----------------------------------------------------&nbsp;本来这个触发器已经结束，但是我们必须防止执行出错。所以如果出错，那么要回滚所有操作，并且向应用程序发送错误信息。&nbsp;复制代码&nbsp;代码如下:If @@Error = 0&nbsp;判断，是否出现错误&nbsp;@@Error是Sql Server的一个全局变量，保存上一个Sql命令是否出错，如果出错，@@Error=1&nbsp;如果是0，表示没有出错。&nbsp;-------------------------------------------&nbsp;Commit Transaction&nbsp;上面是没有出错的语句，表示事务提交，（可以看作是结束事务）&nbsp;如果前面有了Begin Tran开始事务的代码，必须在后面加上这个代码，否则事务不结束，数据库记录将被锁定，无法对数据库记录进行操作！&nbsp;--------------------------------------------&nbsp;Else&nbsp;@@Error变量大于0，表示出现错误&nbsp;----------------------------------&nbsp;Begin&nbsp;Rollback Transaction my_Save1&nbsp;Raiserror('删除出现错误，记录：%s及其所属内容没有被删除。',16,1,@fTopName)&nbsp;End&nbsp;上面的代码是个语句块，表示如果上面的删除语句出错后怎么办&nbsp;Rollback Transaction my_Save1&nbsp;Rollback Transaction 是Sql Server的内部命令，表示回滚事务，就是以前的操作全部取消。my_Save1是上面保存的保存点的名称。&nbsp;这个代码意思和玩游戏中没有过关，从存盘文件中恢复的道理一样。 :D&nbsp;----------------------------------------------------------------------&nbsp;Raiserror('删除出现错误，记录：%s及其所属内容没有被删除。',16,1,@fTopName)&nbsp;Raiserror表示自定义错误信息，这个语句的作用是向使用Sql Server的应用程序发送信息。&nbsp;如asp的代码，asp代码获得这个信息将显示在网页上。&nbsp;16,1是错误的等级号码，这个我不做过多解释，有兴趣的人可以查看SQL Server联机丛书的&nbsp;T-SQL语言参考。&nbsp;%s是Reiserror命令的自定义变量 %s表示字符串变量，内容是后面的@fTopName的内容。&nbsp;这个语句类似于以下VBScript代码（假设VBscript中有Raiserror命令）&nbsp;Raiserror('删除出现错误，记录：' &amp; @fTopName &amp; '及其所属内容没有被删除。',16,1)&nbsp;-------------------------------------------------------------&nbsp;好了，这个触发器所有代码我都详细解释了，希望大家看得懂，并且通过上面的解释提高数据库操作的能力！
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Dbas on Classic</title>
+    <link>/dba/</link>
+    <description>Recent content in Dbas on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 14 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="/dba/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>数据库迁移流程图</title>
+      <link>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%81%E7%A7%BB%E6%B5%81%E7%A8%8B%E5%9B%BE/</link>
+      <pubDate>Sat, 14 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%81%E7%A7%BB%E6%B5%81%E7%A8%8B%E5%9B%BE/</guid>
+      <description>合集 MySQL: MySQL迁移前 MySQL迁移中 MySQL迁移后 Oracle: Oracle迁移前 Oracle迁移中 Oracle迁移后 Redis: Redis迁移前 Redis迁移中 Redis迁移后 </description>
+    </item>
+    
+    <item>
+      <title>DTCC参会者视角：我在2024数据库技术大会的体验</title>
+      <link>/dba/dtcc%E5%8F%82%E4%BC%9A%E8%80%85%E8%A7%86%E8%A7%92%E6%88%91%E5%9C%A82024%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8A%80%E6%9C%AF%E5%A4%A7%E4%BC%9A%E7%9A%84%E4%BD%93%E9%AA%8C/</link>
+      <pubDate>Mon, 26 Aug 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/dtcc%E5%8F%82%E4%BC%9A%E8%80%85%E8%A7%86%E8%A7%92%E6%88%91%E5%9C%A82024%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8A%80%E6%9C%AF%E5%A4%A7%E4%BC%9A%E7%9A%84%E4%BD%93%E9%AA%8C/</guid>
+      <description>前言  2024年数据库技术大会8月24日在北京成功举行 今年第十五届 是参与最深的一届 现场聆听了很多场的技术分享 还受邀做了一场数据安全的分享 感谢itpub的辛苦组织与坚持 给DBA提供了这么好的交流学习平台 这是发自内心的 每年能攒这么多的DBA在一起 非常难得 在会场会能见到很多老朋友 有的朋友可能是一年能见到一次的朋友 也遇到并结识了很多新的朋友 真的可谓收获满满 分享一下此次的个人参会体验 以及介绍一下我自己的分享主题  国产数据库在收缩  相比与前两年的火热 今年的国产数据库面孔在变少 信创的热度依旧很高 但随着信创的推进 部分单位已经完成了信创 而另一些信创可能正在进行中 前两年不断的涌现的新的数据库类型和创业公司 在减少 相比与前几年几乎每个大厂都在推新的数据库 tidb,ob,gaussDB&amp;hellip; 今年行业趋向收缩到几个大的国产db 这也意味着 未来再进入这个门槛的公司应该不多了 已有的这些厂商都拿到了自己的“地盘” 新势力不会再大量涌现了  向量和时序  因为这两种类型的库 我们都有在尝试 但是没有推 使用度几乎是0 所以格外关注这两个类型的库的发展状况 自己也在平衡 是否有必要在合适的时机引进和推广这类数据库 引进成本和推广代价是否值得 流窜了几个向量和时序的专场 也和同行交流 在特定场景下 是非常有价值的 我认可这件事 并打算后续尝试开始正式的试用  务实和务虚  新技术的快速引进和推广 你会在各个会场都听到各种高大上的解决方案 至少80%的专场都在聊新的技术方案 似乎传统的dba工作已经不在大家的视线范围内了 这样确实很高大上 但是相比与这些高大上 每个公司有特定的系统架构和环境 很多方案不一定能适配其他的场景 我更感兴趣的是基本的事 如何做好一个小目标 如何优化好一个小环节 这样的分享需要耐心的找 以及一点点运气 这些dba日常工作中遇到的那点事 怎么去优化和解决 是很有参考价值的 比如多融合库的在dba这边应该怎么选 比如快手上k8s的原因 等等&amp;hellip; 会在一定时间内 成为我们决定问题时的一个参考方向 其中有一场DBdoctor的分享 是我很想去听的分享 可惜因为时间关系 没有在现场 后期只能从ppt里看看了 而说到务实 不得不提一下 DBA之夜里林春老师了 分享dba从业20年经历的时候 林老师超认真的在说他们是如何辛苦的解决去O问题 怎么加班，怎么熬夜 怎么去想办法 得得的说了好久 非常的生动和具体 这真的是投身一线才有的体会  关于我的分享  说了很多现场的感受 其实我也是其中的分享 专场16里 我做为演讲嘉宾做了一场数据安全的分享 题目是《数据泄露了,有DBA什么事？》 这个名字是临时发挥的 其实有两种解读 我说的很显然是后一种 计划了3个章节来说这件事的 1.</description>
+    </item>
+    
+    <item>
+      <title>如何把MySQL和Oracle里的表同步到一个加密库中</title>
+      <link>/dba/%E5%A6%82%E4%BD%95%E6%8A%8Amysql%E5%92%8Coracle%E9%87%8C%E7%9A%84%E8%A1%A8%E5%90%8C%E6%AD%A5%E5%88%B0%E4%B8%80%E4%B8%AA%E5%8A%A0%E5%AF%86%E5%BA%93%E4%B8%AD/</link>
+      <pubDate>Wed, 24 Apr 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E5%A6%82%E4%BD%95%E6%8A%8Amysql%E5%92%8Coracle%E9%87%8C%E7%9A%84%E8%A1%A8%E5%90%8C%E6%AD%A5%E5%88%B0%E4%B8%80%E4%B8%AA%E5%8A%A0%E5%AF%86%E5%BA%93%E4%B8%AD/</guid>
+      <description>如图 加密配置元信息表 REATE TABLE `encrypt_baseinfo` (`from_linkname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;&#39; COMMENT &#39;来源数据库信息&#39;,`from_linktype` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;mysql&#39; COMMENT &#39;mysql,oracle,mongo&#39;,`from_connstr` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;&#39; COMMENT &#39;127.0.0.1;3306;u_test;password;db_test;&#39;,`to_linkname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;&#39; COMMENT &#39;目标数据库信息&#39;,`to_linktype` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;mysql&#39; COMMENT &#39;mysql,oracle,mongo&#39;,`to_connstr` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;&#39; COMMENT &#39;127.0.0.1;3306;u_test;password;db_test;&#39;,`kafka_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;&#39; COMMENT &#39;kafka_name&#39;,`kafka_groupid` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;&#39; COMMENT &#39;kakfak_groupid&#39;,`kakfak_offset` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;&#39; COMMENT &#39;kakfak_auto_offset_reset&#39;,PRIMARY KEY (`from_linkname`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT=&#39;加密字段基础信息表&#39;CREATE TABLE `encrypt_col_info` (`id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT &#39;ID、主键&#39;,`service_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT &#39;服务信息&#39;,`db_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT &#39;数据库信息&#39;,`tab_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT &#39;表名&#39;,`col_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT &#39;列名&#39;,`sub_col_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT &#39;json_key信息&#39;,`col_type` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT &#39;字段类型&#39;,`col_desc` varchar(5000) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT &#39;列名描述信息&#39;,`create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &#39;创建时间&#39;,`update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT &#39;最后更新时间&#39;,`linkname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT &#39;&#39;,`sec_type` tinyint NOT NULL DEFAULT &#39;0&#39; COMMENT &#39;加密类型：0，1：卡号，2：身份证，3：手机，4：地址&#39;,PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT=&#39;加密字段信息表&#39;判断配置表里的数据类型是否正确的快速方法  select concat(&#39;mysqlw -h &#39;,replace(linkname,&#39;my&#39;,&#39;mysql&#39;),&#39;-w.</description>
+    </item>
+    
+    <item>
+      <title>MySQL和Oracle数据库的一些审计要求</title>
+      <link>/dba/mysql%E5%92%8Coracle%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%B8%80%E4%BA%9B%E5%AE%A1%E8%AE%A1%E8%A6%81%E6%B1%82/</link>
+      <pubDate>Mon, 11 Mar 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/mysql%E5%92%8Coracle%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%B8%80%E4%BA%9B%E5%AE%A1%E8%AE%A1%E8%A6%81%E6%B1%82/</guid>
+      <description>MySQL的审计要求  密码是否符合复杂度要求，需要包含大小写字母、数字、字符，密码长度是否达到8位以上  show variables like &#39;%validate%&#39;; INSTALL PLUGIN validate_password SONAME &#39;validate_password.so&#39;; set global validate_password_length=12 set global ... show global variables like &#39;%validate%&#39;;  密码是否定期更换，如，密码有效期设置为90天。  set global default_password_lifetime=360;  是否具有登陆失败锁定策略，例如，登陆失败5次锁定10分钟。   INSTALL PLUGIN CONNECTION_CONTROL SONAME &#39;connection_control.so&#39;; INSTALL PLUGIN CONNECTION_CONTROL_FAILED_LOGIN_ATTEMPTS SONAME &#39;connection_control.so&#39;; show global variables like &#39;connection_%&#39; ;  是否设置超时登出功能，例如，30分钟未操作自动登出  show variables like &#39;wait%timeout%&#39; ; Oracle的审计要求 </description>
+    </item>
+    
+    <item>
+      <title>redis的内存报警OOM command not allowed when used memory&gt;maxmemory</title>
+      <link>/dba/redis%E7%9A%84%E5%86%85%E5%AD%98%E6%8A%A5%E8%AD%A6oomcommandnotallowedwhenusedmemorymaxmemory/</link>
+      <pubDate>Tue, 23 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/redis%E7%9A%84%E5%86%85%E5%AD%98%E6%8A%A5%E8%AD%A6oomcommandnotallowedwhenusedmemorymaxmemory/</guid>
+      <description> 非核心业务的一次小故障，未造成用户感知到的业务影响，记录如下
+ 参与者  DEV1,DEV2 DBA1,DBA2 3主3从的RedisCluster集群：1.10,1.11,1.12,1.20,1.21,1.22  故障起因  DEV1想排查线上Redis是否有对指定的key有访问 11:45 DEV1找到DBA1协助排查 11:50 DBA1在1.11实例上开启monitor进程，监控Redis写入 11:55 monitor进程启动5分钟后，1.11实例的内存占用从2G涨到10G 触发该节点的内存占满，引发故障(该节点的新写入报错，其他节点正常读写) 12:05 DBA1在1.11实例上停止monitor进程，1.11实例的内存占用从10G回退到2G 12:05 Redis集群自动恢复正常   故障发现和处理  12:20 DEV2收到报警 12:23 DEV2找到DBA2反馈程序报错Caused by: io.lettuce.core.RedisCommandExecutionException: OOM command not allowed when used memory &amp;gt; &#39;maxmemory&#39; 12:25 DBA2上线检查问题，在节点1.10上查看内存使用率是2G/10G 正常 12:28 DBA2检查该集群的1.10，1.11,1.12三个节点内存都是2G/10G 没发现异常。 12:30 查不到问题，修改该集群的所有节点最大内存从10G 改到12G 12:30 DEV2重启应用，发现恢复。 12:40 DBA2检查Redis应用，发现set,get的命令从每秒的6000次/秒降到500次/秒，认为业务没有恢复，建议继续排查 12:45 DBA1，DEV1参与排查，DEV2发现有个status任务没有重启成功 12:46 DEV2重启status任务，1分钟后，Redis监控指标恢复正常，故障完成处理 13:12 回溯整个过程，确认是11:50的Monitor进程引起的内存占用异常，原因定位 13:25 沟通确认Monitor进和不可以长期开启的规范。故障完成处理和总结  总结  DBA协助研发排查问题时，开启Monitor进程时间过长，引起一个节点的内存占满，继而引起研发的进程挂掉 非核心业务，没有影响到用户和交易，处理过程中现象比较明显，处理难度低，监控还是不够周全 补充：考虑换LRU策略  </description>
+    </item>
+    
+    <item>
+      <title>8种常用于数据库的数据结构</title>
+      <link>/dba/8%E7%A7%8D%E5%B8%B8%E7%94%A8%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</link>
+      <pubDate>Tue, 02 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/8%E7%A7%8D%E5%B8%B8%E7%94%A8%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</guid>
+      <description>1.跳跃表(skipList) 什么是skiplist  跳跃表（skiplist）是一种随机化的数据， 由 William Pugh 在论文《Skip lists: a probabilistic alternative to balanced trees》中提出， 跳跃表以有序的方式在层次化的链表中保存元素， 效率和平衡树媲美 —— 查找、删除、添加等操作都可以在对数期望时间下完成， 并且比起平衡树来说， 跳跃表的实现要简单直观得多。  图示    用途：  Redis  2.哈希索引（Hash Index） 什么是hash Index  基于哈希表实现，只有精确匹配索引所有列的查询才有效。对于每一行数据，存储引擎都会对所有的索引列计算一个哈希码（hash code），哈希码是一个较小的值，并且不同键值的行计算出来的哈希码也不一样。哈希索引将所有的哈希码存储在索引中，同时在哈希表中保存指向每个数据行的指针。 哈希索引可细分为静态哈希和动态哈希这两大类，  静态哈希  基于散列技术的文件组织使我们能够避免访问索引结构，同时也提供了一种构造索引的方法。在对散列的描述中，使用桶(bucket)来表示能存储一条或多条记录的一个存储单位。通常一个桶就是一个磁盘块，但也可能大于或者小于一个磁盘块。 散列索引将散列函数作用于搜索码以确定对应的桶， 然后将此搜索码以及对应的指针存入此桶(或溢出桶)中。 静态散列最大的缺点在于必须在实现系统时选择确定的散列函数。此后若被索引的文件变大或缩小，要想再改变散列函数就不容易了。因为散列函数 h 将搜索码值映射到桶地址的固定集合 B 上： 根据当前文件大小选择散列函数，这样的选择会使得性能随着数据库的增大而下降。换言之，初始时集合 B 太小，一个桶就会包含许多不同的搜索码值的记录，从而可能发生桶溢出。当文件变大时，性能就会受到影响。 根据将来某个时刻文件的预计大小选择散列函数。 尽管这样可以避免性能下降，但是初始时会造成相当大的空间浪费。  动态哈希  针对静态散列技术出现的问题，动态散列（dynamic hashing）技术允许散列函数动态改变，以适应数据库增大或缩小的需要 当数据库增大或缩小时，可扩充散列可以通过桶的分裂或合并来适应数据库大小的变化，这样可以保持空间的使用效率。此外，由于重组每次仅作用于一个桶，因此所带来的性能开销较低。  图示    3.ssTable 什么是ssTable  SSTable文件是memtable 数据到一定阈值写入文件形成的，由于内存容量总是有限的，将一定量数据写入磁盘可以存放更多数据，所以leveldb相比redis能存放更多数据。既然数据持久化到磁盘，那么还有必然涉及到从磁盘中查询数据，从磁盘中查询数据与从内存中查询数据的效率是不一样的，所以SSTable 数据组织方式必然与众不同，因为必须要提高查询效率，不能给一个key就去遍历所有SSTable。因此本文的另一个目的就是学习SSTable 文件如何组织key-value，提高查询效率。为了提高内存中数据查询效率 我们学习了各种数据结构如红黑树，散列表，那么SSTable是学习如何提高文件查询数据效率的一个很好例子。  图示    4.</description>
+    </item>
+    
+    <item>
+      <title>ApacheDoris在Centos7环境下的安装部署</title>
+      <link>/dba/apachedoris%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</link>
+      <pubDate>Mon, 25 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/apachedoris%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</guid>
+      <description>环境准备 linux版本 Centos7:  cat /etc/redhat-release  系统最大打开文件句柄数​ cat etc/security/limits.conf * soft nofile 65536* hard nofile 65536关闭交换分区（swap）​ swapoff -ased -i &#39;/ swap / s/^\(.*\)$/#\1/g&#39; /etc/fstab检查文件系统  df -hT |grep &amp;quot;ext4&amp;quot;GCC版本(&amp;gt;=4.8.2) gcc -v# gcc version 4.8.5 2015062JAVA版本(&amp;gt;=1.8) java -version # java version &amp;quot;1.8.0_202&amp;quot;确认cpu是否支持avx2 cat /proc/cpuinfo | grep avx2安装 下载 cd /data/software/wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-2.0.3-bin-x64.tar.gztar zxvf apache-doris-2.0.3-bin-x64.tar.gzcd cd apache-doris-2.0.3-bin-x64llmkdir /data/doris5306mv * /data/doris5306/安装fe 修改fe.</description>
+    </item>
+    
+    <item>
+      <title>快速完成一个异构数据同步异常检查功能</title>
+      <link>/dba/%E5%BF%AB%E9%80%9F%E5%AE%8C%E6%88%90%E4%B8%80%E4%B8%AA%E5%BC%82%E6%9E%84%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5%E5%BC%82%E5%B8%B8%E6%A3%80%E6%9F%A5%E5%8A%9F%E8%83%BD/</link>
+      <pubDate>Tue, 05 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E5%BF%AB%E9%80%9F%E5%AE%8C%E6%88%90%E4%B8%80%E4%B8%AA%E5%BC%82%E6%9E%84%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5%E5%BC%82%E5%B8%B8%E6%A3%80%E6%9F%A5%E5%8A%9F%E8%83%BD/</guid>
+      <description>起因  上周我们做的一次Oracle到MySQL迁移，在迁移完成后需要将MySQL数据反向同步到Oracle中，以便于没有迁移干净的原Oracle业务还能提供只读访问 反向同步用的是OGG，我们在OGG同步层面加了异常报警（但是被DBA给人为禁用了 除掉同步软件层面的报警外，我们需要一个偏业务层面的，针对表数据的报警和监控  需求  支持各种数据源的同步对比 支持表的行数对比，最大id对比，表最后更新时间对比 扩展性好，方便配置 异常报警 监控同步状态的页面  解决 拆解思路  需要一个建两张表：表1:存放任务配置信息，表2:存放采集到的数据 需要一个任务：定时（5分钟）去源库和目标库，运行一个SQL,取当前状态并存入到刚才建的history表中 需要一个页面：展示采集结果，可以方便的查看同步状态和延时 需要一个报警任务：异常数据时，发送报警  任务1:建表  CREATE TABLE `msync_config` (`sync_name` varchar(50) NOT NULL,`source_linkconnstr` varchar(100) NOT NULL,`target_linkconnstr` varchar(100) NOT NULL,`source_sqlstr` varchar(2000) NOT NULL,`target_sqlstr` varchar(2000) NOT NULL,`alert_count` int NOT NULL DEFAULT &#39;5&#39;,`alert_maxid` int NOT NULL DEFAULT &#39;5&#39;,`alert_delaysecond` int NOT NULL DEFAULT &#39;60&#39;,`alert_userlist` varchar(100) NOT NULL DEFAULT &#39;&#39;,`add_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,`update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,`alert_type` varchar(50) NOT NULL DEFAULT &#39;count+time&#39; COMMENT &#39;count,id,time三种组合,+代表and,-代表or&#39;) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 CREATE TABLE `msync_history` (`addtime` datetime NOT NULL,`sync_name` varchar(50) NOT NULL,`source_count` bigint NOT NULL DEFAULT &#39;0&#39;,`target_count` bigint NOT NULL DEFAULT &#39;0&#39;,`source_maxid` bigint NOT NULL DEFAULT &#39;0&#39;,`target_maxid` bigint NOT NULL DEFAULT &#39;0&#39;,`source_maxtime` datetime NOT NULL DEFAULT &#39;0000-00-00 00:00:00&#39;,`target_maxtime` datetime NOT NULL DEFAULT &#39;0000-00-00 00:00:00&#39;,PRIMARY KEY (`addtime`,`sync_name`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3任务2:配置采集任务 &amp;lt;action result=&amp;quot;allcount,okcount,errcount&amp;quot; type=&amp;quot;sql_loop&amp;quot; &amp;gt;&amp;lt;connstr&amp;gt;link:dboop_db&amp;lt;/connstr&amp;gt;&amp;lt;sqlstr&amp;gt;select sync_name,source_linkconnstr,target_linkconnstr,source_sqlstr,target_sqlstr from msync_config&amp;lt;/sqlstr&amp;gt;&amp;lt;action result=&amp;quot;sync_name,source_linkconnstr,target_linkconnstr,source_sqlstr,target_sqlstr&amp;quot; type=&amp;quot;sql_select&amp;quot; &amp;gt;&amp;lt;connstr&amp;gt;link:dboop_db&amp;lt;/connstr&amp;gt;&amp;lt;sqlstr&amp;gt;select sync_name,source_linkconnstr,target_linkconnstr,source_sqlstr,target_sqlstr from msync_config where sync_name=%s&amp;lt;/sqlstr&amp;gt;&amp;lt;sqlpara&amp;gt;{__0}&amp;lt;/sqlpara&amp;gt;&amp;lt;/action&amp;gt;&amp;lt;!</description>
+    </item>
+    
+    <item>
+      <title>信创和国产数据库</title>
+      <link>/dba/%E4%BF%A1%E5%88%9B%E5%92%8C%E5%9B%BD%E4%BA%A7%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
+      <pubDate>Fri, 10 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E4%BF%A1%E5%88%9B%E5%92%8C%E5%9B%BD%E4%BA%A7%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
+      <description>什么是“信创”  “信创”的全称是“信息技术应用创新产业”，旨在实现信息技术领域的自主可控，保障国家信息安全。信创产业的主体包括基础硬件、基础软件、应用软件、信息安全、系统集成等部分。 数字化基础设施的安全可控关系到经济发展，直接决定着供应链安全、产业链安全和信息化安全，进而决定国家安全。近年来，国际局势波诡云谲，在频繁的制裁断供事件下，科技自立自主自强变得更加迫在眉睫。“十四五”规划纲要已明确要将科技自立自强作为国家发展的战略支撑，2023年两会上发布的《政府工作报告》强调要建设现代化产业体系，推进科技自立自强。《数字中国建设整体布局规划》则提出要构筑自立自强的数字技术创新体系，筑牢可信可控的数字安全屏障。2022年我国中央及各地政府更是相继发布了上百条信创相关政策，构建具有完全自主知识产权的创新技术体系。 通俗的说是用国产硬件(芯片,存储,) 划重点:自主可控 划范围:基础硬件、基础软件、应用软件、信息安全、系统集成 在实际执行中核心的是：芯片、操作系统、数据库、中间件、整机  信创的主要厂商  芯片CPU：飞腾、鲲鹏、海光、龙芯、兆芯、申威 操作系OS：普华软件、中标麒麟、银河麒麟、统信UOS、红旗、中科方德、中兴新支点 数据库DB：武汉达梦、人大金仓、神州通用、南大通用、万里开源、华为GaussDB、阿里Oceanbase 中间件：东方通、金蝶、宝兰德、华宇软件、普元信息 办公软件：金山软件、福昕软件、万兴科技 安全保密：三六零、奇安信、中孚信息、万里红、格尔软件  信创的市场 行业  信创体系覆盖2+8+N个领域 2:即党、政 8:金融、电力、电信、石油、交通、教育、医疗、航空航天8个关于国计民生的重要行业 N:N个消费市场。N个行业中的办公OA、编辑类的国产软件。  市场规模  预计2023年中国信创产业规模将达20961.9亿元 2027年有望达到37011.3亿元  方向  信创的国有自主可控软硬件替代国外的商业软件一般采用两种方式进行 方向一：上云，通过将服务迁移或合并至阿里云，电信云，华为云，腾讯云&amp;hellip;由云厂商提供信创服务 方向二：自主替换，可以由单位自身的研发团队或第三方国产厂商支持完成软硬件服务的替换  信创的进展  进展非常快，趋势明确 除部分领域（芯片,操作系统）进展不顺利外 存储,数据库，整机，中件间等领域进展得非常顺利 大量的国产硬件,数据库已经完成了对国外商业软件的替换 部分单位和关键行业也完成私有云或公有云的迁移。 进展非常顺利的原因： 1.国家政策要求 2.国外商业软硬件有巨大的利润空间，这部分利润空间可以节省出来 最核心的信创是：芯片，存储，操作系统，数据库，通用软件 下面从我了解的角度来展开聊聊国产数据库的那点事 有哪些是真国产，哪些是假国产 哪些是真的自主研发，哪些是披着皮的洋鬼子  国产数据库 国产数据库的发展  国产数据库在信创政策出来之前 就已经在茁壮成长了 原因一：国外的商业数据库太贵了 一套oracle集群收费每年可能要到几十万块钱 正版的太贵，只能商业谈判走折扣 有的甚至直接用盗版 原因二：国外的开源数据库技术发展 主要是mysql,Pg的发展 给国内的厂商和技术团队提供了方便的二次开发定制的机会 等到信创的政策出来后 巨大的利润空间和强大的需求 引起国产数据库全面开花 这些年国产数据库的创业团队如雨后春笋一样 爆炸增长 其中有传统的老厂商 也有踩着互联网浪潮过来的创业新厂 这些国产数据库厂商不管有多少家 但总是逃不过以下三个大类 1.</description>
+    </item>
+    
+    <item>
+      <title>数据库工具选型</title>
+      <link>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%B7%A5%E5%85%B7%E9%80%89%E5%9E%8B/</link>
+      <pubDate>Wed, 01 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%B7%A5%E5%85%B7%E9%80%89%E5%9E%8B/</guid>
+      <description> 一个采访
+ 我的回答 1、对于您而言，选择使用数据库工具的原因是什么？为了解决哪些需求和痛点？  提高人效,减少DBA重复执行某些固定操作的时间成本 避免人为误操作,避免误操作等潜在风险 保证操作一致性,确保任务和流程按一致的方式执行,避免不同的DBA有不同的检查和执行动作造成的潜在问题  2、在进行数据库工具选型时，可以采取哪些方法和策略（可以从需求分析、候选工具筛选、实验和评估、考虑业务场景、参考案例、最终选型、持续优化和调整等方面展开）？  第一步:确认需求,明确我们需要工具来解决什么问题,基本需求是什么,最好可以实现什么样的效果 第二步:是否可以从现有的平台工具上扩展或衍生出来,如果可以改造和研发的成本是多少 第三步:同行交流及内部沟通,看看其他公司是如何解决此类问题,是否有类似的解决方案 第四步:从收集到的数据库工具中,筛选:功能是否满足需求,是否开源，开发语言是什么,是否适合二次开发,稳定性如何, 第五步:实验，在筛选的数据库工具中，在测试环境进行试用,如果需要改造的,投入小部分资源验证改造可行性 第六步:集合到现有的DBA平台中,让所有的工具在一个平台下使用  3、在选型过程中，需要综合考虑数据库工具的哪些关键因素？  功能性:能帮我们解决什么样的问题 可靠性:是否会带来其他的问题，尤其是涉及安全问题 行业认可度,尽可能的避免小众的解决方案和工具 可扩展性:是否开源及开发语言是什么,会优先选择团队习惯的开发语言的开源工具  4、数据库工具既有免费的，也有付费的，亦有国外和国内的软件之分，您更趋于选择哪一类？为什么？  趋向于选择开源免费的,付费的数据库工具很少会使用,一方面数据库软件的收费通常都比较贵,使用成本不低,另一方面我们选择数据库工具时更多的还是需要集成到现有的dba平台中,开源的改造和调试难度更低，一些自定义的需求和功能，需要二次开发，这时候开源的优势就非常明显 国内和国外的软件没有倾向性,如果是复杂的工具，偏向国内的一点,中文文档还是阅读性上还是比翻译过来的文档更容易理解  5、您使用过哪些数据库工具，它们的适用范围，优缺点分别是什么？在使用过程中，可能会遇到哪些问题？您有什么运维建议吗？  inception和goinception:数据库审核工具,适用于SQL审核上线,几乎完美的解决了SQL上线审核的难点和痛点问题，非常方便集成到现有系统中 gh-ost:数据库上线工具，一般联合上面的inception工具一起使用完成SQL上线，需要注意的是在一些特定情况下有数据丢失的风险 datax和cannal:优秀的数据同步工具，可以应付大多数的数据同步任务。 redis-shake和mongo-shake:在redis和mongo迁移时用到的工具,非常方便  6、在您看来，优秀的数据库工具应该具备哪些功能？请您推荐几款上手快、安装简单、方便易用、支持多种数据库的数据库管理工具？  优秀的数据库工具功能：稳定可靠,解决问题,方便集成和二次开发 推荐goinception,gh-ost以及集成了众多数据库工具的Archery  7、作为用户，您认为目前主流的数据库工具，还存在哪些需要改进的地方？  已经做得很好了，可能在数据防火墙等数据库安全领域还缺少一些通用的解决方法和工具  AI的回答 1、对于您而言，选择使用数据库工具的原因是什么？为了解决哪些需求和痛点？  提高数据管理效率：通过使用数据库工具，可以实现对数据的快速存储、查询和分析，从而提高工作效率。 支持复杂查询和分析：数据库工具通常具有强大的查询和分析功能，可以满足各种复杂的业务需求。 数据安全性和可靠性：数据库工具可以提供数据备份、恢复和高可用性等功能，确保数据的安全性和可靠性。 成本效益：选择合适的数据库工具可以降低硬件、软件和维护成本，提高投资回报率。  2、在进行数据库工具选型时，可以采取哪些方法和策略（可以从需求分析、候选工具筛选、实验和评估、考虑业务场景、参考案例、最终选型、持续优化和调整等方面展开）？  需求分析：明确业务需求和应用场景，了解所需的性能、功能和安全性要求。 候选工具筛选：收集耿耿于意的数据库工具信息，如开源与商业产品、国内外厂商等，并进行初步筛选。 实验和评估：针对初选的工具进行实际测试，包括性能测试、功能测试和安全测试等，以评估其是否符合需求。 考虑业务场景：根据实际业务场景和需求，选择适合的工具，例如分布式数据库适用于高并发场景，关系型数据库适用于事务馊处理等。 参考案例：查阅相关案例和评价，了解其他用户的使用经验和效果，为选型提供参考。 最终选型：综合以上因素，确定最适合的库工具。 持续优化和调整：在实际使用过程中，根据实际情况对工具进行优化和调整，以提高性能和满足新需求。  3、在选型过程中，需要综合考虑数据库工具的哪些关键因素？  剰性能：根据业务需求，选择具有足够性能的数据库工具。 功能：选择具备所需功能的工具，如数据存储、查询、分析和备份等。 安全性：选择具有强大安全特性的工具，如数据加密、访问控制和审计等。 可扩展性：选择可以随着业务增长而轻松扩展的工具。 成本：考虑工具的购买、维护和支持成本，以及可能带来的经济效益。 兼容性：选择能与现有系统和应用兼容的工具。  4、数据库工具既有免费的，也有付费的，亦有国外和国内的软件之分，您更趋于选择哪一类？为什么？  免费或开源的产品：这些产品通常具有较高的性价比，可以降低初始投入成本。 成熟稳定的产品：选择经过市场验证且具有良好口碑的产品，以确保稳定的运行和使用体验。 国内产品：考虑到文化背景和技术支持等因素，选择国内厂商的产品可能会更加合适。但具体情况还需根据项目需求和个人经验来判断。  5、您使用过哪些数据库工具，它们的适用范围，优缺点分别是什么？在使用过程中，可能会遇到哪些问题？您有什么运维建议吗？    Microsoft SQL Server：适用于大型企业级应用，如金融、零售等行业。优点是功能强大，性能稳定，易于管理和维护。缺点是价格较高，对于小型企业来说可能过于昂贵。在使用过程中，可能会遇到性能瓶颈、数据安全问题等。运维建议是定期进行性能调优、备份和恢复演练，以确保数据的可靠性。    MySQL：适用于中小型企业级应用，如博客、论坛等。优点是开源免费，性能良好，易于学习和使用。缺点是功能相对较弱，对于大型复杂应用可能不够灵活。在使用过程中，可能会遇到性能瓶颈、数据安全问题等。运维建议是定期进行性能调优、备份和恢复演练，以确保数据的可靠性。    Oracle Database：适用于大型企业级应用，如金融、电信等行业。优点是功能强大，性能稳定，适用于高并发和高可用性场景。缺点是价格较高，对于小型企业来说可能过于昂贵。在使用过程中，可能会遇到性能瓶颈、数据安全问题等。运维建议是定期进行性能调优、备份和恢复演练，以确保数据的可靠性。    PostgreSQL：适用于中小型企业级应用，如数据分析、物联网等。优点是功能强大，性能稳定，支持复杂的查询语句。缺点是非商业化，对于大型企业来说可能不够可靠。在使用过程中，可能会遇到性能瓶颈、数据安全问题等。运维建议是定期进行性能调优、备份和恢复演练，以确保数据的可靠性。    6、在您看来，优秀的数据库工具应该具备哪些功能？请您推荐几款上手快、安装简单、方便易用、支持多种数据库的数据库管理工具？  优秀的数据库工具应具备以下功能：   强大的数据管理功能，包括表结构设计、数据导入导出、数据备份与恢复等。    高效的数据查询和分析功能，支持复杂的查询语句和统计分析。    良好的扩展性和性能，能够应对大规模数据和高并发访问。    丰富的安全特性，确保数据的安全性和完整性。    友好的用户界面和便捷的操作方式，降低学习成本和使用难度。    7、作为用户，您认为目前主流的数据库工具，还存在哪些需要改进的地方？  推荐的几款上手快、安装简单、方便易用、支持多种数据库的数据库管理工具 understatement, pgAdmin, Sequel Pro 和 DBeaver。这些工具都具有良好的用户体验和功能，支持多种数据库，可以根据您的需求选择合适的工具。  总结  AI语言组织上更流畅，在讲功能作用画大饼时候比真人组织得有条理 但真实的工具，核心要解决的问题，离我还早。  </description>
+    </item>
+    
+    <item>
+      <title>测试环境治理数据库相关部分</title>
+      <link>/dba/%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E6%B2%BB%E7%90%86/</link>
+      <pubDate>Thu, 19 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E6%B2%BB%E7%90%86/</guid>
+      <description> 下午邀请了去哪儿网的测试同学来公司分享 介绍了去哪儿网的测试环境3.0版本 1.0是固定环境(实体) 2.0是noah平台(测试云平台) 3.0是软路由平台 这里面的代际变更和功能点这里不多做介绍 我想总结和对比的是测试环境治理时的数据库部分  测试环境的数据库的不同阶段需求  1.业务量小的时候，一套测试环境就可以了(&amp;lt;10人研发:test) 2.继续发展,需要把测试环境和开发环境分离出来(10-30人研发:test,dev) 3.业务继续壮大,研发人员开始出现金个分组,需要多套测试环境(30-100人研发团队:test1,test2,dev) 4.业务继续壮大,研发人员开始出现金个分组,需要多套测试环境(100-500人研发团队:test1,test2,test3&amp;hellip;,dev,preprod) 5.业务继续壮大,研发人员分事业部，需要云环境(500+研发团队:测试云环境)  多套测试环境的数据结构同步  这里要分两种情况来区别处理 如果是测试云环境，需要有个基准环境出来，过程中有大量的自动化运维参与 如果是独立部署的测试环境,需要手动同步  测试云环境  以生产库为最终标准 定义一个基准环境，基准环境的数据库结构会实时跟线上同步 生产环境的上线将会自动应用到基准环境 其他环境的数据结构会和基准环境对齐 在一个固定的时间点，自动或手动的强制和基准环境对齐 允许非基准环境下的数据库结构和基准环境不一致 非基准环境造的数据和变更会随着环境一起销毁 非基准环境可以随时销毁，重新从基准环境拉一套出来 基准环境的数据维护是件很重要的事  独立部署的测试环境  在非云状态的固定的独立部署的一套或多套测试环境 基准环境就是生产环境 数据库表结构会和生产环境对齐 每个固定的时间点所有测试环境都会和生产环境对比表结构和其他对象 发送出来异常报告 是否修复需要测试或研发人员自行决定是否对齐 SQL上线时可以选择多环境上线，一段脚本在多个环境同时执行 参见：数据库多环境SQL上线。  造数据问题  测试环境的数据谁来造？ 字典类的基础数据从线上同步（允许定时同步） 客户,订单类数据尽可能的由测试人员随机生成 部分数据允许按一定规则从线上同步回来（需要脱敏） 测试环境的数据也会有完整的防误删和备份策略  </description>
+    </item>
+    
+    <item>
+      <title>透明数据加密测试</title>
+      <link>/dba/%E6%95%B0%E6%8D%AE%E5%8A%A0%E5%AF%86%E6%B5%8B%E8%AF%95/</link>
+      <pubDate>Sun, 08 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%95%B0%E6%8D%AE%E5%8A%A0%E5%AF%86%E6%B5%8B%E8%AF%95/</guid>
+      <description>加密环境  MySQL主从实例&amp;ndash;&amp;gt; 主:127.0.2.30:3401,从:127.0.2.30:3402 MySQL空白实例：127.0.2.27:3405 启用127.0.2.30:3401 主实例的闪电加密  加密工具  **透明数据库透明加密  加密规则  ogg_pump 表：pumpid,tablename 两列做列加密 wc_host_arch 表：cpu,network_in 两列做列加密  加密前后对比  访问数据库得到的数据如下   mysqlw -h 127.0.2.30 -P 3401 dbsec -e &amp;quot;select pumpid,tablename from ogg_pump order by pumpid limit 10&amp;quot; +--------+-------------------+ | pumpid | tablename | +--------+-------------------+ | 1 | SYS_DICTIONARY | | 2 | SYS_USR | | 3 | OWN_HI_TASK_FINAL | | 4 | OWN_HI_PROCESS | | 5 | RC_CST_CAR_INFO | | 6 | RC_CST_BSC_INFO | | 7 | RC_XJNP_APPLY | | 8 | HSJ_BASIC | | 9 | HSJ_ENTINV_ITEM | | 10 | HSJ_FR_POSITION | +--------+-------------------+ mysqlw -h 127.</description>
+    </item>
+    
+    <item>
+      <title>DBA操作规范-2023</title>
+      <link>/dba/dba%E6%93%8D%E4%BD%9C%E8%A7%84%E8%8C%83-2023/</link>
+      <pubDate>Sat, 07 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/dba%E6%93%8D%E4%BD%9C%E8%A7%84%E8%8C%83-2023/</guid>
+      <description>基本规范意识  所有操作应该遵循下述原则: 故障优先:当发生线上故障时,需立即暂停原有的工作安排,部分流程规范要求可以适度简化,优先故障恢复 事前通知:影响业务的操作，必须事先和DBA团队负责人确认影响范围。在钉钉里发《运维变更通知》 业务低峰:有潜在业务影响的操作，需和业务方沟通业务低峰执行 备份先行:所有操作，必须事前做好备份,给快速回滚创造条件。包括但不限于：配置文件变更，数据变更,文件删除  服务器操作  连接数据库服务器统一走jumpserver平台 在生产数据库服务器上安装任何软件需经过DBA负责人确认 拷贝大于50G的文件，注意和网络部门确认 生产环境的数据库服务器删除大于500G的文件，需留意IO影响  新建数据库选型  优先MySQL数据库，原则上Oracle,SQLServer,PG,不再支持新建实例和数据库 新建数据库实例需要明确版本,用一键安装脚本完成安装，同时做好实例的备份计划 新数据库选择端口，应考虑：同业务优先，测试和生产同端口  数据库操作  参见《MySQL开发和操作规范》,《Oracle_SQL标准规范》  流程与工单  流程优先:已经做完自动化流程的日常工作，必须走流程，禁止绕开自动化流程的手动操作 工单补充:一些没有自动化流程的工作或特殊操作,须提交DBA工单，不认可：口头沟通,微信,钉钉 与其他部门的协作与沟通也应遵守相应的流程规范要求，例运维部门要求的服务器和网络变更流程规范  权限操作  root,dba账号作为特殊账号不可以配置在业务中，不可以提供给非DBA人员使用或测试 业务新申请账号原则上统一走DBA流程，禁止手动创建账号和密码 用于运维的用户账号，例如：备份账号backupuser,主从同步账号repluser可以手动创建 任何新建账号注意弱密码问题：要求12个字符串的随机字符串 禁止在生产测试申请开通个人帐号，业务和研发查询数据库只能通过DBA平台的页面 原则上不提供给研发人员明文数据库账号和密码，只提供加密后的密码串，统一配置nacos  敏感数据保护  敏感数据包括但不限于：真实姓名、手机号码、邮箱地址、家庭住址、身份证号、银行卡号、交易记录、账号密码等； 严禁私自查询与工作无关的用户或业务数据，包括但不限于：客户信息,员工信息,人力信息,oa信息,财务信息； 禁止在内部群发邮件、群聊、Github、技术分享时泄露敏感数据，比如密码等； 从生产环境同步数据到测试环境，需要和DBA负责人确认：数据量级，是否脱敏 原则上不支持帮业务和研发人员手动导数据的需求，此类需求走DBA平台的在线查询，离线查询 以及大数据库部门的导出  值班制度  值班参考《dba值班表》的排班，每天的值班时间是9:00~次日8:59 当天值班在非工作时间，要求外出带上可随时联网的笔记本。发生故障时15分钟以内可以联网处理问题 当天值班DBA优先处理流程与工单,非工作时间可以用钉钉的DBA模块完成快速审批  </description>
+    </item>
+    
+    <item>
+      <title>数据库故障演练纪实</title>
+      <link>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%95%85%E9%9A%9C%E6%BC%94%E7%BB%83%E7%BA%AA%E5%AE%9E/</link>
+      <pubDate>Tue, 26 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%95%85%E9%9A%9C%E6%BC%94%E7%BB%83%E7%BA%AA%E5%AE%9E/</guid>
+      <description> 敢不敢随机挑选几台数据库机器，拔掉网线？
+ 演练时间  2023-09-26 19:30  演练目的  模拟线上服务器异常时 1.业务产生的影响 2.数据库高可用的生效时间 3.业务影响程度  前期准备  DBA将负责的三条数据库线的机器列表提供给运维 由运维同学采用抽奖程序，随机每条业务线抽到一台服务器 DBA检查抽中的服务器上的数据库及影响的业务范围 拉上受影响业务线的研发负责人和相关人士 注：各种leader 开会沟通时间点和风险点 确认时间点2023-09-26 19:30 开始  实际演练过程 影响范围  部分业务线在切换时产生短暂报错（计划中，影响可忽略不计） 数据库这边高可用方案可正常发挥作用，流量切换和高可用都是按预期的进行 总体演练结果，非常顺利。  2023-09-27 更新  Redis的演练导致大数据部门的一个故障 表现为flink的任务卡住了。 排查时还跑错了key和任务，用时较长，故障影响较大 Redis_Cluster集群 ，从节点的断网，也会影响业务短暂异常，如果程序处理不好，会造成很大的问题  </description>
+    </item>
+    
+    <item>
+      <title>DTCC参会者视角：2024年数据库大会和DBA之夜</title>
+      <link>/dba/2023dtcc%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%A7%E4%BC%9A%E5%92%8Cdba%E4%B9%8B%E5%A4%9C/</link>
+      <pubDate>Wed, 16 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/2023dtcc%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%A7%E4%BC%9A%E5%92%8Cdba%E4%B9%8B%E5%A4%9C/</guid>
+      <description> 刚参加完DTCC2023的DBA之夜回来 原计划21:30结束的活动 快22点才收尾 还赶上北四环的下大雨 慢悠悠的开回来了 趁热呼劲写点内容  旧识  今天遇到了好多旧时的同事 艺龙的，去哪儿的 甚至还遇上了搜房的同事 不期而遇的快乐 感觉十分亲切 可以凑一起吧啦吧啦聊得起劲 疫情原因DTCC已经好几年没正经举办了 虽然人数不如2019年前 人气也不如以往 对我来说 在满地的年轻面孔里 看到几位旧相识 是件很开心的事了  国产数据库  依旧最火的话题 得益于国家的信创支持 把饭已经喂到我们这一行的嘴边了 聪明机灵的已经吃得撑起来了 先是政府事业单位 有钱的金融单位 国有企业 正在快速把数据库国产化 这一波的行情 预计还会持续3-5年 主要是去O，去DB2 然后用商业数据库的版权费 来支持国产DB的发展 这个不光是可以把核心数据系统 掌握在自己手里 也确实可以省掉很多的费用 就算是国产改造阶段产生了更多的费用 也是落在自己人手里不是吗  开源协议  MySQL和PG 国产数据库99%的源头 还有Mongo和Redis的协议约束 有个观点非常好 在国内的知识产权现状下 只要你掌握了开源数据库的代码 协议是约束不了你的 这个是现实情况 而且会持续很多年不会变 国外的开源协议 在国内当前的环境下 确实比较吃亏 我们也确实在占国外的偏宜 一方面用着国外的开源代码 一方面用这些代码改造了国产数据库 再代替国外的商业数据库软件 讲道理 这个我们在占便宜 但是现实是 一大批国内的数据库内核开发者已经养成了 现在拦也拦不住了 OB,TIDB这些年的代码自主量已经越来越少的开源的影子了  PG和MySQL  两个门派之争 我肯定是支持MySQL啊 主观客观上都得是MySQL 有时候简单也是优势 还有现在这覆盖规模和先发优势 没有大的变化 MySQL在国内的发展前景远胜于PG 但华为高斯类的PG改版活跃 还有平安之类的大企业在用 PG派也是有可能壮大的 然后天天骂PG的姜老师 人气还是旺 不少人就是过来看热闹的 只是今年的火药味不足 只有姜老师一个人在那冷嘲热讽 少了上次PG同学们的针锋相对 场面还是平淡了些 两派相争 目前还是周搞的世纪之争 战况激烈深入人心  然后  今天竟然有人说我新换的表带：有点娘炮 这个词让我耿耿于怀 得再换一个表带了  </description>
+    </item>
+    
+    <item>
+      <title>关于数据安全_DBA篇</title>
+      <link>/dba/%E5%85%B3%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8_dba%E7%AF%87/</link>
+      <pubDate>Thu, 15 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E5%85%B3%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8_dba%E7%AF%87/</guid>
+      <description>前言 明天有个会，大家一起商量一下怎么做好数据安全。提前整理一下思路：
+什么是数据安全  数据安全是指保护数据不被非法获取、篡改、破坏或泄露的一种技术和管理措施。 在我这里，数据安全要更具体一点 1.存储安全：数据只要写到数据库里了，就不会丢  1.1 存储上：多节点存储，防止物理损坏 MySQL高可用组件之ProxySQL 1.2 数据按固定的周期进行全备和日志备份 数据库备份管理制度 1.3 自动化脚本检查备份成功和验证 1.4 保证数据被意外删除后，还能找回来 自动化流程:数据找回(一:MySQL数据闪回) 自动化流程:数据找回(二:Oracle部分) 1.5 保证数据和数据库备份是双机房异地存储 数据库备份管理制度 1.6 额外做孤岛备份，以防止内网机房的病毒大面积感染 孤岛备份机和勒索病毒   2.账号策略：只有指定权限的用户可以访问可控范围内的数据（到库级别）  要求研发分业务存储库，不要混用数据库 账号自动化管理，权限限制在可控范围内 账号密码不分发给研发，由运维人员统一配置（这点很重要，为第三步的访问控制提供前题）   3.访问控制：将业务人员和运维人员隔离  业务人员指研发，产品，测试，大数据，风控&amp;hellip; 运维人员：DBA 运维 只有运维人员可以接触到线上数据库，研发和其他人员均不可连接到数据库机器和实例 将研发等业务人员和数据库的接触限定在两个方式内：1.通过程序代码操作数据库 2.通过DBA的Web平台操作数据库 线上查询和线上变更。走DBA提供的平台执行 限制DBA等运维人员，了解业务逻辑，杜绝DBA直接查询和修改线上业务数据 我为什么要反对DBA参与业务(出报表/改数据)   4.安全审计：线上的数据异常，要有日志可查  数据变更日志（binlog，归档日志等） MySQL的7种日志(四):BinLog SQL上线日志 （记录变更新镜像和更新后结果，方便快速回滚） 数据库多环境SQL上线 异常日志和慢日志收集到es 服务器操作日志，数据库账号变更日志 个人查询日志，部分线上查询审计日志   5.数据加密：数据库里的敏感信息应该加密存储  哪些属于敏感信息：手机号.卡号.身份证号.住址&amp;hellip; 首先需要把敏感信息标识出来。  为此我们开发了一个工具，在用户建表或者修改表结构时，会识别出来 外加一个兜底脚本，定时扫描SQL查询结果，如果发现有敏感信息未标识的就会提示出来   敏感信息标识后，不管底层是否做了加密存储，DBA和大数据平台都可以对这些字段做针对性的掩码，防止信息泄露 数据的加密存储，这个单做一节，详细说说    数据加密  如上一节最后说的，我们已经将敏感信息识别出来了，现在怎么做数据的加密存储。根据实际情况展开来说  新项目的数据加密  如果有开发资源：架构组开发一套通用的加密服务，新项目调用 如果没有开发资源： 研发用通用的加密算法对敏感信息进行可逆的加密（例AES)后入库  老项目的数据加密改造 方法一：数据库里存的是加密数据，研发存放和读取都是明文数据  应付审计之法。 优点是：库里的数据确实是加密的 缺点是：研发和业务人员查询时是明文的 这个需要借助第三方中间件来实现：（例如SphereEx） 我头一次听SphereEx讲他们的中件层加密时，觉得这个思路非常棒 这可能是比较节约开发资源的，又可以应付审计的一种加密方式。 这是它的优点也导致了一个缺点：研发查出来数据库里的信息还是明文，数据防泄露效果差 只防住了DBA和运维人员的泄密，而更关键的业务泄露并没防住 加了中间层，稳定性待考证 加密收益： 2颗星 ，加密工作量：1颗星  方法二：数据库里存的是明文数据，研发读取到前台展示的时候是密文的  防前台泄密之法 在SQL层将所有的查询接口都改造一下，需要花费不少的时间（2-3周） 优点是，前台用户看到的数据是加密或掩码的。解密记录是可审计的，防止信息泄漏 缺点是，数据库明文存储了，治标了但没治本 加密收益： 4颗星 ，加密工作量：3颗星  方法三：数据库里存的是密文数据，研发读取到前台展示的时候是密文的  这个就是把旧项目彻底改造了，存数据和读数据的地方都要改一下 这个改造的工作量非常大，但是效果是最彻底的 最完整的方案是分成三个角色 DBA提供存储，架构组提供加解密服务，研发存储和读取的都是密文 其中架构组是核心，提供整套加解密服务 研发参与成本最大，需要在写数据和读数据时修改代码 加密收益： 5颗星 ，加密工作量：4颗星  </description>
+    </item>
+    
+    <item>
+      <title>postgreSQL的安装和初始化(centos7)</title>
+      <link>/dba/postgresql%E7%9A%84%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3centos7/</link>
+      <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/postgresql%E7%9A%84%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3centos7/</guid>
+      <description>安装 # Install the repository RPM:sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm# Install PostgreSQL:sudo yum install -y postgresql15-server##如果需要安装postgresql15-develwget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/llvm5.0-devel-5.0.1-7.el7.x86_64.rpmwget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/llvm5.0-5.0.1-7.el7.x86_64.rpmwget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/llvm5.0-libs-5.0.1-7.el7.x86_64.rpm yum install -y centos-release-scl-rh llvm5*yum install -y postgresql15-devel# Optionally initialize the database and enable automatic start:sudo /usr/pgsql-15/bin/postgresql-15-setup initdbsudo systemctl enable postgresql-15sudo systemctl start postgresql-15安装extenyum install pgvector_15配置 修改监听 修改监听地址为任意地址  vi /var/lib/pgsql/15/data/postgresql.conf 在第60行处增加   54 #------------------------------------------------------------------------------55 # CONNECTIONS AND AUTHENTICATION56 #------------------------------------------------------------------------------57 58 # - Connection Settings -59 60 listen_addresses = &#39;*&#39;61 #listen_addresses = &#39;localhost&#39; # what IP address(es) to listen on;62 # comma-separated list of addresses;63 # defaults to &#39;localhost&#39;; use &#39;*&#39; for all允许所有IP访问  vi /var/lib/pgsql/15/data/pg_hba.</description>
+    </item>
+    
+    <item>
+      <title>不要再让时间溜走了，让AI来管理你的时间！</title>
+      <link>/dba/%E7%94%A8ai%E5%B8%AE%E4%BD%A0%E5%9B%9E%E7%AD%94%E6%97%B6%E9%97%B4%E9%83%BD%E5%8E%BB%E5%93%AA%E5%84%BF%E4%BA%86%E7%9A%84%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E7%94%A8ai%E5%B8%AE%E4%BD%A0%E5%9B%9E%E7%AD%94%E6%97%B6%E9%97%B4%E9%83%BD%E5%8E%BB%E5%93%AA%E5%84%BF%E4%BA%86%E7%9A%84%E9%97%AE%E9%A2%98/</guid>
+      <description>问题  如果你不知道工作时间都去哪了 或写工作周报/OKR时不知从何下手 这时候可以每天花5分钟写个工作记录 用现在最流行的AI技术帮你分类一下 或许可以帮助到你  效果  你可以看到最近一段时间的工作时间分配 也可以看到汇总的工作安排 还可以结合考勤表/OKR表进行对比  需要做的工作  每天花5分钟，写几行工作记录 每个工作记录写一行，可以加个时间 0.5h(0.5小时) 起步 可以自己写工作分类项和okr类别，也可以让AI帮你归类（我用的是chatGPT做分类）  AI分类原理  这里用的是chatGPT 将最近的50条已经分好类的工作项，当作Prompt塞给chatGPT 然后要求AI返回这个工作项的分类 prompt如下：  work_prompt=f&amp;quot;&amp;quot;&amp;quot;&amp;quot;工作内容&amp;quot;和[工作分类]的对应关系如下:{contentstr}请在以下分类中:{typestr}为 &amp;quot; %s &amp;quot; 选择一个分类&amp;quot;&amp;quot;&amp;quot;得到的报表  我们说每天的，每个人的工作内容，是无规律的：信息 当我们人为的把它按一定的格式录入下来以后，这些信息收集起来就成了：数据 有了数据，可以用各种维度的展开，对比，这时候可以做：报表 可以有很多种维度，这个月的和上个月的表 可以用A的工作和B的比 最重要的是，它会让你的工作内容变得可回溯  为什么起这个标题？  这个标题也是ai帮我生成的  </description>
+    </item>
+    
+    <item>
+      <title>自动化流程:数据找回(二:Oracle部分)</title>
+      <link>/dba/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B_%E6%95%B0%E6%8D%AE%E6%89%BE%E5%9B%9E%E9%97%AA%E5%9B%9E_2/</link>
+      <pubDate>Fri, 03 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B_%E6%95%B0%E6%8D%AE%E6%89%BE%E5%9B%9E%E9%97%AA%E5%9B%9E_2/</guid>
+      <description>续上一篇： 自动化流程:数据找回(一:MySQL数据闪回)
+上一篇说的是
+ 1.数据找回的作用 2.MySQL数据找回自动化流程功能演示 3.自动化流程的代码配置  这篇主要介绍Oracle的数据找回自动化流程.
+一些改进  改进1:Oracle数据找回功能从利用OGG改到用归档日志  上一篇的结尾,说Oracle的数据找回.要用到OGG+Kafka的方案. ​最终经过对比验证,换了更好的Oracle原生归档日志方案   改进2:增加了操作类型的筛选项,这样可以针对指定的操作(例如:delete)进行redo和undo  Oracle数据回退功能的方案对比 当尝试做Oracle数据回退功能时有以下几个方案
+ Oracle数据闪回功能 ,优:自带的功能,速度快,简单 缺:需要开启闪回段,闪回的时间太短(平均约30分钟内) 全备和日志还原,优:30天内数据可回退 ,缺:慢,需要资源大,复杂不利于自动化脚本 OGG,因为我们的环境大部分重点表都做了OGG到kafka的订阅, 所以可以直接扫描kafka的信息来获取指定表的变更, 优:资源占用少,快,开发难度低 缺: 如果要回退的这张表没有做OGG订阅怎么办? 归档日志解析, 优:7天内任意时间点可回退 ,缺: 每次回退的时间段不能太长  我们完成了方案3和方案4的代码开发工作,最终选用了方案4: 归档日志解析
+ 脚本化实现难度小 7天内任意时间点,能满足90%的业务需求 回滚速度快,举个例子:  研发提交流程,要求看A数据库里Order表在周三上午10:00-10:30的所有修改动作,提交申请后,大约10秒内就可以完成这个流程.   覆盖的范围大,线上/测试/开发 环境的所有库表都支持 占用资源少,对线上影响小  Oracle数据回退功能演示  在测试环境还原一次全库的历史快照只需要 0.4秒,非常的快速!!!  小结 当数据库有了这个功能以后:
+ 研发可以在改错数据的时候,快速提交流程回退数据 当有奇怪的线上数据问题时,可以很方便的生成redoSQL,重放过去某个时间段的数据修改 数据库有大量写入时,快速的定位是哪张表,什么样的SQL引起的  </description>
+    </item>
+    
+    <item>
+      <title>自动化流程:数据找回(一:MySQL数据闪回)</title>
+      <link>/dba/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B_%E6%95%B0%E6%8D%AE%E6%89%BE%E5%9B%9E%E9%97%AA%E5%9B%9E/</link>
+      <pubDate>Mon, 30 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B_%E6%95%B0%E6%8D%AE%E6%89%BE%E5%9B%9E%E9%97%AA%E5%9B%9E/</guid>
+      <description>功能介绍 数据找回,又名数据闪回,误删除回滚,误操作回滚,数据重做&amp;hellip;
+解决的问题  数据库里的数据被误删除/更新,需要定位修改的SQL语句,影响范围,回滚误操作,此时怎么办?
+  方法1: DBA用前一天的数据库备份还原出来,然后找到更新前的SQL(这个通常需要花费几个小时的时间) 方法2: 如果发现误操作的时间比较及时,一般7天以内,可以通过解析数据库日志(MySQL的binlog,Oracle的archivelog)比较快速的找到误操作的SQL及时回滚  两个方法,都需要DBA参与
+   方法 依赖文件 可恢复范围 操作用时     方法一 全备 1个月内 1-5小时   方法二 日志 7天 0.5小时    其中方法2,需要DBA找到并登录目标服务器,解析数据库日志,其中有研发和DBA的沟通时间,手动处理时间,我们可以通过自动化流程,让研发人员自助填写需求,在dba审批通过后系统自动执行.
+自动化流程的作用  1.提高工作效率,不再需要DBA手动去查日志,解析日志&amp;hellip; 将原先几十分钟的工作,变成自动化 2.减少误操作,减少手动处理问题时的手滑,操作命令写错了的运维风险 3.减少沟通成本,自助化服务无需(dba和研发)反复沟通细节 4.一般发现有数据更新错了,需要很快的得到响应,自助化流程可以减少非工作时间联系DBA的响应时长 5.便于统计哪些项目成员或业务线出现这种误更新的失误.  功能预览 设计了以下的表单填写页面,用于收集信息 设计了两步审批  负责人审批: 如果该库有具体的DB负责人,则DB负责人审批.否则由提交申请的用户上级审批 DBA审批:DBA审批时会看到将要自动化执行的命令,并且可以在执行前修改部分参数.(通常默认的命令是最优的)  后端执行  执行是异步的.执行过程中会展示运行日志 执行完成后,会展示以下三块内容 1.后台运行日志 (用于DBA排查自动化任务时是否有异常) 2.SQL内容概览 (展示符合条件的表共有多少次ins/upd/del操作. 用于验证是否符合预期,该概览目前只支持MySQL,Oracle的还没实现) 3.解析出来的SQL文件 (最重要的部分)  代码实现 step1:表单代码 &amp;lt;step id=&amp;quot;1&amp;quot; name=&amp;quot;数据找回&amp;quot; displaytype=&amp;quot;input&amp;quot;&amp;gt;&amp;lt;form&amp;gt; &amp;lt;input name=&amp;quot;dbid&amp;quot; title=&amp;quot;选择数据库&amp;quot; inputtype=&amp;quot;select_group&amp;quot; desc=&amp;quot;&amp;quot; defaultvalue=&amp;quot;&amp;quot; &amp;gt;&amp;lt;style&amp;gt;&amp;lt;div-class&amp;gt;span24&amp;lt;/div-class&amp;gt;&amp;lt;input-class&amp;gt;input-normal,input-small,input-normal,input-normal&amp;lt;/input-class&amp;gt; &amp;lt;connstr&amp;gt;link:db_monitor&amp;lt;/connstr&amp;gt;&amp;lt;sqlstr&amp;gt;select b.</description>
+    </item>
+    
+    <item>
+      <title>HDD、SSD、SAS、SATA、PCIE、NVME</title>
+      <link>/dba/hddssdsassatapcienvme/</link>
+      <pubDate>Tue, 10 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/hddssdsassatapcienvme/</guid>
+      <description>我的习惯   先说当我接到采购需求的时候,我通常会跟运维同事说我要选购下面的磁盘
+  pcie ssd 偶尔会强调要更高性能接口的ssd
+  ssd盘 大部分时候数据库都需要ssd
+  sas盘 这时候的意思是采购sas接口的硬盘,一般用来存放日志类的数据
+  sata盘 这是用来存放数据冷备份时候才用的盘
+  这是我的习惯事实上提法非常不标准,但是好像负责采购的和运维的同事也都能听得懂.事实上服务器硬盘
+  按存储介质分类:HDD盘,SSD盘
+  按接口标准分类:IDE,SATA,SAS,PCIE
+   下面的内容从多个网上的文章里整理而来,加了些个人看法
+ 硬盘接口 IDE接口 (已淘汰)  IDE接口，又叫ATA接口、PATA接口、并口。 最早是在1986年由康柏、西部数据等几家公司共同开发。 数据线长得是一条像布条的东西，传输数据慢， 由三部分组成：电源接口、跳线接口（用于区别主盘和从盘）、数据接口。  SCSI接口 (淘汰)  早此年IDE接口应用于PC，对应的服务器的接口是SCSI接口。 SCSI1:最早于1986年提出的,最大传输速率为5MB/s，支持7个设备。 SCSI2:Fast SCSI,1994年,10MB/s（10MHz,最大7个设备)。 SCSI2:Wide SCSI,1996年,20MB/s (10MHz,最大15个设备)。 SCSI3:1995年将总线频率大大地提高，并降低信号的干扰。  SATA接口 (还有不少)  SATA接口,又叫串口硬盘 2003年出现的，可以算是最为主流的硬盘接口形态。由于存在时间很长，SATA接口兼容性极强，几乎所有种类的主板都有SATA接口。 市面上固态硬盘SATA接口在性能标准上，一般采用SATA Ⅲ标准，理论最高速度为6Gbps。 大部分基于SATA接口的固态硬盘的读取性能正常会在500MB/S以上。 SATA数据接口（7针）电源接口（15针） 在SATA接口的基础上，后面又衍生出了两款产品。  SATA接口衍生:mSATA接口 (已淘汰)  mSATA接口是早期为了适应于超极本这类超薄设备而基于SATA开发的。可以看作SATA接口的mini版。 物理形态上有两种尺寸：全高（30mm50mm）和半高（30mm25mm）。  SATA接口衍生:SATA-e接口 (已淘汰)  SATA + PCI-Express的混合体，理论带宽达10Gbps，比SATA3.</description>
+    </item>
+    
+    <item>
+      <title>mongodb性能监控指标详细解释</title>
+      <link>/dba/mongodb%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E6%8C%87%E6%A0%87%E8%AF%A6%E7%BB%86%E8%A7%A3%E9%87%8A/</link>
+      <pubDate>Thu, 08 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/mongodb%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E6%8C%87%E6%A0%87%E8%AF%A6%E7%BB%86%E8%A7%A3%E9%87%8A/</guid>
+      <description>常用监控项及说明 当我们监控mongodb实例时，大约有300多项的监控指标，通常我们可以关注以下的20项指标就够了
+   监控项 说明     mongodb_memory 内存占用（MiB）   mongodb_mongod_op_latencies_latency_total 累计操作耗时（毫秒）   mongodb_mongod_op_latencies_ops_total 累计操作次数   mongodb_op_counters_total 累计接收的操作请求次数（即使操作不成功也会增加）   mongodb_connections 连接数   mongodb_mongod_metrics_cursor_open 打开游标数量   mongodb_mongod_metrics_document_total 累计文档操作次数   mongodb_mongod_global_lock_current_queue 当前排队等待获取锁的操作个数   mongodb_mongod_metrics_query_executor_total 查询和查询计划评估过程扫描的（索引或文档）条目总数   mongodb_asserts_total 累计断言错误次数   mongodb_mongod_metrics_get_last_error_wtime_num_total 累计getLastError操作数量   mongodb_mongod_wiredtiger_cache_bytes 当前缓存数据大小（byte）   mongodb_mongod_wiredtiger_cache_bytes_total 写入或读取的缓存数据大小（byte）   mongodb_mongod_wiredtiger_cache_pages 当前缓存页数量   mongodb_mongod_wiredtiger_cache_evicted_total 累计缓存移除页数量   mongodb_extra_info_page_faults_total 累计缺页中断次数   mongodb_ss_network_bytesOut 累计发送网络流量（byte）   mongodb_ss_network_bytesIn 累计接收网络流量（byte）   mongodb_mongod_replset_member_replication_lag 副本集成员主从延迟（秒）    mongodb_memory  mongodb_memory 指标表示 MongoDB 数据库实例使用的内存量。这个指标可以帮助监控系统管理员查看 MongoDB 的内存使用情况，并对系统的内存进行优化。 resident 和virtual resident 指的是进程在物理内存中占用的空间，即进程实际使用的物理内存。 virtual 指的是进程在虚拟内存中占用的空间，即进程所占用的总内存，包括物理内存和交换空间。 通常来说，如果 resident 值很大，说明进程实际使用的物理内存很多，这可能表示系统的内存不足，或者进程的内存使用不合理。如果 virtual 值很大，说明进程占用的总内存很多，这可能表示进程在使用较多的交换空间，或者系统的总内存不足。 总之，resident 和 virtual 指标可以帮助你了解进程对内存的使用情况，从而为进行性能优化提供重要的参考信息。 获取代码：  例：mongodb_memory{job=&amp;quot;mongodb&amp;quot;, service=&amp;quot;mongodb&amp;quot;, team=&amp;quot;dba&amp;quot;, type=&amp;quot;resident&amp;quot;}34957mongodb_memory{job=&amp;quot;mongodb&amp;quot;, service=&amp;quot;mongodb&amp;quot;, team=&amp;quot;dba&amp;quot;, type=&amp;quot;virtual&amp;quot;}49537mongodb_mongod_op_latencies_latency_total   mongodb_mongod_op_latencies_latency_total 指标中的 read、write、command、transactions 分别表示 MongoDB 数据库实例中的不同操作类型的平均响应时间。</description>
+    </item>
+    
+    <item>
+      <title>Redis的缓存一致性/缓存溢出/缓存雪崩/缓存穿透/缓存击穿</title>
+      <link>/dba/redis%E7%BC%93%E5%AD%98-%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7%E6%BA%A2%E5%87%BA%E9%9B%AA%E5%B4%A9%E7%A9%BF%E9%80%8F%E5%87%BB%E7%A9%BF/</link>
+      <pubDate>Fri, 11 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/redis%E7%BC%93%E5%AD%98-%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7%E6%BA%A2%E5%87%BA%E9%9B%AA%E5%B4%A9%E7%A9%BF%E9%80%8F%E5%87%BB%E7%A9%BF/</guid>
+      <description>尝试用一个例子来描述高并发系统下的缓存设计，一边举例子一边描述和解决以下问题。
+ 为什么要用缓存? 缓存一致性问题? 缓存溢出问题? 缓存雪崩问题? 缓存穿透问题? 缓存击穿问题?  问题：  假设我们有5000万条商品信息存储在数据库中，现在这些信息要展示给用户看，我们需要做什么？
+ 答案1:直连数据库  代码中直接访问数据库，读取数据，展示给用户看，这个方法可以吗？ 答案是：访问量少的时候可以，系统访问量大了就崩了。 事实上大多数的内部系统和ToB业务，访问量不大，直接用数据库就解决问题了 如果业务访问量上来了，这时候频繁访问数据库，就会造成很明显的瓶颈。 这也是大多数“古典“网站和系统，用户访问一多就崩溃的原因 在设计系统的时候没有考虑：高访问量，高并发 一般认为预计访问量有超过2000次/秒，直连数据库的方案就不太建议了 为了避免数据库被打崩，我们就需要考虑在数据库和代码层之间加上一个缓存 有很多种缓存，下面以用得最多的Redis来举例子  答案2:加缓存（例如Redis)  现在我们用了Redis在数据库和业务之间做缓冲 需要访问一个商品的时候  1.业务传过来一个商品id 2.在redis中查找是否有这个id的信息，有就直接返回 3.如果redis中没有找到，去数据库里读取，读取到了信息存入redis，并返回给用户   因为多了一层redis，程序性能得到了极大的优化 访问变快了（纯内存的redis比MySQL要快很多） 不会因为大量的访问被堵死了（单节点的Redis可负担的简单QPS大约是10万，MySQL大约是0.4万） 现在系统的瓶颈解决了，那么接着往下想 如果此时数据库的信息被更新了，Redis中的缓存信息怎么办？ 可能有同学认为，数据库更新了，也把Redis信息同步更新/或删除了不就行了 事实上你细想一下，就没那么简单了 这就是引出了一个问题：缓存一致性问题  缓存一致性问题  当修改一条商品信息，MySQL和Redis缓存都需要修改，两者之间会有先后顺序，可能导致数据不一致。
+  当我们需要修改商品时，需要考虑3个问题：  1.先更新缓存还是先更新数据库？ 2.更新缓存的时候,是更新(update)缓存，还是删除(delete)缓存？ 3.怎么更新缓存保证一致性？    1、先更新缓存还是先更新数据库？  如果先更新缓存，写数据库失败，则缓存为最新数据，数据库为旧数据，缓存为脏数据。 之后其他查询马上进来就会拿到这个数据，但是这个数据在数据库中是不存在的。 数据库中不存在的数据缓存并返回给客户端是没有意义的。 所以不能先更新缓存。只能是：DB First  2、更新缓存的时候,是更新(update)缓存，还是删除(delete)缓存？  这里推荐是修改商品的时候，直接删除(delete)缓存 原因是update缓存通常比delete缓存需要更多的资源 为了得到一条商品的完整信息，可能会join几张表得到一个json，组装起来set到redis中的代价，会比直接del一个rediskey要大得多 而在一个高并发系统中，我们要尽可能的保证整个修改是尽可能快的完成(代价是一次缓存失效)  3.</description>
+    </item>
+    
+    <item>
+      <title>万物不如MySQL_万物皆可Join</title>
+      <link>/dba/%E4%B8%87%E7%89%A9%E7%9A%86%E5%8F%AFsql/</link>
+      <pubDate>Thu, 25 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E4%B8%87%E7%89%A9%E7%9A%86%E5%8F%AFsql/</guid>
+      <description>当前数据库架构越来越复杂
+  数据库MongoDB,Redis,Es,Kafka,Postgresql&amp;hellip;
+  加上传统的关系型数据库（MySQL,Oracle,SQLServer)
+  你是否因为各种数据库的查询语言不同而头晕眼花，到处撞墙！
+   你是否各种分库分表后，不同的数据库之前没办法join联合查询而一蹶不振   你是否业务同学发给你一个excel，让你查这些订单的明细而不知所措，来回倒腾。   你是否在焦急的等待着BI大数据同事帮你把不同数据源的表都抽到一起才能join出想要的数据？   怎么办？怎么办？ 没办法!!! 拆开的数据库没办法放在一台服务器上 各种数据库也没办法统一成一种 大数据部门的同步任务正在走流程 走完的流程，他们也不能保证数据同步任务不中断 Excel不是数据库不能用SQL 怎么办？怎么办？ 这种混乱就没人能治吗？ 不要让这些问题挡住你前进的脚本 dboop平台的统一查询平台横空出世 不再区分数据库类型 所有的数据库种类都支持MySQL语法 是的，你没有听错 不管什么类型的数据库 统统只需要记住MySQL语法了 Oracle,SQLServer,MongoDB,kafka DBA在运维的每一种数据库 都可以当成MySQL一样使用了  kafka当成MySQL Mongo当成MySQL  而且这些表都是可以互相join ,union 的   现在我们来休验一下这神奇的黑科技 第一步 我们有个这样的excel 第二步 把excel上传到平台上 第三步 得到一个可以查询的excel文件 第四步 用excel join MySQL 这就是我们说的： 几个问题 问题1:查询会不会影响线上业务  绑定了dba的高可用架构系统，可以自动路由到专门给bi取数服务的专用只读实例上。不会对线上应用产生影响 理论上bi抽数进程会和它产生资源抢占，但是因为bi抽数多数是凌晨进行，两个并不冲突
+ 问题2:查询的性能怎样  快，非常快，普通的单表查询0.</description>
+    </item>
+    
+    <item>
+      <title>图数据库nebula源码编译安装</title>
+      <link>/dba/nebula%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/</link>
+      <pubDate>Wed, 29 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/nebula%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/</guid>
+      <description>环境准备 当前机器环境centos7
+硬件要求    类型 要求     CPU 架构	x86_64   内存 4 GB   硬盘 10 GB，SSD    环境依赖（针对centos7)    软件名称 版本 备注     glibc 2.17 及以上 执行命令ldd &amp;ndash;version检查版本。   g++ 8.5.0 及以上 执行命令g++ -v检查版本。   cmake 3.14.0 及以上 执行命令cmake &amp;ndash;version检查版本。    yum安装准备 cd /etc/yum.repos.d/mv CentOS-Base.repo CentOS-Base.repo.backwget -O CentOS-Base.repo http://mirrors.</description>
+    </item>
+    
+    <item>
+      <title>图数据库nebula性能监控</title>
+      <link>/dba/nebula%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7/</link>
+      <pubDate>Thu, 23 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/nebula%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7/</guid>
+      <description>目的 nebulaGraph官方自带的Nebula Dashboard 监控工具里的监控指标和筛选粒度已经足够丰富。但基于以下原因，还是在此基础上自己做了层监控
+ 缺少关键指标的定义，对除DBA以外的用户不友好。我们希望把性能数据让研发同学也能看到 缺少一个对所有服务器的横向对比和集中展示Dashboard 与我们现有的DBA监控不在一个平台，需要多平台切换使用 没有性能指标评分，同样的指标，没有给出是否合格的标准和提示 官方已经提供了可以直接读取性能数据的接口 http://%s/stats，在些基础上二次开发监控的难度会很低，预估开发工作量1pd ,实际开发工作量1.5pd  1.指标筛选 官方提供的性能接口里有几百项指标，我们从graph,storage,rockdb 三个层面，筛选了60几个重点的，需要关注的指标，筛选的依据是
+ 是否能从指标定位到资源或性能问题（响应时间等） 是否在排查问题出现时，有助于定位异常（命令次数，qps等) 是否有类似的指标已经存在。  最终，挑选了以下指标 2.编写收集代码（Python） 这部分因为有官方接口，所以直接请求就可以了
+for nodeid,nodehost in grpahlist: dict_result=self.get_nebula_stats(nodehost) #入库 dict_result def get_nebula_stats(self,nodehost) dict_result={} urlstr=&amp;#39;http://%s/stats?format=json&amp;#39;%(nodehost,) mlist=self.get_urldata(urlstr) for dictc in mlist: for k,v in dictc.items(): if k in dict_graph: keyname=dict_graph[k][0] dict_result[keyname]=v return dict_result 3.性能评价 这是非常重要的一步，沿用我在2005年做的数据库性能模型的方法（参考：https://github.com/51ak/DatabaseRating/）
+ 对我们的每一项指标，我们需要对其取值范围进行判断，给其打分：优，良，中，劣。 标记为:weight 对每一项指标，对其权重做标记（0-5）,标记为：height 由weight和height计算出这个实例的健康程度 但是我们的nebula服务只有一个集群，不需要太细化，所以我们只做了weight标记  做weight标记的逻辑是定义如下的一个区间列表
+dict_graph={ &amp;#34;num_active_queries.sum.60&amp;#34;:(&amp;#34;num_active_queries&amp;#34;,(-4,5,10,50,1000000)), &amp;#34;num_active_sessions.sum.60&amp;#34;:(&amp;#34;num_active_sessions&amp;#34;,(-4,5,10,50,1000000)), &amp;#34;num_opened_sessions.rate.60&amp;#34;:(&amp;#34;num_opened_sessions&amp;#34;,(-4,100,500,10000,10000000)), &amp;#34;num_queries.rate.60&amp;#34;:(&amp;#34;num_queries_rate&amp;#34;,(-4,100,500,10000,10000000)), &amp;#34;num_queries.sum.60&amp;#34;:(&amp;#34;num_queries_sum&amp;#34;,(-4,5000,50000,900000,100000000)), &amp;#34;num_sentences.rate.60&amp;#34;:(&amp;#34;num_sentences_rate&amp;#34;,(-4,100,500,10000,10000000)), &amp;#34;num_sentences.sum.60&amp;#34;:(&amp;#34;num_sentences_sum&amp;#34;,(-4,5000,50000,900000,100000000)), &amp;#34;query_latency_us.</description>
+    </item>
+    
+    <item>
+      <title>图数据库nebula实时慢日志收集和展示</title>
+      <link>/dba/nebula%E6%85%A2%E6%9F%A5%E8%AF%A2%E7%9B%91%E6%8E%A7/</link>
+      <pubDate>Fri, 17 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/nebula%E6%85%A2%E6%9F%A5%E8%AF%A2%E7%9B%91%E6%8E%A7/</guid>
+      <description>目的 因为我们的图数据库从neo4j社区版转到nebula graph方向。最近在项目压测的时候，一开始很平稳，运行一段时间后，NQL会越来越慢，发现性能巨差。nebula经常卡死，表现为：
+ nebula-storaged.service和nebula-graphd.service服务经常挂掉。 业务侧反馈执行什么NQL都很慢 nebula show query里发现有大量（300-500个）running的进程。平时很快的NQL也卡在那  系统资源
+ 内存紧张 ，大量的虚拟内存被占用 io,cpu也较高  在做了一些参数调优后，发现状态有所缓解，但是一段时间后，还是会慢慢卡死，从现象上推测是有一种或几种慢NQL多次执行后，把系统资源消耗完了，导致大面积的堵塞。所以面临的需求还是要有个慢查询排查工具。
+参考上一次做oracle慢日志收集展示的方法， https://www.dboop.com/oracle/oracle%E6%80%8E%E6%A0%B7%E5%AE%9E%E6%97%B6%E6%94%B6%E9%9B%86%E5%B1%95%E7%A4%BA%E6%85%A2%E6%9F%A5%E8%AF%A2/
+变化的是：
+ 因为nebula的集群就一个，不需要做oracle慢日志的大表套小表，数担据量不大就建了一张monitor_nebula_slow表存放数据. nebula抓到的慢查询里的NQL是没有去参数化的，需要自己做去参数化，把相同类型的NQL，标识为同一个md5id   1.建一张表，每隔1分钟（时间可调，但我们的场景1分钟足够了） CREATE TABLE `monitor_nebula_slow` (`logid` int unsigned NOT NULL AUTO_INCREMENT,`SessionID` varchar(50) NOT NULL DEFAULT &#39;&#39;,`ExecutionPlanID` varchar(50) NOT NULL DEFAULT &#39;&#39;,`User` varchar(50) NOT NULL DEFAULT &#39;&#39;,`Host` varchar(50) NOT NULL DEFAULT &#39;&#39;,`StartTime` datetime DEFAULT NULL,`DurationInUSec` int unsigned NOT NULL DEFAULT &#39;0&#39;,`Status` varchar(50) NOT NULL DEFAULT &#39;&#39;,`Query` varchar(5000) NOT NULL DEFAULT &#39;&#39;,`_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,`md5id` varchar(64) NOT NULL DEFAULT &#39;&#39;,PRIMARY KEY (`logid`),KEY `ix_monitor_nebula_slow` (`_timestamp`)) ENGINE=InnoDB AUTO_INCREMENT=13231 DEFAULT CHARSET=utf8mb32.</description>
+    </item>
+    
+    <item>
+      <title>redis高可用模式双比</title>
+      <link>/dba/redis%E7%9A%84%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB/</link>
+      <pubDate>Fri, 27 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/redis%E7%9A%84%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB/</guid>
+      <description>redis高可用模式 常见的高可用模式对比：
+主从复制时代 主从复制，是指将一台Redis服务器的数据，复制到其他的Redis服务器。前者称为主节点(Master)，后者称为从节点(Slave)；数据的复制是单向的，只能由主节点到从节点。
+主从复制的优点 数据冗余：主从复制实现了数据的热备份，是持久化之外的一种数据冗余方式。 故障恢复：当主节点出现问题时，可以由从节点提供服务，实现快速的故障恢复；实际上是一种服务的冗余。 负载均衡：在主从复制的基础上，配合读写分离，可以由主节点提供写服务，由从节点提供读服务（即写Redis数据时应用连接主节点，读Redis数据时应用连接从节点），分担服务器负载；尤其是在写少读多的场景下，通过多个从节点分担读负载，可以大大提高Redis服务器的并发量。 高可用基石：除了上述作用以外，主从复制还是哨兵和集群能够实施的基础，因此说主从复制是Redis高可用的基础。
+主从复制的工作原理  1）若启动一个Slave机器进程，则它会向Master机器发送一个“sync command”命令，请求同步连接。 2）无论是第一次连接还是重新连接，Master机器都会启动一个后台进程，将数据快照保存到数据文件中（执行rdb操作），同时Master还会记录修改数据的所有命令并缓存在数据文件中。 3）后台进程完成缓存操作之后，Maste机器就会向Slave机器发送数据文件，Slave端机器将数据文件保存到硬盘上，然后将其加载到内存中，接着Master机器就会将修改数据的所有操作一并发送给Slave端机器。- Slave出现故障导致宕机，则恢复正常后会自动重新连接。 4）Master机器收到Slave端机器的连接后，将其完整的数据文件发送给Slave端机器，如果Mater同时收到多个Slave发来的同步请求，则Master会在后台启动一个进程以保存数据文件，然后将其发送给所有的Slave端机器，确保所有的Slave端机器都正常。  Sentinel哨兵时代 哨兵(sentinel)：是一个分布式系统，用于对主从结构中的每台服务器进行监控，当出现故障时通过投票机制选择新的 Master 并将所有 Slave 连接到新的 Master。所以整个运行哨兵的集群的数量不得少于3个节点。
+从Redis2.8版本起，提供了一个稳定版本的Sentinel哨兵来解决高可用的问题，它的思路是启动奇数个Sentinel的服务来监控Redis服务器来保证服务的可用性。 为了保证监控服务器的可用性，我们会对Sentinel做集群部署，Sentinel既监控所有的Redis服务，Sentinel之间也相互监控。 Sentinel本身没有主从之分，地位是平等的，只有Redis服务节点有主从之分。 Sentinel通过Raft共识算法，实现Sentinel选举，选举出一个leader，由leader完成故障转移。
+Raft共识算法： https://www.dboop.com/dba/raft%E5%8D%8F%E8%AE%AE/ 哨兵的核心功能：在主从复制的基础上，哨兵引入了主节点的自动故障转移。
+Sentinel的作用  监控：哨兵会不断地检查主节点和从节点是否运作正常。 自动故障转移：当主节点不能正常工作时，哨兵会开始自动故障转移操作，它会将失效主节点的其中一个从节点升级为新的主节点，并让其他从节点改为复制新的主节点。 通知（提醒）：哨兵可以将故障转移的结果发送给客户端。  Sentinel的结构 哨兵结构由两部分组成，哨兵节点和数据节点。
+ 哨兵节点：哨兵系统由一个或多个哨兵节点组成，哨兵节点是特殊的redis节点，不存储数据。 数据节点：主节点和从节点都是数据节点。  Redis Cluster 时代 redis集群是在redis 3.0版本推出的一个功能，其有效的解决了redis在分布式方面的需求。当遇到单机内存，并发和流量瓶颈等问题时，可采用Cluster方案达到负载均衡的目的。并且从另一方面讲，redis中sentinel有效的解决了故障转移的问题，也解决了主节点下线客户端无法识别新的可用节点的问题，但是如果是从节点下线了，sentinel是不会对其进行故障转移的，并且连接从节点的客户端也无法获取到新的可用从节点，而这些问题在Cluster中都得到了有效的解决。
+key与slot的关系是永远不会变的，会变的只有slot和Redis节点的关系。 如果想让很多个key同时落在同一个节点怎么办呢，只需要在key里面加入{hash tag}即可。 Redis在计算槽编号的时候只会获取{}之间的字符串进行槽编号计算，如下所示：
+user{666}base=&amp;hellip; user{666}fin=&amp;hellip;
+Redis-Cluster 特点  无中心结构。 数据按照slot存储分布在多个节点，节点间数据共享，可动态调整数据分布。 可扩展性，可线性扩展到1000个节点（官网推荐不超过1000个），节点可动态添加或删除。 高可用性，部分节点不可用时，集群仍可用。通过增加Slave做standby数据副本，能够实现故障自动failover，节点之间通过gossip协议交换状态信息，用投票机制完成Slave到Master的角色提升。 降低运维成本，提高系统的扩展性和可用性。  Redis Cluster的作用  （1）数据分区 数据分区(或称数据分片)是集群最核心的功能。  集群将数据分散到多个节点，一方面突破了Redis单机内存大小的限制，存储容量大大增加；另一方面每个主节点都可以对外提供读服务和写服务，大大提高了集群的响应能力。</description>
+    </item>
+    
+    <item>
+      <title>我为什么要反对DBA参与业务(出报表/改数据)</title>
+      <link>/dba/%E6%88%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%8D%E5%AF%B9dba%E6%94%B9%E6%95%B0%E6%8D%AE/</link>
+      <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%88%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%8D%E5%AF%B9dba%E6%94%B9%E6%95%B0%E6%8D%AE/</guid>
+      <description>上午有业务人员在钉钉上call我
+ A：要修改库里的一批资产的属性 我：这事为啥找我? A：有同事说数据库的事情都要找DBA。 我：DBA不直接改数据,谁跟你这样说的，拉上他一起来说说。 A：不愿意透露这个人是谁，   首先表明态度：坚决反对DBA参与(出报表/改数据)等业务行为，DBA可以提供对应的平台和工具。
+ 以下行为
+ DBA知道很复杂的业务逻辑，知道怎么把一个人客户的帐单做拆分（比业务和产品人员都知道的更清楚） 业务同学邮件发过来一批订单号，DBA同学可以帮他同时修改这些订单号关联的7，8张表的数据和状态（逻辑很复杂，但DBA知道怎么改得滴水不漏） 定期给业务人员出一些报表，这些报表是DBA用很复杂的SQL和各种临时表算出来的。逻辑很复杂，只有DBA能写出来 很多业务和产品上没来得及做的功能，业务会直接发工单给DBA，DBA写SQL帮业务临时完成 都是越界的，DBA不需要也不应该对业务“深入”的了解。  为什么要这样？ 从3个方面说：
+ DBA职责 职业分工 数据安全性  一.DBA职责 DBA的首要任务是保护数据，维护高可用访问(而不是主动修改数据)
+ 制定并实施数据库安全规范/管理规范/访问规范等。 持续改进优化高可用架构（当发生硬件/网络/软件故障时，可以快速恢复） 建立自动监控系统,及时有效处理各种报警 建立自动检查，备份，HA，远程容灾和远程备份系统 发现协助业务优化数据库的库表结构，SQL写法等，共同提升数据库性能  二.职业分工 专业的人做专业的事
+ 出数据和导报表的工作，有大数据部门的同事，有数据分析师。 修改数据的工作，有各业务线的研发和产品人员，他们设计的系统，他们最理解怎么改，DBA可以提供- SQL上线平台，他们自助完成 如果DBA比大数据的同更懂得出报表，比业务线的研发人员更了解应该写SQL改数据是没有必要的， DBA可以分成:业务DBA和运维DBA,通常我们说的DB都是运维DBA,权限很大。如果有业务DBA会限制他的权限，不会有运维DBA这么大的权限。  三.数据安全性  DBA作为数据的最终维护人员，修改数据是最直接暴力的方式 普通员工没有直连数据库做操作的权限，只能通过上线代码和指定的平台(DBA提供的dboop平台)   DBA不参与业务(出报表/改数据),是否意味着DBA从工作中摘了出去? 也不是
+ DBA提供数据查询平台,对短而小的数据查询导出需求,研发定位问题的查询，提供一个快速查询平台（有完整的权限管理，日志审计，行为约束，敏感数据脱敏） DBA提供便利的数据库SQL上线自助流程，方便研发人员快速上线SQL，有完整的日志，SQL审核,数据备份,权限控制,快速回滚。 DBA不需要了解表中的每个字段具体含义，每个表之间的关联，只需要知道这个库存放的数据是否重要，属于哪个业务线，负责人是谁，省下来的精力去做真正运维的工作  DBA有权限可以任意修改库里的数据，但是这个不合规，不应该这样做。正确的做法是提供一个平台，让真正了解业务的研发/产品/数据分析人员，去查询，去出报表，去改数据。</description>
+    </item>
+    
+    <item>
+      <title>数据库多环境SQL上线</title>
+      <link>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%9A%E7%8E%AF%E5%A2%83sql%E4%B8%8A%E7%BA%BF/</link>
+      <pubDate>Fri, 08 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%9A%E7%8E%AF%E5%A2%83sql%E4%B8%8A%E7%BA%BF/</guid>
+      <description>数据库多环境分类 MySQL数据库按环境区分有以下几种数据库  正式环境数据库：又称生产环境 验证环境数据库：上线验证环境，介于测试和生产之间的一个环境 测试环境数据库：又细分为   test0测试环境：默认测试环境 test1测试环境: test1测试环境简称t1环境，和test0环境是并行关系 test2,test3&amp;hellip; 未来会有更多的测试环境  开发环境：又称Dev环境，用于研发本地调试代码  Oralce测试环境参考MySQL的测试环境 数据库多环境上线的问题  SQL上线（建表/改表，改数据等） 需要在每个环境下都提个流程，研发的重复工作量大 研发可能会忘掉部分环境下执行某个SQL，造成各种环境和线上环境的差异越来越大  解决方式  提供一个多环境SQL上线流程，研发可以勾选每次上线要执行的环境 提供一个多环境数据库表结构对比工具 提供一个不同环境的数据库对象自动同步工具  多环境SQL上线流程 这里只演示MySQL多环境上线流程，Oracle的多环境上线流程和这个一模一样
+步骤1.选择数据库 步骤2.填写上线内容  注意1：这里可以自由勾选要执行的数据库环境，红色的是线上环境，绿色的是测试和验证环境，蓝色的是开发环境 注意2：所有环境都会执行SQL验证，所有环境通过验证，才可以进入下一步  步骤3.流程审批  如果通过了系统的SQL审核，会出现如下图的界面，进入流程审批 3.负责人审批是必选步骤 4.测试审批是用户可选步骤 5.DBA审批会根据用户提供的SQL内容，系统判定是否有dba介入（建表/改表/大范围修改数据DBA会审批，否则会自动跳过这一步）  步骤4.用户执行  审批完成以后，由发起人自由选择在合适的时间，点击上线按扭   步骤5.执行结果  执行完成后，会显示每个环境的执行结果。   后台配置 这个流程也是在dboop平台上用xml配置的，后台界面如下</description>
+    </item>
+    
+    <item>
+      <title>DBA的工作评价标准</title>
+      <link>/dba/dba%E5%B7%A5%E4%BD%9C%E8%83%BD%E5%8A%9B/</link>
+      <pubDate>Tue, 22 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/dba%E5%B7%A5%E4%BD%9C%E8%83%BD%E5%8A%9B/</guid>
+      <description>每大项有4-5个评价标准，分别给分，卓越(4.5),优秀(4),一般(3.5),待改进(3),较差(2.5) 综合得分计为工作能力得分
+ 这里不区分级别，资深DBA,高级DBA,DBA 按同一标准打分。
+01.责任感和主动性 1:设定工作目标  卓越:有高度的责任感，自己设立挑战目标，并实现目标；在工作责任和任务上挑战自己的极限，为公司创造最大价值 优秀:以极大的责任心去 设立非常挑战性目标；主动要求承担更多责任和工作 一般:给自己设立挑战性目标；严格要求自己；主动要求承担责任和工作 待改进:给自己设立容易达到的目标，不严格要求自己；不主动要求工作和责任 较差:不设立目标，不要求自己；推托工作和责任  2:工作效率效果  卓越:效率非常高，紧迫感非常强，今日事今日毕。全力以赴保证完成任务。树立标准，积极地影响他人 优秀:效率非常高，紧迫感非常强，今日事今日毕。全力以赴保证完成任务 一般:效率高，紧迫感强，在限定时间能完成任务 待改进:做事效率不高，紧迫感不足，有时不能在限定时间能完成，偶尔出错 较差:做事拖沓、无紧迫感、无责任心，不能在限定时间能完成工作，时常出错  3:承担责任  卓越:有自我批评，自我激励的能力；追求卓越，在责任感/主动性上是员工典范 优秀:勇于承认错误而不找借口，积极改正错误；正面积极地影响他人 一般:承认错误不找借口，积极改正错误 待改进:有时不承认错误，有时责怪别人 较差:不承认错误，抱怨和指责别人；态度、言行消极地影响他人  4:奉献精神  卓越:愿意为公司/团队利益而牺牲个人利益 优秀:在任何情况下，关注公司/团队利益多于个人利益 一般:在大多数情况下，关注公司/团队利益多于个人利益 待改进:能平衡个人和公司/团队利益 较差:关注个人利益多于公司和团队  02.解决问题能力 1:解决问题  卓越:洞察工作和流程中的潜在问题，预先就可能出现的问题提出解决方案，避免问题的出现 优秀:解决用户问题时经常能让用户非常满意 一般:解决用户问题时经常能让用户满意 待改进:解决用户问题时有时能让用户满意 较差:不能够解决用户问题，不能让用户满意  2:履行工作职责  卓越:超出职责范围的解决公司面临的困难，并超额完成任务 优秀:能够履行职责并超额完成任务 一般:能够履行职责并完成任务 待改进:有时能够履行职责并完成任务 较差:不能够履行职责并完成任务  3:处理复杂问题  卓越:综合运用逻辑和直觉以获得最好的解决办法；快速和正确地解决问题；认识到产生问题的根本原因,一劳永逸的从系统或流程或人员上彻底解决 优秀:通过分析各种复杂数据，找出关键问题，得出理性的结论并付诸于行动，取得预期目标 一般:能够分析和解决复杂问题；能就新出现的问题提出合理解决办法 待改进:面临复杂问题时所提出方案不是充分必要；但会处理比较简单的问题 较差:在面对复杂问题时需要帮助；做事无轻重缓急  4:态度信心和持续改进  卓越:是某一领域的专家，有必胜信心，永远追求卓越 优秀:把持续改进和提高作为工作和人生态度；面对困难和挑战总是有办法 一般:有不解决问题不罢休的、积极的、有办法态度 待改进:碰到自己无法解决的问题积极向上反映；遇到挫折有时不能快速调解恢复积极心态 较差:对所碰到的问题无动于衷，不向上反映，不去寻求解决方案；遇到挫折容易丧失信心  03.</description>
+    </item>
+    
+    <item>
+      <title>分布式一致性协议:raft协议</title>
+      <link>/dba/raft%E5%8D%8F%E8%AE%AE/</link>
+      <pubDate>Mon, 24 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/raft%E5%8D%8F%E8%AE%AE/</guid>
+      <description>关于raft的起源和历史  raft协议是一种分布式强一致性协议  为什么要有一致性？  1.数据不能存在单个节点（主机）上，否则可能出现单点故障 2.多个节点（主机）需要保证具有相同的数据。   都有哪些一致性协议（算法）  Paxos ：强一致性，由Lamport出品，例如：腾讯的PhxSQL，阿里的OceanBase数据库 Raft ：强一致性，由Paxos改进而来，例如：redis的sentinel,etcd数据库 用的是raft协议 ZAB ：强一致性，由Paxos改进而来，例如：ZooKeeper Gossip协议：弱一致性或者叫最终一致性，例如：rediscluster协议     2014年，由斯坦福大学Diego的一篇200多页的博士论文《CONSENSUS: BRIDGING THEORY AND PRACTICE》提出的一种全新的一致性协议。英文好的可以去看看。网上也有好多翻译成中文的 虽然核心协议上基本都是师继Paxos协议，基于多数派的协议。但是 Raft 一致性协议的贡献在于，定义了可易于实现的一致性协议的事实标准。模块化拆分以及设计简化。使分布式协议更加容易理解和实现  名词一： 复制状态机(Replicated state machines)  为了简化和便于理解，raft协议提出了复制状态机的概念，将集群中的节点都当成一个复制状态机，每个状态机只有三种状态。 复制状态机(Replicated state machines) ： 将集群中的每个服务器看做一个状态机, 它们接收外部的指令, 进行状态的改变, 所谓保持分布式一致性即是保证集群中所有状态机的状态一致性。 在任何时候，每个服务器都处于以下三种状态中的一种: 领导人(leader): 处理所有客户端的交互，日志复制同步，任何时候最多有一个领导人 跟随者(follower): 完全被动（不发出RPC，响应传入的RPC） 候选人(candidate): 用于选举新领导者 我们用图来解释这三种状态的变化关系  名词二： 任期和选举 为了判断过时的信息，过时的leader，raft协议提出了任期(term)的概念
+ 时序被分割为多个领导者任期 每个任期最多1个领导者 有些任期没有领导者（如：上图上的第2个阶段选举失败，但是任期值还是会加1） 每个服务器维护当前任期的值  1.什么时候开始选举  一个正常运行的系统，领导者必须不断的发送心跳（AppendEntries RPC）以保持其领导者的地位 如果在electionTimeout时间内（一般是100-300ms)，跟随都未收到RPC: 跟随者假设领导者已经崩溃，开始新的选举  2.</description>
+    </item>
+    
+    <item>
+      <title>分布式数据库</title>
+      <link>/dba/%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
+      <pubDate>Mon, 03 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
+      <description>分布式CAP原则 CAP定理是NOSQL数据库的基石，指的是在一个分布式系统中，Consistency(一致性)、Availability(可用性)、Partition tolerance(分区容错性)这三者只能满足其中两个，不能全部满足，这个结论是实践的总结，但是理论上，如果网络很好的情况下，三个特性可以同时满足。现实中的分布式系统因为网络的原因，很有可能会出现延迟或丢包等问题，因此必须要实现分区容忍性，一致性和可用性之间只能二选一。 对于传统的数据库来说，需要强一致性；而NoSQL系统一般注重性能和扩展性，而非强一致性。
+ Consistency(一致性)：分布式数据系统中的所有的数据备份，在同一时刻值都相同。也就是同一时刻所有机器上的数据保持一致。 Availability(可用性)：当集群中的一部分节点故障后，集群整体还能响应客户端的请求。也就是说，每个用户的请求都能收到正常的响应，并且响应时间在用户可接受范围内。 Partition tolerance(分区容错性)：尽管节点之间网络通信丢失或延迟了任意数量的消息，但是整个系统仍然在正常运行。  可以有三种组合：
+ CA：指的是单点集群。 CP：舍弃了可用性，可用性指的是高性能，所以性能不是很高。 AP：是弱一致性，一般的NoSQL数据库对一致性的要求不是很高  分布式的一致性  为什么要有一致性？  1.数据不能存在单个节点（主机）上，否则可能出现单点故障 2.多个节点（主机）需要保证具有相同的数据。   都有哪些一致性协议（算法）  Paxos ：强一致性，由Lamport出品，例如：腾讯的PhxSQL，阿里的OceanBase数据库 Raft ：强一致性，由Paxos改进而来，例如：redis的sentinel,etcd数据库 用的是raft协议 ZAB ：强一致性，由Paxos改进而来，例如：ZooKeeper Gossip协议：弱一致性或者叫最终一致性，例如：rediscluster协议    数据分片 当数据量过于庞大，单机难以支撑时，会面临扩展瓶颈，那么就需要将数据进行拆分，分散在多个数据库实例上。
+数据分片是指将数据全局划分为相关的逻辑片段，有水平切分、垂直切分、混合切分三种类型。
+ 水平切分:可以简单地理解为按照数据行进行切分，即一部分行放在某数据库，另外一部分放在另外的数据库实例。比如可以按照时间、地区拆分，亦或是根据hash进行拆分。 垂直切分：垂直拆分可以简单理解为按照表进行分类，将表分布在不同的节点上,基本目标是将使用频繁的属性聚集在一起 混合切分：水平切分与垂直切合的结合。  数据分片的基本原则
+ 完备性条件 可重构性条件 不相交性条件  垂直分片后将数据组合起来需要执行连接运算，比水平分片后的数据组合要困难一些。
+分布式查询处理及优化 分布式数据库需要考虑查询问题，其需要做的就是把一个分布式数据库上的高层次查询映射为本地数据库上的操作，最后通过网络通信，将操作结果汇聚起来。
+相对于集中式数据库，分布式数据库还要考虑额外的几个问题：
+ 选择最优站点查询 数据传送方式 站点之间交换数据的问题 相对于集中式的查询目标，分布式需要多考虑一项 “通信开销代价”  对水平分片的优化
+ 尽量把选择条件下移到分片的限定关系处，再把分片的限定关系与选择条件进行比较，去掉它们之间存在矛盾的相应片断。 如果最后剩下一个水平片断，则在重构全局关系的操作中，就可去掉“并”操作.  对垂直分片的优化
+ 把垂直分片所用到的属性集，与查询条件中的投影操作所涉及的属性相比较，去掉无关的垂直片断。 如果最后只剩下一个垂直片断与查询有关时，去掉重构全局关系的**“连接”**操作（至少可以减少“连接”操作的次数）  基于半连接算法的查询优化</description>
+    </item>
+    
+    <item>
+      <title>数据库备份管理制度</title>
+      <link>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E7%AE%A1%E7%90%86%E5%88%B6%E5%BA%A6/</link>
+      <pubDate>Thu, 23 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E7%AE%A1%E7%90%86%E5%88%B6%E5%BA%A6/</guid>
+      <description>备份策略  数据库备库节点上启用定时任务，每天0:10～6:10 全备（或增备)文件 至本地sas盘，每个实例压缩成一个备份文件。 生成的备份文件调用接口上传状态并断点续传止主备份备机 数据库备份在本地sas盘上保留1-3天的备份文件 辅备份机在0点-22点保持当天的备份文件夹和主备份机的同步 主备份机每天22:00 将当天的接收到的备份文件移至 yyyyMMdd 目录下 所有备份机每天23:00删除30天以上的过期备份文件  每个月的第一次数据库全备，永不过期删除（例如：如果db每天一次全备，则每月的1号备份永久保留）    备份周期  MySQL：每天1次全备，15分钟同步一次binlog日志，全备和日志保留30天 Oracle:每周1次全备,其余天数增备，实时保存日志，备份和日志保留30天 MongoDB:每天1次全备，全备保留30天  备份脚本（源机） 传输脚本（辅备份机） </description>
+    </item>
+    
+    <item>
+      <title>孤岛备份机和勒索病毒</title>
+      <link>/dba/%E5%AD%A4%E5%B2%9B%E5%A4%87%E4%BB%BD%E6%9C%BA%E5%92%8C%E5%8B%92%E7%B4%A2%E7%97%85%E6%AF%92/</link>
+      <pubDate>Wed, 22 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E5%AD%A4%E5%B2%9B%E5%A4%87%E4%BB%BD%E6%9C%BA%E5%92%8C%E5%8B%92%E7%B4%A2%E7%97%85%E6%AF%92/</guid>
+      <description>勒索病毒 什么是勒索病毒？  勒索病毒就是那种中毒后 加密你的文件（通常是aes加密算法) 提示你去支付一些电子货币才能解开文件的一种病毒 通常是要求支付一定数量的比特币 像下面这种  怎么写一个勒索病毒？  如果让我写一个简单的勒索病毒 我可能会这样写 0.像指定的服务器（控制机）请求一个aes公钥 1.用这个公钥挨个给本地文件加密  1.1 遍历本地所有文件 1.2 给每个文件头加上一个特殊标记（不用多，10来个字节就行） 1.3 挨个用公钥加密所有文件   2.提示用户文件加密了，要求给钱 3.如果收到钱了就给他一个解密的代码 4.解密代码这样写  4.1 遍历本地所有文件 4.2 判断是否有特殊标记 4.3 如果有，则是加密文件 4.4 用私钥去解开这个文件   当然真实的勒索病毒会更加严谨，我只是描述一下思路 我也从来没写过  中了勒索病毒怎么办？  不差钱方案：给钱，然后寄希望于对方的人品。 运气好方案：这是个常见的普通勒索病毒，网上有很多的工具可以尝试解一下 报警：造成重大损失的可以公开报警，交给安全部门处理，当然这个破案的难度有点大，数据可能还是找不回来 补救方案：用备份来救命。  如果有备份，可以恢复文件，那这时候就基本上可以依靠本身的备份体系来恢复大部分损失（还是会有不可挽回的损失）    勒索病毒和备份体系的攻防  聪明的勒索病毒会攻击备份体系 1.本机备份：中了勒索病毒以后，本机备份几乎是99%也会中毒，几乎没啥用了 2.异机备份：如果是个人电脑中毒，很难会感染到备份机，但是如果是机房里的服务器中毒了，那么病毒极有可能会感染备份机。 3.异机房备份：同异机备份，主要还是一个服务器内网环境。 如何防止勒索病毒攻击备份体系呢？ 这就是我们接下来下说的孤岛备份机方案  孤岛备份机 什么是孤岛备份机？  它是一个特殊的备份机 1.它不和普通的服务器连网 2.本地不开任何端口，任何其他服务器不能请求它的任何服务 3.只和指定的一台机器直连（通常这台机器是个普通的备份机） 4.它只以视为“这台普通备份机”的备份机 5.它会定时拉取普通备份机上的指定目录 6.</description>
+    </item>
+    
+    <item>
+      <title>MySQL binlog 问答</title>
+      <link>/dba/mysqlbinlogquestion/</link>
+      <pubDate>Fri, 15 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/mysqlbinlogquestion/</guid>
+      <description>binlog 是什么?  MySQL 的二进制日志 ,不是纯文本类的 记录的是数据库变动的日志(insert,update,delete,create,replace,grant &amp;hellip;.) 不包括 select,set 等  binlog 重要吗？是不是一定要开？  几乎是最重要的MySQL日志，严谨点说是最重要的之一 如果没有特殊情况，一定要开！为什么？你再往后看&amp;hellip;)  binlog 有什么作用？  高可用同步，经常用它来同步主库和从库的数据。 它本身就是记录了数据库变化的日志，放在那让你看也是它作为“日志”的作用 恢复指定时间点的数据, 想把数据库恢复到指定时间眯，得靠它 回滚数据 ，误删除数据时用到 审计 变更捕获到其他平台(kafka,es或其他数据库)  binlog 怎么开启，放在哪，怎么存储的？ binlog组提交  MySQL 引入了 binlog 组提交（group commit）机制，当有多个事务提交的时候，会将多个 binlog 刷盘操作合并成一个，从而减少磁盘 I/O 的次数 引入了组提交机制后，prepare 阶段不变，只针对 commit 阶段，将 commit 阶段拆分为三个过程： flush 阶段：多个事务按进入的顺序将 binlog 从 cache 写入文件（不刷盘）； sync 阶段：对 binlog 文件做 fsync 操作（多个事务的 binlog 合并一次刷盘）； commit 阶段：各个事务按顺序做 InnoDB commit 操作； 上面的每个阶段都有一个队列，每个阶段有锁进行保护，因此保证了事务写入的顺序，第一个进入队列的事务会成为 leader，leader领导所在队列的所有事务，全权负责整队的操作，完成后通知队内其他事务操作结束。 对每个阶段引入了队列后，锁就只针对每个队列进行保护，不再锁住提交事务的整个过程，可以看的出来，锁粒度减小了，这样就使得多个阶段可以并发执行，从而提升效率。  主从复制是怎么实现？ MySQL 集群的主从复制过程梳理成 3 个阶段：  写入 Binlog：主库写 binlog 日志，提交事务，并更新本地存储数据。 同步 Binlog：把 binlog 复制到所有从库上，每个从库把 binlog 写到暂存日志中。 回放 Binlog：回放 binlog，并更新存储引擎中的数据。  具体详细过程如下：  MySQL 主库在收到客户端提交事务的请求之后，会先写入 binlog，再提交事务，更新存储引擎中的数据，事务提交完成后，返回给客户端“操作成功”的响应。 从库会创建一个专门的 I/O 线程，连接主库的 log dump 线程，来接收主库的 binlog 日志，再把 binlog 信息写入 relay log 的中继日志里，再返回给主库“复制成功”的响应。 从库会创建一个用于回放 binlog 的线程，去读 relay log 中继日志，然后回放 binlog 更新存储引擎中的数据，最终实现主从的数据一致性。  24、什么时候 binlog cache 会写到 binlog 文件？ 在事务提交的时候，执行器把 binlog cache 里的完整事务写入到 binlog 文件中，并清空 binlog cache。</description>
+    </item>
+    
+    <item>
+      <title>MySQL的innodb中Next-Key锁的解析</title>
+      <link>/dba/innodb_lock_2020/</link>
+      <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/innodb_lock_2020/</guid>
+      <description>去年的某个时候，一个朋友在微信上问我MySQL间隙锁的案例，当时正在赶一个项目，没来得及看那个CASE，后来找不到了。昨天看到这篇jahfer写的博客: https://jahfer.com/posts/innodb-locks/ 觉得在介绍Next-Key锁的这方面很有创意的使用了自制的动画（非常简陋的动画 没啥用，我换成了截图做标记了)，不管是创意还是内容都值得一看
+   作者:jahfer 翻译:51ak   &amp;ndash;翻译全文如下：
+最近，我在调试MySQL高并发问题时有机会深入理解了InnoDB的锁定机制，这篇文章是我学习innodb锁行为的一个总结。
+0.概念介绍 InnoDB只有几个锁定概念,但是它们的使用和行为取决于当前连接正在使用的事务隔离级别
+ …the isolation level is the setting that fine-tunes the balance between performance and reliability, consistency, and reproducibility of results when multiple transactions are making changes and performing queries at the same time. 引自MySQL官方文档 https://dev.mysql.com/doc/refman/5.7/en/innodb-transaction-isolation-levels.html
+ InnoDB一共有4种隔离级别（按最严格到最宽松的顺序）
+ SERIALIZABLE 序列化 REPEATABLE READ (default) 可重复读 READ COMMITTED 读已提交 READ UNCOMMITTED 读未提交  每种隔离级别下的锁行为差异非常大，而我们现在只分析前两种隔离级别（SERIALIZABLE，REPEATABLE READ),首先让我们创建一个book 表。</description>
+    </item>
+    
+    <item>
+      <title>数据库团队DBA的OKR和KPI指标</title>
+      <link>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9B%A2%E9%98%9Fdba%E7%9A%84okr%E5%92%8Ckpi%E6%8C%87%E6%A0%87/</link>
+      <pubDate>Thu, 10 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9B%A2%E9%98%9Fdba%E7%9A%84okr%E5%92%8Ckpi%E6%8C%87%E6%A0%87/</guid>
+      <description>数据库团队的OKR（目标关键结果）可能包括：  数据存储容量优化：通过数据库管理和数据存储优化技术，提高数据存储的效率和容量。 数据安全性提升：通过数据库安全技术和安全控制，保护数据的安全性。 数据恢复能力提高：通过数据备份和恢复技术，提高数据恢复的效率和能力。 数据库性能优化：通过数据库性能调优和技术优化，提高数据库的性能。 数据查询效率提高：通过数据查询优化技术，提高数据查询的效率。 数据可视化开发：通过数据可视化技术，提高数据的可读性和可视性。 数据分析能力提高：通过数据分析技术，提高数据分析的效率和能力。 数据处理效率提高：通过数据处理优化技术，提高数据处理的效率。 数据交换效率提高：通过数据交换优化技术，提高数据交换的效率。 数据管理流程改进：通过对数据管理流程的优化和改进，提高数据管理的效率和质量。 团队技能培训：通过为团队提供技能培训，提高团队的专业水平和能力。 协同工作效率提高：通过改进团队间的协同工作，提高团队的协同工作效率。  这些OKR可能根据公司的具体情况进行调整和定制，以适应公司的特殊需求。
+数据库团队有哪些可量化的KPI指标 数据库团队可以使用以下可量化的指标来评估其进展和成果：
+ 数据库响应时间：测量数据库对请求的响应时间，以评估数据库的性能。 数据库可用性：通过计算数据库在一段时间内的可用率，评估数据库的可用性。 数据库容量：通过监控数据库的容量使用情况，评估数据库的容量需求。 数据完整性：通过测量数据的完整性，评估数据的质量。 数据备份和恢复：通过测量数据备份和恢复的时间和准确性，评估数据的安全性。 团队效率：通过测量团队完成任务的效率，评估团队的工作效率。 研发团队满意度：通过调查研发对数据库团队的满意程度，评估团队的服务质量。  这些指标可以帮助数据库团队评估其OKR的实现情况，并对团队的工作进行评估和改进。</description>
+    </item>
+    
+    <item>
+      <title>丐帮PK赛</title>
+      <link>/dba/gaibangpk/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/gaibangpk/</guid>
+      <description>[ 丐帮pk赛：帮派里选出来最睿智的两个人，1vs1，互相出题，答题时长不限，方法不限,结果正确了，得1分，否则对方得一份。统计最终得分。 ]
+当前得分 p:3 / k:8  第一轮.地铁站走楼梯问题 题目:从知春路地铁站走楼梯上来，共有30级台阶，阿怂每次上台阶要么是1层，要么是2层，问：有多少种方法阿怂可以爬完这30级台阶？
+ 出题人:P 答题人:K 答题时间:用时17分钟 答题结果:正确 正确答案:1346269 解答:每一层楼梯的方法不是他决定的,是他上一级台阶有几种方法和上上一级台阶有几种方法,加一块就是他有几种方法. 图解： 代码：https://github.com/51ak/golearn/blob/master/day11_%E7%88%AC%E6%A5%BC%E6%A2%AF/main.go   第二轮.病毒感染率问题 题目:假设新冠病毒检测covid-19的感染率为1%，而新冠病毒检测检测准确率为99%,如果阿怂做了一次检查，被通知结果为阳性，那么阿怂真正感染的概率是多少？
+ 出题人:K 答题人:P 答题时间:用时2分钟 答题结果:失败! 答成了99% 正确答案:50% 解答:假设有10000人，感染率为1%,那么其中有100为感染，9900位健康,其中100感染者里，有99位真感染，1人误诊，9900位健康者里，有99位因为误诊是感染的，9801位是健康的。于是：被告知感染的人里，有99位真正的感染者和99位健康的人。你感染了被诊断出来的几率是0.01*（1-0.01）=0.0099，假如你没感染被诊断出来的几率是0.99*0.01=0.0099所以实际上依然健康的概率为0.0099/（0.0099+0.0099）=0.5 贝叶斯理论   第三轮.收保护费问题 题目:阿怂要到一条街上收保护费，老大交待这次不能同时收相邻的两个捕子的保护费，收了第1号铺子的就不能收第2号，可以跳过去收3或者4号。假如从1号铺子开始每个铺子能收到的保护费分别是4, 3, 5, 4, 5, 23, 7, 8, 9, 7, 7, 8, 12, 15, 17, 13, 4, 9, 12, 17, 13, 5, 0, 7, 14, 7, 9, 8, 9, 30 元，问：阿怂最多能收到多少元钱？
+ 出题人:P 答题人:K 答题时间:用时18分钟 答题结果:166算错了一个数 正确答案:167 解答:当收到第N个铺子时，可以选择收和不收，  选择收，那么这个铺子时的最大金额就是N-2间铺子的最大金额+第N间铺子 选择不收，那么收到这个铺子时的最大金额就是第N-1间铺子的最大金额 所以在N号铺子时，怂哥最多能拿到的钱就是上面两个值取个最大值，把这个值人做个记号，然后接着去下个铺子做同样的事，结果就一路推出来了。 在第N号铺子，只需要回头看看N-2，N-1号铺子门口的最大金额标记和这个铺子的钱就知道这个铺子的记号。 图解： 代码：https://github.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的drop/truncate Table影响分析和最佳实践</title>
+      <link>/dba/droptable/</link>
+      <pubDate>Thu, 26 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/droptable/</guid>
+      <description>0.前言 MySQL上直接Drop张大表,会有什么影响，能否直接写个 drop table ; 或者 truncate table ; 甚至是delete * from 如果这张表足够大，比如1亿行记录，drop 的时间需要多久，期间我的MySQL是否能正常访问？
+首先明确一点，现在讨论的是要删掉的大表一定是没人访问的表，否则如果这张表仍然还有被高频的访问，你敢直接删那基本上就是茅坑里点灯，找死！ 如果MySQL版本是5.5.23以下，直接DROP一张大表，也是守着茅坑睡觉，离死不远。 好，现在明确了这张表肯定没人访问了，你的MySQL版本也足够新，并不表示你就远离了茅坑，但如果这张表足够大，仍然有被崩到的风险。
+大表：我们定义为5000万行以上，或者单表文件大于100G
+我们要讨论的是innodb存储引擎,myisam等存储引擎，DROP 表又快又安全
+1.drop table 的风险和避免方法 Drop table 要做的主要有3件事：  把硬盘上的这个文件删了 把内存中的这个库已经加载加来的Page删了，腾出空间 把MySQL元数据字典中这张表关联信息删了  可能会引起的风险有3种：  MySQL长时间阻塞其他事务执行，大量请求堆积，实例假死。(锁) 磁盘IO被短时间大量占用，数据库性能明显下降(IO) 内存里的page大量置换，引起线程阻塞，实例假死（内存)  解决和避免的方法3种：  io占用的问题，对这个表建一个硬链，使Drop table 表的时候并没有真的去磁盘上删那个巨大的ibd文件，事后再用truncate的方式慢慢的删除这个文件，如果是SSD盘和卡,drop table后再直接rm文件也没问题 内存和IO占用的问题，升级MySQL版本   MySQL 5.5.23 引入了 lazy drop table 来优化改进了drop 操作影响(改进，改进，并没有说完全消除!!!拐杖敲黑板3次)
+  MySQL5.7.8 拆分了AHI共用一个全局的锁结构 btr_search_latch
+  MySQL8.0 解决了truncate table 的风险
+   道路千万行，低峰第一条。选择低峰时间段，找个夜深人静，月黑风高的时候是更好的选择。  2.</description>
+    </item>
+    
+  </channel>
+</rss>

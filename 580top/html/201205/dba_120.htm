@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySQL数据库中的查询优化方法</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="我们大家都知道我们要完成一个任务有多种方法，使用sql语句也有多种写法，但不同写法的查询性能可能会有天壤之别，本文列举出五个查询优化的方法，当然，优化的方法还有很多。&nbsp;1、优化数据类型&nbsp;mysql中数据类型有多种，如果你是一名dba，正在按照优化的原则对数据类型进行严格的检查，但开发人员可能会选择他们认为最简单的方案，以加快编码速度，或者选择最明显的选择，因此，你可能面临的MySQL数据库中的查询优化方法" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识">基础知识</a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化"><span class="zc_666">性能与优化</span></a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlyouhua/l_16_1.htm">性能与优化</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>MySQL数据库中的查询优化方法</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   我们大家都知道我们要完成一个任务有多种方法，使用SQL语句也有多种写法，但不同写法的查询性能可能会有天壤之别，本文列举出五个查询优化的方法，当然，优化的方法还有很多。　　&nbsp;1、优化数据类型&nbsp;MySQL中数据类型有多种，如果你是一名DBA，正在按照优化的原则对数据类型进行严格的检查，但开发人员可能会选择他们认为最简单的方案，以加快编码速度，或者选择最明显的选择，因此，你可能面临的都不是最佳的选择，如果可能的话，你应该尝试以通用准则来改变这些决定。 IT专家网独家：MySQL存储过程调试&nbsp;(1)避免使用NULL&nbsp;NULL对于大多数数据库都需要特殊处理，MySQL也不例外，它需要更多的代码，更多的检查和特殊的索引逻辑，有些开发人员完全没有意识到，创建表时NULL是默认值，但大多数时候应该使用NOT NULL，或者使用一个特殊的值，如0，-1作为默认值。&nbsp;(2)仅可能使用更小的字段&nbsp;MySQL从磁盘读取数据后是存储到内存中的，然后使用cpu周期和磁盘I/O读取它，这意味着越小的数据类型占用的空间越小，从磁盘读或打包到内存的效率都更好，但也不要太过执着减小数据类型，要是以后应用程序发生什么变化就没有空间了。修改表将需要重构，间接地可能引起代码的改变，这是很头疼的问题，因此需要找到一个平衡点。MySQL中隐藏空间问题介绍&nbsp;2、小心字符集转换&nbsp;客户端或应用程序使用的字符集可能和表本身的字符集不一样，这需要MySQL在运行过程中隐含地进行转换，此外，要确定字符集如UTF-8是否支持多字节字符，因此它们需要更多的存储空间。&nbsp;3、优化count(my_col)和count(*)&nbsp;如果你使用MyISAM表，在没有where子句的情况下使用count(*)速度是很快的，因为行数量的统计是非常精确的，因此MySQL不会一行一行地去找，进而得出行数，如my_col列没有空值，那么和前面说的情况会一样，即count(my_col)速度也会很快。&nbsp;如果有where子句时使用count( )，基本上就无法进行更多优化了，在where子句中超出了明显的索引列，对于复杂的where子句，只有使用覆盖索引才有用。&nbsp;除了上面的建议外，你还可以使用汇总表，它们让你可以对表的内容保持更新，你可以使用触发器，或者应用程序逻辑保持汇总表总是最新状态，或者定期运行一个批处理作业保持填充最新的数据信息，如果你采用后者，你的信息将会非常接近，但不是精确的，依赖于批处理作业多久运行一次，这需要权衡应用程序对精确信息的需要，和保持数据更新的系统开销，要在这二者之间找到一个平衡点。&nbsp;4、优化子查询&nbsp;遇到子查询时，MySQL的查询优化引擎并不是总是最有效的，这就是为什么经常将子查询转换为连接查询的原因了，优化器已经能够正确处理连接查询了，当然要注意的一点是，确保连接表(第二个表)的连接列是有索引的，在第一个表上MySQL通常会相对于第二个表的查询子集进行一次全表扫描，这是嵌套循环算法的一部分。&nbsp;5、优化UNION&nbsp;在跨多个不同的数据库时使用UNION是一个有趣的优化方法，UNION从两个互不关联的表中返回数据，这就意味着不会出现重复的行，同时也必须对数据进行排序，我们知道排序是非常耗费资源的，特别是对大表的排序。&nbsp;UNION ALL可以大大加快速度，如果你已经知道你的数据不会包括重复行，或者你不在乎是否会出现重复的行，在这两种情况下使用UNION ALL更适合。此外，还可以在应用程序逻辑中采用某些方法避免出现重复的行，这样UNION ALL和UNION返回的结果都是一样的，但UNION ALL不会进行排序。&nbsp;小结&nbsp;虽然本文列举的优化方法并不完全，但无论何时，只要可能，尽可能尝试不同的解决方案，查看查询计划，在大数据集上进行测试，并会定位结果基准点，观察在实际应用中的情况怎么样。同时，事先查看一下你的慢速查询日志，尽可能早地找出需要调整的查询。
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>redis使用规范文档 20170522版 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">redis使用规范文档 20170522版</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+<p>运维redis很久了，一直是口头给rd说各种要求，尝试把这些规范总结成文档</p>
+
+<ul>
+<li>强制：所有的key设置过期时间（最长可设置过期时间10天，如有特殊要求，联系dba说明原因 ）</li>
+<li>强制：禁止在测试环境，本地办公环境，开发跳板机，连接线上redis实例（实例归业务自运维的 除外）</li>
+<li>强制：禁止使用运维类的命令 <code>keys  monitor debug watch flush bigkeys</code></li>
+<li>强制：list的长度最大长度不超过1万，size不超过1G</li>
+<li>强制：key的长度不超过100个字符</li>
+<li>建议：string类型value长度不超过10M</li>
+<li>建议：做好容量规划，预先考虑内存占用过大后，业务的拆分和分片后的影响</li>
+<li>建议：选择合适的数据类型（<code>string,list,hash,set,sortset</code>)  ,使用特殊的数据类型（ bit,geo)须提前与dba沟通</li>
+<li>建议：使用常用的命令，m类操作，建议个数100个以下。</li>
+<li>建议：不使用多个db,只使用db0,如果要区分业务线，在配置文件里定义各业务线使用的前缀</li>
+
+<li><p>建议：有一套能区分业务归属的命名规范，key前缀是发生内存暴涨，性能问题时的分析定位问题 的可行基础，Key的命名规范建议：</p>
+
+<ul>
+<li>第1个字符小写定义数据类型：</li>
+<li><code>string —&gt;s,Hash—&gt;h,Set—&gt;s,Zset —&gt;z,List —&gt;l,Geo—&gt;g</code></li>
+<li>第2,3字符定义公开的业务分类：</li>
+<li>第4-10个字符定义部门类的业务线细分</li>
+<li>推荐的key中可使用符号.:#</li>
+<li>不推荐使用的有：\ ? * {} [] ()<br /></li>
+<li>例：<code>hCMappnode.product.detail:1312342</code>
+<br /></li>
+</ul></li>
+
+<li><p>建议：不命名用对list,set,zset等分片支持不友好的操作如：union diff，  如果不能避免 ，注意使用大括号括起key的关键字</p></li>
+
+<li><p>建议：在代码中捕扣redis连接异常。考虑一个redis实例短时当机时业务的降级处理，尤其是对 redis的高频调用，有时候redis报错日志可能会打满磁盘</p></li>
+
+<li><p>建议：不同业务线，不同重要程度的redis建议申请多个redis实例，避免业务线中使用的redis过大。</p></li>
+</ul>
+
+</main>
+<h2 class="date">发布日期:2017/05/22</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/redis">redis</a> <a href="/categories/%E8%A7%84%E8%8C%83">规范</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

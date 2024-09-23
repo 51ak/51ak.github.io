@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>mysql中found_rows函数sql_calc_found_rows的配合 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">mysql中found_rows函数sql_calc_found_rows的配合</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+<p>row_count() 函数一般用于返回被 update, insert, delete,select  实际修改的行数。
+配合sql_calc_found_rows,limit 的使用可以实现非常快速的分页功能.</p>
+
+<p>官方描述:</p>
+
+<pre><code>
+In MySQL 5.6, ROW_COUNT() returns a value as follows:
+
+DDL statements: 0. This applies to statements such as CREATE TABLE or DROP TABLE.
+
+DML statements other than SELECT: The number of affected rows. This applies to statements such as UPDATE, INSERT, or DELETE (as before), but now also to statements such as ALTER TABLE and LOAD DATA INFILE.
+
+SELECT: -1 if the statement returns a result set, or the number of rows “affected” if it does not. For example, for SELECT * FROM t1, ROW_COUNT() returns -1. For SELECT * FROM t1 INTO OUTFILE 'file_name', ROW_COUNT() returns the number of rows written to the file.
+
+SIGNAL statements: 0.
+
+For UPDATE statements, the affected-rows value by default is the number of rows actually changed. If you specify the CLIENT_FOUND_ROWS flag to mysql_real_connect() when connecting to mysqld, the affected-rows value is the number of rows “found”; that is, matched by the WHERE clause.
+</code></pre>
+
+<p>也就是说对于update语句，row_count() 默认返回的是实际被修改的行数；但是通过参数设置，也可以返回找到的行数(或者说匹配的行数，受影响的行数)，这样设置就能兼容于Oracle  ps/sql中 sql%rowcount 和 sql server 中的 @@RowCount。</p>
+
+<p>但是 row_count() 的结果和 mysql 的JDBC driver的默认行为却是不一致的，mysql jdbc中的 Statement.getUpdateCount() 函数返回的是被找到的行数，而不是实际被修改的行数，如果要返回被实际修改的行，应该使用存储过程，相关链接说明：</p>
+
+<pre><code>use AffectedRows
+Don't set the CLIENT_FOUND_ROWS flag when connecting to the server (not JDBC-compliant, will break most applications that rely on &quot;found&quot; rows vs. &quot;affected rows&quot; for DML statements), but does cause &quot;correct&quot; update counts from &quot;INSERT ... ON DUPLICATE KEY UPDATE&quot; statements to be returned by the server.
+</code></pre>
+
+<p>Default: false
+Since version: 5.1.7
+该参数默认为false，我们最好不要进行修改，如果修改了就和JDBC标准不兼容！如果需要返回实际被修改的行，应该使用存储过程(使用row_count())</p>
+
+<p>If you need to know how many records were <em>changed</em> (not that same as the number matching the where) then you might consider a stored
+procedure.
+但是设置 useAffectedRows=true; 有一个好处，就是它能正确的返回 insert &hellip; on duplicate key update 的结果(如果不设置为true，返回的结果是错误的)</p>
+
+<p>使用MYSQL的FOUND_ROWS()函数
+Mysql FOUND_ROWS() 函数结合SQL_CALC_FOUND_ROWS在SELECT中可以得到两个结果：
+1. 得到Limit的内容
+2. 得到去除Limit以后所有行数</p>
+
+<p>SELECT语句中经常可能用LIMIT限制返回行数。有时候可能想要知道如果没有LIMIT会返回多少行，但又不想再执行一次相同语句。那么，在SELECT查询中包含SQL_CALC_FOUND_ROWS选项，然后执行FOUND_ROWS()就可以了：</p>
+
+<pre><code>select SQL_CALC_FOUND_ROWS * FROM tbl_name WHERE id &gt; 100 LIMIT 10;
+SELECT FOUND_ROWS();
+</code></pre>
+
+<p>1
+2
+其中SQL_CALC_FOUND_ROWS 告诉Mysql将sql所处理的行数记录下来，FOUND_ROWS() 则取到了这个纪录。 虽然也是两个语句，但是只执行了一次主查询，所以效率比原来要高很多。</p>
+
+<p>如果在前一条语句中使用SQL_CALC_FOUND_ROWS选项，FOUND_ROWS()将返回第一条语句没有LIMIT时返回的行数。
+如果在前一条语句中没有使用SQL_CALC_FOUND_ROWS选项，FOUND_ROWS()将返回前一条语句实际返回的行数。
+如果使用 SELECT SQL_CALC_FOUND_ROWS，MySQL必须计算所有结果集的行数。尽管这样，总比再执行一次不使用LIMIT的查询要快多了吧，因为那样结果集要返回客户端滴。（另外：应该不单是没有将结果集返回的原因，还有原因可能是比如LIKE之类比较费劲的SQL不需要再去劳累一次。）</p>
+
+<p>– 注意下面语句中的条件 LIKE</p>
+
+<pre><code>SELECT SQL_CALC_FOUND_ROWS * FROM tbl_name WHERE Name LIKE ‘%string%’ id &gt; 100 LIMIT 10; 
+SELECT FOUND_ROWS();
+</code></pre>
+
+<p>– 上面语句等价于下面语句，但性能方面应该提升非常非常的明显：</p>
+
+<pre><code>SELECT COUNT(*) FROM tbl_name WHERE Name LIKE ‘%string%’ ; 
+SELECT * FROM tbl_name WHERE Name LIKE ‘%string%’ id &gt; 100 LIMIT 
+</code></pre>
+
+</main>
+<h2 class="date">发布日期:2019/05/02</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/sql%E6%8A%80%E5%B7%A7">SQL技巧</a> <a href="/categories/sql%E8%AF%AD%E6%B3%95">SQL语法</a> <a href="/categories/%E5%88%86%E9%A1%B5">分页</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

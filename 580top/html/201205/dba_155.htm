@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySQL的查询缓存小记</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="mysql查询缓存机制原理querycache，querycache是根据sql语句来cache的。一个sql查询如果以select开头，那么mysql服务器将尝试对其使用qc。每个cache都是以sql文本作为key来存的。在应用querycache之前，sql文本不会被作任何处理。也就是说，两个sql语句，只要相差哪怕是一个字符（例如大小写不一样；多一个空格等），那么这两个sql将使用不MySQL的查询缓存小记" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化">性能与优化</a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlzhishi/l_14_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>MySQL的查询缓存小记</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   <a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a>查询缓存机制原理QueryCache，QueryCache是根据SQL语句来cache的。一个SQL查询如果以select开头，那么 MySQL服务器将尝试对其使用 QC。每个Cache都是以SQL文本作为key来存的。在应用QueryCache之前，SQL文本不会被作任何处理。也就是说，两个SQL语句，只要 相差哪怕是一个字符（例如大小写不一样；多一个空格等），那么这两个SQL将使用不同的一个QueryCache。不过SQL文本有可能会被客户端做一些处理。例如在官方的命令行客户端里，在发送SQL给服务器之前，会做如下处理：过滤所有注释去掉SQL文本前后的空格,TAB等字符。注意，是文本前面和后面的。中间的不会被去掉。下 面的三条SQL里，因为SELECT大小写的关系，最后一条和<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>两条在QC里肯定是用的不一样的存储位置。而第一条和第二条，区别在于后者有个注释，在 不同客户端，会有不一样的结果。所以，保险起见，请尽量不要使用动态的注释。在PHP的<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>扩展里，SQL的注释是不会被去掉的。也就是三条 SQL会被存储在三个不同的缓存里，虽然它们的结果都是一样的。select * FROM people where name='surfchen';select * FROM people where /*hey~*/name='surfchen';SELECT * FROM people where name='surfchen';目前只有select语句会被cache，<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>类似show,use的语句则不会被cache。因为QC是如此前端，如此简单的一个缓存系统，所以如果一个表被更新，那么和这个表相关的SQL的所有QC都会被失效。假设一个联合查询里涉及到了表A和表B，如果表A或者表B的其中一个被更新（update或者delete），这个查询的QC将会失效。也 就是说，如果一个表被频繁更新，那么就要考虑清楚究竟是否应该对相关的一些SQL进行QC了。一个被频繁更新的表如果被应用了QueryCache，可能 会加重<a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a>数据库的负担，而不是减轻<a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a>负担。我一般的做法是默认打开QueryCache，而对一些涉及频繁更新的表的SQL语句加上 SQL_NO_CACHE关键词来对其禁用CACHE。这样可以尽可能避免不必要的内存操作，尽可能保持内存的连续性。那些查询很分散的 SQL语句，也不应该使用缓存。例如用<a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a>来查询用户和密码的语句——“select pass from user where name='surfchen'”。这样的语句，在一个系统里，很有可能只在一个用户登陆的时候被使用。每个用户的登陆所用到的查询，都是不一样的SQL 文本，QueryCache在这里就几乎不起作用了，因为缓存的数据几乎是不会被用到的，它们只会在内存里占地方。存储块在本节里“存储块”和“block”是同一个意思QueryCache 缓存一个查询结果的时候，一般情况下不是一次性地分配足够多的内存来缓存结果的。而是在查询结果获得的过程中，逐块存储。当一个存储块被填满之后，一个新 的存储块将会被创建，并分配内存（allocate）。单个存储块的内存分配大小通过query_cache_min_res_unit参数控制，默认为 4KB。最后一个存储块，如果不能被全部利用，那么没使用的内存将会被释放。如果被缓存的结果很大，那么会可能会导致分配内存操作太频繁，系统系能也随之 下降；而如果被缓存的结果都很小，那么可能会导致内存碎片过多，这些碎片如果太小，就很有可能不能再被分配使用。除了查询结果需要存储块 之外，每个SQL文本也需要一个存储块，而涉及到的表也需要一个存储块（表的存储块是所有线程共享的，每个表只需要一个存储块）。存储块总数量=查询结果 数量*2+涉及的数据库表数量。也就是说，第一个缓存生成的时候，至少需要三个存储块：表信息存储块，SQL文本存储块，查询结果存储块。而第二个查询如 果用的是同一个表，那么最少只需要两个存储块：SQL文本存储块，查询结果存储块。通过观察 Qcache_queries_in_cache和Qcache_total_blocks可以知道平均每个缓存结果占用的存储块。它们的比例如果接近 1:2，则说明当前的query_cache_min_res_unit参数已经足够大了。如果Qcache_total_blocks比 Qcache_queries_in_cache多很多，则需要增加query_cache_min_res_unit的大小。Qcache_queries_in_cache*query_cache_min_res_unit（sql 文本和表信息所在的block占用的内存很小，可以忽略）如果远远大于query_cache_size-Qcache_free_memory，那么可 以尝试减小 query_cache_min_res_unit的值。调整大小如果Qcache_lowmem_prunes增长迅速，意味着很多缓存因为内存不够而被释放，而不是因为相关表被更新。尝试加大query_cache_size，尽量使Qcache_lowmem_prunes零增长。启动参数show variables like 'query_cache%'可以看到这些信息。query_cache_limit:如果单个查询结果大于这个值，则不Cachequery_cache_size: 分配给QC的内存。如果设为0，则相当于禁用QC。要注意QC必须使用大约40KB来存储它的结构，如果设定小于 40KB,则相当于禁用QC。QC存储的最小单位是1024 byte，所以如果你设定了一个不是1024的倍数的值，这个值会被四舍五入到最接近当前值的等于1024的倍数的值。query_cache_type:0 完全禁止QC，不受SQL语句控制（另外可能要注意的是，即使这里禁用，上面一个参数所设定的内存大小还是会被分配）；1启用QC，可以在SQL语句使用 SQL_NO_CACHE禁用；2可以在SQL语句使用SQL_CACHE启用。query_cache_min_res_unit:每次给QC结果分配内存的大小状态show status like 'Qcache%'可以看到这些信息。Qcache_free_blocks: 当一个表被更新之后，和它相关的cache blocks将被free。但是这个block依然可能存在队列中，除非是在队列的尾部。这些blocks将会被统计到这个值来。可以用FLUSH QUERY CACHE语句来清空free blocks。Qcache_free_memory:可用内存，如果很小，考虑增加query_cache_sizeQcache_hits:自<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>进程启动起，cache的命中数量Qcache_inserts:自<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>进程启动起，被增加进QC的数量Qcache_lowmem_prunes:由于内存过少而导致QC被删除的条数。加大query_cache_size，尽可能保持这个值0增长。Qcache_not_cached:自<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>进程启动起，没有被cache的只读查询数量（包括select,show,use,desc等）Qcache_queries_in_cache:当前被cache的SQL数量Qcache_total_blocks: 在QC中的blocks数。一个query可能被多个blocks存储，而这几个blocks中的最后一个，未用满的内存将会被释放掉。例如一个QC结果 要占6KB内存，如果query_cache_min_res_unit是4KB，则最后将会生成3个 blocks，第一个block用来存储sql语句文本，这个不会被统计到query+cache_size里，第二个block为4KB，第三个 block为2KB（先allocate4KB，然后释放多余的2KB）。每个表，当第一个和它有关的SQL查询被CACHE的时候，会使用一个 block来存储表信息。也就是说，block会被用在三处地方：表信息，SQL文本，查询结果。另外一篇：如 果 MySQL Server 负载比较高，处理非常繁忙的话，可以启动Query Cache 以加速响应时间，启动方法可以在my.cnf(Linux)或my.ini(Windows)中加入不以下项目:(Redhat下面是：/etc /my.cnf;Debian和Ubuntu是在/etc/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/my.cnf)query_cache_size = 268435456query_cache_type = 1query_cache_limit = 1048576以上语句的设置中 query_cache_size 是分配256M内存给Query Cache;query_cache_type=1，是给所有的查询做Cache；query_cache_limit 是指定个别的查询语句1MB的内存。这些数据可以根据自己的需求作出适当的更改，设置完成之后，保存文档，重新启动MySQL即可。query_cache_type 0 代表不使用缓冲， 1 代表使用缓冲，2 代表根据需要使用。设置 1 代表缓冲永远有效，如果不需要缓冲，就需要使用如下语句：SELECT SQL_NO_CACHE * FROM my_table WHERE ...如果设置为 2 ，需要开启缓冲，可以用如下语句：SELECT SQL_CACHE * FROM my_table WHERE ...用 SHOW STATUS 可以查看缓冲的情况：<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; show status like 'Qca%';+-------------------------+----------+| Variable_name | Value |+-------------------------+----------+| Qcache_queries_in_cache | 8 || Qcache_inserts | 545875 || Qcache_hits | 83951 || Qcache_lowmem_prunes | 0 || Qcache_not_cached | 2343256 || Qcache_free_memory | 33508248 || Qcache_free_blocks | 1 || Qcache_total_blocks | 18 |+-------------------------+----------+8 rows in set (0.00 sec)如果需要计算命中率，需要知道服务器执行了多少 SELECT 语句：<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; show status like 'Com_sel%';+---------------+---------+| Variable_name | Value |+---------------+---------+| Com_select | 2889628 |+---------------+---------+1 row in set (0.01 sec)在本例中， MySQL 命中了 2,889,628 条查询中的 83,951 条，而且 INSERT 语句只有 545,875 条。因此，它们两者的和和280万的总查询相比有很大差距，因此，我们知道本例使用的缓冲类型是 2 。而在类型是 1 的例子中， Qcache_hits 的数值会远远大于 Com_select 。几个命令：<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; show status like 'Qcache%'; #查看<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>查询缓存的运行时状态<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; reset query cache;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #重置<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>查询缓存&nbsp;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; flush query cache&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #清理查询缓存碎片
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

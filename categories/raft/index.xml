@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>raft on Classic</title>
+    <link>/categories/raft/</link>
+    <description>Recent content in raft on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 03 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/raft/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL中间件对比:ProxySQL/MaxScale/ShardingSphere</title>
+      <link>/mysql/mysql%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/</link>
+      <pubDate>Thu, 03 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/</guid>
+      <description>MySQL中件间对比 目标：对比以下3款MySQL中件间
+ ProxySQL MaxScale ShardingSphere  一.Proxy基础能力 兼容性  ProxySQL:良好 MaxScale:mairdb更友好，MGR支持不好 ShardingSphere:良好  发行方  ProxySQL:sysown MaxScale:mairdb ShardingSphere:京东  发布/更新/生态  ProxySQL:c++, 5.1k stars,最新版v2.4.4 1个半月前发布 MaxScale:c,1.6k stars,最新版22.08.2 3个半月前发布 ShardingSphere:java,17.6k stars,最新版5.2.1 16天前发布  运维便利性  ProxySQL:简单 MaxScale:普通 ShardingSphere:复杂（配置文件多且复杂）  二.Proxy高可用架构支持 主从架构下的从库故障  如何探测到   ALL: 每N秒主动探测一次
+  如何响应故障   ALL:探测不到，主动处理: - ShardingSphere:从路由表中标记下线 - proxysql:从group中标记下线 - MaxScale:标记下线
+  切换后状态   ALL:复制拓扑可用
+  影响时长   ALL:1-5 秒</description>
+    </item>
+    
+    <item>
+      <title>MySQL高可用组件之orchestrator</title>
+      <link>/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Borchestrator/</link>
+      <pubDate>Mon, 17 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Borchestrator/</guid>
+      <description>orchestrator是什么 介绍  GitHub公司的用go语言编写并开源的一个MySQL高可用管理工具 MySQL高可用性和复制拓扑管理工具，支持复制拓扑结构的调整，自动故障转移和手动主从切换等。 提供Web界面展示MySQL复制的拓扑关系及状态，通过Web可更改MySQL实例的复制关系和部分配置信息 同时也提供命令行和api接口，方便运维管理。 相对比MHA来看最重要的是解决了管理节点的单点问题，其通过raft协议保证本身的高可用。  特点  自动发现MySQL的复制拓扑，并且在web上展示。 重构复制关系，可以在web进行拖图来进行复制关系变更。 检测主异常，并可以自动或手动恢复，通过Hooks进行自定义脚本。 支持命令行和web界面管理复制。  功能限制  slave不能手动提升为master 不支持多源复制 不支持并行复制 不支持与PXC联合使用  注意事项  对主机名依赖严重，习惯用ip来管理实例的，需要注意确保主机名可解析 主从拓扑结果目前不支持两个实例互为主备或环形结构 自动故障转移，只负责将主从切换了，把从设置为主，其他的变更（dns或proxy变更以及运维信息的变更等需要自己写hook脚本）  orchestrator的工作原理 orchestrator的探测机制  orchestrator会每隔InstancePollSeconds（默认5s）时间用以下SQL去被监控的实例上读取实例状态  show global status like &#39;Uptime&#39; select @@global.hostname, ifnull(@@global.report_host, &#39;&#39;), @@global.server_id, @@global.version, @@global.version_comment, @@global.read_only, @@global.binlog_format, @@global.log_bin, @@global.log_slave_updates show master status show global status like &#39;rpl_semi_sync_%_status&#39; select @@global.gtid_mode, @@global.server_uuid, @@global.gtid_executed, @@global.gtid_purged, @@global.master_info_repository = &#39;TABLE&#39;, @@global.binlog_row_image show slave status select count(*) &amp;gt; 0 and MAX(User_name) !</description>
+    </item>
+    
+    <item>
+      <title>分布式一致性协议:raft协议</title>
+      <link>/dba/raft%E5%8D%8F%E8%AE%AE/</link>
+      <pubDate>Mon, 24 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/raft%E5%8D%8F%E8%AE%AE/</guid>
+      <description>关于raft的起源和历史  raft协议是一种分布式强一致性协议  为什么要有一致性？  1.数据不能存在单个节点（主机）上，否则可能出现单点故障 2.多个节点（主机）需要保证具有相同的数据。   都有哪些一致性协议（算法）  Paxos ：强一致性，由Lamport出品，例如：腾讯的PhxSQL，阿里的OceanBase数据库 Raft ：强一致性，由Paxos改进而来，例如：redis的sentinel,etcd数据库 用的是raft协议 ZAB ：强一致性，由Paxos改进而来，例如：ZooKeeper Gossip协议：弱一致性或者叫最终一致性，例如：rediscluster协议     2014年，由斯坦福大学Diego的一篇200多页的博士论文《CONSENSUS: BRIDGING THEORY AND PRACTICE》提出的一种全新的一致性协议。英文好的可以去看看。网上也有好多翻译成中文的 虽然核心协议上基本都是师继Paxos协议，基于多数派的协议。但是 Raft 一致性协议的贡献在于，定义了可易于实现的一致性协议的事实标准。模块化拆分以及设计简化。使分布式协议更加容易理解和实现  名词一： 复制状态机(Replicated state machines)  为了简化和便于理解，raft协议提出了复制状态机的概念，将集群中的节点都当成一个复制状态机，每个状态机只有三种状态。 复制状态机(Replicated state machines) ： 将集群中的每个服务器看做一个状态机, 它们接收外部的指令, 进行状态的改变, 所谓保持分布式一致性即是保证集群中所有状态机的状态一致性。 在任何时候，每个服务器都处于以下三种状态中的一种: 领导人(leader): 处理所有客户端的交互，日志复制同步，任何时候最多有一个领导人 跟随者(follower): 完全被动（不发出RPC，响应传入的RPC） 候选人(candidate): 用于选举新领导者 我们用图来解释这三种状态的变化关系  名词二： 任期和选举 为了判断过时的信息，过时的leader，raft协议提出了任期(term)的概念
+ 时序被分割为多个领导者任期 每个任期最多1个领导者 有些任期没有领导者（如：上图上的第2个阶段选举失败，但是任期值还是会加1） 每个服务器维护当前任期的值  1.什么时候开始选举  一个正常运行的系统，领导者必须不断的发送心跳（AppendEntries RPC）以保持其领导者的地位 如果在electionTimeout时间内（一般是100-300ms)，跟随都未收到RPC: 跟随者假设领导者已经崩溃，开始新的选举  2.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,902 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Linux服务器如何科学的访问国外的google,git,pypi等站点| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Linux服务器如何科学的访问国外的google,git,pypi等站点</span></h1>
+</div>
+
+
+  <main>
+    <h2 id="目的">目的</h2>
+<ul>
+<li>当我们在Linux服务器上配置环境时（需要pip yum git wget go get ）经常会遇到外网资源受限</li>
+<li>各种依赖关系非常乱，版本对不上，资源下不了。</li>
+<li>国内的镜像站版本不全等等</li>
+<li>非常影响工作效率和成果。</li>
+<li>此时需要用科学的方式将这些开发资源快速配置好</li>
+<li>以下是步骤</li>
+<li>安装配置本地v2ray</li>
+<li>需要使用时启v2ray,source代理</li>
+<li>用完停v2ray,恢复正常环境</li>
+</ul>
+<h2 id="下载运行脚本">下载运行脚本</h2>
+<p>bash &lt;(curl -L <a href="https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh">https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh</a>)</p>
+<pre><code>#!/usr/bin/env bash
+# shellcheck disable=SC2268
+
+# The files installed by the script conform to the Filesystem Hierarchy Standard:
+# https://wiki.linuxfoundation.org/lsb/fhs
+
+# The URL of the script project is:
+# https://github.com/v2fly/fhs-install-v2ray
+
+# The URL of the script is:
+# https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh
+
+# If the script executes incorrectly, go to:
+# https://github.com/v2fly/fhs-install-v2ray/issues
+
+# You can set this variable whatever you want in shell session right before running this script by issuing:
+# export DAT_PATH='/usr/local/share/v2ray'
+DAT_PATH=${DAT_PATH:-/usr/local/share/v2ray}
+
+# You can set this variable whatever you want in shell session right before running this script by issuing:
+# export JSON_PATH='/usr/local/etc/v2ray'
+JSON_PATH=${JSON_PATH:-/usr/local/etc/v2ray}
+
+# Set this variable only if you are starting v2ray with multiple configuration files:
+# export JSONS_PATH='/usr/local/etc/v2ray'
+
+# Set this variable only if you want this script to check all the systemd unit file:
+# export check_all_service_files='yes'
+
+curl() {
+  $(type -P curl) -L -q --retry 5 --retry-delay 10 --retry-max-time 60 &quot;$@&quot;
+}
+
+systemd_cat_config() {
+  if systemd-analyze --help | grep -qw 'cat-config'; then
+    systemd-analyze --no-pager cat-config &quot;$@&quot;
+    echo
+  else
+    echo &quot;${aoi}~~~~~~~~~~~~~~~~&quot;
+    cat &quot;$@&quot; &quot;$1&quot;.d/*
+    echo &quot;${aoi}~~~~~~~~~~~~~~~~&quot;
+    echo &quot;${red}warning: ${green}The systemd version on the current operating system is too low.&quot;
+    echo &quot;${red}warning: ${green}Please consider to upgrade the systemd or the operating system.${reset}&quot;
+    echo
+  fi
+}
+
+check_if_running_as_root() {
+  # If you want to run as another user, please modify $UID to be owned by this user
+  if [[ &quot;$UID&quot; -ne '0' ]]; then
+    echo &quot;WARNING: The user currently executing this script is not root. You may encounter the insufficient privilege error.&quot;
+    read -r -p &quot;Are you sure you want to continue? [y/n] &quot; cont_without_been_root
+    if [[ x&quot;${cont_without_been_root:0:1}&quot; = x'y' ]]; then
+      echo &quot;Continuing the installation with current user...&quot;
+    else
+      echo &quot;Not running with root, exiting...&quot;
+      exit 1
+    fi
+  fi
+}
+
+identify_the_operating_system_and_architecture() {
+  if [[ &quot;$(uname)&quot; == 'Linux' ]]; then
+    case &quot;$(uname -m)&quot; in
+      'i386' | 'i686')
+        MACHINE='32'
+        ;;
+      'amd64' | 'x86_64')
+        MACHINE='64'
+        ;;
+      'armv5tel')
+        MACHINE='arm32-v5'
+        ;;
+      'armv6l')
+        MACHINE='arm32-v6'
+        grep Features /proc/cpuinfo | grep -qw 'vfp' || MACHINE='arm32-v5'
+        ;;
+      'armv7' | 'armv7l')
+        MACHINE='arm32-v7a'
+        grep Features /proc/cpuinfo | grep -qw 'vfp' || MACHINE='arm32-v5'
+        ;;
+      'armv8' | 'aarch64')
+        MACHINE='arm64-v8a'
+        ;;
+      'mips')
+        MACHINE='mips32'
+        ;;
+      'mipsle')
+        MACHINE='mips32le'
+        ;;
+      'mips64')
+        MACHINE='mips64'
+        ;;
+      'mips64le')
+        MACHINE='mips64le'
+        ;;
+      'ppc64')
+        MACHINE='ppc64'
+        ;;
+      'ppc64le')
+        MACHINE='ppc64le'
+        ;;
+      'riscv64')
+        MACHINE='riscv64'
+        ;;
+      's390x')
+        MACHINE='s390x'
+        ;;
+      *)
+        echo &quot;error: The architecture is not supported.&quot;
+        exit 1
+        ;;
+    esac
+    if [[ ! -f '/etc/os-release' ]]; then
+      echo &quot;error: Don't use outdated Linux distributions.&quot;
+      exit 1
+    fi
+    # Do not combine this judgment condition with the following judgment condition.
+    ## Be aware of Linux distribution like Gentoo, which kernel supports switch between Systemd and OpenRC.
+    ### Refer: https://github.com/v2fly/fhs-install-v2ray/issues/84#issuecomment-688574989
+    if [[ -f /.dockerenv ]] || grep -q 'docker\|lxc' /proc/1/cgroup &amp;&amp; [[ &quot;$(type -P systemctl)&quot; ]]; then
+      true
+    elif [[ -d /run/systemd/system ]] || grep -q systemd &lt;(ls -l /sbin/init); then
+      true
+    else
+      echo &quot;error: Only Linux distributions using systemd are supported.&quot;
+      exit 1
+    fi
+    if [[ &quot;$(type -P apt)&quot; ]]; then
+      PACKAGE_MANAGEMENT_INSTALL='apt -y --no-install-recommends install'
+      PACKAGE_MANAGEMENT_REMOVE='apt purge'
+      package_provide_tput='ncurses-bin'
+    elif [[ &quot;$(type -P dnf)&quot; ]]; then
+      PACKAGE_MANAGEMENT_INSTALL='dnf -y install'
+      PACKAGE_MANAGEMENT_REMOVE='dnf remove'
+      package_provide_tput='ncurses'
+    elif [[ &quot;$(type -P yum)&quot; ]]; then
+      PACKAGE_MANAGEMENT_INSTALL='yum -y install'
+      PACKAGE_MANAGEMENT_REMOVE='yum remove'
+      package_provide_tput='ncurses'
+    elif [[ &quot;$(type -P zypper)&quot; ]]; then
+      PACKAGE_MANAGEMENT_INSTALL='zypper install -y --no-recommends'
+      PACKAGE_MANAGEMENT_REMOVE='zypper remove'
+      package_provide_tput='ncurses-utils'
+    elif [[ &quot;$(type -P pacman)&quot; ]]; then
+      PACKAGE_MANAGEMENT_INSTALL='pacman -Syu --noconfirm'
+      PACKAGE_MANAGEMENT_REMOVE='pacman -Rsn'
+      package_provide_tput='ncurses'
+    else
+      echo &quot;error: The script does not support the package manager in this operating system.&quot;
+      exit 1
+    fi
+  else
+    echo &quot;error: This operating system is not supported.&quot;
+    exit 1
+  fi
+}
+
+## Demo function for processing parameters
+judgment_parameters() {
+  while [[ &quot;$#&quot; -gt '0' ]]; do
+    case &quot;$1&quot; in
+      '--remove')
+        if [[ &quot;$#&quot; -gt '1' ]]; then
+          echo 'error: Please enter the correct parameters.'
+          exit 1
+        fi
+        REMOVE='1'
+        ;;
+      '--version')
+        VERSION=&quot;${2:?error: Please specify the correct version.}&quot;
+        break
+        ;;
+      '-c' | '--check')
+        CHECK='1'
+        break
+        ;;
+      '-f' | '--force')
+        FORCE='1'
+        break
+        ;;
+      '-h' | '--help')
+        HELP='1'
+        break
+        ;;
+      '-l' | '--local')
+        LOCAL_INSTALL='1'
+        LOCAL_FILE=&quot;${2:?error: Please specify the correct local file.}&quot;
+        break
+        ;;
+      '-p' | '--proxy')
+        if [[ -z &quot;${2:?error: Please specify the proxy server address.}&quot; ]]; then
+          exit 1
+        fi
+        PROXY=&quot;$2&quot;
+        shift
+        ;;
+      *)
+        echo &quot;$0: unknown option -- -&quot;
+        exit 1
+        ;;
+    esac
+    shift
+  done
+}
+
+install_software() {
+  package_name=&quot;$1&quot;
+  file_to_detect=&quot;$2&quot;
+  type -P &quot;$file_to_detect&quot; &gt; /dev/null 2&gt;&amp;1 &amp;&amp; return
+  if ${PACKAGE_MANAGEMENT_INSTALL} &quot;$package_name&quot;; then
+    echo &quot;info: $package_name is installed.&quot;
+  else
+    echo &quot;error: Installation of $package_name failed, please check your network.&quot;
+    exit 1
+  fi
+}
+
+get_current_version() {
+  if /usr/local/bin/v2ray -version &gt; /dev/null 2&gt;&amp;1; then
+    VERSION=&quot;$(/usr/local/bin/v2ray -version | awk 'NR==1 {print $2}')&quot;
+  else
+    VERSION=&quot;$(/usr/local/bin/v2ray version | awk 'NR==1 {print $2}')&quot;
+  fi
+  CURRENT_VERSION=&quot;v${VERSION#v}&quot;
+}
+
+get_version() {
+  # 0: Install or update V2Ray.
+  # 1: Installed or no new version of V2Ray.
+  # 2: Install the specified version of V2Ray.
+  if [[ -n &quot;$VERSION&quot; ]]; then
+    RELEASE_VERSION=&quot;v${VERSION#v}&quot;
+    return 2
+  fi
+  # Determine the version number for V2Ray installed from a local file
+  if [[ -f '/usr/local/bin/v2ray' ]]; then
+    get_current_version
+    if [[ &quot;$LOCAL_INSTALL&quot; -eq '1' ]]; then
+      RELEASE_VERSION=&quot;$CURRENT_VERSION&quot;
+      return
+    fi
+  fi
+  # Get V2Ray release version number
+  TMP_FILE=&quot;$(mktemp)&quot;
+  if ! curl -x &quot;${PROXY}&quot; -sS -i -H &quot;Accept: application/vnd.github.v3+json&quot; -o &quot;$TMP_FILE&quot; 'https://api.github.com/repos/v2fly/v2ray-core/releases/latest'; then
+    &quot;rm&quot; &quot;$TMP_FILE&quot;
+    echo 'error: Failed to get release list, please check your network.'
+    exit 1
+  fi
+  HTTP_STATUS_CODE=$(awk 'NR==1 {print $2}' &quot;$TMP_FILE&quot;)
+  if [[ $HTTP_STATUS_CODE -lt 200 ]] || [[ $HTTP_STATUS_CODE -gt 299 ]]; then
+    &quot;rm&quot; &quot;$TMP_FILE&quot;
+    echo &quot;error: Failed to get release list, GitHub API response code: $HTTP_STATUS_CODE&quot;
+    exit 1
+  fi
+  RELEASE_LATEST=&quot;$(sed 'y/,/\n/' &quot;$TMP_FILE&quot; | grep 'tag_name' | awk -F '&quot;' '{print $4}')&quot;
+  &quot;rm&quot; &quot;$TMP_FILE&quot;
+  RELEASE_VERSION=&quot;v${RELEASE_LATEST#v}&quot;
+  # Compare V2Ray version numbers
+  if [[ &quot;$RELEASE_VERSION&quot; != &quot;$CURRENT_VERSION&quot; ]]; then
+    RELEASE_VERSIONSION_NUMBER=&quot;${RELEASE_VERSION#v}&quot;
+    RELEASE_MAJOR_VERSION_NUMBER=&quot;${RELEASE_VERSIONSION_NUMBER%%.*}&quot;
+    RELEASE_MINOR_VERSION_NUMBER=&quot;$(echo &quot;$RELEASE_VERSIONSION_NUMBER&quot; | awk -F '.' '{print $2}')&quot;
+    RELEASE_MINIMUM_VERSION_NUMBER=&quot;${RELEASE_VERSIONSION_NUMBER##*.}&quot;
+    # shellcheck disable=SC2001
+    CURRENT_VERSION_NUMBER=&quot;$(echo &quot;${CURRENT_VERSION#v}&quot; | sed 's/-.*//')&quot;
+    CURRENT_MAJOR_VERSION_NUMBER=&quot;${CURRENT_VERSION_NUMBER%%.*}&quot;
+    CURRENT_MINOR_VERSION_NUMBER=&quot;$(echo &quot;$CURRENT_VERSION_NUMBER&quot; | awk -F '.' '{print $2}')&quot;
+    CURRENT_MINIMUM_VERSION_NUMBER=&quot;${CURRENT_VERSION_NUMBER##*.}&quot;
+    if [[ &quot;$RELEASE_MAJOR_VERSION_NUMBER&quot; -gt &quot;$CURRENT_MAJOR_VERSION_NUMBER&quot; ]]; then
+      return 0
+    elif [[ &quot;$RELEASE_MAJOR_VERSION_NUMBER&quot; -eq &quot;$CURRENT_MAJOR_VERSION_NUMBER&quot; ]]; then
+      if [[ &quot;$RELEASE_MINOR_VERSION_NUMBER&quot; -gt &quot;$CURRENT_MINOR_VERSION_NUMBER&quot; ]]; then
+        return 0
+      elif [[ &quot;$RELEASE_MINOR_VERSION_NUMBER&quot; -eq &quot;$CURRENT_MINOR_VERSION_NUMBER&quot; ]]; then
+        if [[ &quot;$RELEASE_MINIMUM_VERSION_NUMBER&quot; -gt &quot;$CURRENT_MINIMUM_VERSION_NUMBER&quot; ]]; then
+          return 0
+        else
+          return 1
+        fi
+      else
+        return 1
+      fi
+    else
+      return 1
+    fi
+  elif [[ &quot;$RELEASE_VERSION&quot; == &quot;$CURRENT_VERSION&quot; ]]; then
+    return 1
+  fi
+}
+
+download_v2ray() {
+  DOWNLOAD_LINK=&quot;https://github.com/v2fly/v2ray-core/releases/download/$RELEASE_VERSION/v2ray-linux-$MACHINE.zip&quot;
+  echo &quot;Downloading V2Ray archive: $DOWNLOAD_LINK&quot;
+  if ! curl -x &quot;${PROXY}&quot; -R -H 'Cache-Control: no-cache' -o &quot;$ZIP_FILE&quot; &quot;$DOWNLOAD_LINK&quot;; then
+    echo 'error: Download failed! Please check your network or try again.'
+    return 1
+  fi
+  echo &quot;Downloading verification file for V2Ray archive: $DOWNLOAD_LINK.dgst&quot;
+  if ! curl -x &quot;${PROXY}&quot; -sSR -H 'Cache-Control: no-cache' -o &quot;$ZIP_FILE.dgst&quot; &quot;$DOWNLOAD_LINK.dgst&quot;; then
+    echo 'error: Download failed! Please check your network or try again.'
+    return 1
+  fi
+  if [[ &quot;$(cat &quot;$ZIP_FILE&quot;.dgst)&quot; == 'Not Found' ]]; then
+    echo 'error: This version does not support verification. Please replace with another version.'
+    return 1
+  fi
+
+  # Verification of V2Ray archive
+  CHECKSUM=$(awk -F '= ' '/256=/ {print $2}' &lt; &quot;${ZIP_FILE}.dgst&quot;)
+  LOCALSUM=$(sha256sum &quot;$ZIP_FILE&quot; | awk '{printf $1}')
+  if [[ &quot;$CHECKSUM&quot; != &quot;$LOCALSUM&quot; ]]; then
+    echo 'error: SHA256 check failed! Please check your network or try again.'
+    return 1
+  fi
+}
+
+decompression() {
+  if ! unzip -q &quot;$1&quot; -d &quot;$TMP_DIRECTORY&quot;; then
+    echo 'error: V2Ray decompression failed.'
+    &quot;rm&quot; -r &quot;$TMP_DIRECTORY&quot;
+    echo &quot;removed: $TMP_DIRECTORY&quot;
+    exit 1
+  fi
+  echo &quot;info: Extract the V2Ray package to $TMP_DIRECTORY and prepare it for installation.&quot;
+}
+
+install_file() {
+  NAME=&quot;$1&quot;
+  if [[ &quot;$NAME&quot; == 'v2ray' ]] || [[ &quot;$NAME&quot; == 'v2ctl' ]]; then
+    install -m 755 &quot;${TMP_DIRECTORY}/$NAME&quot; &quot;/usr/local/bin/$NAME&quot;
+  elif [[ &quot;$NAME&quot; == 'geoip.dat' ]] || [[ &quot;$NAME&quot; == 'geosite.dat' ]]; then
+    install -m 644 &quot;${TMP_DIRECTORY}/$NAME&quot; &quot;${DAT_PATH}/$NAME&quot;
+  fi
+}
+
+install_v2ray() {
+  # Install V2Ray binary to /usr/local/bin/ and $DAT_PATH
+  install_file v2ray
+  if [[ -f &quot;${TMP_DIRECTORY}/v2ctl&quot; ]]; then
+    install_file v2ctl
+  else
+    if [[ -f '/usr/local/bin/v2ctl' ]]; then
+      rm '/usr/local/bin/v2ctl'
+    fi
+  fi
+  install -d &quot;$DAT_PATH&quot;
+  # If the file exists, geoip.dat and geosite.dat will not be installed or updated
+  if [[ ! -f &quot;${DAT_PATH}/.undat&quot; ]]; then
+    install_file geoip.dat
+    install_file geosite.dat
+  fi
+
+  # Install V2Ray configuration file to $JSON_PATH
+  # shellcheck disable=SC2153
+  if [[ -z &quot;$JSONS_PATH&quot; ]] &amp;&amp; [[ ! -d &quot;$JSON_PATH&quot; ]]; then
+    install -d &quot;$JSON_PATH&quot;
+    echo &quot;{}&quot; &gt; &quot;${JSON_PATH}/config.json&quot;
+    CONFIG_NEW='1'
+  fi
+
+  # Install V2Ray configuration file to $JSONS_PATH
+  if [[ -n &quot;$JSONS_PATH&quot; ]] &amp;&amp; [[ ! -d &quot;$JSONS_PATH&quot; ]]; then
+    install -d &quot;$JSONS_PATH&quot;
+    for BASE in 00_log 01_api 02_dns 03_routing 04_policy 05_inbounds 06_outbounds 07_transport 08_stats 09_reverse; do
+      echo '{}' &gt; &quot;${JSONS_PATH}/${BASE}.json&quot;
+    done
+    CONFDIR='1'
+  fi
+
+  # Used to store V2Ray log files
+  if [[ ! -d '/var/log/v2ray/' ]]; then
+    if id nobody | grep -qw 'nogroup'; then
+      install -d -m 700 -o nobody -g nogroup /var/log/v2ray/
+      install -m 600 -o nobody -g nogroup /dev/null /var/log/v2ray/access.log
+      install -m 600 -o nobody -g nogroup /dev/null /var/log/v2ray/error.log
+    else
+      install -d -m 700 -o nobody -g nobody /var/log/v2ray/
+      install -m 600 -o nobody -g nobody /dev/null /var/log/v2ray/access.log
+      install -m 600 -o nobody -g nobody /dev/null /var/log/v2ray/error.log
+    fi
+    LOG='1'
+  fi
+}
+
+install_startup_service_file() {
+  get_current_version
+  if [[ &quot;$(echo &quot;${CURRENT_VERSION#v}&quot; | sed 's/-.*//' | awk -F'.' '{print $1}')&quot; -gt &quot;4&quot; ]]; then
+    START_COMMAND=&quot;/usr/local/bin/v2ray run&quot;
+  else
+    START_COMMAND=&quot;/usr/local/bin/v2ray&quot;
+  fi
+  install -m 644 &quot;${TMP_DIRECTORY}/systemd/system/v2ray.service&quot; /etc/systemd/system/v2ray.service
+  install -m 644 &quot;${TMP_DIRECTORY}/systemd/system/v2ray@.service&quot; /etc/systemd/system/v2ray@.service
+  mkdir -p '/etc/systemd/system/v2ray.service.d'
+  mkdir -p '/etc/systemd/system/v2ray@.service.d/'
+  if [[ -n &quot;$JSONS_PATH&quot; ]]; then
+    &quot;rm&quot; -f '/etc/systemd/system/v2ray.service.d/10-donot_touch_single_conf.conf' \
+      '/etc/systemd/system/v2ray@.service.d/10-donot_touch_single_conf.conf'
+    echo &quot;# In case you have a good reason to do so, duplicate this file in the same directory and make your customizes there.
+# Or all changes you made will be lost!  # Refer: https://www.freedesktop.org/software/systemd/man/systemd.unit.html
+[Service]
+ExecStart=
+ExecStart=${START_COMMAND} -confdir $JSONS_PATH&quot; |
+      tee '/etc/systemd/system/v2ray.service.d/10-donot_touch_multi_conf.conf' &gt; '/etc/systemd/system/v2ray@.service.d/10-donot_touch_multi_conf.conf'
+  else
+    &quot;rm&quot; -f '/etc/systemd/system/v2ray.service.d/10-donot_touch_multi_conf.conf' \
+      '/etc/systemd/system/v2ray@.service.d/10-donot_touch_multi_conf.conf'
+    echo &quot;# In case you have a good reason to do so, duplicate this file in the same directory and make your customizes there.
+# Or all changes you made will be lost!  # Refer: https://www.freedesktop.org/software/systemd/man/systemd.unit.html
+[Service]
+ExecStart=
+ExecStart=${START_COMMAND} -config ${JSON_PATH}/config.json&quot; &gt; '/etc/systemd/system/v2ray.service.d/10-donot_touch_single_conf.conf'
+    echo &quot;# In case you have a good reason to do so, duplicate this file in the same directory and make your customizes there.
+# Or all changes you made will be lost!  # Refer: https://www.freedesktop.org/software/systemd/man/systemd.unit.html
+[Service]
+ExecStart=
+ExecStart=${START_COMMAND} -config ${JSON_PATH}/%i.json&quot; &gt; '/etc/systemd/system/v2ray@.service.d/10-donot_touch_single_conf.conf'
+  fi
+  echo &quot;info: Systemd service files have been installed successfully!&quot;
+  echo &quot;${red}warning: ${green}The following are the actual parameters for the v2ray service startup.&quot;
+  echo &quot;${red}warning: ${green}Please make sure the configuration file path is correctly set.${reset}&quot;
+  systemd_cat_config /etc/systemd/system/v2ray.service
+  # shellcheck disable=SC2154
+  if [[ x&quot;${check_all_service_files:0:1}&quot; = x'y' ]]; then
+    echo
+    echo
+    systemd_cat_config /etc/systemd/system/v2ray@.service
+  fi
+  systemctl daemon-reload
+  SYSTEMD='1'
+}
+
+start_v2ray() {
+  if [[ -f '/etc/systemd/system/v2ray.service' ]]; then
+    if systemctl start &quot;${V2RAY_CUSTOMIZE:-v2ray}&quot;; then
+      echo 'info: Start the V2Ray service.'
+    else
+      echo 'error: Failed to start V2Ray service.'
+      exit 1
+    fi
+  fi
+}
+
+stop_v2ray() {
+  V2RAY_CUSTOMIZE=&quot;$(systemctl list-units | grep 'v2ray@' | awk -F ' ' '{print $1}')&quot;
+  if [[ -z &quot;$V2RAY_CUSTOMIZE&quot; ]]; then
+    local v2ray_daemon_to_stop='v2ray.service'
+  else
+    local v2ray_daemon_to_stop=&quot;$V2RAY_CUSTOMIZE&quot;
+  fi
+  if ! systemctl stop &quot;$v2ray_daemon_to_stop&quot;; then
+    echo 'error: Stopping the V2Ray service failed.'
+    exit 1
+  fi
+  echo 'info: Stop the V2Ray service.'
+}
+
+check_update() {
+  if [[ -f '/etc/systemd/system/v2ray.service' ]]; then
+    get_version
+    local get_ver_exit_code=$?
+    if [[ &quot;$get_ver_exit_code&quot; -eq '0' ]]; then
+      echo &quot;info: Found the latest release of V2Ray $RELEASE_VERSION . (Current release: $CURRENT_VERSION)&quot;
+    elif [[ &quot;$get_ver_exit_code&quot; -eq '1' ]]; then
+      echo &quot;info: No new version. The current version of V2Ray is $CURRENT_VERSION .&quot;
+    fi
+    exit 0
+  else
+    echo 'error: V2Ray is not installed.'
+    exit 1
+  fi
+}
+
+remove_v2ray() {
+  if systemctl list-unit-files | grep -qw 'v2ray'; then
+    if [[ -n &quot;$(pidof v2ray)&quot; ]]; then
+      stop_v2ray
+    fi
+    if ! (&quot;rm&quot; -r '/usr/local/bin/v2ray' \
+      &quot;$DAT_PATH&quot; \
+      '/etc/systemd/system/v2ray.service' \
+      '/etc/systemd/system/v2ray@.service' \
+      '/etc/systemd/system/v2ray.service.d' \
+      '/etc/systemd/system/v2ray@.service.d'); then
+      echo 'error: Failed to remove V2Ray.'
+      exit 1
+    else
+      echo 'removed: /usr/local/bin/v2ray'
+      if [[ -f '/usr/local/bin/v2ctl' ]]; then
+        rm '/usr/local/bin/v2ctl'
+        echo 'removed: /usr/local/bin/v2ctl'
+      fi
+      echo &quot;removed: $DAT_PATH&quot;
+      echo 'removed: /etc/systemd/system/v2ray.service'
+      echo 'removed: /etc/systemd/system/v2ray@.service'
+      echo 'removed: /etc/systemd/system/v2ray.service.d'
+      echo 'removed: /etc/systemd/system/v2ray@.service.d'
+      echo 'Please execute the command: systemctl disable v2ray'
+      echo &quot;You may need to execute a command to remove dependent software: $PACKAGE_MANAGEMENT_REMOVE curl unzip&quot;
+      echo 'info: V2Ray has been removed.'
+      echo 'info: If necessary, manually delete the configuration and log files.'
+      if [[ -n &quot;$JSONS_PATH&quot; ]]; then
+        echo &quot;info: e.g., $JSONS_PATH and /var/log/v2ray/ ...&quot;
+      else
+        echo &quot;info: e.g., $JSON_PATH and /var/log/v2ray/ ...&quot;
+      fi
+      exit 0
+    fi
+  else
+    echo 'error: V2Ray is not installed.'
+    exit 1
+  fi
+}
+
+# Explanation of parameters in the script
+show_help() {
+  echo &quot;usage: $0 [--remove | --version number | -c | -f | -h | -l | -p]&quot;
+  echo '  [-p address] [--version number | -c | -f]'
+  echo '  --remove        Remove V2Ray'
+  echo '  --version       Install the specified version of V2Ray, e.g., --version v4.18.0'
+  echo '  -c, --check     Check if V2Ray can be updated'
+  echo '  -f, --force     Force installation of the latest version of V2Ray'
+  echo '  -h, --help      Show help'
+  echo '  -l, --local     Install V2Ray from a local file'
+  echo '  -p, --proxy     Download through a proxy server, e.g., -p http://127.0.0.1:8118 or -p socks5://127.0.0.1:1080'
+  exit 0
+}
+
+main() {
+  check_if_running_as_root
+  identify_the_operating_system_and_architecture
+  judgment_parameters &quot;$@&quot;
+
+  install_software &quot;$package_provide_tput&quot; 'tput'
+  red=$(tput setaf 1)
+  green=$(tput setaf 2)
+  aoi=$(tput setaf 6)
+  reset=$(tput sgr0)
+
+  # Parameter information
+  [[ &quot;$HELP&quot; -eq '1' ]] &amp;&amp; show_help
+  [[ &quot;$CHECK&quot; -eq '1' ]] &amp;&amp; check_update
+  [[ &quot;$REMOVE&quot; -eq '1' ]] &amp;&amp; remove_v2ray
+
+  # Two very important variables
+  TMP_DIRECTORY=&quot;$(mktemp -d)&quot;
+  ZIP_FILE=&quot;${TMP_DIRECTORY}/v2ray-linux-$MACHINE.zip&quot;
+
+  # Install V2Ray from a local file, but still need to make sure the network is available
+  if [[ &quot;$LOCAL_INSTALL&quot; -eq '1' ]]; then
+    echo 'warn: Install V2Ray from a local file, but still need to make sure the network is available.'
+    echo -n 'warn: Please make sure the file is valid because we cannot confirm it. (Press any key) ...'
+    read -r
+    install_software 'unzip' 'unzip'
+    decompression &quot;$LOCAL_FILE&quot;
+  else
+    # Normal way
+    install_software 'curl' 'curl'
+    get_version
+    NUMBER=&quot;$?&quot;
+    if [[ &quot;$NUMBER&quot; -eq '0' ]] || [[ &quot;$FORCE&quot; -eq '1' ]] || [[ &quot;$NUMBER&quot; -eq 2 ]]; then
+      echo &quot;info: Installing V2Ray $RELEASE_VERSION for $(uname -m)&quot;
+      download_v2ray
+      if [[ &quot;$?&quot; -eq '1' ]]; then
+        &quot;rm&quot; -r &quot;$TMP_DIRECTORY&quot;
+        echo &quot;removed: $TMP_DIRECTORY&quot;
+        exit 1
+      fi
+      install_software 'unzip' 'unzip'
+      decompression &quot;$ZIP_FILE&quot;
+    elif [[ &quot;$NUMBER&quot; -eq '1' ]]; then
+      echo &quot;info: No new version. The current version of V2Ray is $CURRENT_VERSION .&quot;
+      exit 0
+    fi
+  fi
+
+  # Determine if V2Ray is running
+  if systemctl list-unit-files | grep -qw 'v2ray'; then
+    if [[ -n &quot;$(pidof v2ray)&quot; ]]; then
+      stop_v2ray
+      V2RAY_RUNNING='1'
+    fi
+  fi
+  install_v2ray
+  install_startup_service_file
+  echo 'installed: /usr/local/bin/v2ray'
+  if [[ -f '/usr/local/bin/v2ctl' ]]; then
+    echo 'installed: /usr/local/bin/v2ctl'
+  fi
+  # If the file exists, the content output of installing or updating geoip.dat and geosite.dat will not be displayed
+  if [[ ! -f &quot;${DAT_PATH}/.undat&quot; ]]; then
+    echo &quot;installed: ${DAT_PATH}/geoip.dat&quot;
+    echo &quot;installed: ${DAT_PATH}/geosite.dat&quot;
+  fi
+  if [[ &quot;$CONFIG_NEW&quot; -eq '1' ]]; then
+    echo &quot;installed: ${JSON_PATH}/config.json&quot;
+  fi
+  if [[ &quot;$CONFDIR&quot; -eq '1' ]]; then
+    echo &quot;installed: ${JSON_PATH}/00_log.json&quot;
+    echo &quot;installed: ${JSON_PATH}/01_api.json&quot;
+    echo &quot;installed: ${JSON_PATH}/02_dns.json&quot;
+    echo &quot;installed: ${JSON_PATH}/03_routing.json&quot;
+    echo &quot;installed: ${JSON_PATH}/04_policy.json&quot;
+    echo &quot;installed: ${JSON_PATH}/05_inbounds.json&quot;
+    echo &quot;installed: ${JSON_PATH}/06_outbounds.json&quot;
+    echo &quot;installed: ${JSON_PATH}/07_transport.json&quot;
+    echo &quot;installed: ${JSON_PATH}/08_stats.json&quot;
+    echo &quot;installed: ${JSON_PATH}/09_reverse.json&quot;
+  fi
+  if [[ &quot;$LOG&quot; -eq '1' ]]; then
+    echo 'installed: /var/log/v2ray/'
+    echo 'installed: /var/log/v2ray/access.log'
+    echo 'installed: /var/log/v2ray/error.log'
+  fi
+  if [[ &quot;$SYSTEMD&quot; -eq '1' ]]; then
+    echo 'installed: /etc/systemd/system/v2ray.service'
+    echo 'installed: /etc/systemd/system/v2ray@.service'
+  fi
+  &quot;rm&quot; -r &quot;$TMP_DIRECTORY&quot;
+  echo &quot;removed: $TMP_DIRECTORY&quot;
+  if [[ &quot;$LOCAL_INSTALL&quot; -eq '1' ]]; then
+    get_version
+  fi
+  echo &quot;info: V2Ray $RELEASE_VERSION is installed.&quot;
+  echo &quot;You may need to execute a command to remove dependent software: $PACKAGE_MANAGEMENT_REMOVE curl unzip&quot;
+  if [[ &quot;$V2RAY_RUNNING&quot; -eq '1' ]]; then
+    start_v2ray
+  else
+    echo 'Please execute the command: systemctl enable v2ray; systemctl start v2ray'
+  fi
+}
+
+main &quot;$@&quot;
+</code></pre><h2 id="vim-usrlocaletcv2rayconfigjson">vim /usr/local/etc/v2ray/config.json</h2>
+<pre><code>{
+  &quot;log&quot;: {
+    &quot;error&quot;: &quot;&quot;,
+    &quot;loglevel&quot;: &quot;info&quot;,
+    &quot;access&quot;: &quot;&quot;
+  },
+  &quot;inbounds&quot;: [
+    {
+      &quot;listen&quot;: &quot;127.0.0.1&quot;,
+      &quot;protocol&quot;: &quot;socks&quot;,
+      &quot;settings&quot;: {
+        &quot;udp&quot;: false,
+        &quot;auth&quot;: &quot;noauth&quot;
+      },
+      &quot;port&quot;: &quot;1080&quot;
+    },
+    {
+      &quot;listen&quot;: &quot;127.0.0.1&quot;,
+      &quot;protocol&quot;: &quot;http&quot;,
+      &quot;settings&quot;: {
+        &quot;timeout&quot;: 360
+      },
+      &quot;port&quot;: &quot;1087&quot;
+    }
+  ],
+  &quot;outbounds&quot;: [
+    {
+      &quot;mux&quot;: {
+        &quot;enabled&quot;: false,
+        &quot;concurrency&quot;: 8
+      },
+      &quot;protocol&quot;: &quot;vmess&quot;,
+      &quot;streamSettings&quot;: {
+        &quot;network&quot;: &quot;kcp&quot;,
+        &quot;kcpSettings&quot;: {
+          &quot;header&quot;: {
+            &quot;type&quot;: &quot;dtls&quot;
+          },
+          &quot;mtu&quot;: 1350,
+          &quot;congestion&quot;: false,
+          &quot;tti&quot;: 20,
+          &quot;uplinkCapacity&quot;: 50,
+          &quot;writeBufferSize&quot;: 1,
+          &quot;readBufferSize&quot;: 1,
+          &quot;downlinkCapacity&quot;: 20
+        },
+        &quot;security&quot;: &quot;none&quot;
+      },
+      &quot;tag&quot;: &quot;proxy&quot;,
+      &quot;settings&quot;: {
+        &quot;vnext&quot;: [
+          {
+            &quot;address&quot;: &quot;这里写ip地址&quot;,
+            &quot;users&quot;: [
+              {
+                &quot;id&quot;: &quot;这里是proxyid&quot;,
+                &quot;alterId&quot;: 0,
+                &quot;level&quot;: 0,
+                &quot;security&quot;: &quot;aes-128-gcm&quot;
+              }
+            ],
+            &quot;port&quot;:这里proxy端口
+          }
+        ]
+      }
+    },
+    {
+      &quot;tag&quot;: &quot;direct&quot;,
+      &quot;protocol&quot;: &quot;freedom&quot;,
+      &quot;settings&quot;: {
+        &quot;domainStrategy&quot;: &quot;UseIP&quot;,
+        &quot;userLevel&quot;: 0
+      }
+    },
+    {
+      &quot;tag&quot;: &quot;block&quot;,
+      &quot;protocol&quot;: &quot;blackhole&quot;,
+      &quot;settings&quot;: {
+        &quot;response&quot;: {
+          &quot;type&quot;: &quot;none&quot;
+        }
+      }
+    }
+  ],
+  &quot;dns&quot;: {},
+  &quot;routing&quot;: {
+    &quot;settings&quot;: {
+      &quot;domainStrategy&quot;: &quot;AsIs&quot;,
+      &quot;rules&quot;: [
+        {
+          &quot;type&quot;: &quot;field&quot;,
+          &quot;outboundTag&quot;: &quot;direct&quot;,
+          &quot;domain&quot;: [
+            &quot;dboop.com&quot;,
+            &quot;baidu.com&quot;,
+            &quot;qq.com&quot;
+          ]
+        }
+      ]
+    }
+  },
+  &quot;transport&quot;: {}
+}
+</code></pre><h2 id="测试连通性">测试连通性</h2>
+<pre><code>systemctl start v2ray
+curl --socks5 127.0.0.1:1080 https://www.google.com
+
+systemctl stop v2ray
+</code></pre><h2 id="vim-v2rayrc">vim v2ray.rc</h2>
+<pre><code>export http_proxy=http://127.0.0.1:1087
+export https_proxy=http://127.0.0.1:1087
+export ftp_proxy=http://127.0.0.1:1087
+export no_proxy=&quot;10.x.x.x&quot;  
+
+</code></pre><h2 id="使用">使用</h2>
+<p>当需要pip yum git wget 外网资源受阻时</p>
+<pre><code>systemctl start v2ray
+source v2ray.rc
+</code></pre><p>用完以后</p>
+<pre><code>systemctl stop  v2ray
+
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/04/19</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/centos">centos</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

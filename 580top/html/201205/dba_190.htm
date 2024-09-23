@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SQLServer线程等待信息</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="要知道线程等待时间是制约sqlserver效率的重要原因，这一个随笔中将学习怎样收集sqlserver中的线程等待时间，类型等信息，这些信息是进行数据库优化的依据。<br/><br/>sys.dm_os_wait_stats<br/>这是一个系统视图，里面存储线程所遇到的所有的等待信息，具体的列如下表<br/>列名<br/>数据类型<br/>说明<br/>wait_type<SQLServer线程等待信息" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA">高可用性和HA</a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化">性能与优化</a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决">故障与解决</a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserverzhishi/l_2_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>SQLServer线程等待信息</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   要知道线程等待时间是制约SQL Server效率的重要原因，这一个随笔中将学习怎样收集SQL Server中的线程等待时间，类型等信息，这些信息是进行数据库优化的依据。<br />　　<br />sys.dm_os_wait_stats<br />这是一个系统视图，里面存储线程所遇到的所有的等待信息，具体的列如下表<br />列名<br />数据类型<br />说明<br />Wait_type<br />Nvarchar(60)<br />等待类型名称<br />waiting_tasks_count<br />Bigint<br />等待类型的等待数。该计数器在每开始一个等待时便会增加。<br />Wait_time_ms<br />Bigint<br />该等待类型的总等待时间。<br />Max_wait_time_ms<br />Bigint<br />该等待类型的最长等待时间。<br />Signal_wait_time_ms<br />Bigint<br />正在等待的线程从收到信号通知到开始运行之间的时差。<br />要注意的是，这个视图的信息每次关闭SQL Server的时候都会自动清除，下次打开SQL Server的时候又会重新开始统计。<br />　　<br />新建线程等待信息表<br />如果想得到连续的信息，在固定时间间隔内收集信息比如一个小时一次，这样就可以分析系统分配的等待时间，识别出繁忙时间段。这里我们将这些信息收集到一个数据表中保存并进行分析。使用下面的语句新建一个表：<br />use AdventureWorks<br /><br />CREATE TABLE dbo.WaitStats<br /><br />(<br /><br />dt DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP),<br /><br />wait_type NVARCHAR(60) NOT NULL,<br /><br />waiting_tasks_count BIGINT NOT NULL,<br /><br />wait_time_ms BIGINT NOT NULL,<br /><br />max_wait_time_ms BIGINT NOT NULL,<br /><br />signal_wait_time_ms BIGINT NOT NULL<br /><br />);<br /><br />CREATE UNIQUE CLUSTERED INDEX idx_dt_type ON dbo.WaitStats(dt, wait_type);<br /><br />CREATE INDEX idx_type_dt ON dbo.WaitStats(wait_type, dt);　　<br />新建job填充数据<br />要收集信息最好是用一个job来定时地执行insert语句填充数据，下面介绍步骤<br />点击数据库中的SQL Server Agent，展开，右击jobs文件夹，右击新建。如图1<br /><br /><br />图1 在新建job界面，General标签中填写job名称，描述，如图2<br /><br />图2 点击Setps标签，点击新建按钮，在新建step界面内设置Step Name，Type，DataBase，Command等属性，如下图3。这些属性一看就知道是要做什么的，就不一一的解释了。还要说的 是截图是建好的job，如果你自己做的话对话框显示的标题可能不一样。<br /><br /><br />图3<br />Command属性是设置要执行的SQL语句或存储过程等等，这里设置如下的SQL Script:<br />INSERT INTO Performance.dbo.WaitStats<br />(wait_type, waiting_tasks_count, wait_time_ms,<br />max_wait_time_ms, signal_wait_time_ms)<br />SELECT<br />wait_type, waiting_tasks_count, wait_time_ms,<br />max_wait_time_ms, signal_wait_time_ms<br />FROM sys.dm_os_wait_stats点击Shedules标签，设置job的执行计划，这里设置的是每天的每5分钟执行一次如图4<br />&nbsp;<br />图4上述步骤包含了新建一个job的主要设置，<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>的细节信息没有包含，遇到具体问题再具体分析吧。<br />收集等待信息数据<br />过一段时间之后在表WaitStats中就会有一些数据，每隔5分钟就会在这个表中写入一些数据，这些数据会不断的增加。这里为了得到相邻间隔之间线程等待时间的变化就要使用自连接，连接条件是等待类型相同，当前行号等于上一个的行号加上1，然后就可以用上一次等待时间减去这一次的等待时间得到这个变化值，下面使用一个函数来实现这个逻辑：<br />IF OBJECT_ID('dbo.IntervalWaits', 'IF') IS NOT NULL<br />DROP FUNCTION dbo.IntervalWaits;<br />GO<br />CREATE FUNCTION dbo.IntervalWaits<br />(@fromdt AS DATETIME, @todt AS DATETIME)<br />RETURNS TABLE<br />AS<br />RETURN<br />WITH Waits AS<br />(<br />SELECT dt, wait_type, wait_time_ms,<br />ROW_NUMBER() OVER(PARTITION BY wait_type<br />ORDER BY dt) AS rn<br />FROM dbo.WaitStats<br />)<br />SELECT PRv.wait_type, Prv.dt AS start_time,<br />CAST((Cur.wait_time_ms - Prv.wait_time_ms)<br />/ 1000. AS NUMERIC(12, 2)) AS interval_wait_s<br />FROM Waits AS Cur<br />JOIN Waits AS Prv<br />ON Cur.wait_type = Prv.wait_type<br />AND Cur.rn = Prv.rn + 1<br />AND Prv.dt &gt;= @fromdt<br />AND Prv.dt &lt; DATEADD(day, 1, @todt)<br />GO这个函数接受两个参数，开始统计时间，结束统计时间，返回等待变化的时间，并按照类型排序。调用这个函数如下：<br />SELECT wait_type, start_time, interval_wait_s FROM dbo.IntervalWaits('20110509', '20110510') AS F<br />ORDER BY SUM(interval_wait_s) OVER(PARTITION BY wait_type) DESC,wait_type,start_time;<br />但是我们不能每次都去调用这个函数，所以可以吧这个查询放在一个视图里面，外部只需要使用视图来查询数据就可以了：<br />IF OBJECT_ID('dbo.IntervalWaitsSample', 'V') IS NOT NULL<br />DROP VIEW dbo.IntervalWaitsSample;<br />GO<br />CREATE VIEW dbo.IntervalWaitsSample<br />AS<br />SELECT wait_type, start_time, interval_wait_s<br />FROM dbo.IntervalWaits('20090212', '20090215') AS F;<br />GO从视图中查询得到的数据就是我们要得到的数据。但是这些并不明显，先写到这里，下一个随笔我将在EXECL中把这些数据制作成一个直方图或者连线图，横轴是时间，纵轴是等待间隔时间。这样就会更加直观地看到在那些时间SQL Server的线程等待时间最长，也就是最繁忙的时候。
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

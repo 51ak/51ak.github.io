@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>关系型数据库是怎么工作的2:时间复杂度 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">关系型数据库是怎么工作的2:时间复杂度</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+<nav id="TableOfContents">
+<ul>
+<li><a href="#1-o-1-vs-o-n-2">1 O(1) vs O(n^2)</a>
+<ul>
+<li>
+<ul>
+<li><a href="#1-1-时间复杂度概念">1.1 时间复杂度概念</a></li>
+<li><a href="#1-2-时间复杂度举例">1.2 时间复杂度举例</a></li>
+<li><a href="#1-3-再深入理解下时间复杂度">1.3 再深入理解下时间复杂度</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+
+
+<main>
+
+
+<h1 id="1-o-1-vs-o-n-2">1 O(1) vs O(n^2)</h1>
+
+<p>现如今，很多程序员不关心时间复杂度&hellip;.好吧，他们是对的！</p>
+
+<p>但当你处理大数据时（我不是说几千个）或者你为了几毫秒的性能在优化，就非常有必要了解这个理论了。刚巧，数据库符合这两种情况！
+不会花费太长时间，只是了解下，这将有助于我们理解后面说的&rdquo;基于成本的优化&rdquo;</p>
+
+<h3 id="1-1-时间复杂度概念">1.1 时间复杂度概念</h3>
+
+<p>时间复杂度被用来表达算法处理已知问题所消耗的时长，为了表达这个复杂度，计算机科学家使用数学上的大O符号。 该符号加上算法需要进行多少次操作函数一起使用。</p>
+
+<p>用下图来说明时间复杂度的差异
+<img src="/img/TimeComplexity.png" alt="时间复杂度的差异" title="TimeComplexity" /></p>
+
+<p>O(1) 是静态的
+O(log(n)) 保持在一个低复杂度，哪怕有几十亿的数据要处理
+O(n^2) 是复杂度最差的</p>
+
+<h3 id="1-2-时间复杂度举例">1.2 时间复杂度举例</h3>
+
+<p>当数据量少的时候，O(1) 和 O(n^2) 之间的差异是微不足道的。
+比如说，当你需要个算法处理2000条数据时</p>
+
+<ul>
+<li>O(1) 算法花费 1 次操作</li>
+<li>O(log(n)) 算法花费 7 次操作</li>
+<li>O(n) 算法花费 2000 次操作</li>
+<li>O(n*log(n)) 算法花费 14000 次操作</li>
+<li>O(n^2) 算法花费 4000000 次操作</li>
+</ul>
+
+<p>看起来 O(1) 和 O(n^2) 算法好像差了4000000次倍的操作，但最多只多花了2毫秒，跟你眨一次眼睛一样的时间，现代的CPU进程每秒处理几亿次操作，这就是为什么性能和优化在IT项目中显得不那么重要.</p>
+
+<p>正如我说的那样，当处理大量数据时，理解时间复杂度的概念还是非常重要的，这次我们试试处理 1000000条数据（一百万行对数据库来说并不多）</p>
+
+<ul>
+<li>O(1) 算法花费 1 次操作</li>
+<li>O(log(n)) 算法花费 14 次操作</li>
+<li>O(n) 算法花费 100万 次操作</li>
+<li>O(n*log(n)) 算法花费 140万 次操作</li>
+<li>O(n^2) 算法花费 10000亿 次操作</li>
+</ul>
+
+<p>都不用去计算，这个糟糕的O(n^2) 算法足够你去喝杯咖啡了（甚至再来一杯）！如果再100万条数据后面再加一个0，那就足够你睡一小觉了。</p>
+
+<h3 id="1-3-再深入理解下时间复杂度">1.3 再深入理解下时间复杂度</h3>
+
+<p>先说一些看法：</p>
+
+<ul>
+<li>在一个<strong>哈希表</strong>上 ,搜索一个元素时间复杂度是 O(1)</li>
+<li>在一个<strong>平衡良好的树</strong>上 ,搜索一个元素时间复杂度是 O(log(n))</li>
+<li>在一个<strong>数组</strong>上 ,搜索一个元素时间复杂度是 O(n)</li>
+<li><strong>好的排序</strong>算法时间复杂度是 O(n*log(n))</li>
+<li><strong>坏的排序</strong>算法时间复杂度是 O(n^2))</li>
+</ul>
+
+<p>Note: <em>在下一章节中，我们将看到这些数法和数据结构</em></p>
+
+<p>时间复杂度有多种类型：</p>
+
+<ul>
+<li>平均情况</li>
+<li>最好的情况</li>
+<li>最坏的情况
+时间复杂度通常要考虑的是<strong>最坏的情况</strong>。</li>
+</ul>
+
+<p>刚才我只谈论时间复杂性(cpu)，但是复杂性也适用于：
+- 算法的内存消耗
+- 算法的磁盘I/O消耗</p>
+
+<p>当然，n^2也不是最差的复杂性，比如说：</p>
+
+<ul>
+<li>n^4: 真是太烂了，回头我将举一些哪些算法的时间复杂度是这个</li>
+<li>3^n: 这个还要更烂! 这篇文章一会也会看到这种糟糕的算法应用 (这种可怕的算法竟然真的在数据库中能被使用到).</li>
+<li>factorial n : 哪怕你只有几条数据，你也永远得不到算法的结果</li>
+<li>n^n: 如果你最终用到了这种复杂性，请扪心自问，你是不是真的在做IT&hellip;</li>
+</ul>
+
+<p>Note: *这里，我并没有给出这些大O的真实定义，只是给了些基本的想法，你可以在维基百科上得到这些概念的真实定义 *</p>
+
+<p>本节完成，下一章节我们将讨论：合并排序</p>
+
+<p>本篇文章完整分为7节，当前第2节。以下完整章节：
+1. <a href="https://www.dboop.com/post/2017/09/09/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%841%E5%BC%95%E8%A8%80/">引言</a>
+2. <a href="https://www.dboop.com/post/2017/09/10/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%842%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/">时间复杂度</a>
+3. <a href="https://www.dboop.com/post/2017/09/11/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%843%E5%90%88%E5%B9%B6%E6%8E%92%E5%BA%8F/">合并排序</a>
+4. <a href="https://www.dboop.com/post/2017/09/12/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%844%E6%95%B0%E7%BB%84.%E6%A0%91.%E5%93%88%E5%B8%8C%E8%A1%A8/">数组.树.哈希表</a>
+5. <a href="https://www.dboop.com/post/2018/01/02/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%845%E5%9F%BA%E6%9C%AC%E7%BB%84%E4%BB%B6%E4%B9%8B%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%AE%A1%E7%90%86/">客户端管理</a>
+6. <a href="https://www.dboop.com/post/2018/01/08/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%846sql%E6%9F%A5%E8%AF%A2/">SQL查询</a>
+7. <a href="https://www.dboop.com/post/2018/01/11/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%847%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/">数据管理</a></p>
+
+</main>
+<h2 class="date">发布日期:2017/09/10</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%90%86%E8%AE%BA">数据库理论</a> <a href="/categories/%E7%BF%BB%E8%AF%91">翻译</a> <a href="/categories/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93">关系型数据库</a> <a href="/categories/mysql">mysql</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E8%BD%AC%E8%AF%91">转译</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>VB两种操作Access数据库方法的比较解析</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="在vb编程中通常要与数据库打交道，对于数据量较小的应用，一般选用access作为数据库，因为access数据库比较简单，功能也比较齐全，数据的备份、拷贝都很方便，且程序发布时不需要额外单独安装其它的数据库管理软件。因此，在功能能够满足要求的条件下，access数据库往往成为一些小型数据库软件的首选。<br/><br/>关于用vb操作access库表的方法有多种，一般初学者往往会使用数据VB两种操作Access数据库方法的比较解析" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a href="../othersql/l_19_1.htm" class="hover"　title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../nosql/l_20_1.htm" title="NoSQL">NoSQL</a>|</li><li><a  href="../sysbase/l_21_1.htm" title="Sybase">Sybase</a>|</li><li><a  href="../db2/l_22_1.htm" title="DB2">DB2</a>|</li><li><a  href="../access/l_23_1.htm" title="Access"><span class="zc_666">Access</span></a>|</li><li><a  href="../infomix/l_24_1.htm" title="Informix">Informix</a>|</li><li><a  href="../sqlsql/l_25_1.htm" title="其他">其他</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../othersql/l_19_1.htm">其他数据库</a>&nbsp;&gt;&nbsp;<a href="../access/l_23_1.htm">Access</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>VB两种操作Access数据库方法的比较解析</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   　　在VB编程中通常要与数据库打交道，对于数据量较小的应用，一般选用<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>作为数据库，因为<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库比较简单，功能也比较齐全，数据的备份、拷贝都很方便，且程序发布时不需要额外单独安装其它的数据库管理软件。因此，在功能能够满足要求的条件下，<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库往往成为一些小型数据库软件的首选。<br /><br />　　关于用VB操作<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>库表的方法有多种，一般初学者往往会使用数据控件，许多资料上也大都以此作为操作<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库的起点来介绍，因为这个方法使用起来非常简单，但使用数据控件的方法在程序编码上往往不够灵活。现在介绍一下其它两种操作<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库的方法。<br /><br />　　第一种：使用数据库对象<br /><br />　　首先，要进行有关数据对象的声明，代码如下。<br /><br />Dim MyWs As Workspace<br />Dim MyDB As Database<br />Dim WordTab As Recordset<br />　　生成工作区，打开数据库，然后再根据需要打开相应的库表。<br /><br />Set MyWs = DBEngine.CreateWorkspace　″″　 ″Admin″　 ″″　 dbUseJet　<br />Set MyDB = MyWs.OpenDatabase　数据库名称　 False　 False　<br />Set WordTab = MyDB.OpenRecordset　″表名″　 dbOpenDynaset　<br />　　这种方法的优点是代码比较简单，要求的环境为DAO 2.5/3.51，其中表名可以换成SELECT语句，即根据条件打开所需要的记录集，这种方法可脱离数据控件，可以比较方便灵活地操作数据库表，增加了程序的灵活性。<br /><br />　　提示：经过测试发现，这种方法只能打开<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>97库表，对于<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>2000库表却无能为力，会弹出库表格式不对的出错提示。另外，对数据环境的要求仍比较多。<br /><br />　　第二种：使用ADODB<br /><br />　　首先，声明一个链接变量，并根据需要声明记录集变量。<br /><br />Dim LocCnn1 As ADODB.Connection<br />Dim LocRst1 As ADODB.Recordset<br />　　建立与数据库的链接，如果数据库没有口令，最后一行可以不写（写上也不会错）。<br /><br /><br /><br />Set LocCnn1 = New ADODB.Connection<br />LocCnn1.Open ″Provider=Microsoft.Jet.OLEDB.4.0　User ID=Admin　″ &amp; _<br />″Data Source=″ &amp; App.Path &amp; ″数据库名称.mdb　″&amp; _<br />″Mode=Share Deny None　Extended Properties=''　Persist Security Info=False　″ &amp; _<br />″Jet OLEDB　Database Password='asp561rbc'　″<br />　　这种方法虽然代码长一些，但对数据环境要求低，且结构清晰，所编写的发布程序也大为减小。由于与链接SQL Server等数据库的方法一样，因而大量的操作数据库的代码相同，当数据库需要由<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>扩充到一些大型数据库，或由一些大型数据库裁剪出一个简单数据库时，程序的移植会比较方便。<br /><br />　　另外，这种方法对于<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>97及<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>2000均能很好地支持，兼容性好。对于大量插入、删除、修改等操作，只在Connection层进行即可，既可提高速度又可减少代码。<br /><br />　　如果还要获取具体的记录集内容，则须再根据条件打开具体的库表，代码如下：<br /><br />Set LocRst1 = New ADODB.Recordset　&nbsp;<br />LocRst1.CursorType = adOpenKeyset<br />LocRst1.LockType = adLockOptimistic<br />LocRst1.Open ″SELECT 　 FROM 表名″　 LocCnn1　adCmdText<br />　　提示：一般情况下，建议使用第二种方法。<br /><br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

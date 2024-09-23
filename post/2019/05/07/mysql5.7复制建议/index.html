@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>mysql5.7复制建议 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">mysql5.7复制建议</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+<nav id="TableOfContents">
+<ul>
+<li><a href="#关于复制选型">关于复制选型</a></li>
+<li><a href="#半同步复制">半同步复制</a>
+<ul>
+<li><a href="#设置-主库执行">设置：主库执行</a></li>
+<li><a href="#设置-备库执行">设置：备库执行</a>
+<ul>
+<li><a href="#1-安装slave插件">1：安装slave插件</a></li>
+<li><a href="#2-启用slave半同步复制">2：启用slave半同步复制</a></li>
+<li><a href="#3-重启slave上的io线程">3：重启slave上的IO线程</a></li>
+</ul></li>
+<li><a href="#状态">状态</a>
+<ul>
+<li><a href="#show-global-variables-like-rpl-semi">show  global variables like &lsquo;rpl_semi%&lsquo;;</a>
+<ul>
+<li><a href="#主上">主上：</a></li>
+<li><a href="#从上">从上：</a></li>
+</ul></li>
+<li><a href="#show-global-status-like-rpl-semi">show global status like &lsquo;rpl_semi%&lsquo;;</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#复制参数建议">复制参数建议：</a></li>
+</ul>
+</nav>
+
+
+<main>
+
+
+<h1 id="关于复制选型">关于复制选型</h1>
+
+<ul>
+<li><strong>MGR</strong>:有条件上MGR的，上MGR,对网络要求较高。</li>
+<li><strong>半同步复制</strong>：用默认的AFTER_SYNC模式，一般实例都建议使用(重点推荐)</li>
+<li><strong>异步复制</strong>：对从实例要求延时不高的，日志类的等等可以用</li>
+</ul>
+
+<h1 id="半同步复制">半同步复制</h1>
+
+<h2 id="设置-主库执行">设置：主库执行</h2>
+
+<pre><code class="language-sql">install plugin rpl_semi_sync_master soname 'semisync_master.so';
+SET GLOBAL rpl_semi_sync_master_enabled=1;
+</code></pre>
+
+<h2 id="设置-备库执行">设置：备库执行</h2>
+
+<h3 id="1-安装slave插件">1：安装slave插件</h3>
+
+<pre><code class="language-sql">install plugin rpl_semi_sync_slave soname 'semisync_slave.so';
+set global slave_parallel_workers=8;
+</code></pre>
+
+<h3 id="2-启用slave半同步复制">2：启用slave半同步复制</h3>
+
+<pre><code class="language-sql">set global rpl_semi_sync_slave_enabled=1; ##启用slave半同步复制，可以写到配置文件中
+
+</code></pre>
+
+<h3 id="3-重启slave上的io线程">3：重启slave上的IO线程</h3>
+
+<p>如果没有重启，则默认还是异步复制，重启后，slave会在master上注册为半同步复制的slave角色。</p>
+
+<pre><code class="language-sql">stop slave io_thread;
+start slave io_thread;
+
+</code></pre>
+
+<p>或者：</p>
+
+<pre><code class="language-sql">stop slave;
+set global slave_parallel_type='LOGICAL_CLOCK';
+start slave;
+</code></pre>
+
+<h2 id="状态">状态</h2>
+
+<h3 id="show-global-variables-like-rpl-semi">show  global variables like &lsquo;rpl_semi%&lsquo;;</h3>
+
+<h4 id="主上">主上：</h4>
+
+<ul>
+<li>rpl_semi_sync_master_enabled：表示主上是否开启半同步复制功能，可以动态修改。可选值：ON\OFF</li>
+<li>rpl_semi_sync_master_timeout：为了防止半同步复制中主在没有收到S发出的确认发生堵塞，用来设置超时，超过这个时间值没有收到信息，则切换到异步复制，执行操作。默认为10000毫秒，等于10秒，这个参数动态可调，表示主库在某次事务中，如果等待时间超过10秒，那么则降级为异步复制模式，不再等待SLAVE从库。如果主库再次探测到，SLAVE从库恢复了，则会自动再次回到半同步复制模式。可以设置成1000，即1秒。</li>
+<li>rpl_semi_sync_master_wait_for_slave_count：控制slave应答的数量，默认是1，表示master接收到几个slave应答后才commit。</li>
+<li>rpl_semi_sync_master_wait_no_slave ：当一个事务被提交，但是Master没有Slave连接，这时M不可能收到任何确认信息，但M会在时间限制范围内继续等待。如果没有Slave链接，会切换到异步复制。是否允许master每个事务提交后都要等待slave的接收确认信号。默认为on，每一个事务都会等待。如果为off，则slave追赶上后，也不会开启半同步复制模式，需要手工开启。</li>
+<li>rpl_semi_sync_master_wait_point：该参数表示半同步复制的主在哪个点等待从的响应，默认AFTER_SYNC，在得到slave的应答后再commit，可选值AFTER_COMMIT。</li>
+</ul>
+
+<h4 id="从上">从上：</h4>
+
+<ul>
+<li>rpl_semi_sync_slave_enabled：表示从上是否开启半同步复制功能，可以动态修改。可选值：ON\OFF</li>
+</ul>
+
+<h3 id="show-global-status-like-rpl-semi">show global status like &lsquo;rpl_semi%&lsquo;;</h3>
+
+<ul>
+<li>Rpl_semi_sync_master_clients ：说明支持和注册半同步复制的已连Slave数。</li>
+<li>Rpl_semi_sync_master_net_avg_wait_time ：master等待slave回复的平均等待时间，单位毫秒。</li>
+<li>Rpl_semi_sync_master_net_wait_time ：master总的等待时间。</li>
+<li>Rpl_semi_sync_master_net_waits ：master等待slave回复的的总的等待次数，即半同步复制的总次数，不管失败还是成功，不算半同步失败后的异步复制。</li>
+<li>Rpl_semi_sync_master_no_times ：master关闭半同步复制的次数。</li>
+<li>Rpl_semi_sync_master_no_tx ：master没有收到slave的回复而提交的次数，可以理解为master等待超时的次数，即半同步模式不成功提交数量。</li>
+<li>Rpl_semi_sync_master_status ：ON是活动状态（半同步），OFF是非活动状态（异步），用于表示主服务器使用的是异步复制模式，还是半同步复制模式。</li>
+<li>Rpl_semi_sync_slave_status ：Slave上的半同步复制状态，ON表示已经被启用，OFF表示非活动状态。</li>
+<li>Rpl_semi_sync_master_tx_avg_wait_time ：master花在每个事务上的平均等待时间。</li>
+<li>Rpl_semi_sync_master_tx_wait_time ：master总的等待时间。</li>
+<li>Rpl_semi_sync_master_tx_waits ：master等待成功的次数，即master没有等待超时的次数，也就是成功提交的次数</li>
+<li>Rpl_semi_sync_master_wait_pos_backtraverse ：master提交后来的先到了，而先来的还没有到的次数。</li>
+<li>Rpl_semi_sync_master_wait_sessions ：前有多少个session因为slave的回复而造成等待。</li>
+<li>Rpl_semi_sync_master_yes_tx ：master成功接收到slave的回复的次数，即半同步模式成功提交数量。<br /></li>
+</ul>
+
+<h1 id="复制参数建议">复制参数建议：</h1>
+
+<p>set global slave_parallel_type=&lsquo;LOGICAL_CLOCK&rsquo;;
+set global slave_parallel_workers=8;</p>
+
+<p>事务隔离级别：
+set global transaction isolation level  read committed;</p>
+
+</main>
+<h2 class="date">发布日期:2019/05/07</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/%E5%A4%8D%E5%88%B6">复制</a> <a href="/categories/mysql%E5%8F%82%E6%95%B0">mysql参数</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>oracle审计相关:audit日志和安全策略 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">oracle审计相关:audit日志和安全策略</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+
+
+<h1 id="开启审计日志">开启审计日志</h1>
+
+<h2 id="1-查询当前审计日志开启状态">1.查询当前审计日志开启状态</h2>
+
+<p>show parameter audit;</p>
+
+<pre><code class="language-sql"> show parameter audit;
+ 
+NAME                     TYPE    VALUE
+------------------------------------ ----------- ------------------------------
+audit_file_dest              string  /app/oracle/******/adum
+                         p
+audit_sys_operations             boolean     TRUE
+audit_syslog_level           string
+audit_trail              string  DB
+</code></pre>
+
+<p>audit_sys_operations 应为True
+audit_trail 的value值为NONE表示不开启；
+audit_trail 的value值为FALSE表示不开启；
+audit_trail 的value值为DB表示开启；
+audit_trail 的value值为TURE表示开启；</p>
+
+<h2 id="2-开启审计日志">2.开启审计日志</h2>
+
+<p><code>alter system set audit_sys_operations=TRUE scope=spfile;</code></p>
+
+<p>需重启</p>
+
+<h2 id="3-关闭审计功能">3.关闭审计功能</h2>
+
+<pre><code class="language-sql">SQL&gt; conn /as sysdba
+SQL&gt; show parameter audit
+SQL&gt; alter system set audit_trail = none scope=spfile;
+</code></pre>
+
+<h1 id="密码策略">密码策略</h1>
+
+<h2 id="1-创建profile">1.创建profile</h2>
+
+<pre><code class="language-sql">create profile DEFAULTE limit
+sessions_per_user unlimited
+cpu_per_session unlimited
+cpu_per_call unlimited
+connect_time unlimited
+;
+
+</code></pre>
+
+<p>这里分两类：</p>
+
+<p>(1) 对数据库资源做限制
+sessions_per_user　　每个用户名所允许的并行会话数
+cpu_per_session　　  一个会话一共可以使用的cpu时间，单位是百分之一秒
+ccpu_per_call 　　　　一次sql调用(解析、执行和获取)允许使用的cpu时间
+connect_time 　　　　限制会话连接时间，单位是分钟
+idle_time  　　　　　  允许空闲会话的时间，单位是分钟
+logical_reads_per_session　　限制会话对数据块的读取，单位是块
+logical_reads_per_call　　　　限制sql调用对数据块的读取，单位是块
+composite_limit　　　　　　   指定一个会话的总的资源消耗，以service units单位表示
+private_sga 　　　　　　　　　限制会话在sga中shared pool中私有空间的分配</p>
+
+<p>(2) 对密码做限制
+failed_login_attempts　　　　帐户被锁定之前可以错误尝试的次数
+password_life_time　　　　　 密码可以被使用的天数，单位是天，默认值180天
+password_reuse_time 　　　  密码可重用的间隔时间(结合password_reuse_max)
+password_reuse_max　　　　 密码的最大改变次数(结合password_reuse_time)
+password_lock_time　　　　   超过错误尝试次数后，用户被锁定的天数，默认1天
+password_grace_time　　　　 当密码过期之后还有多少天可以使用原密码
+password_verify_function　　 该字段允许将复杂的PL/SQL密码验证脚本做为参数传递到create</p>
+
+<h2 id="2-修改新profile">2.修改新profile</h2>
+
+<p><code>SELECT resource_type,resource_name,limit FROM dba_profiles WHERE resource_type='PASSWORD' AND profile='DEFAULTE';</code></p>
+
+<p>alter profile DEFAULTE limit
+FAILED_LOGIN_ATTEMPTS 5
+PASSWORD_LIFE_TIME UNLIMITED
+PASSWORD_REUSE_TIME UNLIMITED
+PASSWORD_REUSE_MAX UNLIMITED
+PASSWORD_VERIFY_FUNCTION VERIFY_FUNCTION_11G
+PASSWORD_LOCK_TIME 1
+PASSWORD_GRACE_TIME 7;</p>
+
+<h2 id="3-修改用户对应的profile">3. 修改用户对应的profile</h2>
+
+<p>select username,profile from dba_users ;</p>
+
+<pre><code class="language-sql">
+alter user SYSTEM  profile DEFAULTE;
+alter user SYS  profile DEFAULTE;
+alter user ...  profile DEFAULTE;
+</code></pre>
+
+<h2 id="4-修改旧profile">4.修改旧profile</h2>
+
+<pre><code class="language-sql">alter profile DEFAULT limit
+FAILED_LOGIN_ATTEMPTS 5
+PASSWORD_LIFE_TIME 90
+PASSWORD_REUSE_TIME 5
+PASSWORD_REUSE_MAX 3
+PASSWORD_VERIFY_FUNCTION VERIFY_FUNCTION_11G
+PASSWORD_LOCK_TIME 1
+PASSWORD_GRACE_TIME 7;
+
+</code></pre>
+
+<h2 id="5-删除profile">5.删除profile</h2>
+
+<p>如果需要回滚，所有用户用default的话</p>
+
+<pre><code class="language-sql">
+alter user SYSTEM  profile DEFAULT;
+alter user SYS  profile DEFAULT;
+alter user ...  profile DEFAULT;
+
+
+drop profile DEFAULTE cascade;
+</code></pre>
+
+</main>
+<h2 class="date">发布日期:2019/11/02</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/oracle">oracle</a> <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86">数据库管理</a> <a href="/categories/%E8%A7%84%E8%8C%83">规范</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

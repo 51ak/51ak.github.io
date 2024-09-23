@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SQLServer移动ALWASYON副本文件的方法和脚本| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">SQLServer移动ALWASYON副本文件的方法和脚本</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1暂停alwayson数据传送">1.暂停ALWAYSON数据传送</a></li>
+    <li><a href="#2生成脚本">2.生成脚本：</a>
+      <ul>
+        <li><a href="#3生成脚本2">3.生成脚本2</a></li>
+        <li><a href="#4停sqlserver服务">4.停SQLSERVER服务</a></li>
+        <li><a href="#41剪切文件到新位置">4.1.剪切文件到新位置</a></li>
+        <li><a href="#42启动sqlserver服务">4.2.启动SQLSERVER服务</a></li>
+        <li><a href="#5恢复alwayson数据传送">5.恢复ALWAYSON数据传送</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="1暂停alwayson数据传送">1.暂停ALWAYSON数据传送</h2>
+<pre><code>ALTER DATABASE [db1] SET HADR SUSPEND;
+
+ALTER DATABASE [db2] SET HADR SUSPEND;
+
+ALTER DATABASE [db3] SET HADR SUSPEND;
+
+</code></pre><h2 id="2生成脚本">2.生成脚本：</h2>
+<pre><code>
+
+SELECT  database_id,
+
+(sum(size)*8/1024/1024) as usedGb
+
+FROM    sys.master_files 
+
+WHERE   database_id in (
+
+select database_id from sys.databases 
+
+where
+
+ NAME NOT IN ('....')
+
+)  
+
+AND physical_name LIKE 'E:\%' group  by database_id
+
+order by  2 desc
+
+</code></pre><h3 id="3生成脚本2">3.生成脚本2</h3>
+<pre><code>SELECT  name , 
+
+        physical_name AS CurrentLocation ,
+
+        state_desc,(size*8/1024/1024) as usedGb
+
+,'ALTER DATABASE ['+DB_NAME(database_id)+'] MODIFY FILE ( NAME = '+name+' , FILENAME = '''+REPLACE(physical_name,'D:\','F:\')+''' )' 
+
+FROM    sys.master_files 
+
+WHERE   database_id in (17)  
+
+AND  SIZE&gt;1024*1024  AND physical_name LIKE 'E:\%' order by database_id
+
+</code></pre><h3 id="4停sqlserver服务">4.停SQLSERVER服务</h3>
+<h3 id="41剪切文件到新位置">4.1.剪切文件到新位置</h3>
+<h3 id="42启动sqlserver服务">4.2.启动SQLSERVER服务</h3>
+<h3 id="5恢复alwayson数据传送">5.恢复ALWAYSON数据传送</h3>
+<pre><code>ALTER DATABASE [bdg_sub2] SET HADR RESUME;
+
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2020/02/02</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/sqlserver">sqlserver</a> <a href="/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86">故障处理</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

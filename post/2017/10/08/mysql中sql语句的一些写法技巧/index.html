@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>mysql中sql语句的一些写法技巧 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">mysql中sql语句的一些写法技巧</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#一行转多行">一行转多行</a></li>
+<li><a href="#多行转一行">多行转一行</a></li>
+<li><a href="#coalesce">COALESCE</a></li>
+<li><a href="#mysql实现first-value-t-url-over-partition-by-tabid-refer-dboop">MYSQL实现FIRST_VALUE(t.url) over(partition by tabid,refer_dboop)</a></li>
+<li><a href="#mysql常用日期函数">MYSQL常用日期函数</a>
+<ul>
+<li><a href="#date-format">DATE_FORMAT</a></li>
+<li><a href="#str-to-date">Str to Date</a></li>
+<li><a href="#date-add">date_add()</a></li>
+<li><a href="#datediff">DATEDIFF()</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+
+
+<main>
+
+
+<h2 id="一行转多行">一行转多行</h2>
+
+<p>      url列以分号分隔，将其一行转化为多行，借助自增长表help_topic 实现。</p>
+
+<pre><code class="language-MySQL">select a.dboop_id,dboop_code,tab_name,tabid,refer_dboop,
+substring_index(substring_index(a.url,';',b.help_topic_id+1),';',-1) as urls 
+from  t_dboop_mapping a join mysql.help_topic b 
+on (length(a.url) - length(replace(a.url,';',''))+1) &gt; b.help_topic_id; 
+</code></pre>
+
+<h2 id="多行转一行">多行转一行</h2>
+
+<p>     分组后汇总成一行，testid以逗号分隔</p>
+
+<pre><code class="language-MySQL">  select tabID,group_concat(distinct cast(testid as char(8))) as testid from  tab_test group by tabID
+</code></pre>
+
+<h2 id="coalesce">COALESCE</h2>
+
+<p>COALESCE(value,…)是一个可变参函数，可以使用多个参数。</p>
+
+<pre><code class="language-MySQL">select coalesce(null,2,3); // Return 2
+
+select coalesce(null,null,3); // Return 3
+
+
+select coalesce(1,2,3); // Return 1
+</code></pre>
+
+<p>这个参数使用的场合为：假如某个字段默认是null，你想其返回的不是null，而是比如0或其他值，可以使用这个函数</p>
+
+<pre><code class="language-SELECT">作用：接受多个参数，返回第一个不为 NULL 的参数，如果所有参数都为 NULL，此函数返回 NULL；当它使用 2 个参数时，和 IFNULL 函数作用相同。
+
+
+## CONCAT_WS()
+和 concat()一样，将多个字符串连接成一个字符串，但是可以一次性指定分隔符（concat_ws 就是 concat with separator）
+`concat_ws(separator, str1, str2, ...)`
+说明：第一个参数指定分隔符。需要注意的是分隔符不能为 null，如果为 null，则返回结果为 null。
+
+
+## ON DUPLICATE KEY UPDATE
+先声明一点，ON DUPLICATE KEY UPDATE为Mysql特有语法，这是个坑 
+语句的作用，当insert已经存在的记录时，执行Update
+包括SET或用REPLACE，连事务都省的做，ON DUPLICATE KEY UPDATE能够让我们便捷的完成重复插入的开发需求，但它是Mysql的特有语法，使用时应多注意主键和插入值是否是我们想要插入或修改的key、Value。
+
+## INSTR
+mysql 进行模糊查询时，可使用内部函数 instr，替代传统的 like 方式，并且速度更快。
+
+instr(field, str) 函数，第一个参数 field 是字段，第二个参数 str 是要查询的串，返回串 str 的位置，没找到就是 0
+
+select * from book where INSTR( book_name , &quot;经&quot; ) &gt; 0
+mysql INSTR 函数用法
+
+## SUBSTR
+用来截取数据库某个字段中的一部分。
+
+substr(string,start,length)
+string 参数：必选。数据库中需要截取的字段。
+
+start 参数：必选。正数，从字符串指定位子开始截取；
+
+负数，从字符串结尾指定位子开始截取；
+
+0，在字符串中第一个位子开始截取。1，同理。(特殊)
+
+length 参数：可选。需要截取的长度。缺省，即截取到结束位置。
+
+## MYSQL实现rownumber
+    mysql是不支持rownum函数，下面例子实现产品表中给产品一个顺序编号
+
+```MySQL
+    select @rownum:=@rownum+1 rownum, dbo
+    from 
+   (
+       select (@rownum:=0),a.dbo 
+    from 
+        (select  dbo from  t_dboop_info  GROUP BY dbo) a
+    ) t
+</code></pre>
+
+<h2 id="mysql实现first-value-t-url-over-partition-by-tabid-refer-dboop">MYSQL实现FIRST_VALUE(t.url) over(partition by tabid,refer_dboop)</h2>
+
+<p>   mysql中没有类似oracle和postgreSQL的 OVER(PARTITION BY)功能,如下实现查询每个分组中按url排序后第一个url</p>
+
+<pre><code class="language-MySQL">select tabid,refer_dboop,substring_index(group_concat( t.url ),',',1)
+from (
+select tabid,refer_dboop,url from t_dboop_mapping  test by tabid,refer_dboop,url
+) t group by tabid,refer_dboop
+</code></pre>
+
+<h2 id="mysql常用日期函数">MYSQL常用日期函数</h2>
+
+<h3 id="date-format">DATE_FORMAT</h3>
+
+<p>DATE_FORMAT() 函数用于以不同的格式显示日期/时间数据。</p>
+
+<p>语法
+DATE_FORMAT(date,format)
+date 参数是合法的日期。format 规定日期/时间的输出格式。</p>
+
+<p>可以使用的格式有：</p>
+
+<p>格式  描述
+%a  缩写星期名
+%b  缩写月名
+%c  月，数值
+%D  带有英文前缀的月中的天
+%d  月的天，数值(00-31)
+%e  月的天，数值(0-31)
+%f  微秒
+%H  小时 (00-23)
+%h  小时 (01-12)
+%I  小时 (01-12)
+%i  分钟，数值(00-59)
+%j  年的天 (001-366)
+%k  小时 (0-23)
+%l  小时 (1-12)
+%M  月名
+%m  月，数值(00-12)
+%p  AM 或 PM
+%r  时间，12-小时（hh:mm:ss AM 或 PM）
+%S  秒(00-59)
+%s  秒(00-59)
+%T  时间, 24-小时 (hh:mm:ss)
+%U  周 (00-53) 星期日是一周的第一天
+%u  周 (00-53) 星期一是一周的第一天
+%V  周 (01-53) 星期日是一周的第一天，与 %X 使用
+%v  周 (01-53) 星期一是一周的第一天，与 %x 使用
+%W  星期名
+%w  周的天 （0=星期日, 6=星期六）
+%X  年，其中的星期日是周的第一天，4 位，与 %V 使用
+%x  年，其中的星期一是周的第一天，4 位，与 %v 使用
+%Y  年，4 位
+%y  年，2 位</p>
+
+<pre><code class="language-MySQL">DATE_FORMAT(NOW(),'%b %d %Y %h:%i %p')
+DATE_FORMAT(NOW(),'%m-%d-%Y')
+DATE_FORMAT(NOW(),'%d %b %y')
+DATE_FORMAT(NOW(),'%d %b %Y %T:%f')
+
+</code></pre>
+
+<p>Dec 29 2008 11:45 PM
+12-29-2008
+29 Dec 08
+29 Dec 2008 16:25:46.635</p>
+
+<h3 id="str-to-date">Str to Date</h3>
+
+<p>（字符串转换为日期）函数：str_to_date(str, format)</p>
+
+<pre><code class="language-MySQL">select str_to_date('08/11/2004', '%m/%d/%Y'); -- 2004-08-11
+select str_to_date('08/11/08' , '%m/%d/%y'); -- 2004-08-11
+select str_to_date('08.11.2004 08:11:30', '%m.%d.%Y %h:%i:%s'); -- 2004-08-11 08:11:30
+</code></pre>
+
+<h3 id="date-add">date_add()</h3>
+
+<p>函数向日期添加指定的时间间隔。
+DATE_ADD(testDate,INTERVAL 2 DAY)
+DATE_ADD(testDate,INTERVAL -2 MONTH)</p>
+
+<h3 id="datediff">DATEDIFF()</h3>
+
+<p>函数返回两个日期之间的天数。
+SELECT DATEDIFF(&lsquo;2004-12-30&rsquo;,&lsquo;2004-12-29&rsquo;) AS DiffDate</p>
+
+</main>
+<h2 class="date">发布日期:2017/10/08</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/%E5%87%BD%E6%95%B0">函数</a> <a href="/categories/sql">sql</a> <a href="/categories/%E6%8A%80%E5%B7%A7">技巧</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

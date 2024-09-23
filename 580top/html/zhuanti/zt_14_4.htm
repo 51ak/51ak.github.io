@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>专题报道：《存储引擎InnoDB》 - 数据库管理员DBA学习网站 </title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li><li><a href="../zt/l_index_1.htm" class="hover">网站专题</a></li></ul><ul class="sub"><li><a  href="../zt/l_sqlserver_1.htm" title="SQLServer专题">SQLServer</a>|</li><li><a  href="../zt/l_Oracle_1.htm" title="Oracle专题">Oracle</a>|</li><li><a  href="../zt/l_mysql_1.htm" title="MySQL专题">MySQL</a>|</li><li><a  href="../zt/l_othersql_1.htm" title="其他数据库专题">其他数据库</a>|</li><li><a  href="../zt/l_yunwei_1.htm" title="系统运维专题">系统运维</a>|</li><li><a  href="../zt/l_kaoshi_1.htm" title="DBA考试专题">DBA考试</a>|</li><li><a  href="../zt/l_dbahuati_1.htm" title="DBA话题专题">DBA话题</a>|</li></ul></div></div>
+<br class="clearfloat" />
+</div>
+ 
+ 
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../zt/l_index_1.htm">网站专题</a>&nbsp;&gt;&nbsp; <a href="../zt/l_mysql_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="zt_14_1.htm">存储引擎InnoDB</a></div>
+  <div id="sidebar1">
+
+  <div class='div_tab_tab'>
+	<div id="div_login_title">580top数据库:</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+ &nbsp;</div>    
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+   
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+    <div class="d9"><p>&nbsp;</p></div>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+
+
+    <div class="d3"><p>&nbsp;</p></div>
+    
+    <p>&nbsp;</p>
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  
+
+        <div id="contentdiv"> 
+            <div id="news_list">
+                   <div>
+                              <div class="d2"><h1>专题报道：《存储引擎InnoDB》</h1><span>InnoDB 是 MySQL 上第一个提供外键约束的数据存储引擎，除了提供事务处理外，InnoDB 还支持行锁，提供和 Oracle 一样的一致性的不加锁读取，能增加并发读的用户数量并提高性能，不会增加锁的数量。InnoDB 的设计目标是处理大容量数据时最大化性能，它的 CPU 利用率是其他所有基于磁盘的关系数据库引擎中最有效率的。</span></div><UL><LI class=list_title><SPAN>2009/12/15 22:29:11</SPAN><a href="../200912/dba_1223.htm"  title="Innodb文件表空间结构 ">Innodb文件表空间结构 </a>  <LI   class="text"> innodb的表空间是在配置文件中定义（说是表空间有时觉的有点羞愧，和oracle比真的差太远了），这里简单列一下表空间里的基本概念及表的分配情况。 表空间是在配置文件中定义的几个文件简单的耦合起来，在使用中互不可少（少一个就面临db完蛋的危险）。对于共享表空间无法确定表所在的表空间上。 独立表空间可以做到每个表有自已的表空间（羞一下）。 针对共享表空间，表空间中包括：回滚段,段（segment<a href="../200912/dba_1223.htm" title="Innodb文件表空间结构 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="14" title="《存储引擎InnoDB》专题">存储引擎InnoDB</a></SPAN><SPAN>作者：wubx</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2010/1/4 13:13:30</SPAN><a href="../201001/dba_1215.htm"  title="InnoDB线程并发检查机制 ">InnoDB线程并发检查机制 </a>  <LI   class="text">innodb在接受mysql线程调用时，有一个并发线程的检查机制，通过innodb_thread_concurrency参数进行控制。如果参数设置大于0，则表示检查机制开启，允许进入的线程数就是参数的值。等于0则禁用并发检查。在新的mysql线程调用innodb接口前，innodb会检查已经接受的请求线程数，如已经超过innodb_thread_concurrency设置的限制，则该请求线程会等待<a href="../201001/dba_1215.htm" title="InnoDB线程并发检查机制 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="14" title="《存储引擎InnoDB》专题">存储引擎InnoDB</a></SPAN><SPAN>作者：DBA@Taobao</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2010/1/7 13:29:19</SPAN><a href="../201001/dba_1213.htm"  title="Innodb 多版本实现 ">Innodb 多版本实现 </a>  <LI   class="text"> innodb是一个多版本的存储引擎，它可以把旧的行信息存到表空间中。这些旧的行信息存储到innodb称为的回滚段的表空间中。 innodb为实现多版本，innodb在每一行添加了三个列。一个6字节的db_trx_id字段用来表示事务的insert或是update操作，对于delete操作实际上也并不在直接删除，只是用一个bit位去标识行被删除。另外，每行包括7字节的db_roll_ptr字段，称<a href="../201001/dba_1213.htm" title="Innodb 多版本实现 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="14" title="《存储引擎InnoDB》专题">存储引擎InnoDB</a></SPAN><SPAN>作者：wubx</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2010/2/25 9:29:49</SPAN><a href="../201002/dba_1200.htm"  title="InnoDB线程并发检查机制 ">InnoDB线程并发检查机制 </a>  <LI   class="text">innodb在接受mysql线程调用时，有一个并发线程的检查机制，通过innodb_thread_concurrency参数进行控制。如果参数设置大于0，则表示检查机制开启，允许进入的线程数就是参数的值。等于0则禁用并发检查。在新的mysql线程调用innodb接口前，innodb会检查已经接受的请求线程数，如已经超过innodb_thread_concurrency设置的限制，则该请求线程会等待<a href="../201002/dba_1200.htm" title="InnoDB线程并发检查机制 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="14" title="《存储引擎InnoDB》专题">存储引擎InnoDB</a></SPAN><SPAN>作者：DBA@Taobao</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2010/2/26 9:07:49</SPAN><a href="../201002/dba_1196.htm"  title="Innodb 表和索引结构 ">Innodb 表和索引结构 </a>  <LI   class="text">表的结构：对于mysql把有的存储引擎都是把表结构的定义存放到.frm文件中。但对于innodb表同时有一个内部的字典存放到表空间中。所以对于innodb表不能单纯的移动.frm在不同的mysql事例下。对于innodb引擎的表，如果mysql 删除相应的表或数据库，同时会删除相应的.frm及在表空间的相应的字典信息。在.frm文件只是用来定义表的结构，innodb把数据和索引都存放到了表空间中。<a href="../201002/dba_1196.htm" title="Innodb 表和索引结构 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="14" title="《存储引擎InnoDB》专题">存储引擎InnoDB</a></SPAN><SPAN>作者：wubx</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2010/3/1 14:01:29</SPAN><a href="../201003/dba_1195.htm"  title="InnoDB Double write ">InnoDB Double write </a>  <LI   class="text">记得刚开始看innodb文档的时候，double write一节（其实只有一小段）就让我很困惑。无奈当时内力太浅，纠缠了很久也没弄明白。时隔几个月，重新来整理一下。涉及到的概念：buffer pool简称bp，dirty page，log file，flush，innodb tablespace。1. 什么是double write在innodb将bp中的dirty page刷（flush）到磁盘<a href="../201003/dba_1195.htm" title="InnoDB Double write ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="14" title="《存储引擎InnoDB》专题">存储引擎InnoDB</a></SPAN><SPAN>作者：DBA@Taobao</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2010/3/18 9:02:29</SPAN><a href="../201003/dba_1189.htm"  title="MySQL不同分支版本的压力测试 ">MySQL不同分支版本的压力测试 </a>  <LI   class="text">压力测试的目的：通过压力测试了解一下不同发行版本的性能区别。mysql不的版本测试,mysql同样的配置具体版本如下：mysql-5.1.42企业版＋innodb-pluginmysql-5.1.42企业版＋默认的innodbmysql-5.1.43开源版+ innodb-pluginmysql-5.1.43 percona压力设置创建一个1kw的innodb表,使用16个并发去进行读取写入更新事<a href="../201003/dba_1189.htm" title="MySQL不同分支版本的压力测试 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="14" title="《存储引擎InnoDB》专题">存储引擎InnoDB</a></SPAN><SPAN>作者：wubx</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2010/4/15 9:47:43</SPAN><a href="../201004/dba_1177.htm"  title="MySQL数据库存储引擎和分支现状 ">MySQL数据库存储引擎和分支现状 </a>  <LI   class="text">在mysql经历了2008年sun的收购和2009年oracle收购sun的过程中，基本处于停滞发展的情况，在可以预见的未来，mysql是肯定会被oracle搁置并且逐步雪藏消灭掉的。mysql随着相应的各主创和内部开发人员的离去，缔造了各个不同的引擎和分支，让mysql有希望继续发扬光大起来。本文大致讲解一下mysql目前除了主要的 myisam、innodb、heap(memory)、ndb <a href="../201004/dba_1177.htm" title="MySQL数据库存储引擎和分支现状 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="14" title="《存储引擎InnoDB》专题">存储引擎InnoDB</a></SPAN><SPAN>作者：heiyeluren</SPAN>  </LI></UL>
+                            </div>
+                            <div class="sabrosus"><a href='zt_14_1.htm' title='回到第一页'>首页</a><a href='zt_14_3.htm' title='上一页'>上一页</a><a href='zt_14_1.htm' title='第1页'>1</a><a href='zt_14_2.htm' title='第2页'>2</a><a href='zt_14_3.htm' title='第3页'>3</a><span class="current">4</span><a href='zt_14_5.htm' title='第5页'>5</a><a href='zt_14_6.htm' title='第6页'>6</a><a href='zt_14_7.htm' title='第7页'>7</a><a href='zt_14_8.htm' title='第8页'>8</a><a>...</a><a href='zt_14_5.htm' title='下一页'>下一页</a><a href='zt_14_11.htm' title='尾页'>尾页</a><input type="hidden" value="4" id="page">&nbsp;&nbsp;<strong>分页：4/11页</strong></div>         
+            </div>        
+        </div>
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+	
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

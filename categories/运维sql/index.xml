@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>运维SQL on Classic</title>
+    <link>/categories/%E8%BF%90%E7%BB%B4sql/</link>
+    <description>Recent content in 运维SQL on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 29 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E8%BF%90%E7%BB%B4sql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Oracle处理归档日志archivelog空间报警</title>
+      <link>/oracle/oracle%E5%A4%84%E7%90%86%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97archivelog%E7%A9%BA%E9%97%B4%E6%8A%A5%E8%AD%A6/</link>
+      <pubDate>Fri, 29 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E5%A4%84%E7%90%86%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97archivelog%E7%A9%BA%E9%97%B4%E6%8A%A5%E8%AD%A6/</guid>
+      <description>查看归档日志空间占用率  select * from v$flash_recovery_area_usage; --查看空间占用率 select * from v$recovery_file_dest; --查看归档日志的存放地址; show parameter recovery; --查看归档空间大小 增加表空间大小（磁盘空间足够的话） alter system set db_recovery_file_dest_size=250G; --请归档空间增大到250G 删除过期文件 export ORACLE_SID=****** rman target / crosscheck archivelog all; //查看可以所有的归档文件 delete expired archivelog all; //清空过期的归档文件 delete force noprompt ARCHIVELOG ALL COMPLETED BEFORE &#39;trunc(SYSDATE)-90&#39;; //清除90天前的归档文件 quit </description>
+    </item>
+    
+    <item>
+      <title>Oracle增加表审计</title>
+      <link>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1/</link>
+      <pubDate>Wed, 10 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1/</guid>
+      <description>增加表审计 # 查看现在有哪些审计对象 select * from dba_obj_audit_opts; # 开启审计 audit select,update,insert,delete on 用户.表名 by access # 关闭审计 noaudit select,update,insert,delete on 用户.表名 # 查看审计结果 select * from dba_audit_trail 清空审计 sqlplus / as sysdba truncate table sys.aud$; ``</description>
+    </item>
+    
+    <item>
+      <title>定时收集存储过程函数视图信息入库(Oracle,MySQL)</title>
+      <link>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%87%BD%E6%95%B0%E8%A7%86%E5%9B%BE%E4%BF%A1%E6%81%AForaclemysql/</link>
+      <pubDate>Thu, 04 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%87%BD%E6%95%B0%E8%A7%86%E5%9B%BE%E4%BF%A1%E6%81%AForaclemysql/</guid>
+      <description>需求 下午接到运维转来的一个权限申请流程：大数据部门研发要求开通保垒机权限。以方便在保垒机上安装SQL客户端去查看存储过程和视图的内容
+保垒机直连数据库查询，这种不可控的方式，早在去年我就把这个历史问题给禁止掉了，没想到现在还有人要求开通
+经过沟通得知，对方想查看Oracle数据库里的一些老的存储过程的代码。而DBA平台上只有表结构相关的数据字典，没有存储过程和视图的数据字典
+所以，别慌，不就这点需求吗，马上就可以加上。
+ 为什么DBA平台上的数据字典不包括存储过程和视图？ 因为存储过程/函数/视图 也是被我禁掉的，研发人员上线不可以写存储过程和视图。 所以就没想过要在DBA运维平台上做这块功能
+ 但是因为
+ 历史原因，以前的Oracle数据库上已经存在很多的视图和存储过程 第三方原因，公司采购的一些第三方服务和软件，带了存储过程和视图 这些被禁止使用的数据库对象，也需要做统一维护  拆解  这些数据库对象的信息用定时任务收集线上的表结构到本地，存为两份 一份入库，做为快照信息，展示给用户。 一份落本地文件，上传到git，用git做版本管理   为什么不在用户请求查看某个数据库对象的信息时，实时查询给用户？
+ 1.因为历史原因，我们有的库有几万个数据库对象，当用户选择一个库时，list列表加载很慢，所以一开始设计的时候，我们做了快照 2.一份快照，还可以用作数据库对象的git版本管理   建表 在dboop库中建表
+ CREATE TABLE `info_objects` ( `objectid` int NOT NULL AUTO_INCREMENT, `dbid` int NOT NULL DEFAULT &#39;0&#39;, `TABLE_SCHEMA` varchar(64) NOT NULL DEFAULT &#39;&#39;, `object_name` varchar(255) NOT NULL DEFAULT &#39;&#39;, `object_type` varchar(64) NOT NULL DEFAULT &#39;&#39;, `object_text` longtext, `cstatus` smallint NOT NULL DEFAULT &#39;1&#39;, `dba_freshtime` datetime NOT NULL DEFAULT &#39;1990-01-01 00:00:00&#39;, PRIMARY KEY (`objectid`), UNIQUE KEY `idx_infoobjects_id` (`dbid`,`object_name`,`object_type`), KEY `idx_info_objects_time` (`dba_freshtime`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 实现数据字典收集入库 建Oracle采集任务  &amp;lt;!</description>
+    </item>
+    
+    <item>
+      <title>Oracle运维DBA常用命令集合</title>
+      <link>/oracle/oracle%E8%BF%90%E7%BB%B4dba%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Wed, 30 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E8%BF%90%E7%BB%B4dba%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</guid>
+      <description>-- 写在开始 linesize/pagesize set linesize 9999 set pagesize 9999 查看ORACLE SID
+select * from v$instance select instance_name,host_name from v$instance; 查看数据库的运行天数
+select INSTANCE_NAME,round(sysdate-STARTUP_TIME) run_day from gv$instance; 查看alert log
+show parameter dump; 查看当前DB的scn
+select dbms_flashback.get_system_change_number from dual; select current_scn from v$database; scn转时间戳
+select scn_to_timestamp(991159) scn from dual; 时间转换为scn
+select timestamp_to_scn(to_timestamp(&#39;2019-01-27 18:19:20.123456789&#39;,&#39;YYYY-MM-DD HH24:MI:SS.FF&#39;)) scn from dual; scn和时间的对应关系
+select scn,to_char(time_dp,&#39;yyyy-mm-dd hh24:mi:ss&#39;) time from sys.smon_scn_time where rownum&amp;lt;10 order by 1,2; 查看数据库所有用户及用户状态
+-- SYSADM用户是线上应用用户 select USERNAME,ACCOUNT_STATUS from dba_users; select current_scn from v$database; 查看存储过程数量</description>
+    </item>
+    
+    <item>
+      <title>Oracle新建A用户默认访问B用户的表和视图</title>
+      <link>/oracle/oracle%E6%96%B0%E5%BB%BAa%E7%94%A8%E6%88%B7%E9%BB%98%E8%AE%A4%E8%AE%BF%E9%97%AEb%E7%94%A8%E6%88%B7%E7%9A%84%E8%A1%A8%E5%92%8C%E8%A7%86%E5%9B%BE/</link>
+      <pubDate>Mon, 03 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E6%96%B0%E5%BB%BAa%E7%94%A8%E6%88%B7%E9%BB%98%E8%AE%A4%E8%AE%BF%E9%97%AEb%E7%94%A8%E6%88%B7%E7%9A%84%E8%A1%A8%E5%92%8C%E8%A7%86%E5%9B%BE/</guid>
+      <description>原因  在oracle 中schema与用户是一一对应的关系 A用户默认访问的是Aschema下的表 业务需求建立用户A可以查询B用户建立的表；会报错：表和视图不存在 以下是解决方法  方案一：改写SQL  A用户查询时带上B用户的schema  select * from A.table 方案二：手动指定current_schema  临时修改A用户的schema，执行下面SQL事件  alter session set current_schema=B; select * from table; 方案三：触发器  增加A用户的登录trigger  create or replace trigger {triggername} after logon on A.schema begin execute immediate &#39;alter session set current_schema=B&#39;; 方案四：增加同义词  增加A用户的同义词  # 用管理账号执行 grant create synonym to A # 用A账号执行 CREATE SYNONYM TEST FOR B.TEST; .... #把所有的表和视图都加上 总结  方法1.</description>
+    </item>
+    
+  </channel>
+</rss>

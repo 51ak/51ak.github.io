@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Oracle数据库中的字符处理技巧总结</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="在数据库开发与维护中，数据库管理员接触最多的数据类型就是字符类型了，包括字符串、日期类型的字符串等等。在oracle数据库中为了帮助数据库管理员能够以最快的方式处理这些字符类型的数据，提供了许多有用的函数或者工具。笔者今天就谈谈在oracle数据库中处理字符串的经验与心得。<br/>一、去掉尾部的空格字符。<br/>有时候在查询或者进行其他处理的时候，需要把字符串尾部的空格字符去掉。如Oracle数据库中的字符处理技巧总结" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a href="../Oracle/l_7_1.htm" class="hover"　title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../Oraclezhishi/l_8_1.htm" title="Oracle基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../Oracleha/l_9_1.htm" title="Oracle高可用性和HA">高可用性和HA</a>|</li><li><a  href="../Oracleyouhua/l_10_1.htm" title="Oracle性能与优化">性能与优化</a>|</li><li><a  href="../Oracleguzhang/l_11_1.htm" title="Oracle故障与解决">故障与解决</a>|</li><li><a  href="../Oraclebi/l_12_1.htm" title="Oracle商业应用">Oracle商业应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../Oracle/l_7_1.htm">Oracle</a>&nbsp;&gt;&nbsp;<a href="../Oraclezhishi/l_8_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>Oracle数据库中的字符处理技巧总结</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   在数据库开发与维护中，数据库管理员接触最多的数据类型就是字符类型了，包括字符串、日期类型的字符串等等。在<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库中为了帮助数据库管理员能够以最快的方式处理这些字符类型的数据，提供了许多有用的函数或者工具。笔者今天就谈谈在<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库中处理字符串的经验与心得。<br />　　一、去掉尾部的空格字符。<br />　　有时候在查询或者进行<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>处理的时候，需要把字符串尾部的空格字符去掉。如有时候应用软件设计的不合理，会把空格字符保存在数据库中。如在输入产品品号的时候，用户不小心，把“DT001”输成了“DT001 ”。如果应用程序在设计的时候，能够自动把尾部的空格去掉然后在保存到数据库中能够就万无一失了。但是不少的应用软件在开发的时候没有如此设计。这就给后续的处理带来了很多的麻烦。因为利用Where语句来查找记录的时候，“DT001”(最后不带空格)与“DT001 ”(最后带一个空格)两个是不同的条件。如果想利用这个条件来进行数据更新、查询等等，就会遇到问题。为此在写相关的Update或者Select语句的时候，可能需要把后面的空格符号去掉。为此在<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库中，有很多种解决方式。如数据库管理员可以使用Ltrim函数来实现。这个函数的格式为Ltrim[c1,c2]。其作用是去掉C1左边所包含的C2种的任何字符。当遇到不是C2种的字符串时结束，然后返回剩余的字符串。如果把C2字符串设置为空格符号(默认情况下就是空格)，那么就可以把DT001后面的空格符号去掉了。<br />　　二、在头部自动进行填充。<br />　　有时候可能数据库设计的时候，考虑的不够周到，导致某些字段不够大。在对数据库进行升级的时候，需要调整相关的字段。此时就可能需要对某个字段的头部进行填充，以达到数据一致性的要求。如现在有个ERP系统，其需要用到一张产品信息的表，其中有一个产品编号字段。刚开始在设计产品编码的时候，设计的长度不够，如只设置了5位。随着企业产品记录的增多，需要对这个编码的内容进行扩展。如产品信息属于包装材料类的，需要在原来产品编号的头部加入一个字符B;如产品信息属于客供品的，则需要在原来产品编号的头部加入一个字符C;如产品信息属于辅助材料的，则在原来的产品编号前面加入一个字符F;等等。此时该如何实现这个需求呢?难道要一个个去修改吗?现在这手工修改的工作量比较大，而且容易出错，这个方法不可取。其实在<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库系统中提供了一个单行字符函数，可以帮助数据库管理员与企业来解决这个问题。这个函数就是RPAD函数。这个命令的格式为RPAD(C1，N，C2)。这个函数的意识是在C1的右边填充字符C2，直到字符串的总长度满足N。默认情况下C2的值为空格，用户可以根据自己的需要设置这个值。如果C1的长度比N要大，则会截取C1右边的N个字符。现在如果要实现上面这个需求，则只需要设置函数RPAD(产品编号，6，F)即可。由于原来的产品编号为5位，现在需要为辅助信息的产品编号前面加入一个字符F，修改后的总长度变为6位。不过在使用这个函数的话，往往需要利用Where条件语句进行限制。<br />　　现在这个函数还可以里用实现字符串的截取。如还是这个产品编号，其前面一位表示产品的种类。此时数据库管理员就可以利用RPAD(产品编号，1)来截取产品编号的第一位字符(这里产品编号的长度比1要大，则会截取产品右边的1个字符，即产品类别标示码)。这在报表设计的时候也非常有用，有利于简化报表的显示。<br />　　三、字符大小写的控制。<br />　　在做报表的时候，我们可能需要对字符串的现实格式进行控制，如大小写的显示格式。另外，在进行数据库移植的时候，可能以前的收入大小写不规范。数据库管理员需要采用一定的规则来规范移植后的数据库字符串书写规范。为了简化这些需求的实现方式，在<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库中也提供了一些工具来解决这些问题。<br />　　如以前在输入产品编号的时，可能大小写不区分。而在前台应用程序中也没有进行这方面的控制。现在用户希望所有的产品编号都为大写，需要把原先是小写的产品编号全部转换成大写。此时如果产品数量比较多的话，显然利用手工修改的方式会增加工作量。如果编写一个程序来实现的话，又太复杂，其实我们可以借鉴<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库提供的字符串处理函数来实现。在单行字符函数集中，有一个函数UPPER，它的作用就是将全部字符串都改写为大写并返回。为此我们可以利用一个子查询或者借助视图的帮助，把所有产品编号中，如果含有小写字符的产品编号都更新为大写。如果原来就是大写的，就保持原样(而不是说原来大写的变小写，原来小写的变大写)。同理，既然小写可以变大写，那么大写也就可以变为小写。利用单行字符串函数LOWER，就可以把全部字符串改为小写输出(把大写字母改为小写，而小写字符保持不变)。<br />　　另外一个大小写的控制原则比较复杂，如对于一些英文地址或者英文名字之类的字符串，需要首个字母大写，而<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>字符小写。这个实现起来就有一定的难度。还好在<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库中提供了一个现成的解决方法，即利用Initchar函数来实现。这个函数的功能是将某个字段中每个单词的首字符转换为大小，<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>字符都是小写的字符串。通常情况下，这个字段之间的单词可以利用空格、控制字符或则标点符号来表示。可见通过这个三个大小写字符串控制函数，可以优化字符串的显示格式，让其显示更加的规范。而结合Update语句的话，还可以成批的在数据库中进行更新，让其保存的数据也符合规范化的要求。<br />　　四、字符串中的复杂替换。<br />　　几年之后，杭州进行来一些行政区划的规格，如把下沙市改为了直属杭州管辖的下沙区。为此有一家企业的数据库管理人员就问笔者，能否把一些记录中的下沙市都改为下沙区。什么意思呢?也就是说，在数据库中可有含有如下记录“下沙市某某钢铁厂”、“杭州市某某服装厂”、“滨江区某某信息有限公司”等等。现在数据库管理员希望把含下沙市的内容都改为下沙区。这涉及到一些复杂字段的替换，实现起来具有一定的难度。数据库是结构化数据的结合体，不比Word文档，可以利用查找替换功能来解决这个需求。那么在<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库中该如何实现呢?在<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>数据库中就模拟实现了Word文档中的查找替换功能。<br />　　如在单行字符函数中有一个叫做Replace的函数，就可以帮助数据库管理员实现这个需求。这个函数的格式为Replace(C1，C2，C3)。他的含义就彪死后把C1中出现的C2都替换成C3，然后返回字符串。这是什么意思呢?其实就是跟Word文档中的查找替换功能类似。从字符串C1种查找C2的内容，如果找到的话利用C3来代替。如果C3 的内容为空，则所有在字段中出现C2内容的字符都将被删除。那要实现上面的需求，就可以把这个函数的参数设置为Replace(Adress，下沙市，下沙区)。然后再利用Upadate语句把这个函数返回的值赋值给地址字段即可。如此，在数据库地址字段中，出现下沙市的地方将全部被更新为下沙区。但是这个更改不会影响到<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>的记录。如不会把杭州市也改为杭州区等等。<br />　　为此，要实现一些复杂的字符替换作业，可以利用函数Replace来完成。有时会，把Replace函数与<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>函数相结合，还可以实现一些更加复杂的内容。如在产品基本信息中，产品编号中可能包含了产品的分类信息，如PSD001这个产品编号，第一个字符P表示成批，第二三个字符SD表示手动工具。如果自动工具的话就为PZD001。在生成报表的时候，如果利用这些字符来显示结果的话，显然报表的可读性并不是很好。此时数据库管理员可以先利用字符串截取函数或者利用上面所提到过的头部填充函数等等来截取相关的字符串，然后再利用现在这个查找替换函数，则可以把ZD等字符转换成“自动工具”等代表含义的字符串，这将提高报表的可读性。可见，将Replace替换函数与<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>函数结合(C1、C2、C3参数都可以利用函数来实现)从而可以实现复杂的替换功能。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

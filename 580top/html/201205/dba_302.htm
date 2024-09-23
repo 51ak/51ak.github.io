@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Oracle重复数据删除技术解密</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="一、什么是重复数据删除<br/>备份设备中总是充斥着大量的冗余数据。为了解决这个问题，节省更多空间，“重复删除”技术便顺理成章地成了人们关注的焦点。采用“重复删除”技术可以将存储的数据缩减为原来的1/20，从而让出更多的备份空间，不仅可以使磁盘上的备份数据保存更长的时间，而且还可以节约离线存储时所需的大量的带宽。<br/>就在几年前，d2d备份似乎还好得令人难以置信。受价格低廉的atOracle重复数据删除技术解密" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a href="../Oracle/l_7_1.htm" class="hover"　title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../Oraclezhishi/l_8_1.htm" title="Oracle基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../Oracleha/l_9_1.htm" title="Oracle高可用性和HA">高可用性和HA</a>|</li><li><a  href="../Oracleyouhua/l_10_1.htm" title="Oracle性能与优化">性能与优化</a>|</li><li><a  href="../Oracleguzhang/l_11_1.htm" title="Oracle故障与解决">故障与解决</a>|</li><li><a  href="../Oraclebi/l_12_1.htm" title="Oracle商业应用">Oracle商业应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../Oracle/l_7_1.htm">Oracle</a>&nbsp;&gt;&nbsp;<a href="../Oraclezhishi/l_8_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>Oracle重复数据删除技术解密</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   一、什么是重复数据删除<br />　　备份设备中总是充斥着大量的冗余数据。为了解决这个问题，节省更多空间，“重复删除”技术便顺理成章地成了人们关注的焦点。采用“重复删除”技术可以将存储的数据缩减为原来的1/20，从而让出更多的备份空间，不仅可以使磁盘上的备份数据保存更长的时间，而且还可以节约离线存储时所需的大量的带宽。<br />　　就在几年前，D2D备份似乎还好得令人难以置信。受价格低廉的 ATA(以及稍后的SATA)硬盘的影响，很多人会选择用D2D取代虚拟磁带库或做备份到磁盘的工作，使备份速度变得更快，不必再担心在磁带驱动器和磁带库上产生的机械故障，并且使文件恢复变得更加轻松。<br />　　但是今天，我们的磁盘备份设备的容量已经趋于饱和，在数据中心已经没有足够的空间来备份PT级的数据，在这种情况下，当我们希望将备份数据保存一个月时，却只能保存两到三天。问题是在我们的备份设备中有太多的重复数据。现在终于有了解决这个问题的办法，善于抓住机会赚钱的厂商们声称他们的新一代“删除重复数据”产品可以按20：1，甚至300：1的比例缩减我们需要存储的数据量。果真如此吗?让我们仔细看看。<br />　　重复数据删除技术支持在已有的磁盘设备上存储更多的备份数据。因此采用“重复数据删除”技术可以增加您保存备份数据的时间，减少数据中心的消耗，降低成本。如果您删除重复数据后再通过WAN发送，那么您就能够节省大量的带宽，并且可以取代磁带实现网上离线备份。重复数据删除技术唯一的缺点是备份速度变慢。<br />　　源起<br />　　当您的备份程序在网络中多次从同一目录下备份相同的文件，或者从多个地址处备份相同的文件时，重复的数据在临时区域进行备份。大部分网络上的重复数据量令人吃惊，这些数据从56个用户保存在他们本地目录下的假日聚会的PDF格式邀请函，到每个服务器的系统驱动器上3GB&nbsp;Windows文件，真是包罗万象，应有尽有。<br />　　解决临时区域内文件重复的方案是增量备份。尽管我们很喜欢这样做，尤其是喜欢选择Tivoli Storage Manager 采用的永久增量备份的方法，但当我们考虑到RAID灾难恢复时，我们想到的是重复数据删除，而不是增量备份。增量备份主要是避免重复。<br />　　重复数据删除最基本的形式是出现在CAS(内容寻址存储)设备中的单一实例存储(single-i tance store)，例如，EMC的 Centera。当每个文件存储到CAS系统上时，CAS系统会为存储的文件内容生成一个散列(hash);如果系统中已经存在具有相同散列(hash)的文件，系统就会再创建一个表示副本的指针指向已存在的文件，而不是保存另一个副本。<br />　　微软Windows Storage&nbsp;Server的最新版本，Windows服务器的OEM NAS(网络附加存储)版本，采用了与删除重复文件略微不同的方法。当写入数据时，W 不识别重复文件，而是运行一个后台程序SIS (单一实例存储) Groveler，该程序通过部分文件散列函数(采用二进制比较法)识别重复文件，将重复文件移到公用存储区，原始位置上的文件用连接到公用存储区文件的链接代替。<br />　　尽管文件级SIS能够节省一些空间，但是如果我们不只消除重复文件而且还消除了文件内存储的重复数据，那事情可就变得让人有兴趣了。想想Outlook的 . T文件。例如一个典型的Outlook用户可以拥有300-MB或更大的. T文件，文件上保存着他过去所有的电子邮件;每天他都会收到一个或更多新的邮件，就因为那天他的. T文件改变了，你的备份程序就把这个. T文件包括在增量备份里了，即使这个300MB的文件只有25 KB 的改变。<br />　　重复数据删除产品能够识别这个25 KB的新数据，并且剔除其余没有改变的旧的数据，只保存25 KB的新数据，从而节省大量磁盘空间。再进一步设想一下，550KB的附件在20个用户的 . T文件内，如果它们能够被消除，您就可以缩减大量的数据。象下述这样的一组解决方案是Data&nbsp;Domain倡导的采用“重复数据删除”技术进行备份的目标。即这些采用“重复删除”技术的设备管理 VTL (虚拟磁带库) 或 NAS等备份设备，它们从这些备份应用设备(VTL或NAS设备等)中获取数据，透明地执行“重复删除”处理。二、重复数据删除的五个阶段<br />　　数据收集<br />　　在数据收集阶段，软件通过比较进入的备份数据和先前的备份缩小需要进行分析数据的范围，使用“内容已知”数据库辨别它们之间可能的重复和相似数据。例如，如果名为同一个客户端中的 “\root\documents\abc.txt”文件在备份中存在两次，软件自动决定采取何种动作。如果进入的数据是已存在数据的修改版本，该数据就进入下一阶段(数据识别、数据比较)的处理流程以确定数据发生的具体变化;如果进入的数据和已存在数据完全相同，那么进入下一阶段对数据副本进行校验。另外的数据收集操作包括：标志保存在不同位置(例如，不同的客户端、目录等)的相同对象副本。软件还为数据收集阶段发现的冗余数据对创建一工作列表，该表格用于数据识别和比较阶段进行进一步分析。<br />　　数据识别/数据比较<br />　　在数据识别/数据比较阶段，软件以字节为单位分析数据收集阶段标志出的相似数据对象。如果数据收集阶段创建的工作表表明需要进行数据识别，那么软件就会用 delta 差分算法确定备份组中的哪些数据是唯一的、哪些数据是重复的。<br />　　该算法可以有效地以字节为单位映射发生变化的数据，并且对数据对象内的偏移或者位置改变不敏感，所以，即使相关的对象之间发生明显的结构改变，该算法仍可以定位冗余的数据。<br />　　如果数据收集阶段从元数据级别认定备份组中的数据和前一个备份相同，那么在数据识别阶段将以字节为单位对数据进行比较。在该步骤中，软件调用数据比较器识别出数据发生变化的文件。<br />　　数据重组<br />　　数据识别/数据比较的结果被传递给数据重组过程，在该过程中数据被重新组装，放入临时的“保留磁带”中，新数据被保存，前一阶段被标出的重复数据被已存数据的指针替代。对备份软件而言，保留磁带和真正的磁带完全相同，只是存储在新磁带中的数据要远少于真正的磁带上存储的数据。从备份软件看来，数据是连续的并且也没有删除副本，软件可以根据嵌入在文件系统中的指针读取重复数据的唯一一份副本。该过程的最终结果是产生一份经过重复数据删除的备份组视图。<br />　　可选的完整性检查<br />　　在实际删除所有的重复数据前，软件执行一次可选的检查，以保证数据100%的完整性。在本阶段中，软件通过将“保留磁带”(代表经过重复数据删除的数据)和原始数据进行比较验证其结构和整个数据内容。<br />　　空间回收<br />　　在空间回收阶段，软件从文件系统中删除冗余的数据，释放先前被占用的磁盘空间以备他用。保留磁带和原始的、没有经过重复数据删除的磁带交换位置(比如条码、槽位以及属性等)，然后软件智能的释放重复的区块并将它们放回空闲空间池。经过这样的处理以后，所有<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>需要存储空间的数据处理过程都可以重用先前被重复数据占用的空间。<br />　　三、重复数据删除技术的四大优势<br />　　重复数据删除技术也就是所谓的容量优化保护技术。它能给客户的计算机系统，尤其是备份系统带来哪些好处呢?<br />　　目前，重复数据删除技术主要应用于数据备份，也有公司宣称将把该技术应用在主存储中，但那毕竟不是主流。重复数据删除技术可以提供更大的备份容量，实现更长时间的数据保留，还能实现备份数据的持续验证，提高数据恢复服务水平，方便实现数据容灾等。<br />　　更大的备份容量<br />　　备份数据中包含太多的冗余部分，在数据全备份中更是如此。尽管增量备份只是备份那些有变化的文件，但增量备份中通常也会包含冗余的数据块。<br />　　重复数据删除技术的原理是只保存惟一一份备份数据的数据段。当数据写入到备份设备时，数据会被分成可变长度的数据段。重复数据删除设备会实时将该数据段与已经存储的各数据段进行比较。这种方式可以保证每个惟一的数据段只保留一份。因为重复数据删除设备可以在文件内或文件间，甚至数据块内发现重复的文件和数据段，所以实际所需的存储空间也就比所要保存的数据量低一个数据量级。容量优化效率高低的关键在于算法。容量优化技术依据的原理并不是新出现的，而是在学术圈里存在几十年了。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySQL5 改密码后不能登录问题的解决办法</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="首先说明一下,下面描述仅限于win系统其它系统我没试过,mysql&nbsp;自从4.1.1以后修改了用户密码的格式,从16位增加到了41位,采用了一种新的验证方法,但4.1以前的客户端协议不支持这种方法,所以造成了不能登临的后果.即使密码正确了不能正常登录。<br/>提示如下:<br/>#1250-clientdoesnotsupportauthenticationpMySQL5 改密码后不能登录问题的解决办法" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化">性能与优化</a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlzhishi/l_14_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>MySQL5 改密码后不能登录问题的解决办法</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   　　首先说明一下,下面描述仅限于Win系统 其它系统我没试过,<a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a>&nbsp;自从4.1.1以后修改了用户密码的格式, 从16位增加到了41位, 采用了一种新的验证方法,但4.1以前的客户端协议不支持这种方法,所以造成了不能登临的后果.即使密码正确了不能正常登录。<br />提示如下:<br />#1250 - Client does not support authentication protocol requested byserver; consider upgrading MySQL client<br />在窗口中执行:<br />C:<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>in&gt;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> -uroot<br />Welcome to the MySQL monitor.　Commands end with ; or g.<br />Your MySQL connection id is 1 to&nbsp;server&nbsp;version: 5.0.0-alpha-nt<br />Type 'help;' or 'h' for help. Type 'c' to clear the buffer.<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt;&nbsp;select&nbsp;password('aa');<br />+-------------------------------------------+<br />| password('aa')|<br />+-------------------------------------------+<br />| *DEE59C300700AF9B586F9F2A702231C0AC373A13 |<br />+-------------------------------------------+<br />1 row in set (0.00 sec)<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt;<br />从上可以看出password的结果返回了一个以'*'号开头的41位字符串,而以前是16位的.<br /><a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a>官方网站给出了二种解决方法<br />1,使用新的客户端api,<br />2,强制服务器使用旧的密码方案<br />我首先尝试了第一种方法,从<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>5.0中拷贝lib<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>.dll到php&nbsp;的扩展目录中,替代了php本身附带的lib<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>.dll, 但结果令人失望. Php提示装入php_<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>.dll失败:PHP Warning:　PHP Startup: Unable to load dynamic library 'c:/php5/ext/php_<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>.dll' - 找不到指定的程序。后来发现新版的dll中缺少了<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>_drop_db() 这一函数 :( 只有等php或<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>出更新的dll了.<br />第一种方法行不通,只有试试第二种方法,<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>的官方FAQ中说,需要加上-old-password这一参数,我首先尝试 在命令行下起动<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>,<br />c:<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>in&gt;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d-nt -old-password<br />在另一窗口中 运行<br />C:<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>in&gt;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> -uroot<br />Welcome to the MySQL monitor.　Commands end with ; or g.<br />&nbsp;<br />Your MySQL connection id is 540 to server version: 5.0.0-alpha-nt<br />Type 'help;' or 'h' for help. Type 'c' to clear the buffer.<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; select password('mypassword');<br />+------------------------+<br />| password('mypassword') |<br />+------------------------+<br />| 162eebfb6477e5d3　 |<br />+------------------------+<br />1 row in set (0.55 sec)<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt;<br />可以看出password的结果又变成16位的了,可喜的变化<br />我在c:windowsmy.ini (xp,98,中如此,2000中应在c:wint下)中的"<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d"段中加入"set-variable=old-passwords"<br />例:<br />[<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d]<br />basedir=C:/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a><br />set-variable=old-passwords<br />datadir=C:/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/data<br />[WinMySQLadmin]<br />Server=C:/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>/bin/<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d-nt.exe<br />user=root<br />password=mypassword<br />然后在服务管理器中起动<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a><br />后来我又发现,只要在<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>.user表中把password的字段长度改成16系统就自动切换到了oldpassword方式,改成改回41后 又自动换到了新的验证方式.在这里提醒一下,更改password方式后,要重新设制一下密码并刷新一下权限(或重起<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>)<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

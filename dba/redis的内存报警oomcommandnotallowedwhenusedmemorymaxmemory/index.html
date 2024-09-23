@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>redis的内存报警OOM command not allowed when used memory&gt;maxmemory| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">redis的内存报警OOM command not allowed when used memory&gt;maxmemory</span></h1>
+</div>
+
+
+  <main>
+    <blockquote>
+<p>非核心业务的一次小故障，未造成用户感知到的业务影响，记录如下</p>
+</blockquote>
+<h2 id="参与者">参与者</h2>
+<ul>
+<li>DEV1,DEV2</li>
+<li>DBA1,DBA2</li>
+<li>3主3从的RedisCluster集群：1.10,1.11,1.12,1.20,1.21,1.22</li>
+</ul>
+<h2 id="故障起因">故障起因</h2>
+<ul>
+<li>DEV1想排查线上Redis是否有对指定的key有访问</li>
+<li>11:45 DEV1找到DBA1协助排查</li>
+<li>11:50 DBA1在1.11实例上开启monitor进程，监控Redis写入</li>
+<li>11:55 monitor进程启动5分钟后，1.11实例的内存占用从2G涨到10G</li>
+<li>触发该节点的内存占满，引发故障(该节点的新写入报错，其他节点正常读写)</li>
+<li>12:05 DBA1在1.11实例上停止monitor进程，1.11实例的内存占用从10G回退到2G</li>
+<li>12:05 Redis集群自动恢复正常</li>
+<li><img src="/img/2022auto/2024-01-23-14-27-52.png" alt="Redis节点的内存占满"></li>
+</ul>
+<h2 id="故障发现和处理">故障发现和处理</h2>
+<ul>
+<li>12:20 DEV2收到报警</li>
+<li>12:23 DEV2找到DBA2反馈程序报错<code>Caused by: io.lettuce.core.RedisCommandExecutionException: OOM command not allowed when used memory &gt; 'maxmemory'</code></li>
+<li>12:25 DBA2上线检查问题，在节点1.10上查看内存使用率是2G/10G 正常</li>
+<li>12:28 DBA2检查该集群的1.10，1.11,1.12三个节点内存都是2G/10G 没发现异常。</li>
+<li>12:30 查不到问题，修改该集群的所有节点最大内存从10G 改到12G</li>
+<li>12:30 DEV2重启应用，发现恢复。</li>
+<li>12:40 DBA2检查Redis应用，发现set,get的命令从每秒的6000次/秒降到500次/秒，认为业务没有恢复，建议继续排查</li>
+<li>12:45 DBA1，DEV1参与排查，DEV2发现有个status任务没有重启成功</li>
+<li>12:46 DEV2重启status任务，1分钟后，Redis监控指标恢复正常，故障完成处理</li>
+<li>13:12 回溯整个过程，确认是11:50的Monitor进程引起的内存占用异常，原因定位</li>
+<li>13:25 沟通确认Monitor进和不可以长期开启的规范。故障完成处理和总结</li>
+</ul>
+<h2 id="总结">总结</h2>
+<ul>
+<li>DBA协助研发排查问题时，开启Monitor进程时间过长，引起一个节点的内存占满，继而引起研发的进程挂掉</li>
+<li>非核心业务，没有影响到用户和交易，处理过程中现象比较明显，处理难度低，监控还是不够周全</li>
+<li>补充：考虑换LRU策略</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2024/01/23</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/redis">redis</a> <a href="/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86">故障处理</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

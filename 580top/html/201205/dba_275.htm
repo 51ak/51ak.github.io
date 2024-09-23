@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>设计视图Access允许的九种数据类型</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="在表的设计视图中，每一个字段都有设计类型，access允许九种数据类型：文本、备注、数值、日期/时间、货币、自动编号、是/否、ole对象、超级链接、查询向导。&nbsp;<br/>文本：这种类型允许最大255个字符或数字，access默认的大小是50个字符，而且系统只保存输入到字段中的字符，而不保存文本字段中未用位置上的空字符。可以设置“字段大小”属性控制可输入的最大字符长度。<br/设计视图Access允许的九种数据类型" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a href="../othersql/l_19_1.htm" class="hover"　title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../nosql/l_20_1.htm" title="NoSQL">NoSQL</a>|</li><li><a  href="../sysbase/l_21_1.htm" title="Sybase">Sybase</a>|</li><li><a  href="../db2/l_22_1.htm" title="DB2">DB2</a>|</li><li><a  href="../access/l_23_1.htm" title="Access"><span class="zc_666">Access</span></a>|</li><li><a  href="../infomix/l_24_1.htm" title="Informix">Informix</a>|</li><li><a  href="../sqlsql/l_25_1.htm" title="其他">其他</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../othersql/l_19_1.htm">其他数据库</a>&nbsp;&gt;&nbsp;<a href="../access/l_23_1.htm">Access</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>设计视图Access允许的九种数据类型</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   　　在表的设计视图中，每一个字段都有设计类型，access允许九种数据类型：文本、备注、数值、日期/时间、货币、自动编号、是/否、OLE对象、超级链接、查询向导。&nbsp;<br />　　文本：这种类型允许最大255个字符或数字，<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>默认的大小是50个字符，而且系统只保存输入到字段中的字符，而不保存文本字段中未用位置上的空字符。可以设置“字段大小”属性控制可输入的最大字符长度。<br />　　备注：<br />　　这种类型用来保存长度较长的文本及数字，它允许字段能够存储长达64000个字符的内容。但<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>不能对备注字段进行排序或索引，却可以对文本字段进行排序和索引。在备注字段中虽然可以搜索文本，但却不如在有索引的文本字段中搜索得快。<br />　　数字：<br />　　这种字段类型可以用来存储进行算术计算的数字数据，用户还可以设置“字段大小”属性定义一个特定的数字类型，任何指定为数字数据类型的字型可以设置成“字节”、“整数”、“长整数”、“单精度数”、“双精度数”、“同步复制ID”、“小数”五种类型。在<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>中通常默认为“双精度数”。<br />　　日期/时间：<br />　　这种类型是用来存储日期、时间或日期时间一起的，每个日期/时间字段需要8个字节来存储空间。<br />　　货币：这种类型是数字数据类型的特殊类型，等价于具有双精度属性的数字字段类型。向货币字段输入数据时，不必键入人民币符号和千位处的逗号，<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>会自动显示人民币符号和逗号，并添加两位小数到货币字段。当小数部分多于两位时，<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>会对数据进行四舍五入。精确度为小数点左方15位数及右方4位数。<br />　　自动编号：<br />　　这种类型较为特殊，每次向表格添加新记录时，<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>会自动插入唯一顺序或者随机编号，即在自动编号字段中指定某一数值。自动编号一旦被指定，就会永久地与记录连接。如果删除了表格中含有自动编号字段的一个记录后，<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>并不会为表格自动编号字段重新编号。当添加某一记录时，<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>不再使用已被删除的自动编号字段的数值，而是重新按递增的规律重新赋值。<br />　　是/否：这种字段是针对于某一字段中只包含两个不同的可选值而设立的字段，通过是/否数据类型的格式特性，用户可以对是/否字段进行选择。<br />　　OLE对象：<br />　　这个字段是指字段允许单独地“链接”或“嵌入”OLE对象。添加数据到OLE对象字段时，可以链接或嵌入<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>表中的OLE对象是指在<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>使用OLE协议程序创建的对象，例如Word文档、Excel电子表格、图像、声音或<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>二进制数据。OLE对象字段最大可为1GB，它主要受磁盘空间限制。<br />　　超级链接：这个字段主要是用来保存超级链接的，包含作为超级链接地址的文本或以文本形式存储的字符与数字的组合。当单击一个超级链接时，WEB浏览器或<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>将根据超级链接地址到达指定的目标。超级链接最多可包含三部分：一是在字段或控件中显示的文本；二是到文件或页面的路径；三是在文件或页面中的地址。在这个字段或控件中插入超级链接地址最简单的方法就是在“插入”菜单中单击“超级链接”命令。<br />　　查阅向导：<br />　　这个字段类型为用户提供了一个建立字段内容的列表，可以在列表中选择所列内容作为添入字段的内容<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

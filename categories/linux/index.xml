@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>linux on Classic</title>
+    <link>/categories/linux/</link>
+    <description>Recent content in linux on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 07 Jul 2021 00:00:00 +0000</lastBuildDate><atom:link href="/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>常用脚本_grep,sed,awk,find命令</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_grepsedawkfind%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Wed, 07 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_grepsedawkfind%E5%91%BD%E4%BB%A4/</guid>
+      <description>grep ##zcat 是用于查看压缩的文件 ##gzip 套件包含许多可以 “在原地” 处理压缩文件的实用程序。zcat、zgrep、zless、zdiff 等实用程序的作用分别与 cat、grep、less 和 diff 相同，但是它们操作压缩的文件。 zcat web.log.gz | grep aqzt.com | head ###Grep &#39;OR&#39; 或操作 grep &amp;quot;pattern1\|pattern2&amp;quot; file.txt grep -E &amp;quot;pattern1|pattern2&amp;quot; file.txt grep -e pattern1 -e pattern2 file.txt egrep &amp;quot;pattern1|pattern2&amp;quot; file.txt awk &#39;/pattern1|pattern2/&#39; file.txt sed -e &#39;/pattern1/b&#39; -e &#39;/pattern2/b&#39; -e d file.txt #找出文件（filename）中包含123或者包含abc的行 grep -E &#39;123|abc&#39; filename #用egrep同样可以实现 egrep &#39;123|abc&#39; filename #awk 的实现方式 awk &#39;/123|abc/&#39; filename ###Grep &#39;AND&#39; 与操作 grep -E &#39;pattern1.*pattern2&#39; file.txt # in that order grep -E &#39;pattern1.</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_scp和rsync</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_scp%E5%92%8Crsync/</link>
+      <pubDate>Sat, 15 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_scp%E5%92%8Crsync/</guid>
+      <description>scp 从本地复制到远程 在本地服务器上将/data/mysqlbackup目录下所有的文件传输到服务器10.0.0.2的/data/mysqlbackup目录下，命令为：
+scp -r /data/mysqlbackup root@10.0.0.2:/data/mysqlbackup
+从远程复制到本地 在本地服务器上操作，将服务器10.0.0.2上/data/mysqlbackup/目录下所有的文件全部复制到本地的/root目录下，命令为： scp -r root@10.0.0.2:/data/mysqlbackup /root
+rsync  time=$(date &#39;+%Y-%m-%d-%H-test1_binlog.0001&#39;) time1=$(date &#39;+%Y-%m-%d-%H-test2_binlog.0001&#39;) #cp /data/mysqlbackup/log/test1_binlog.0001 /data/mysqlbackup/log/$time #cp /data/mysqlbackup/log/test2_binlog.0001 /data/mysqlbackup/log/$time1 /usr/bin/rsync -av --bwlimit=10000 /data/mysqlbackup/log/test1_binlog.0001 /data/mysqlbackup/log/$time /usr/bin/rsync -av --bwlimit=10000 /data/mysqlbackup/log/test2_binlog.0001 /data/mysqlbackup/log/$time1 cat /dev/null &amp;gt; /data/mysqlbackup/log/test1_binlog.0001 cat /dev/null &amp;gt; /data/mysqlbackup/log/test2_binlog.0001 find /data/mysqlbackup/log/ -ctime +5 -exec rm -f {} \; ##剪切参考，IO速度限制的cp和mv(限速1024 KB/s) ##cp: rsync --bwlimit=1024 {src} {dest} ##mv: rsync --bwlimit=1024 --remove-source-files {src} {dest} ##使用ssh方式rsync，不用服务端，简单方便，SSH需要认证，就不用每次输入密码 #ssh-keygen -t rsa -N &#39;&#39; -f ~/.</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_ssh无密码认证(linux互信)</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_ssh%E6%97%A0%E5%AF%86%E7%A0%81%E8%AE%A4%E8%AF%81/</link>
+      <pubDate>Fri, 14 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_ssh%E6%97%A0%E5%AF%86%E7%A0%81%E8%AE%A4%E8%AF%81/</guid>
+      <description>A机添加B机ssh信任 # B机执行 ssh-keygen -t rsa 一路回车 cat /root/.ssh/idrsa.pub # A机执行 vim /root/.ssh/authorized_keys 将B机的pub信息加入 ssh ssh-keygen -t rsa -N &amp;quot;&amp;quot; -f ~/.ssh/id_rsa -q -b 2048 -C &amp;quot;test@ppabc.cn&amp;quot; ssh无密码认证 RSA ssh-keygen -t rsa cat ~/.ssh/id_rsa.pub &amp;gt;&amp;gt; ~/.ssh/authorized_keys chmod 600 ~/.ssh/authorized_keys ssh无密码认证 DSA ssh-keygen -t dsa -P &#39;&#39; -f ~/.ssh/id_dsa cat ~/.ssh/id_dsa.pub &amp;gt;&amp;gt; ~/.ssh/authorized_keys chmod 600 ~/.ssh/authorized_keys 查看生产的密匙 cat ~/.ssh/id_dsa
+用ssh -v 显示详细的登陆信息查找原因： ssh -v localhost 拷贝本地生产的key到远程服务器端（两种方法）  方法1  cat ~/.ssh/id_dsa.pub | ssh 远程用户名@远程服务器ip &#39;cat - &amp;gt;&amp;gt; ~/.</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_iptables</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_iptables/</link>
+      <pubDate>Fri, 07 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_iptables/</guid>
+      <description>安装和启动 systemctl status iptables yum install iptables-services systemctl start iptables #启动 systemctl status iptables #查看运行状态 systemctl restart iptables.service #重启 systemctl stop iptables.service #停止 systemctl enable iptables.service #设置开机启动 systemctl disable iptables.service #禁止开机启动 常用命令 iptables -h #查询帮助 iptables -L -n #列出（filter表）所有规则 iptables -L -n --line-number #列出（filter表）所有规则，带编号 iptables -L -n -t nat #列出（nat表）所有规则 iptables -F #清除（filter表）中所有规则 iptables -F -t nat #清除（nat表）中所有规则 service iptables save #保存配置（保存配置后必须重启iptables） systemctl restart iptables.service #重启 查看： iptables -L -n --line-number iptables -t nat -A PREROUTING -p tcp -d 127.</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_date和time</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_time/</link>
+      <pubDate>Thu, 06 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_time/</guid>
+      <description>日期加减  ####昨天日期（1天以前） date -d last-day +%Y-%m-%d date -d &amp;quot;1 days ago&amp;quot; +%Y-%m-%d date -d &#39;-1 days&#39; +%Y-%m-%d ####下周一日期 date -d &#39;next monday&#39; +%Y-%m-%d ####明天日期 date -d next-day +%Y-%m-%d date -d &#39;1 days&#39; +%Y-%m-%d ####前天 （2天以前） ‘n days ago&#39; 表示n天前的那一天 date -d &amp;quot;2 days ago&amp;quot; +%Y-%m-%d ####上个月的今天 date -d last-month +%Y-%m-%d ####下个月的今天 date -d next-month +%Y-%m-%d ###当前时间 date +%Y-%m-%d_%H_%M_%S ###注意 : 当你不希望出现无意义的 0 时(比如说 1999/03/07)，则可以在标记中插入 – 符号 ###比如说 date +%-H:%-M:%-S 会把时分秒中无意义的 0 给去掉，像是原本的 08:09:04 会变为 8:9:4。 date +%Y%-m%-d ##201766 日期方面 : %a : 星期几 (Sun.</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_python</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_python/</link>
+      <pubDate>Wed, 05 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_python/</guid>
+      <description>python安装 yum install -y gcc zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel yum install -y libffi-devel cd /opt/ wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tar.xz tar -xvJf Python-3.7.0.tar.xz mkdir -p /usr/local/python3 cd Python-3.7.4 ./configure --prefix=/usr/local/python3 make &amp;amp;&amp;amp; make install ln -s /usr/local/python3/bin/python3 /usr/local/bin/python3 ln -s /usr/local/python3/bin/pip3 /usr/local/bin/pip3 python3 -V pip3 -V </description>
+    </item>
+    
+    <item>
+      <title>常用脚本_linux性能</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E6%80%A7%E8%83%BD%E6%9F%A5%E7%9C%8B/</link>
+      <pubDate>Sat, 01 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E6%80%A7%E8%83%BD%E6%9F%A5%E7%9C%8B/</guid>
+      <description>System_info wget https://www.dboop.com/download/System_info.sh &amp;amp;&amp;amp; sh System_info.sh cpu wget https://www.dboop.com/download/cpu.sh &amp;amp;&amp;amp; sh cpu.sh disk wget https://www.dboop.com/download/disk.sh &amp;amp;&amp;amp; sh disk.sh iostat  wget https://www.dboop.com/download/iostat.sh &amp;amp;&amp;amp; sh iostat.sh loadavg  wget https://www.dboop.com/download/loadavg.sh &amp;amp;&amp;amp; sh loadavg.sh memory wget https://www.dboop.com/download/memory.sh &amp;amp;&amp;amp; sh memory.sh show_disks  wget https://www.dboop.com/download/show_disks.sh &amp;amp;&amp;amp; sh show_disks.sh swap  wget https://www.dboop.com/download/swap.sh &amp;amp;&amp;amp; sh swap.sh vmstat wget https://www.dboop.com/download/vmstat.sh &amp;amp;&amp;amp; sh vmstat.sh 内存 # 查内存占用情况 ps -e -o &#39;pid,comm,args,pcpu,rsz,vsz,stime,user,uid&#39; # 其中rsz是是实际内存 ps -e -o &#39;pid,comm,args,pcpu,rsz,vsz,stime,user,uid&#39; | grep java | sort -nrk5 # 其中rsz为实际内存，上例实现按内存排序，由大到小 # 查内存占用情况 ps -aux | sort -k4nr | head -n 10 # 使用指令查看占用的物理内存， ps aux|awk &#39;{sum+=$6} END {print sum/1024}&#39; # 使用指令，核实进程的最大使用内存量 ps -eo pid,rss,pmem,pcpu,vsz,args --sort=rss # 查内存命令 ps p 916 -L -o pcpu,pmem,pid,tid,time,tname,cmd # 排查高CPU占用介绍的PS命令 ps -mp 9004 -o THREAD,tid,time,rss,size,%mem # 分析具体的对象数目和占用内存大小 jmap -histo:live [pid] # 利用MAT工具分析是否存在内存泄漏等等。 jmap -dump:live,format=b,file=xxx.</description>
+    </item>
+    
+  </channel>
+</rss>

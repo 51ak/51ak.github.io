@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>sqlserver表长期没人访问的下线步骤 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">sqlserver表长期没人访问的下线步骤</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+
+
+<p>很多公司因为历史原因，需要下线SQLSERVER里的表或者库。在下线前需要排查确定这些表无人访问</p>
+
+<h1 id="下线步骤">下线步骤</h1>
+
+<ol>
+<li>整理库表的最后访问时间（一般是最近一个月的）</li>
+<li>改掉程序中对这些复制订阅表的从库访问（如果有）</li>
+<li>在测试环境sp_rename 这些表，加上指定后缀(_dbadel)</li>
+<li>如果有问题回滚sp_rename</li>
+<li>保留2周后备份删除</li>
+</ol>
+
+<h1 id="获得表的最后访问时间">获得表的最后访问时间</h1>
+
+<pre><code class="language-SQL">IF OBJECT_ID('tempdb.dbo.#tableused', 'U') IS NULL 
+BEGIN 
+CREATE TABLE #tableused
+(
+DBName VARCHAR(100) ,
+TableName VARCHAR(100) ,
+reads BIGINT ,
+writes bigint,
+last_system_seek DATETIME ,
+last_user_seek DATETIME ,
+last_user_scan DATETIME ,
+last_user_lookup DATETIME ,
+last_user_update DATETIME ,
+tableCreateTime DATETIME
+)
+END 
+EXEC sp_msforeachdb '
+declare @dbname varchar(200);
+select @dbname=''?''
+if (@dbname not in (''system'') and db_id(@dbname)&gt;4) and @dbname not like ''%dbo%''  --在这里排掉不需要统计的库
+begin
+execute
+(
+''
+use ''+ @dbname+'';
+insert into #tableused
+select ''''''+ @dbname+'''''', 
+obj.name AS TableName , 
+sum(indUsage.user_seeks+indUsage.user_scans+indUsage.user_lookups) as  reads,
+sum(indUsage.user_updates) as writes, 
+max(indUsage.last_system_seek ) as last_system_seek , 
+max(indUsage.last_user_seek)   as last_user_seek,
+max(indUsage.last_user_scan)   as last_user_scan,
+max(indUsage.last_user_lookup) as last_user_lookup,
+max(indUsage.last_user_update  ) as last_user_update,
+min(obj.create_date) as create_date
+FROM ''+ @dbname + ''.sys.indexes AS ind 
+INNER JOIN ''+ @dbname + ''.sys.objects AS obj ON ind.object_id = obj.object_id 
+LEFT JOIN ''+ @dbname + ''.sys.dm_db_index_usage_stats indUsage ON ind.object_id = indUsage.object_id AND indUsage.database_id=DB_ID(''''''+ @dbname+'''''')
+AND ind.index_id = indUsage.index_id 
+WHERE obj.type &lt;&gt; ''''S'''' and is_ms_shipped=0  AND OBJECTPROPERTY(obj.object_id, ''''isusertable'''') = 1 
+
+group by obj.name
+''
+)
+end
+'
+
+
+SELECT *
+FROM #tableused
+
+
+DROP TABLE #tableused
+</code></pre>
+
+<h1 id="建一个任务-用于每10分钟收集一次线上的访问情况">建一个任务，用于每10分钟收集一次线上的访问情况</h1>
+
+<pre><code class="language-xml">
+&lt;tasktype&gt;sql_to_sql&lt;/tasktype&gt;
+
+&lt;from_server&gt;group:sqlserver_onlineall&lt;/from_server&gt;		&lt;!--数据源，推荐用--&gt;
+&lt;to_server&gt;link:db_infostatus&lt;/to_server&gt;			&lt;!--目标实例--&gt;
+
+&lt;step&gt;							&lt;!--可以多次定义的任务步骤--&gt;
+  &lt;from_sqlstr&gt;
+    select login_name,s.host_name,c.client_net_address,COUNT(0) host_count from Sys.dm_exec_requests r with(nolock) 
+right outer join Sys.dm_exec_sessions s  with(nolock) on r.session_id = s.session_id right outer join Sys.dm_exec_connections c  with(nolock)
+on s.session_id = c.session_id where s.session_id &gt;50 
+and login_name not like '%\%'
+group by host_name,login_name,client_net_address 
+ &lt;/from_sqlstr&gt;
+      &lt;to_sqlstr&gt;insert into info_sqlserver_process
+(addtime,linkname,login_name,host_name,ipstr,thead_counts) values ('{tasktime}','{linkname}','{0}','{1}','{2}',{3})
+&lt;/to_sqlstr&gt; 
+ 
+&lt;/step&gt;
+
+&lt;success&gt;&lt;/success&gt;
+&lt;onerror&gt;&lt;/onerror&gt;
+</code></pre>
+
+<h1 id="建一个报表-用来展示收集到的数据">建一个报表，用来展示收集到的数据</h1>
+
+<pre><code class="language-xml">&lt;!--每个报表都可以定义多个page用来展示和多个para用来接收用户输入--&gt;
+
+
+&lt;page&gt;
+ &lt;viewtype&gt;table&lt;/viewtype&gt;
+  &lt;title&gt;按库汇总&lt;/title&gt;
+  &lt;connstr&gt;link:db_infostatus&lt;/connstr&gt;
+  &lt;sqlstr&gt;&lt;![CDATA[
+select login_name,
+sum(thead_counts) as conn_counts
+ from info_sqlserver_process 
+where login_name not in ('dba')
+group by login_name
+order by conn_counts desc 
+
+]]&gt;
+  &lt;/sqlstr&gt;
+  &lt;width&gt;420px&lt;/width&gt;
+&lt;/page&gt;
+
+&lt;page&gt;
+ &lt;viewtype&gt;table&lt;/viewtype&gt;
+  &lt;title&gt;按主机汇总&lt;/title&gt;
+  &lt;connstr&gt;link:db_infostatus&lt;/connstr&gt;
+  &lt;sqlstr&gt;&lt;![CDATA[
+select 
+concat(host_name,'(',ipstr,')')
+ as hoststr,
+sum(thead_counts) as conn_counts
+ from info_sqlserver_process 
+where login_name not in ('dba')
+group by
+ concat(host_name,'(',ipstr,')')
+order by conn_counts desc 
+
+]]&gt;
+  &lt;/sqlstr&gt;
+  &lt;width&gt;420px&lt;/width&gt;
+&lt;/page&gt;
+
+
+&lt;page&gt;
+ &lt;viewtype&gt;table&lt;/viewtype&gt;
+  &lt;connstr&gt;link:db_infostatus&lt;/connstr&gt;
+  &lt;sqlstr&gt;&lt;![CDATA[
+select concat(host_name,'(',ipstr,')') as hoststr,
+login_name
+ ,
+sum(thead_counts) as tcount from info_sqlserver_process 
+where login_name not in ('dba')
+group by host_name,ipstr,
+ login_name
+
+
+]]&gt;
+  &lt;/sqlstr&gt;
+  &lt;width&gt;720px&lt;/width&gt;
+&lt;/page&gt;
+
+</code></pre>
+
+</main>
+<h2 class="date">发布日期:2018/04/29</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/sqlserver">sqlserver</a> <a href="/categories/sql%E6%8A%80%E5%B7%A7">SQL技巧</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

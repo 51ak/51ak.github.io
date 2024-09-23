@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL5.7实例无限重启故障定位及解决| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL5.7实例无限重启故障定位及解决</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#环境">环境</a></li>
+    <li><a href="#故障现象">故障现象</a></li>
+    <li><a href="#处理过程">处理过程</a>
+      <ul>
+        <li><a href="#断主从复制">断主从复制</a></li>
+        <li><a href="#切主库">切主库</a></li>
+        <li><a href="#排查异常sql">排查异常SQL</a></li>
+        <li><a href="#禁账号">禁账号</a></li>
+        <li><a href="#升mysql80">升MySQL8.0</a></li>
+      </ul>
+    </li>
+    <li><a href="#后续">后续</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <blockquote>
+<p>故障开始时间：2023-06-30 09:18
+故障实例：BI大数据业务</p>
+</blockquote>
+<h2 id="环境">环境</h2>
+<ul>
+<li>系统：CentOS Linux release 7.8.2003 (Core)</li>
+<li>MySQL: 5.7.28-log MySQL Community Server (GPL)</li>
+<li>部署：多实例部署，当前实例bufferPool:8G</li>
+<li>集群：3台主机
+<ul>
+<li>主：51</li>
+<li>备：52 (和51做双主)</li>
+<li>从：53 （同步自52）</li>
+</ul>
+</li>
+</ul>
+<h2 id="故障现象">故障现象</h2>
+<ul>
+<li>收到报警，该实例频繁报连接异常和恢复</li>
+<li>检查发现该MySQL实例频繁重启</li>
+<li>1.该实例访问量很小，不是资源不足引起</li>
+<li>2.和研发确认该实例相关的业务最近未发生变更</li>
+<li>3.DBA内部确认最近该实例没有做配置变更</li>
+<li>4.报错时系统日志无异常报错</li>
+<li>5.MySQL正常运行时可以提供服务，但1分钟左右就会自动shutdown</li>
+<li>6.慢日志里没有异常SQL</li>
+<li>7.MySQL错误日志里只有实例启动后自检的warinning 以及</li>
+</ul>
+<pre><code>2023-06-30T10:15:35.534553+08:00 0 [Warning] CA certificate ca.pem is self signed.
+2023-06-30T10:15:35.546909+08:00 0 [Warning] Recovery from master pos 59075485 and file mysql-bin.***** for channel ''. Previous relay log pos and relay log file had been set to 416, /data/mysql******/relaylognew/relay-bin.***** respectively.
+</code></pre><h2 id="处理过程">处理过程</h2>
+<ul>
+<li>检查日志和监控，找不到异常点</li>
+<li>开全日志，刷屏全量SQL,观察是否有异常SQL （无）</li>
+<li>因为错误日志反复刷relayLog和主从连接异常</li>
+<li>尝试断主从复制</li>
+</ul>
+<h3 id="断主从复制">断主从复制</h3>
+<ul>
+<li>断开 51到52的同步，观察问题依旧</li>
+<li>断开 52到51的同步，观察问题依旧</li>
+<li>清理主从信息 ，问题依旧</li>
+<li>此时还是会刷relaylog的异常。</li>
+<li>确认跟主从同步没关系</li>
+<li>检查52备实例的状态，确认备库是正常的。</li>
+<li>联系业务，准备把主库切到51上</li>
+</ul>
+<h3 id="切主库">切主库</h3>
+<ul>
+<li>和业务沟通后，大群里发临时切换通知</li>
+<li>恢复51到52的数据同步，在检查到已经追上gtid后</li>
+<li>开52写，关51写，确认一致后</li>
+<li>数据库流量切到51上，观察连接</li>
+<li>确认没有问题，研发回去检查日志后，说报readonly错</li>
+<li>以为是应用有连接缓存</li>
+<li>让研发重启应用试试。</li>
+<li>同时排查51库上的连接。发现没有连接</li>
+<li>检查52状态，发现readonly</li>
+<li>关掉52的readonly .研发反馈好了</li>
+<li>1分钟后，又报readonly</li>
+<li>再看52又readonly了。</li>
+<li>这时我发现问题复发了</li>
+<li>肯定是my.cnf里漏掉了修改</li>
+<li>也就是说切换到52以后，还是会不停的重启</li>
+<li>修改52的my.cnf.</li>
+<li>确认切库到新的机器后，还是会无限重启</li>
+<li>继续排查52实例的反复重启问题</li>
+<li>此时将注意力放在排查异常SQL上</li>
+</ul>
+<h3 id="排查异常sql">排查异常SQL</h3>
+<ul>
+<li>跟研发沟通停掉部分业务观察</li>
+<li>停掉以后，观察5分钟，未再发生重启</li>
+<li>研发共有3个相关应用</li>
+<li>启动应用1，数据库很快进入无限重启状态</li>
+<li>停应用1，启应用2，数据库还是会重启</li>
+<li>停应用1，3，启应用3，数据库还是会重启</li>
+<li>判断无论启哪个应用都会导致数据库重启</li>
+<li>genlog里还是没有明显异常（太多了，也不好定位）</li>
+<li>停应用1，2，3后，数据库会偶尔重启</li>
+<li>此时数据库有连接过来</li>
+<li>判断停应用不彻底</li>
+<li>计划停高频访问的4个MySQL账号</li>
+</ul>
+<h3 id="禁账号">禁账号</h3>
+<ul>
+<li>因为上面的停应用找异常没找到问题点</li>
+<li>沟通后，我们停账号来筛选问题</li>
+<li>找到4个可以停的，访问较多的账号</li>
+<li>直接锁了</li>
+<li>问题依旧（只是重启频繁变低，4-5分钟会重启一次）</li>
+<li>怀疑是触发了MySQL的bug</li>
+<li>因为该实例有版本升级计划</li>
+<li>和研发沟通直接升MySQL版本到8.0</li>
+</ul>
+<h3 id="升mysql80">升MySQL8.0</h3>
+<ul>
+<li>跟研发沟通升级事宜</li>
+<li>确认可以1个小时内完成版本升级</li>
+<li>把已下线的51节点（原主实例）升级到MySQL8.0.22</li>
+<li>把51和52做双向同步</li>
+<li>在做同步时因为是不同版本的MySQL</li>
+<li>出现<code>Slave failed to initialize relay log info structure from the repository</code>报错</li>
+<li>清空51和52的relaylog</li>
+<li>手动重启了52的MySQL</li>
+<li>等双向同步做好以后</li>
+<li>却发现故障恢复了</li>
+<li>52不再频繁重启了</li>
+<li>和研发确认业务是否都已恢复</li>
+<li>确认都恢复了</li>
+<li>最终定位于两步：</li>
+<li>1.清空了relayLog 2.手动重启了实例</li>
+<li>这两步操作中的一步恢复了故障</li>
+<li>倾向于清空relaylog这一步起了关键作用</li>
+</ul>
+<h2 id="后续">后续</h2>
+<ul>
+<li>故障在计划外恢复了</li>
+<li>正在觉得蹊跷时</li>
+<li>发现53从库也跟着出现无限重启问题</li>
+<li>备份relaylog文件夹</li>
+<li>清空重启</li>
+<li>故障也恢复了</li>
+<li>留下来一个故障时的relaylog</li>
+<li>解析relaylog</li>
+<li>却没发现有任何异常点</li>
+<li>一次意外的无限重启故障</li>
+<li>一次意外的恢复</li>
+<li>目前还没找到明确的可信服的点</li>
+</ul>
+<p>附：
+<img src="/img/2022auto/2023-06-30-14-57-16.png" alt="无限重启的binlog"></p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/06/30</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86">故障处理</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%9F%BA%E7%A1%80">基础</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

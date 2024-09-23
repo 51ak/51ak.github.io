@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>服务器过保日期批量查询python| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">服务器过保日期批量查询python</span></h1>
+</div>
+
+
+<nav id="TableOfContents"></nav>
+
+  <main>
+    <h1 id="浪潮服务器过保查询">浪潮服务器过保查询</h1>
+<pre><code>
+import json
+import urllib
+import requests
+ 
+# def chenck_hardware_info(sn):
+url = 'https://www.inspur.com/eportal/ui'
+sn_file = &quot;/tm/sn.text&quot;
+def request_datatime(sn):
+ params = {
+    &quot;struts.portlet.action&quot;: &quot;/portlet/download-front!serverConfig.action&quot;,
+    &quot;sn&quot;: sn,
+    &quot;src&quot;: &quot;inspur&quot;,
+    &quot;language&quot;: &quot;CN&quot;,
+    &quot;pageId&quot;: &quot;2317460&quot;,
+    &quot;moduleId&quot;: &quot;82efecfc33da48b4a66567cb3dcbe5f3&quot;
+ }
+ headers = {
+    &quot;Referer&quot;: &quot;https://www.inspur.com/eportal/ui?pageId=2317460&quot;,
+    &quot;Cookie&quot;: &quot;JSESSIONID=****; ........(这里写cookie地址)&quot;
+ }
+ r = requests.post(url, headers=headers, params=urllib.parse.urlencode(params))
+ resp = r.text[1:len(r.text)-1]
+ resp = json.loads(resp)
+ #print(resp['Date'])
+ return resp['warranty1']
+ 
+ 
+def post_info(sn):
+        r1 = request_datatime(sn)
+        url = &quot;http://cmdbbackend.dev.tujia.com/api/inventoryitem/sn/update/life&quot;
+        headers = {
+          &quot;OPS-Token&quot;:&quot;IHmioqYhb0XgBAsEiHeK_guibinw&quot;,
+          &quot;Content-Type&quot;:&quot;application/json&quot;
+        }
+        data = [{
+          &quot;serialNo&quot;: sn,
+          &quot;contractPeriod&quot;: r1
+        }]
+        r = requests.post(url=url, headers=headers, data=json.dumps(data))
+        print(sn)
+        return r
+ 
+for sn in open(sn_file, mode='r'):
+    sn = sn.strip('\n')
+    print(post_info(sn))
+
+
+</code></pre><h1 id="dell服务器过保查询">Dell服务器过保查询</h1>
+<pre><code>
+import requests,re
+from requests.exceptions import RequestException
+from bs4 import BeautifulSoup
+import json
+sn_text = &quot;/tmp/sn.text&quot;
+ 
+def getServiceTag(sn):
+    base_url='https://www.dell.com/support/home/cn/zh/cnbsd1/product-support/servicetag/'
+    html1 =  Get_Page(base_url + sn)
+    if html1:
+        p1 = re.compile('servicetag/(.*)/overview&quot;')
+        p2 = re.compile('&lt;h1 class=&quot;mb-3 mb-lg-1 text-center text-lg-left position-relative word-break&quot;&gt;(.*)&lt;/h1&gt;')
+        r1 = p1.findall(html1)
+        r2 = p2.findall(html1)
+        return r1
+ 
+def Get_Page(url):      #根据sn号获取返回页面
+    try:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36',
+            'Referer': 'https://www.dell.com/support/home/cn/zh/cnbsd1/product-support/servicetag/B7WHC92'
+        }
+        response = requests.get(url=url,headers=headers)
+        if response.status_code == 200:
+            return response.text
+        return None
+    except RequestException:
+        return None
+ 
+def getDellInfoDetails(serviceTag,session):
+    headers = {
+        'Accept': '*/*',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'zh-CN',
+        'User-Agent': 'ApiPOST Runtime +https://www.apipost.cn',
+    }
+    url_params = {'serviceTag': serviceTag}
+    c = requests.cookies.RequestsCookieJar()
+    c.set('DellCEMSession', session, path='/', domain='.dell.com')
+    res = requests.post(
+        url='https://www.dell.com/support/components/dashboard/cn/zh/cnbsd1/Warranty/GetWarrantyDetails',
+        data=url_params, headers=headers, cookies=c)
+    return res.text
+ 
+ 
+
+def strip1(sn):
+    sn = sn
+    h1 = getDellInfoDetails(getServiceTag(sn), '{这里写sessionid})
+    soup = BeautifulSoup(h1, 'html.parser')
+    tbody = soup.find(&quot;tbody&quot;)
+    try:
+ 
+        headings = [th.get_text() for th in tbody.find_all(&quot;tr&quot;)]
+        headings1 = [i for i, x in enumerate(headings) if x.find('仅限部件保修') != -1]
+        headings = [th.get_text() for th in tbody.find_all(&quot;tr&quot;)]
+        headings1 = [i for i, x in enumerate(headings) if x.find('仅限部件保修') != -1]
+        headings2 = headings[headings1[0]].split( )
+        month1 = headings2[-5].split( )
+        month2 = headings2[-2].split( )
+        test1 = [month1[0].replace('月', '', 3)]
+        test2 = [month2[0].replace('月', '', 3)]
+        l1 = headings2[-1] + '/' + test2[0] + '/' + headings2[-3]
+        return l1
+    except AttributeError :
+        return None
+ 
+def post_info(sn):
+    r1 = strip1(sn)
+    url = &quot;http://cmdbbackend.dev.tujia.com/api/inventoryitem/sn/update/life&quot;
+    headers = {
+        &quot;OPS-Token&quot;: &quot;IHmioqYhb0XgBAsEiHeK_guibinw&quot;,
+        &quot;Content-Type&quot;: &quot;application/json&quot;
+    }
+    data = [{
+        &quot;serialNo&quot;: sn,
+        &quot;contractPeriod&quot;: r1
+    }]
+    r = requests.post(url=url, headers=headers, data=json.dumps(data))
+    print(sn)
+    return r
+ 
+for sn in open(sn_text, mode='r'):
+    sn = sn.strip('\n')
+    print(post_info(sn)
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2021/10/09</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E8%BF%90%E7%BB%B4">运维</a> <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96">自动化</a> <a href="/categories/python">python</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> <a href="/tags/%E5%9F%BA%E7%A1%80">基础</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

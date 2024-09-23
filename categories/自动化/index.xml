@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>自动化 on Classic</title>
+    <link>/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/</link>
+    <description>Recent content in 自动化 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 21 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>一个简单有趣的程序</title>
+      <link>/ops/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E6%9C%89%E8%B6%A3%E7%9A%84%E7%A8%8B%E5%BA%8F/</link>
+      <pubDate>Thu, 21 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E6%9C%89%E8%B6%A3%E7%9A%84%E7%A8%8B%E5%BA%8F/</guid>
+      <description>会编程实在是一件很好玩的事 手机里选了300张照片 想着单纯的洗照片有点无聊 得在每张照片上加个单词 这时候 写一段python 简单而高效  代码如下： from PIL import Image, ImageDraw, ImageFont import os # def writeWord(fontname=&#39;沐瑶软笔手写体.ttf&#39;,words=&amp;quot;Python&amp;quot;): # img = Image.new(&#39;RGB&#39;, (800, 400), color = &#39;white&#39;) # draw = ImageDraw.Draw(img) # font = ImageFont.truetype(f&#39;fonts/{fontname}&#39;, 100) # draw.text((100, 150), words, font = font, fill = &#39;black&#39;) # img.save(&#39;PythonArt.png&#39;) def watermark_Image(img_path,output_path, text): img = Image.open(img_path) drawing = ImageDraw.Draw(img) black = (254, 223, 225, 179) font = ImageFont.truetype(&#39;fonts/opposansb.ttf&#39;, 350) drawing.</description>
+    </item>
+    
+    <item>
+      <title>定时收集Oracle索引信息</title>
+      <link>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86oracle%E7%B4%A2%E5%BC%95%E4%BF%A1%E6%81%AF/</link>
+      <pubDate>Mon, 26 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86oracle%E7%B4%A2%E5%BC%95%E4%BF%A1%E6%81%AF/</guid>
+      <description>需求  把Oracle各实例的索引信息，统一收集存储到一张表里  建表 在dboop库中建表
+ CREATE TABLE `info_indexs` ( `dbid` int NOT NULL DEFAULT &#39;0&#39;, `table_name` varchar(255) NOT NULL DEFAULT &#39;&#39;, `index_name` varchar(255) NOT NULL DEFAULT &#39;&#39;, `index_type` varchar(64) NOT NULL DEFAULT &#39;&#39;, `uniq_type` varchar(64) NOT NULL DEFAULT &#39;&#39;, `num_rows` int NOT NULL DEFAULT 0, `sample_size` int NOT NULL DEFAULT 0, `last_analyzed` datetime null, `column_name` varchar(2000) NOT NULL DEFAULT &#39;&#39;, `cstatus` smallint NOT NULL DEFAULT &#39;1&#39;, `dba_freshtime` datetime NOT NULL DEFAULT &#39;1990-01-01 00:00:00&#39;, PRIMARY KEY (`dbid`,`table_name`,`index_name`), KEY `idx_info_indexs_time` (`dba_freshtime`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ; 实现数据字典收集入库 建Oracle采集任务  &amp;lt;!</description>
+    </item>
+    
+    <item>
+      <title>不要再让时间溜走了，让AI来管理你的时间！</title>
+      <link>/dba/%E7%94%A8ai%E5%B8%AE%E4%BD%A0%E5%9B%9E%E7%AD%94%E6%97%B6%E9%97%B4%E9%83%BD%E5%8E%BB%E5%93%AA%E5%84%BF%E4%BA%86%E7%9A%84%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E7%94%A8ai%E5%B8%AE%E4%BD%A0%E5%9B%9E%E7%AD%94%E6%97%B6%E9%97%B4%E9%83%BD%E5%8E%BB%E5%93%AA%E5%84%BF%E4%BA%86%E7%9A%84%E9%97%AE%E9%A2%98/</guid>
+      <description>问题  如果你不知道工作时间都去哪了 或写工作周报/OKR时不知从何下手 这时候可以每天花5分钟写个工作记录 用现在最流行的AI技术帮你分类一下 或许可以帮助到你  效果  你可以看到最近一段时间的工作时间分配 也可以看到汇总的工作安排 还可以结合考勤表/OKR表进行对比  需要做的工作  每天花5分钟，写几行工作记录 每个工作记录写一行，可以加个时间 0.5h(0.5小时) 起步 可以自己写工作分类项和okr类别，也可以让AI帮你归类（我用的是chatGPT做分类）  AI分类原理  这里用的是chatGPT 将最近的50条已经分好类的工作项，当作Prompt塞给chatGPT 然后要求AI返回这个工作项的分类 prompt如下：  work_prompt=f&amp;quot;&amp;quot;&amp;quot;&amp;quot;工作内容&amp;quot;和[工作分类]的对应关系如下:{contentstr}请在以下分类中:{typestr}为 &amp;quot; %s &amp;quot; 选择一个分类&amp;quot;&amp;quot;&amp;quot;得到的报表  我们说每天的，每个人的工作内容，是无规律的：信息 当我们人为的把它按一定的格式录入下来以后，这些信息收集起来就成了：数据 有了数据，可以用各种维度的展开，对比，这时候可以做：报表 可以有很多种维度，这个月的和上个月的表 可以用A的工作和B的比 最重要的是，它会让你的工作内容变得可回溯  为什么起这个标题？  这个标题也是ai帮我生成的  </description>
+    </item>
+    
+    <item>
+      <title>将没有parentid的二维表转换成json的树状结构(python版)</title>
+      <link>/ops/%E5%B0%86%E6%B2%A1%E6%9C%89parentid%E7%9A%84%E4%BA%8C%E7%BB%B4%E8%A1%A8%E8%BD%AC%E6%8D%A2%E6%88%90json%E7%9A%84%E6%A0%91%E7%8A%B6%E7%BB%93%E6%9E%84python%E7%89%88/</link>
+      <pubDate>Fri, 06 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B0%86%E6%B2%A1%E6%9C%89parentid%E7%9A%84%E4%BA%8C%E7%BB%B4%E8%A1%A8%E8%BD%AC%E6%8D%A2%E6%88%90json%E7%9A%84%E6%A0%91%E7%8A%B6%E7%BB%93%E6%9E%84python%E7%89%88/</guid>
+      <description>需求  数据库里有这样的二维表  (id,country,province,city) (1,&amp;quot;a&amp;quot;,&amp;quot;aa&amp;quot;,&amp;quot;aa1&amp;quot;), (&amp;quot;2&amp;quot;,&amp;quot;a&amp;quot;,&amp;quot;aa&amp;quot;,&amp;quot;aa2&amp;quot;), (&amp;quot;3&amp;quot;,&amp;quot;b&amp;quot;,&amp;quot;bb&amp;quot;,&amp;quot;bb1&amp;quot;), (&amp;quot;4&amp;quot;,&amp;quot;b&amp;quot;,&amp;quot;bb&amp;quot;,&amp;quot;bb2&amp;quot;), (&amp;quot;5&amp;quot;,&amp;quot;b&amp;quot;,&amp;quot;bb&amp;quot;,&amp;quot;bb3&amp;quot;), (&amp;quot;6&amp;quot;,&amp;quot;c&amp;quot;,&amp;quot;cc&amp;quot;,&amp;quot;cc1&amp;quot;), 转换成在json中可用的树状结构
+[{ &amp;quot;id&amp;quot;: &amp;quot;a&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;a&amp;quot;, &amp;quot;leaf&amp;quot;: false, &amp;quot;children&amp;quot;: [{ &amp;quot;id&amp;quot;: &amp;quot;a|aa&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;a&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;aa&amp;quot;, &amp;quot;leaf&amp;quot;: false, &amp;quot;children&amp;quot;: [{ &amp;quot;id&amp;quot;: 1, &amp;quot;parent_id&amp;quot;: &amp;quot;a|aa&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;aa1&amp;quot;, &amp;quot;leaf&amp;quot;: true }, { &amp;quot;id&amp;quot;: &amp;quot;2&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;a|aa&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;aa2&amp;quot;, &amp;quot;leaf&amp;quot;: true }] }] }, { &amp;quot;id&amp;quot;: &amp;quot;b&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;b&amp;quot;, &amp;quot;leaf&amp;quot;: false, &amp;quot;children&amp;quot;: [{ &amp;quot;id&amp;quot;: &amp;quot;b|bb&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;b&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;bb&amp;quot;, &amp;quot;leaf&amp;quot;: false, &amp;quot;children&amp;quot;: [{ &amp;quot;id&amp;quot;: &amp;quot;3&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;b|bb&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;bb1&amp;quot;, &amp;quot;leaf&amp;quot;: true }, { &amp;quot;id&amp;quot;: &amp;quot;4&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;b|bb&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;bb2&amp;quot;, &amp;quot;leaf&amp;quot;: true }, { &amp;quot;id&amp;quot;: &amp;quot;5&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;b|bb&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;bb3&amp;quot;, &amp;quot;leaf&amp;quot;: true }] }] }, { &amp;quot;id&amp;quot;: &amp;quot;c&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;c&amp;quot;, &amp;quot;leaf&amp;quot;: false, &amp;quot;children&amp;quot;: [{ &amp;quot;id&amp;quot;: &amp;quot;c|cc&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;c&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;cc&amp;quot;, &amp;quot;leaf&amp;quot;: false, &amp;quot;children&amp;quot;: [{ &amp;quot;id&amp;quot;: &amp;quot;6&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;c|cc&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;cc1&amp;quot;, &amp;quot;leaf&amp;quot;: true }] }] }]  本来以为很好写的一小段,写起来发现还挺麻烦的  难点  二维表转json tree 还是比较常见的写法,但是这个二维表里没有parentid,所以上下级关系需要用country,province 两列来对齐生成  代码  我写了一个python版的实现   class jsontree_str_(): def __init__(self) -&amp;gt; None: pass def get_jsonstr_parentid(self,rows,columns): sb_rows=[] columnsi=len(columns) if len(rows)==0 or columnsi&amp;lt;3: return sb_rows dict_ids={} for row in rows: for i in range(1,columnsi): idstr=&amp;quot;|&amp;quot;.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的参数对比方法</title>
+      <link>/mysql/mysql%E7%9A%84%E5%8F%82%E6%95%B0%E5%AF%B9%E6%AF%94%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Mon, 10 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84%E5%8F%82%E6%95%B0%E5%AF%B9%E6%AF%94%E6%96%B9%E6%B3%95/</guid>
+      <description>什么时候需要对比MySQL参数  迁移时，从一个集群到另一个集群 升级时，从一个版本到另一个版本 巡检时，需要关注重点参数是否有人为修改过 其他时候，自己去想  怎么对比 实例少时，比如两个集群的几组实例  可以去每台机器上把重点参数打印出来 手动对比  大量数据库实例的对比，需要用脚本工具实现 第一步，建一个收集表 CREATE TABLE `info_variables` ( `instanceid` int NOT NULL DEFAULT &#39;0&#39;, `var_key` varchar(100) NOT NULL DEFAULT &#39;&#39;, `var_value` varchar(1000) NOT NULL DEFAULT &#39;&#39;, `linkname` varchar(50) NOT NULL DEFAULT &#39;&#39;, clustertype varchar(10) not null default &#39;&#39;, `_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY (`instanceid`,`var_key`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8; 第二步，建一个收集任务  我是在dboop平台上配置的，执行show global variables再 insert 到info_variables表  第三步，清理指标 delete from info_variables where var_key like &#39;wsrep%&#39;; delete from info_variables where var_key like &#39;performance_schema_%&#39;; delete from info_variables where var_key like &#39;ssl_%&#39;; delete from info_variables where var_key like &#39;log%&#39;; delete from info_variables where var_key like &#39;group%&#39;; delete from info_variables where var_key like &#39;validate%&#39;; delete from info_variables where var_key like &#39;gtid%&#39;; delete from info_variables where var_value like &#39;%/%&#39;; delete from info_variables where var_key in ( &#39;datadir &#39;, &#39;hostname &#39;, &#39;innodb_data_home_dir &#39;, &#39;innodb_log_group_home_dir &#39;, &#39;innodb_undo_directory &#39;, &#39;port &#39;, &#39;relay_log &#39;, &#39;relay_log_basename &#39;, &#39;relay_log_index &#39;, &#39;report_port &#39;, &#39;server_id &#39;, &#39;slave_load_tmpdir &#39;, &#39;socket &#39;, &#39;tmpdir &#39; ); 第四步，形成报告  可以按需求出报告或报表 甚至做可视化的参数对比页面  重点关注参数 时间类：  explicit_defaults_for_timestamp time_zone  自增主键：  auto_increment_increment auto_increment_offset innodb_autoextend_increment innodb_autoinc_lock_mode  连接属性：  join_buffer_size max_tmp_tables wait_timeout max_allowed_packet max_connections  字符编码：  character_set_server transaction_isolation collation_connection collation_database collation_server  mode:  sql_mode   以上参数的变化和不一致，可能会在迁移或升级过程中带来严重的后果，需慎重。</description>
+    </item>
+    
+    <item>
+      <title>Python入门之书上没有的东西</title>
+      <link>/ops/python%E5%85%A5%E9%97%A8%E4%B9%8B%E4%B9%A6%E4%B8%8A%E6%B2%A1%E6%9C%89%E7%9A%84%E4%B8%9C%E8%A5%BF/</link>
+      <pubDate>Mon, 26 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/python%E5%85%A5%E9%97%A8%E4%B9%8B%E4%B9%A6%E4%B8%8A%E6%B2%A1%E6%9C%89%E7%9A%84%E4%B8%9C%E8%A5%BF/</guid>
+      <description>分享分  为Python零基础同学做了一场入门分享 准备了1个小时的ppt 现场因为有很多演示，共花了90分钟 还好今天没人过来抢会议室。  ppt 说重点：  三天打鱼两天晒网的学习Python是不现实的，每天抽小半个小时敲代码，坚持下去，一两个星期就能入门。 最先要学的不是基础知识，而是环境配置和工具的选择 基础知识不用啃得太死，差不多理解了有印象就行，后面随着练习会不断强化，自然就学会了 练习为王，千万不要死看书，不动手。 多写，多练习，遇到报错顺着问题解决，一开始有卡住的找朋友同事帮忙，后面要学着自己搜索 多利用搜索引擎，随着技能的提升，会不断的有新问题出现。 要针对一个具体的目标和小型项目来进行练习。  </description>
+    </item>
+    
+    <item>
+      <title>vscode在mac上用PyQt5制作窗口应用</title>
+      <link>/ops/python%E5%88%B6%E4%BD%9Cmac%E7%A8%8B%E5%BA%8F/</link>
+      <pubDate>Tue, 20 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/python%E5%88%B6%E4%BD%9Cmac%E7%A8%8B%E5%BA%8F/</guid>
+      <description>环境准备  vscode python3 (我用的是python3.9)  安装PyQt5 pip3 install PyQt5 pip3 install PyQt5-tools VSCode中安装和配置pyqt插件 安装了后点设置
+Qtdesigner：这里写入designer.app的完整路径 {这里写python的安装绝对路径}/site-packages/qt5_applications/Qt/bin/Designer.app/Contents/MacOS/Designer
+至此就完成了环境准备
+设计一个窗体程序 建一个项目文件夹，然后右键新建一个form 打开的design窗口，拖动控件，完成窗体设计 保存窗体到 form1.ui 直接cmd+s 保存即可，这里的form1名字可以随意起
+编译form1.ui到py文件 右键选compile
+这里还可以继续调整生成py文件（如果有需要的话）
+新建一个启动文件 main.py import sys from PyQt5.QtWidgets import QMainWindow,QApplication,QWidget from Ui_form1 import Ui_Dialog #导入你写的界面类 class MyMainWindow(QMainWindow,Ui_Dialog): #这里也要记得改 def __init__(self,parent =None): super(MyMainWindow,self).__init__(parent) self.setupUi(self) if __name__ == &amp;quot;__main__&amp;quot;: app = QApplication(sys.argv) myWin = MyMainWindow() myWin.show() sys.exit(app.exec_()) 调试和生成程序 调试代码 用pyton单应用启动调试main.py ，顺利的话会出现刚刚设计好的窗体。 如果有报错的话，解决它
+安装pyinstall  pip3 install pyinstaller 编译和生成一个可执行文件  sudo pyinstaller --windowed --onefile --clean --noconfirm main.</description>
+    </item>
+    
+    <item>
+      <title>万物不如MySQL_万物皆可Join</title>
+      <link>/dba/%E4%B8%87%E7%89%A9%E7%9A%86%E5%8F%AFsql/</link>
+      <pubDate>Thu, 25 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E4%B8%87%E7%89%A9%E7%9A%86%E5%8F%AFsql/</guid>
+      <description>当前数据库架构越来越复杂
+  数据库MongoDB,Redis,Es,Kafka,Postgresql&amp;hellip;
+  加上传统的关系型数据库（MySQL,Oracle,SQLServer)
+  你是否因为各种数据库的查询语言不同而头晕眼花，到处撞墙！
+   你是否各种分库分表后，不同的数据库之前没办法join联合查询而一蹶不振   你是否业务同学发给你一个excel，让你查这些订单的明细而不知所措，来回倒腾。   你是否在焦急的等待着BI大数据同事帮你把不同数据源的表都抽到一起才能join出想要的数据？   怎么办？怎么办？ 没办法!!! 拆开的数据库没办法放在一台服务器上 各种数据库也没办法统一成一种 大数据部门的同步任务正在走流程 走完的流程，他们也不能保证数据同步任务不中断 Excel不是数据库不能用SQL 怎么办？怎么办？ 这种混乱就没人能治吗？ 不要让这些问题挡住你前进的脚本 dboop平台的统一查询平台横空出世 不再区分数据库类型 所有的数据库种类都支持MySQL语法 是的，你没有听错 不管什么类型的数据库 统统只需要记住MySQL语法了 Oracle,SQLServer,MongoDB,kafka DBA在运维的每一种数据库 都可以当成MySQL一样使用了  kafka当成MySQL Mongo当成MySQL  而且这些表都是可以互相join ,union 的   现在我们来休验一下这神奇的黑科技 第一步 我们有个这样的excel 第二步 把excel上传到平台上 第三步 得到一个可以查询的excel文件 第四步 用excel join MySQL 这就是我们说的： 几个问题 问题1:查询会不会影响线上业务  绑定了dba的高可用架构系统，可以自动路由到专门给bi取数服务的专用只读实例上。不会对线上应用产生影响 理论上bi抽数进程会和它产生资源抢占，但是因为bi抽数多数是凌晨进行，两个并不冲突
+ 问题2:查询的性能怎样  快，非常快，普通的单表查询0.</description>
+    </item>
+    
+    <item>
+      <title>定时收集存储过程函数视图信息入库(Oracle,MySQL)</title>
+      <link>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%87%BD%E6%95%B0%E8%A7%86%E5%9B%BE%E4%BF%A1%E6%81%AForaclemysql/</link>
+      <pubDate>Thu, 04 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%87%BD%E6%95%B0%E8%A7%86%E5%9B%BE%E4%BF%A1%E6%81%AForaclemysql/</guid>
+      <description>需求 下午接到运维转来的一个权限申请流程：大数据部门研发要求开通保垒机权限。以方便在保垒机上安装SQL客户端去查看存储过程和视图的内容
+保垒机直连数据库查询，这种不可控的方式，早在去年我就把这个历史问题给禁止掉了，没想到现在还有人要求开通
+经过沟通得知，对方想查看Oracle数据库里的一些老的存储过程的代码。而DBA平台上只有表结构相关的数据字典，没有存储过程和视图的数据字典
+所以，别慌，不就这点需求吗，马上就可以加上。
+ 为什么DBA平台上的数据字典不包括存储过程和视图？ 因为存储过程/函数/视图 也是被我禁掉的，研发人员上线不可以写存储过程和视图。 所以就没想过要在DBA运维平台上做这块功能
+ 但是因为
+ 历史原因，以前的Oracle数据库上已经存在很多的视图和存储过程 第三方原因，公司采购的一些第三方服务和软件，带了存储过程和视图 这些被禁止使用的数据库对象，也需要做统一维护  拆解  这些数据库对象的信息用定时任务收集线上的表结构到本地，存为两份 一份入库，做为快照信息，展示给用户。 一份落本地文件，上传到git，用git做版本管理   为什么不在用户请求查看某个数据库对象的信息时，实时查询给用户？
+ 1.因为历史原因，我们有的库有几万个数据库对象，当用户选择一个库时，list列表加载很慢，所以一开始设计的时候，我们做了快照 2.一份快照，还可以用作数据库对象的git版本管理   建表 在dboop库中建表
+ CREATE TABLE `info_objects` ( `objectid` int NOT NULL AUTO_INCREMENT, `dbid` int NOT NULL DEFAULT &#39;0&#39;, `TABLE_SCHEMA` varchar(64) NOT NULL DEFAULT &#39;&#39;, `object_name` varchar(255) NOT NULL DEFAULT &#39;&#39;, `object_type` varchar(64) NOT NULL DEFAULT &#39;&#39;, `object_text` longtext, `cstatus` smallint NOT NULL DEFAULT &#39;1&#39;, `dba_freshtime` datetime NOT NULL DEFAULT &#39;1990-01-01 00:00:00&#39;, PRIMARY KEY (`objectid`), UNIQUE KEY `idx_infoobjects_id` (`dbid`,`object_name`,`object_type`), KEY `idx_info_objects_time` (`dba_freshtime`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 实现数据字典收集入库 建Oracle采集任务  &amp;lt;!</description>
+    </item>
+    
+    <item>
+      <title>show engine innodb status 工具化实现</title>
+      <link>/mysql/mysql%E7%9A%84showinnodbstatus/</link>
+      <pubDate>Wed, 06 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84showinnodbstatus/</guid>
+      <description>为什么要写这个工具 当MySQL出现性能问题时，DBA经常得去innodb status ，
+但是innodb status的输出信息非常丰富也很复杂。滚了几个屏幕的指标，像这样的得翻好几页，几百行的结果。
+ 哪些是重要的指标 指标具体代表什么意思 指标的值是否正常  非常考验DBA的眼力。
+考虑到以上的不方便，写了个小脚本把这些指标提取出来，并将指标对应的中文意思和合理取值范围做了详细的备注。
+实现思路  当用户选中MySQL实例，并点击show engine innnodb statutus按钮时 后台进程去该实例执行 show engine innnodb statutus 语句 返回结果做正则筛选，将各种指标和值保存在一个字典中 提前准备好一个指标的字典，字典里记了该值的中文说明和取值范围（取值范围这个还没做好） 两个字典一合并，输出一个分好类的可视化结果  指标提取和定义 脚本内容是定义了一个数据字典去翻译这些指标
+{ &amp;quot;background_thread&amp;quot;:(&amp;quot;后台进程:除掉用户请求的活动会话，MySQL后台进程也会定时的进行一系列工作。&amp;quot;,[(&amp;quot;master_thread_loops_active&amp;quot;,&amp;quot;&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;后台master线程avtive执行次数合计值&amp;lt;/b&amp;gt;,后台master线程的每次循环时会选择一种状态来执行(active、shutdown、idle),active次数/idle次数 比值越高，代表系统的写操作越繁忙。&amp;quot;), (&amp;quot;master_thread_loops_idle&amp;quot;,&amp;quot;&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;后台master线程idle执行次数合计值&amp;lt;/b&amp;gt;,和上一个指标连起来看,idle次数越高，代表系统的写操作越少。所以该指标值越大，系统写资源越充足&amp;quot;), (&amp;quot;master_thread_log_flush_and_writes&amp;quot;,&amp;quot;Bytes&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;后台master线程刷新redo日志&amp;lt;/b&amp;gt;,定期刷新redo日志，和参数innodb_flush_log_at_timeout控制刷新时间&amp;quot;) ] ) ,&amp;quot;bufferpool_memory&amp;quot;:(&amp;quot;缓冲池:有关已读和已写页面的统计信息。可以从这些数字中获得缓冲池的使用情况。&amp;quot;,[ (&amp;quot;total_large_memory_allocated&amp;quot;,&amp;quot;Bytes&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;分配给InnoDB Buffer Pool的总内存&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;dictionary_memory_allocated&amp;quot;,&amp;quot;Bytes&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;分配给InnoDB数据字典的内存&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;buffer_pool_size&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;分配给IBP的内存，单位pages&amp;lt;/b&amp;gt;,每页16k&amp;quot;) ,(&amp;quot;buffer_pool_hit&amp;quot;,&amp;quot;/1000&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool命中率&amp;lt;/b&amp;gt;每1000次请求有*次命中buffer pool,非常重要&amp;quot;) ,(&amp;quot;free_buffers&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool Free List 总大小，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;database_pages&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool LRU List 总大小，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;old_database_pages&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool old LRU 总大小，单位pages(冷端)&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;modified_db_pages&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;Buffer Pool中脏页的数量，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pending_reads&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;等待读入Buffer Pool的页数量，单位pages&amp;lt;/b&amp;gt;,理论上不应该有等待队列&amp;quot;) ,(&amp;quot;pending_writes_lru&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;LRU中buffer中等待被刷的脏页数，单位pages&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pending_writes_flush_list&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在checkpoint期间要刷新的缓冲池页数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pending_writes_single_page&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在缓冲池中写入挂起的独立页的数目&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_made_young&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;热点页数&amp;lt;/b&amp;gt;,在缓冲池LRU list中年轻的总页数(移动新页面到sublist的头部)&amp;quot;) ,(&amp;quot;pages_made_not_young&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;old sublist中的page数，冷端的page数&amp;lt;/b&amp;gt;,在缓冲池LRU列表中不年轻的页面总数(保留旧页面在sublist中，不改变)&amp;quot;) ,(&amp;quot;pages_made_young_per_sec&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒LRU链中被young的page数&amp;lt;/b&amp;gt;,oungs/s度量标准仅用于old pages，基于对page的访问次数，而不是页的数量。对页进行多次访问都会被计算。如果见到非常低的值，可能需要减小延迟或增加old page LRU list 的比例。增大后，页面需要更长的时间才会移动到尾部，这就增加了再次访问page，从而使他们made young的可能性增大&amp;quot;) ,(&amp;quot;pages_made_non_young_per_sec&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒LRU链中未被young的page数&amp;lt;/b&amp;gt;，可以一定程度上看出库的繁忙程度和命中率,Not young，如果在执行大表扫描时未看到较高的non-young和non-youngs/s，请增加innodb_old_blocks_time。&amp;quot;) ,(&amp;quot;pages_read&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool中读取的page总数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_created&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在bufferpool中创建的page数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_written&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool写入的page数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_read_per_sec&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool中读取的page数/秒&amp;lt;/b&amp;gt;, 比较重要，代表库的繁忙程度&amp;quot;) ,(&amp;quot;pages_created_per_sec&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;在bufferpool中创建的page数/秒&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_written_per_sec&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;从bufferpool写入的page数/秒&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;pages_read_ahead&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒平均预读操作次数&amp;lt;/b&amp;gt;k&amp;quot;) ,(&amp;quot;evicted_without_access&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒驱逐的page数&amp;lt;/b&amp;gt;k&amp;quot;) ,(&amp;quot;random_read_ahead&amp;quot;,&amp;quot;page/s&amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;每秒钟随机预读操作的次数&amp;lt;/b&amp;gt;&amp;quot;) ,(&amp;quot;lrn_len&amp;quot;,&amp;quot; &amp;quot;,&amp;quot;not count&amp;quot;,&amp;quot;&amp;lt;b&amp;gt;LRU的长度&amp;lt;/b&amp;gt;&amp;quot;) ] ) .</description>
+    </item>
+    
+    <item>
+      <title>服务器过保日期批量查询python</title>
+      <link>/ops/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E4%BF%9D%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2python%E8%84%9A%E6%9C%AC/</link>
+      <pubDate>Sat, 09 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E4%BF%9D%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2python%E8%84%9A%E6%9C%AC/</guid>
+      <description>浪潮服务器过保查询  import json import urllib import requests # def chenck_hardware_info(sn): url = &#39;https://www.inspur.com/eportal/ui&#39; sn_file = &amp;quot;/tm/sn.text&amp;quot; def request_datatime(sn): params = { &amp;quot;struts.portlet.action&amp;quot;: &amp;quot;/portlet/download-front!serverConfig.action&amp;quot;, &amp;quot;sn&amp;quot;: sn, &amp;quot;src&amp;quot;: &amp;quot;inspur&amp;quot;, &amp;quot;language&amp;quot;: &amp;quot;CN&amp;quot;, &amp;quot;pageId&amp;quot;: &amp;quot;2317460&amp;quot;, &amp;quot;moduleId&amp;quot;: &amp;quot;82efecfc33da48b4a66567cb3dcbe5f3&amp;quot; } headers = { &amp;quot;Referer&amp;quot;: &amp;quot;https://www.inspur.com/eportal/ui?pageId=2317460&amp;quot;, &amp;quot;Cookie&amp;quot;: &amp;quot;JSESSIONID=****; ........(这里写cookie地址)&amp;quot; } r = requests.post(url, headers=headers, params=urllib.parse.urlencode(params)) resp = r.text[1:len(r.text)-1] resp = json.loads(resp) #print(resp[&#39;Date&#39;]) return resp[&#39;warranty1&#39;] def post_info(sn): r1 = request_datatime(sn) url = &amp;quot;http://cmdbbackend.dev.tujia.com/api/inventoryitem/sn/update/life&amp;quot; headers = { &amp;quot;OPS-Token&amp;quot;:&amp;quot;IHmioqYhb0XgBAsEiHeK_guibinw&amp;quot;, &amp;quot;Content-Type&amp;quot;:&amp;quot;application/json&amp;quot; } data = [{ &amp;quot;serialNo&amp;quot;: sn, &amp;quot;contractPeriod&amp;quot;: r1 }] r = requests.</description>
+    </item>
+    
+    <item>
+      <title>数据库备份管理制度</title>
+      <link>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E7%AE%A1%E7%90%86%E5%88%B6%E5%BA%A6/</link>
+      <pubDate>Thu, 23 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E7%AE%A1%E7%90%86%E5%88%B6%E5%BA%A6/</guid>
+      <description>备份策略  数据库备库节点上启用定时任务，每天0:10～6:10 全备（或增备)文件 至本地sas盘，每个实例压缩成一个备份文件。 生成的备份文件调用接口上传状态并断点续传止主备份备机 数据库备份在本地sas盘上保留1-3天的备份文件 辅备份机在0点-22点保持当天的备份文件夹和主备份机的同步 主备份机每天22:00 将当天的接收到的备份文件移至 yyyyMMdd 目录下 所有备份机每天23:00删除30天以上的过期备份文件  每个月的第一次数据库全备，永不过期删除（例如：如果db每天一次全备，则每月的1号备份永久保留）    备份周期  MySQL：每天1次全备，15分钟同步一次binlog日志，全备和日志保留30天 Oracle:每周1次全备,其余天数增备，实时保存日志，备份和日志保留30天 MongoDB:每天1次全备，全备保留30天  备份脚本（源机） 传输脚本（辅备份机） </description>
+    </item>
+    
+    <item>
+      <title>孤岛备份机和勒索病毒</title>
+      <link>/dba/%E5%AD%A4%E5%B2%9B%E5%A4%87%E4%BB%BD%E6%9C%BA%E5%92%8C%E5%8B%92%E7%B4%A2%E7%97%85%E6%AF%92/</link>
+      <pubDate>Wed, 22 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E5%AD%A4%E5%B2%9B%E5%A4%87%E4%BB%BD%E6%9C%BA%E5%92%8C%E5%8B%92%E7%B4%A2%E7%97%85%E6%AF%92/</guid>
+      <description>勒索病毒 什么是勒索病毒？  勒索病毒就是那种中毒后 加密你的文件（通常是aes加密算法) 提示你去支付一些电子货币才能解开文件的一种病毒 通常是要求支付一定数量的比特币 像下面这种  怎么写一个勒索病毒？  如果让我写一个简单的勒索病毒 我可能会这样写 0.像指定的服务器（控制机）请求一个aes公钥 1.用这个公钥挨个给本地文件加密  1.1 遍历本地所有文件 1.2 给每个文件头加上一个特殊标记（不用多，10来个字节就行） 1.3 挨个用公钥加密所有文件   2.提示用户文件加密了，要求给钱 3.如果收到钱了就给他一个解密的代码 4.解密代码这样写  4.1 遍历本地所有文件 4.2 判断是否有特殊标记 4.3 如果有，则是加密文件 4.4 用私钥去解开这个文件   当然真实的勒索病毒会更加严谨，我只是描述一下思路 我也从来没写过  中了勒索病毒怎么办？  不差钱方案：给钱，然后寄希望于对方的人品。 运气好方案：这是个常见的普通勒索病毒，网上有很多的工具可以尝试解一下 报警：造成重大损失的可以公开报警，交给安全部门处理，当然这个破案的难度有点大，数据可能还是找不回来 补救方案：用备份来救命。  如果有备份，可以恢复文件，那这时候就基本上可以依靠本身的备份体系来恢复大部分损失（还是会有不可挽回的损失）    勒索病毒和备份体系的攻防  聪明的勒索病毒会攻击备份体系 1.本机备份：中了勒索病毒以后，本机备份几乎是99%也会中毒，几乎没啥用了 2.异机备份：如果是个人电脑中毒，很难会感染到备份机，但是如果是机房里的服务器中毒了，那么病毒极有可能会感染备份机。 3.异机房备份：同异机备份，主要还是一个服务器内网环境。 如何防止勒索病毒攻击备份体系呢？ 这就是我们接下来下说的孤岛备份机方案  孤岛备份机 什么是孤岛备份机？  它是一个特殊的备份机 1.它不和普通的服务器连网 2.本地不开任何端口，任何其他服务器不能请求它的任何服务 3.只和指定的一台机器直连（通常这台机器是个普通的备份机） 4.它只以视为“这台普通备份机”的备份机 5.它会定时拉取普通备份机上的指定目录 6.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Oracle数据块损坏恢复总结</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="在恢复前使用dbv命令检查数据文件是否存在坏块<br/>dbvfile=d:oracleoradatamydbronly.dbfblocksize=8192查看数据坏块所在数据文件号及块号可以对表进行一次全表扫描，如：<br/>selectcount(*)fromtablename;1、没有备份的情况下：<br/>1.1、使用exp/imp恢复<br/>Oracle数据块损坏恢复总结" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a href="../Oracle/l_7_1.htm" class="hover"　title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../Oraclezhishi/l_8_1.htm" title="Oracle基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../Oracleha/l_9_1.htm" title="Oracle高可用性和HA">高可用性和HA</a>|</li><li><a  href="../Oracleyouhua/l_10_1.htm" title="Oracle性能与优化">性能与优化</a>|</li><li><a  href="../Oracleguzhang/l_11_1.htm" title="Oracle故障与解决">故障与解决</a>|</li><li><a  href="../Oraclebi/l_12_1.htm" title="Oracle商业应用">Oracle商业应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../Oracle/l_7_1.htm">Oracle</a>&nbsp;&gt;&nbsp;<a href="../Oraclezhishi/l_8_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>Oracle数据块损坏恢复总结</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   在恢复前使用DBV命令检查数据文件是否存在坏块<br />dbv file=d:<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>oradatamydbRONLY.DBF blocksize=8192　　查看数据坏块所在数据文件号及块号可以对表进行一次全表扫描，如：<br />select count(*) from tablename;　　1、　　　 没有备份的情况下：<br />　　1.1、使用exp/imp恢复<br />　　 在这种情况下肯定会造成数据的丢失，在这种情况下应采取将数据导出然后重建表再进行导入的方法，来尽量恢复损坏数据块中的数据，但是在有坏块的情况下是不允许导出的，如下命令：<br />　 Exp test/test file=t.dmp tables=t;　　 导出命令在执行中会报ORA-01578错误，在这错误提示中会提示那个文件号的文件以及这个文件中的哪个块被损坏，如：ORA&mdash;01578：<a href="../../html/Oracle/l_7_1.htm" title="ORACLE" >ORACLE</a> 数据块损坏（文件号 4，块号 35）<br />　　 针对以上的提示首先查询那些对象被损坏：<br />　 Select tablespace_name,segment_type,owner,segment_name From dba_extents Where file_id=4 and 35 between block_id and block_id+blocks-1;　　如果被损坏的块是索引，通常可以通过索引重建来解决，如果损坏的是数据（segment_type为table），那么通过设置如下内部事件使得Exp操作跳过坏块。<br />Alter session set events=’10231 trace name context forever,level 10’;　　然后重新执行导出命令，导出相关的表，然后执行Drop Table命令删除相关表，之后重建表最后导入数据。<br />　　1.2、使用DBMS_REPAIR恢复<br />　　用DBMS_REPAIR当然也会丢失数据。这里不做详细的介绍，有兴趣的可以查看<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>的在线文档<br />　　2、使用Rman进行恢复：<br />　　 首先要存在Rman的最新备份集，然后执行如下命令：<br />　　RMAN>backup validate datafile 4;检查4号数据文件是否存在坏块<br />　　执行查询：select * from v$database_block_corruption where file#=4;<br />　　如果4号文件存在坏块的话，那么将在结果集中有所显示，会显示损坏的块号，根据显示结果执行如下命令进行恢复：<br />　　RMAN>blockrecover datafile 4 block 35 from backupset;<br />　　该命令执行后即可恢复坏块，并且不会造成数据丢失，但是要求数据库必须要运行在归档模式下，否则RMAN无法发挥作用，而且通过RMAN做过最新的数据库备份<br />　　3、使用bbed恢复<br />　　使用bbed恢复时必须有数据文件的拷贝。<br />　　bbed就是英文block browse edit的缩写，用来直接查看和修改数据文件数据的一个工具。<br />　　在windows和<a href="../../html/linux/l_31_1.htm" title="linux" >linux</a>上面都有<br />　　但在<a href="../../html/linux/l_31_1.htm" title="linux" >linux</a>下需要编译：<br />　　然后把$<a href="../../html/Oracle/l_7_1.htm" title="ORACLE" >ORACLE</a>_HOME/rdbms/lib加到环境变量的PATH里面，就可以直接在命令中bbed了。<br />　　BBED的缺省口令为blockedit,For <a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a> Internal Use only 请谨慎使用<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>不做技术支持。<br />[<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>@test <a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>]$ cd $<a href="../../html/Oracle/l_7_1.htm" title="ORACLE" >ORACLE</a>_HOME/rdbms/lib[<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>@test lib]$ make -f ins_rdbms.mk $<a href="../../html/Oracle/l_7_1.htm" title="ORACLE" >ORACLE</a>_HOME/rdbms/lib/bbed　　进入bbed后，可以使用help查看帮助<br />BBED> help　　bbed的详细用法这里不做具体介绍。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

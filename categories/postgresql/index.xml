@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>postgreSQL on Classic</title>
+    <link>/categories/postgresql/</link>
+    <description>Recent content in postgreSQL on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 26 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/postgresql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>postgreSQL的安装和初始化(centos7)</title>
+      <link>/dba/postgresql%E7%9A%84%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3centos7/</link>
+      <pubDate>Wed, 26 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/postgresql%E7%9A%84%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3centos7/</guid>
+      <description>安装 # Install the repository RPM:sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm# Install PostgreSQL:sudo yum install -y postgresql15-server##如果需要安装postgresql15-develwget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/llvm5.0-devel-5.0.1-7.el7.x86_64.rpmwget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/llvm5.0-5.0.1-7.el7.x86_64.rpmwget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/llvm5.0-libs-5.0.1-7.el7.x86_64.rpm yum install -y centos-release-scl-rh llvm5*yum install -y postgresql15-devel# Optionally initialize the database and enable automatic start:sudo /usr/pgsql-15/bin/postgresql-15-setup initdbsudo systemctl enable postgresql-15sudo systemctl start postgresql-15安装extenyum install pgvector_15配置 修改监听 修改监听地址为任意地址  vi /var/lib/pgsql/15/data/postgresql.conf 在第60行处增加   54 #------------------------------------------------------------------------------55 # CONNECTIONS AND AUTHENTICATION56 #------------------------------------------------------------------------------57 58 # - Connection Settings -59 60 listen_addresses = &#39;*&#39;61 #listen_addresses = &#39;localhost&#39; # what IP address(es) to listen on;62 # comma-separated list of addresses;63 # defaults to &#39;localhost&#39;; use &#39;*&#39; for all允许所有IP访问  vi /var/lib/pgsql/15/data/pg_hba.</description>
+    </item>
+    
+  </channel>
+</rss>

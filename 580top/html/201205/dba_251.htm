@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Oracle中只更新两张表对应数据的方法</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="先建立一个结构一模一样的表emp1，并为其插入部分数据<br/>createtableemp1asselect*fromempwheredeptno=20;update掉emp1中的部分数据<br/>updateemp1setsal=sal+100,comm=nvl(comm,0)+50然后我们试着使用emp1中数据来更新emp中sal和comOracle中只更新两张表对应数据的方法" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a href="../Oracle/l_7_1.htm" class="hover"　title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../Oraclezhishi/l_8_1.htm" title="Oracle基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../Oracleha/l_9_1.htm" title="Oracle高可用性和HA">高可用性和HA</a>|</li><li><a  href="../Oracleyouhua/l_10_1.htm" title="Oracle性能与优化">性能与优化</a>|</li><li><a  href="../Oracleguzhang/l_11_1.htm" title="Oracle故障与解决">故障与解决</a>|</li><li><a  href="../Oraclebi/l_12_1.htm" title="Oracle商业应用">Oracle商业应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../Oracle/l_7_1.htm">Oracle</a>&nbsp;&gt;&nbsp;<a href="../Oraclezhishi/l_8_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>Oracle中只更新两张表对应数据的方法</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   先建立一个结构一模一样的表emp1，并为其插入部分数据<br />create　table　emp1asselect　*　from　emp　where　deptno　=　20;　　update掉emp1中的部分数据<br />update　emp1set　sal　=　sal　+　100,comm　=　nvl(comm,0)　+　50　　然后我们试着使用emp1中数据来更新emp中sal 和 comm这两列数据。<br />　　我们可以这么写<br />Update　empSet(sal,comm)　=　(select　sal,comm.　From　emp1　where　emp.empno　=　emp1.empno)Where　exists　(select　1　from　emp1　where　emp1.empno　=　emp.empno)　　请你尤其注意这里的where子句，你可以尝试不写where子句来执行以下这句话，你将会使得emp中的很多值变成空。<br />　　这是因为在<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>的update语句中如果不写where子句,<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>将会默认的把所有的值全部更新，即使你这里使用了子查询并且某在值并不能在子查询里找到，你就会想当然的以为,<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>或许将会跳过这些值吧，你错了，<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>将会把该行的值更新为空。<br />　　我们还还可以这么写：<br />update　(select　a.sal　asal,b.sal　bsal,a.comm　acomm,b.comm　bcomm　from　emp　a,emp1　b　where　a.empno　=　b.empno)set　asal　=　bsal,acomm　=　bcomm;　　这里的表是一个类视图。当然你执行时可能会遇到如下错误:<br />　　ERROR 位于第 2 行:<br />　　ORA-01779: 无法修改与非键值保存表对应的列<br />　　这是因为新建的表emp1还没有主键的缘故<br />　　下面增加一个主键<br />alter　table　emp1　add　constraint　pk_emp1　primary　key　(empno);　　执行之后<br />　　在执行前面的语句就能成功。<br />　　这里我们总结一下：<br />　　在<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>中不存在update from结构，所以遇到需要从另外一个表来更新本表的值的问题的时候，有两种解决的办法:<br />　　一种是使用子查询，使用子查询时一定要注意where条件(一般后面接exists子句)，除非两个表是一一对应的，否则where条件必不可少，遗漏掉where条件时可能会导致插入大量空值。<br />　　另外一种是类视图的更新方法，这也是<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>所独有的。先把对应的数据全部抽取出来，然后更新表一样更新数据，这里需要注意的是，必须保证表的数据唯一型<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

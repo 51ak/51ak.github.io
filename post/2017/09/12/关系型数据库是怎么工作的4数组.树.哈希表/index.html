@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>关系型数据库是怎么工作的4:数组.树.哈希表 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">关系型数据库是怎么工作的4:数组.树.哈希表</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+<nav id="TableOfContents">
+<ul>
+<li><a href="#3-数组-树-哈希表">3.数组.树.哈希表</a>
+<ul>
+<li><a href="#3-1-数组">3.1 数组</a></li>
+<li><a href="#3-2-树和索引">3.2 树和索引</a></li>
+<li><a href="#3-3-回顾下我们的问题">3.3 回顾下我们的问题</a></li>
+<li><a href="#3-4-b-树索引">3.4 B+树索引</a></li>
+<li><a href="#3-4-哈希表-hash-table">3.4 哈希表(Hash table)</a>
+<ul>
+<li>
+<ul>
+<li><a href="#一个好的哈希函数">一个好的哈希函数</a></li>
+<li><a href="#数组vs哈希表">数组VS哈希表</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+
+
+<main>
+
+
+<h1 id="3-数组-树-哈希表">3.数组.树.哈希表</h1>
+
+<p>这一节讲数据结构。很重要，因为它是现代数据库的主心骨。在这一节，我还会介绍数据库索引的概念</p>
+
+<h2 id="3-1-数组">3.1 数组</h2>
+
+<p>二维数组是一种最简单的数据结构，一个表可以看作是一个数组，例如：</p>
+
+<p><img src="/img/array.png" alt="数组" title="数组" /></p>
+
+<p>这个二维数组是一张行和列组成的表：</p>
+
+<ul>
+<li>每行代表一个主题</li>
+<li>这些列描述主题的功能</li>
+<li>虽然可以很好地存储和可视化数据，但是当您需要查找特定值时，它会很糟糕。
+例如：如果你想找到所有UK工作的人，你只能查找每一行去确定是不是有UK工作的，这将花费你N次操作（N=行数）,这也不太差但这里有更快的办法吗？这就是一会我们要说的&rdquo;树&rdquo;出现了。</li>
+</ul>
+
+<p>Note: <em>大多数现代数据库都提供高级阵列来高效地存储表，例如堆组织表或索引组织表。 但这并不会改变在一组列上快速搜索特定条件的问题。</em></p>
+
+<h2 id="3-2-树和索引">3.2 树和索引</h2>
+
+<p><strong>二叉搜索树</strong>是一种有特殊属性的二叉树，每个节点中的key必须满足以下条件：</p>
+
+<ul>
+<li>必须大于所有存储在左侧子树中的key</li>
+<li>必须小于所有存储在右侧子树中的key</li>
+</ul>
+
+<p>让我们用图看看这个意思</p>
+
+<p><img src="/img/BST-624x321.png" alt="二叉搜索树" title="二叉搜索树" /></p>
+
+<p>这棵树有N=15个元素,我们来试试找 208</p>
+
+<ul>
+<li>我从根节点 136 开始. 因为136&lt;208, 我需要在136的右子树上找.</li>
+<li>398&gt;208 因此, 我要找398的左子树</li>
+<li>250&gt;208 因此, 我要找250的左子树</li>
+<li>200&lt;208 因此, 我要找200的右子树. 但 200 并没有右子树, 这个KEY不存在 (因为如果它存在,它只能存在200的右子树上,现在没有)</li>
+</ul>
+
+<p>我们来试试找 40</p>
+
+<ul>
+<li>我从根节点 136 开始. 因为136&gt;40, 我需要在136的左子树上找.</li>
+<li>80&gt;40 因此, 我要找80的左子树</li>
+<li>40= 40, 节点存在. 我提取出这个节点行id(图上没有显示ID)然后通过行id查找表</li>
+<li>知道行ID后，我便知道数据在表上的确切位置，因此可以立即获取它。</li>
+</ul>
+
+<p>最后,两个搜索都花费了*树的高度*次操作,如果你有认真阅读上一节中我们关于合并排序的内容 ,你应该明白这个值是 log(N).所以花费了long(N)次操作.还不错!</p>
+
+<h2 id="3-3-回顾下我们的问题">3.3 回顾下我们的问题</h2>
+
+<p>但是这个描述非常抽象,让我们回到我们的问题(<em>上一小节中在表中查找UK工作的人</em>). 同样是一棵树,不过这次不再是愚蠢的int型数字,而是一个代表国家的字符串.
+- 如果你想知道都有谁在UK这个国家工作
+- 你查找这棵树得到UK所在的节点
+- 在UK这个节里,你将发现对应的ROWS的地址
+这次查找工作只花费了你log(N)次操作,比起直接扫描列表的方法用的N次.你刚才用的方法就是一个<strong>数据库索引</strong></p>
+
+<p>你可以对任何一组列建索引(一个string ,一个int,2个string ,1个int+1个string,一个date &hellip;.) 只要有一个可以函数可以处理这个KEY的长度,才便于你建立和排序这些KEY .</p>
+
+<h2 id="3-4-b-树索引">3.4 B+树索引</h2>
+
+<p>尽管这个树(二叉搜索树)可以很好的找到指定值 ,但是这里有个大问题:当你需要找到两个值之间的多个元素.它会花费O(N)因为你需要扫描树上的每个节点以检查是否符合这个条件(树的有序遍历),而且这个操作对磁盘IO不友好,因为要读整个树.我需要找一个方法提高范围查询的效率.为解决这个问题,现代的数据库采用了一个刚才说的二叉搜索树的修改版版本叫做B+树.在一个B+树上
+- 只有最底层的节点(叶子节点)存储信息(一般是行在对应表中的具体位置)
+- 其他节点只是为了搜索中路由到正确节点存在的</p>
+
+<p><img src="/img/database_index-1024x424.png" alt="B+树索引" title="B+树索引" /></p>
+
+<p>如你看到的那样,这里有更多的节点(两倍多),事实上,你需要额外的节点,这些&rdquo;判断节点&rdquo;将帮助你找到正确的节点(存了真实的数据表行位置信息).但这个搜索的复杂度还是O(log(N))只是多了一个层级.最大的不同是最下面的叶子节点链接了它的下一个节点.</p>
+
+<p>在这个B+树上,如果我们要找到40到100的值:
+- 你只需要像刚才二叉树上一样的方式找到40(如果40不存在就找到比40大的最小的数)
+- 然后顺着下一个叶子的链接一直收集直到100.
+对比下从这个N个节点的树上找到了M个节点.这个找符合条件的40像上棵树一样花费了log(N).但是,一旦找到了这个节点,只需要M次操作就得到了所有需要的M个节点.所以这个<strong>搜索只花了M + log(N)次操作</strong>,对比上一个搜索树的N次.而且,不需要读整个树(只需要M+LOG(N)个节点),这就意味着更少的磁盘占用,如果M的数目不大(比如说200行)N的数目大(100万行)这里将差跟很大.</p>
+
+<p>但是这里有个新问题(又来!).如果你在数据库增加或删除一行数据(如果这行数据在关联的B+树中):
+- 你需要维持B+树上的这些节点的顺序,否则你就不能在这些混乱的节点找到你需要的那些节点
+- 你需要维持B+树尽可能低的层级,否则这个时间复杂度的 O(log(N)) 将变成 O(N).</p>
+
+<p>换句说说,B+树需要自排序和自动平衡.还好聪明的删除和插入动作可以解决这个问题.但是这也是有代价的:B+树上的插入和删除动作O(log(N)).这也是为什么你们会听说用太多索引不是个好主意.确实,你正在降低表中insert/update/delete操作的速度,因为数据库需要更新这张表的所有索引,每个索引需要花费O(log(N)).同时,增加的这些索引意味着事务管理器将有更多的工作量(晚一些时候我们会讲到事务管理</p>
+
+<p>想了解更详细的内容,
+你可以看这个维基:<a href="https://en.wikipedia.org/wiki/B%2B_tree">https://en.wikipedia.org/wiki/B%2B_tree</a>
+如果你想知道在数据库中实现B+树的示例，MySQL的核心开发人员的两篇文章:
+<a href="http://blog.jcole.us/2013/01/07/the-physical-structure-of-innodb-index-pages/">http://blog.jcole.us/2013/01/07/the-physical-structure-of-innodb-index-pages/</a>
+<a href="http://blog.jcole.us/2013/01/10/btree-index-structures-in-innodb/">http://blog.jcole.us/2013/01/10/btree-index-structures-in-innodb/</a>
+这两篇文章都着眼于INNODB是怎么处理索引的.</p>
+
+<p>NOTE:*一位读者告诉我,为了底层优化,这个B+树需要完全平衡.</p>
+
+<h2 id="3-4-哈希表-hash-table">3.4 哈希表(Hash table)</h2>
+
+<p>我们的最后一个数据结构是哈希表.想快速找到一个值它这非常有用.而且了解了哈希表将会帮我们搞懂得一个常用的数据库操作:hash join. 这个数据结构也被用于数据库存储一些内部信息(比如说*表锁*或<em>缓冲池</em>,回头我们将介绍到)</p>
+
+<p>哈希表是一种通过它的键快速找到需要元素的一个数据结构.建一个哈希表,你需要申明:
+- 元素中的一个key
+- 为这个Key找到一个<strong>哈希函数</strong>.计划出来的key哈希将给出这个元素的存储位置(桶)
+- 一个比较这些key的<strong>对比函数</strong>.一旦找到了正确的树,需要这个函数在桶中找到正确的元素</p>
+
+<p>一个简单的例子,让我们举个可视化的例子:</p>
+
+<p><img src="/img/hash_table-624x317.png" alt="哈希表" title="哈希表" /></p>
+
+<p>这个哈希表有10个桶.只里我偷懒只花了5个,但我知道你足够聪明,所以我让你们脑补了剩下的5个.
+<strong>哈希函数</strong>这里我用KEY对10取模.换句话说,我只用了元素的KEY的最后一个数字来林海雪找到它的桶:
+- 如果最后一个数字是0 ,这个元素存储在0号桶的最后一位
+- 如果最后一个数字是1 ,这个元素存储在1号桶的最后一位
+- 如果最后一个数字是2 ,这个元素存储在2号桶的最后一位
+&hellip;
+<strong>对比函数</strong> 这里我用了一个简单的2个整理数的比较.</p>
+
+<p>让我们假定需要一个78的元素
+- 哈希表计算78的哈希值为8:
+- 它在8号桶里开始找,第一个元素就是78.
+- 它返回元素78
+- 它只花费了2次操作(一次计算哈希值,一次在桶里找到这个元素)</p>
+
+<p>好,我们再试找59这个元素:
+- 哈希表计算59的哈希值为9:
+- 它在9号桶里开始找,第一个元素就是99.因为99!=59,99不是正确的值
+- 相同的逻辑,它找下一个元素(9,79&hellip;.29)
+- 元素不存在
+- 这次搜索花费了7次操作.</p>
+
+<h4 id="一个好的哈希函数">一个好的哈希函数</h4>
+
+<p>如你所见到的,你找的值不同,花费竟然不同!
+如果现在我们用这个key对100万来取模(它花费6个数字位),每二个搜索只花了一个操作,因为这里没有000059这个桶.真正的挑战是找到一个好的哈希函数,它创建的每个桶都只存少量的元素.</p>
+
+<p>在我这个例子,找到一个哈希函数非常简单.但这只是个简单的例子,找到一个好的哈希函数是很困难的,如果这个是:
+- 一个字符串(比如一个人名)
+- 2个字符串(比如一个人的姓和名)
+- …</p>
+
+<p>**拥有一个好的哈希函数,搜索哈希表的花费是O(1).</p>
+
+<h4 id="数组vs哈希表">数组VS哈希表</h4>
+
+<p>为什么不用数组?</p>
+
+<p>恩,你问了一个好问题</p>
+
+<ul>
+<li>一个哈希表可以被半加载到内存,剩下的桶可以继续放在磁盘上</li>
+<li>一个数组必须使用内存中的一块连续空间,如果我们加载大表,很难找到足够的连续空间</li>
+<li>对于一个哈希表,你可以选择你想的Key(比如这个国家和这个人的名字)</li>
+</ul>
+
+<p>想了解更多哈希表的信息,你可以读这篇文章:讲述的是一种非常有效率的哈希表实现:JAVA HashMap
+<a href="http://coding-geek.com/how-does-a-hashmap-work-in-java/">http://coding-geek.com/how-does-a-hashmap-work-in-java/</a>
+不需要你了解JAVA就可以理解文章中的概念</p>
+
+<p>本节完成，下一章节我们将回顾一下内容,并讨论：客户端管理</p>
+
+<p>本篇文章完整分为7节，当前第4节。以下完整章节：</p>
+
+<ol>
+<li><a href="https://www.dboop.com/post/2017/09/09/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%841%E5%BC%95%E8%A8%80/">引言</a></li>
+<li><a href="https://www.dboop.com/post/2017/09/10/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%842%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/">时间复杂度</a></li>
+<li><a href="https://www.dboop.com/post/2017/09/11/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%843%E5%90%88%E5%B9%B6%E6%8E%92%E5%BA%8F/">合并排序</a></li>
+<li><a href="https://www.dboop.com/post/2017/09/12/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%844%E6%95%B0%E7%BB%84.%E6%A0%91.%E5%93%88%E5%B8%8C%E8%A1%A8/">数组.树.哈希表</a></li>
+<li><a href="https://www.dboop.com/post/2018/01/02/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%845%E5%9F%BA%E6%9C%AC%E7%BB%84%E4%BB%B6%E4%B9%8B%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%AE%A1%E7%90%86/">客户端管理</a></li>
+<li><a href="https://www.dboop.com/post/2018/01/08/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%846sql%E6%9F%A5%E8%AF%A2/">SQL查询</a></li>
+<li><a href="https://www.dboop.com/post/2018/01/11/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%847%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/">数据管理</a></li>
+</ol>
+
+</main>
+<h2 class="date">发布日期:2017/09/12</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%90%86%E8%AE%BA">数据库理论</a> <a href="/categories/%E7%BF%BB%E8%AF%91">翻译</a> <a href="/categories/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93">关系型数据库</a> <a href="/categories/mysql">mysql</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E8%BD%AC%E8%AF%91">转译</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

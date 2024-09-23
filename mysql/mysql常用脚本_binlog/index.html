@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL常用脚本_binlog解析和回滚| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL常用脚本_binlog解析和回滚</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#解析binlog">解析binlog</a>
+      <ul>
+        <li><a href="#方法1mysqlbinlog">方法1:mysqlbinlog</a></li>
+        <li><a href="#方法2my2sql">方法2:my2sql</a></li>
+      </ul>
+    </li>
+    <li><a href="#反解binlog误删数据">反解binlog(误删数据)</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="解析binlog">解析binlog</h2>
+<h3 id="方法1mysqlbinlog">方法1:mysqlbinlog</h3>
+<pre><code>mysqlbinlog --no-defaults  --base64-output=decode-rows -vv  --database=dboop   --start-datetime='2020-10-11  00:00:00' --stop-datetime='2020-10-11  15:00:00'  mysql-bin.000075 &gt;75.sql
+
+常用参数
+database：只列出该数据库下的binlog数据，但无法过滤由触发器执行的SQL。
+base64-output=decode-rows -vv：显示具体 SQL 语句。
+skip-gtids=true：忽略 GTID 显示。
+
+</code></pre><ul>
+<li>输出结果</li>
+</ul>
+<pre><code># at 20001
+#201011 12:04:09 server id 1  end_log_pos 20094 CRC32 0x2b305ac     Query    thread_id=53    exec_time=0    error_code=0
+SET TIMESTAMP=1651011012/*!*/;
+BEGIN
+/*!*/;
+</code></pre><p>上面输出包括信息：</p>
+<ul>
+<li>position: 位于文件中的位置，即第一行的（# at 20001）,说明该事件记录从文件第20001个字节开始</li>
+<li>timestamp: 事件发生的时间戳，即第二行的（#201011 12:04:09）</li>
+<li>server id: 服务器标识（1）</li>
+<li>end_log_pos 表示下一个事件开始的位置（即当前事件的结束位置+1）</li>
+<li>thread_id: 执行该事件的线程id （thread_id=53）</li>
+<li>exec_time: 事件执行的花费时间</li>
+<li>error_code: 错误码，0意味着没有发生错误</li>
+<li>type:事件类型Query</li>
+</ul>
+<h3 id="方法2my2sql">方法2:my2sql</h3>
+<pre><code>wget https://www.dboop.com/download/my2sqlv2
+
+/data/my2sql/my2sqlv2   -user root -password 123456 -host 10.0.0.2   -port 3306  -databases dboop -tables test001   -mode repl -work-type 2sql  -start-file mysql-bin.000075 -start-datetime &quot;2020-10-11 15:00:00&quot; -stop-datetime &quot;2020-10-11 15:20:00&quot; -output-dir /data/my2sql/dbooptest/
+</code></pre><h2 id="反解binlog误删数据">反解binlog(误删数据)</h2>
+<ul>
+<li>方法1:my2sql</li>
+</ul>
+<pre><code>wget https://www.dboop.com/download/my2sqlv2
+
+/data/my2sql/my2sqlv2   -user root -password 123456 -host 10.0.02   -port 3306  -databases dboop -tables test001   -mode repl -work-type rollback  -start-file mysql-bin.000075 -start-datetime &quot;2020-10-11 15:00:00&quot; -stop-datetime &quot;2020-10-11 15:20:00&quot; -output-dir /data/my2sql/dbooptest/
+
+-work-type 2sql
+
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2021/04/10</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC">常用脚本</a> <a href="/categories/binlog">binlog</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%9F%BA%E7%A1%80">基础</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

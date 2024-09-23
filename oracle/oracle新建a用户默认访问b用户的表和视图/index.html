@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Oracle新建A用户默认访问B用户的表和视图| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Oracle新建A用户默认访问B用户的表和视图</span></h1>
+</div>
+
+
+  <main>
+    <h2 id="原因">原因</h2>
+<ul>
+<li>在oracle 中schema与用户是一一对应的关系</li>
+<li>A用户默认访问的是Aschema下的表</li>
+<li>业务需求建立用户A可以查询B用户建立的表；会报错：表和视图不存在</li>
+<li>以下是解决方法</li>
+</ul>
+<h2 id="方案一改写sql">方案一：改写SQL</h2>
+<ul>
+<li>A用户查询时带上B用户的schema</li>
+</ul>
+<pre><code>select * from A.table
+</code></pre><h2 id="方案二手动指定current_schema">方案二：手动指定current_schema</h2>
+<ul>
+<li>临时修改A用户的schema，执行下面SQL事件</li>
+</ul>
+<pre><code>alter session set current_schema=B;
+select * from table;
+</code></pre><h2 id="方案三触发器">方案三：触发器</h2>
+<ul>
+<li>增加A用户的登录trigger</li>
+</ul>
+<pre><code>create or replace trigger {triggername}
+after logon on A.schema
+begin
+execute immediate 'alter session set current_schema=B';
+
+</code></pre><h2 id="方案四增加同义词">方案四：增加同义词</h2>
+<ul>
+<li>增加A用户的同义词</li>
+</ul>
+<pre><code># 用管理账号执行
+grant create synonym to A
+
+
+# 用A账号执行
+CREATE SYNONYM  TEST FOR B.TEST;
+....
+#把所有的表和视图都加上
+
+
+</code></pre><h2 id="总结">总结</h2>
+<ul>
+<li>方法1.有改造成本。业务改造基本不可能</li>
+<li>方法2.有小量改造成本，一本适合运维用</li>
+<li>方法3.不推荐</li>
+<li>只留下方法4.无业务改造成本。</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2020/02/03</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/oracle">oracle</a> <a href="/categories/%E8%BF%90%E7%BB%B4sql">运维SQL</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

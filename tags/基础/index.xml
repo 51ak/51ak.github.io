@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>基础 on Classic</title>
+    <link>/tags/%E5%9F%BA%E7%A1%80/</link>
+    <description>Recent content in 基础 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 29 Aug 2024 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL9.0在centos7上安装部署DBA版</title>
+      <link>/mysql/mysql9.0%E5%9C%A8centos7%E4%B8%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2dba%E7%89%88/</link>
+      <pubDate>Thu, 29 Aug 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql9.0%E5%9C%A8centos7%E4%B8%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2dba%E7%89%88/</guid>
+      <description>方法一：RPM安装方式 下载： wget https://dev.mysql.com/get/Downloads/MySQL-9.0/mysql-9.0.1-1.el7.x86_64.rpm-bundle.tar tar -xvf mysql-9.0.1-1.el7.x86_64.rpm-bundle.tar ll -rw-r--r-- 1 root root 1082173440 Jul 14 03:03 mysql-9.0.1-1.el7.x86_64.rpm-bundle.tar -rw-r--r-- 1 7155 31415 15319752 Jul 14 02:55 mysql-community-client-9.0.1-1.el7.x86_64.rpm -rw-r--r-- 1 7155 31415 3628356 Jul 14 02:55 mysql-community-client-plugins-9.0.1-1.el7.x86_64.rpm -rw-r--r-- 1 7155 31415 709720 Jul 14 02:55 mysql-community-common-9.0.1-1.el7.x86_64.rpm -rw-r--r-- 1 7155 31415 595117664 Jul 14 02:55 mysql-community-debuginfo-9.0.1-1.el7.x86_64.rpm -rw-r--r-- 1 7155 31415 2023960 Jul 14 02:55 mysql-community-devel-9.0.1-1.el7.x86_64.rpm -rw-r--r-- 1 7155 31415 4219028 Jul 14 02:55 mysql-community-embedded-compat-9.</description>
+    </item>
+    
+    <item>
+      <title>MySQL内置函数</title>
+      <link>/mysql/mysql%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0/</link>
+      <pubDate>Tue, 28 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0/</guid>
+      <description>MySQL字符串函数    函数 说明     ASCII(s) 返回字符串 s 的第一个字符的 ASCII 码。   CHAR_LENGTH(s) 返回字符串 s 的字符数   CHARACTER_LENGTH(s) 返回字符串 s 的字符数   CONCAT(s1,s2&amp;hellip;sn) 字符串 s1,s2 等多个字符串合并为一个字符串   CONCAT_WS(x, s1,s2&amp;hellip;sn) 同 CONCAT(s1,s2,&amp;hellip;) 函数，但是每个字符串直接要加上 x，x 可以是分隔符   FIELD(s,s1,s2&amp;hellip;) 返回第一个字符串 s 在字符串列表(s1,s2&amp;hellip;)中的位置   FIND_IN_SET(s1,s2) 返回在字符串s2中与s1匹配的字符串的位置   FORMAT(x,n) 函数可以将数字 x 进行格式化 &amp;ldquo;#,###.##&amp;rdquo;, 将 x 保留到小数点后 n 位，最后一位四舍五入。   INSERT(s1,x,len,s2) 字符串 s2 替换 s1 的 x 位置开始长度为 len 的字符串   LOCATE(s1,s) 从字符串 s 中获取 s1 的开始位置   LCASE(s) 将字符串 s 的所有字母变成小写字母   LEFT(s,n) 返回字符串 s 的前 n 个字符   LEFT(s,n) 返回字符串 s 的前 n 个字符   LENGTH(str) 返回字符的长度，一个汉字算三个字符，一个数字或字母算一个字符。   LOCATE(s1,s) 从字符串 s 中获取 s1 的开始位置   LOWER(s) 将字符串 s 的所有字母变成小写字母。   LPAD(s1,len,s2) 在字符串 s1 的开始处填充字符串 s2，使字符串长度达到 len   LTRIM(s) 去掉字符串 s 开始处的空格   MID(s,n,len) 从字符串 s 的 start 位置截取长度为 length 的子字符串，同 SUBSTRING(s,n,len)   POSITION(s1 IN s) 从字符串 s 中获取 s1 的开始位置   REPEAT(s,n) 将字符串 s 重复 n 次   REPLACE(str,from_str,to_str) 将字符串 str 中出现的字符串 from_str 替代成字符串 to_str，并返回替换后新字符串，该方法对大小写敏感。   REVERSE(s) 将字符串s的顺序反过来   RIGHT(s,n) 返回字符串 s 的后 n 个字符   RPAD(s1,len,s2) 在字符串 s1 的结尾处添加字符串 s2，使字符串的长度达到 len   RTRIM(s) 去掉字符串 s 结尾处的空格   SPACE(n) 返回 n 个空格   STRCMP(s1,s2) 比较字符串 s1 和 s2，如果 s1 与 s2 相等返回 0 ，如果 s1&amp;gt;s2 返回 1，如果 s1&amp;lt;s2 返回 -1   SUBSTR(s, start, length) 从字符串 s 的 start 位置截取长度为 length 的子字符串   SUBSTRING(s, start, length) 从字符串 s 的 start 位置截取长度为 length 的子字符串   SUBSTRING_INDEX(s, delimiter, number) 返回从字符串 s 的第 number 个出现的分隔符 delimiter 之后的子串。如果 number 是正数，返回第 number 个字符左边的字符串。如果 number 是负数，返回第(number 的绝对值(从右边数))个字符右边的字符串。   如果 number 是负数，返回第(number 的绝对值(从右边数))个字符右边的字符串。    TRIM(str) 去掉字符串 str 开始和结尾处的指定的符号，不指定默认为空格。   UCASE(s) 将字符串转换为大写   UPPER(s) 将字符串转换为大写    MySQL数字函数    函数 说明     ABS(x) 返回 x 的绝对值　   ACOS(x) 求 x 的反余弦值(参数是弧度)   ASIN(x) 求反正弦值(参数是弧度)   ATAN(x) 求反正切值(参数是弧度)   ATAN2(n, m) 求反正切值(参数是弧度)   AVG(expression) 返回一个表达式的平均值，expression 是一个字段   CEIL(x) 返回大于或等于 x 的最小整数　   CEILING(x) 返回大于或等于 x 的最小整数　   COS(x) 求余弦值(参数是弧度)   COT(x) 求余切值(参数是弧度)   COUNT(expression) 返回查询的记录总数，expression 参数是一个字段或者 * 号   DEGREES(x) 将弧度转换为角度　   n DIV m 整除，n 为被除数，m 为除数   EXP(x) 返回 e 的 x 次方　   FLOOR(x) 返回小于或等于 x 的最大整数　   GREATEST(expr1, expr2, expr3, &amp;hellip;) 返回列表中的最大值   LEAST(expr1, expr2, expr3, &amp;hellip;) 返回列表中的最小值   LN 返回数字的自然对数   LOG(x) 返回自然对数(以 e 为底的对数)　   LOG10(x) 返回以 10 为底的对数　   LOG2(x) 返回以 2 为底的对数   MAX(expression) 返回字段 expression 中的最大值   MIN(expression) 返回字段 expression 中的最小值   MOD(x,y) 返回 x 除以 y 以后的余数　   PI() 返回圆周率　   POW(x,y) 返回 x 的 y 次方　   POWER(x,y) 返回 x 的 y 次方　   RADIANS(x) 将角度转换为弧度　   RAND() 返回 0 到 1 的随机数　   ROUND(x) 返回离 x 最近的整数   SIGN(x) 返回 x 的符号，x 是负数、0、正数分别返回 -1、0 和 1　   SIN(x) 求正弦值(参数是弧度)　   SQRT(x) 返回x的平方根　   SUM(expression) 返回指定字段的总和   TAN(x) 求正切值(参数是弧度)   TRUNCATE(x,y) 返回数值 x 保留到小数点后 y 位的值（与 ROUND 最大的区别是不会进行四舍五入）    MySQL日期时间函数    函数 说明     ADDDATE(d,n) 计算起始日期 d 加上 n 天的日期   ADDTIME(t,n) 时间 t 加上 n 秒的时间   CURDATE() 返回当前日期   CURRENT_DATE() 返回当前日期   CURRENT_TIME 返回当前时间   CURRENT_TIMESTAMP() 返回当前日期和时间   CURTIME() 返回当前时间   DATE() 从日期或日期时间表达式中提取日期值   DATEDIFF(expr1, expr2) 计算日期 expr1 表达式与日期 expr2 之间相隔的天数。   DATE_ADD(d，INTERVAL expr type) 计算起始日期 d 加上一个时间段后的日期   DATE_FORMAT(d,f) 按表达式 f的要求显示日期 d   DATE_SUB(date, INTERVAL expr unit) 从指定日期减去指定的日期时间间隔。   DAY(d) 返回日期值 d 的日期部分   DAYNAME(d) 返回日期 d 是星期几，如 Monday,Tuesday   DAYOFMONTH(d) 计算日期 d 是本月的第几天   DAYOFWEEK(d) 日期 d 今天是星期几，1 星期日，2 星期一，以此类推   DAYOFYEAR(d) 计算日期 d 是本年的第几天   EXTRACT(type FROM d) 从日期 d 中获取指定的值，type 指定返回的值。type可取值为：,MICROSECOND,SECOND,MINUTE,HOUR,DAY,WEEK,MONTH,QUARTER,YEAR,SECOND_MICROSECOND,MINUTE_MICROSECOND,MINUTE_SECOND,HOUR_MICROSECOND,HOUR_SECOND,HOUR_MINUTE,DAY_MICROSECOND,DAY_SECOND,DAY_MINUTE,DAY_HOUR,YEAR_MONTH   FROM_DAYS(n) 计算从 0000 年 1 月 1 日开始 n 天后的日期   HOUR(t) 返回 t 中的小时值   LAST_DAY(d) 返回给给定日期的那一月份的最后一天   LOCALTIME() 返回当前日期和时间   LOCALTIMESTAMP() 返回当前日期和时间   MAKEDATE(year, day-of-year) 基于给定参数年份 year 和所在年中的天数序号 day-of-year 返回一个日期   MAKETIME(hour, minute, second) 组合时间，参数分别为小时、分钟、秒   MICROSECOND(date) 返回日期参数所对应的毫秒数   MINUTE(t) 返回 t 中的分钟值   MONTHNAME(d) 返回日期当中的月份名称，如 Janyary   MONTH(d) 返回日期d中的月份值，1 到 12   NOW() 返回当前日期和时间。   PERIOD_ADD(period, number) 为 年-月 组合日期添加一个时段   PERIOD_DIFF(period1, period2) 返回两个时段之间的月份差值   QUARTER(d) 返回日期d是第几季节，返回 1 到 4   SECOND(t) 返回 t 中的秒钟值   SEC_TO_TIME(s) 将以秒为单位的时间 s 转换为时分秒的格式   STR_TO_DATE(string, format_mask) 将字符串转变为日期   SUBDATE(d,n) 日期 d 减去 n 天后的日期   SUBTIME(t,n) 时间 t 减去 n 秒的时间   SYSDATE() 返回当前日期和时间   TIME(expression) 提取传入表达式的时间部分   TIME_FORMAT(t,f) 按表达式 f 的要求显示时间 t   TIME_TO_SEC(t) 将时间 t 转换为秒   TIMEDIFF(time1, time2) 计算时间差值   TIMESTAMP(expression, interval) 单个参数时，函数返回日期或日期时间表达式；有2个参数时，将参数加和   TO_DAYS(d) 计算日期 d 距离 0000 年 1 月 1 日的天数   UNIX_TIMESTAMP([date]) 获取对应的时间戳，无参时，返回当前的时间戳。   WEEK(d) 计算日期 d 是本年的第几个星期，范围是 0 到 53   WEEKDAY(d) 日期 d 是星期几，0 表示星期一，1 表示星期二   WEEKOFYEAR(d) 计算日期 d 是本年的第几个星期，范围是 0 到 53   YEAR(d) 返回年份   YEARWEEK(date, mode) 返回年份及第几周（0到53），mode 中 0 表示周天，1表示周一，以此类推    MySQL聚合函数    函数 说明     AVG() 返回指定参数的平均值。   BIT_AND() 返回表达式的所有位按位 AND 结果。   BIT_OR() 返回表达式的所有位按位 OR 结果。   BIT_XOR() 返回表达式的所有位按位 XOR 结果。如果参数为 NULL，返回值也将为 NULL。   COUNT() 返回条数。   COUNT(DISTINCT) 返回指定不同值的条数。   GROUP_CONCAT() 将 GROUP BY 产生的同一个分组中的值连接起来，返回一个字符串结果。   MAX() 返回最大值。   MIN() 返回最小值。   STD() 返回总体标准差。   STDDEV() 返回总体标准差。   STDDEV_POP() 返回总体标准差。   STDDEV_SAMP() 返回样本标准差。   SUM() 返回运算和的结果。   VAR_POP() 返回总体方差。   VAR_SAMP() 返回样本方差。   VARIANCE() 返回总体方差。    MySQL其他函数    函数 说明     BIN(x) 返回 x 的二进制编码   BINARY(s) 将字符串 s 转换为二进制字符串   case when else end 分支选择   CAST(expr AS type [ARRAY]) 转换数据类型   COALESCE(expr1, expr2, &amp;hellip;.</description>
+    </item>
+    
+    <item>
+      <title>python报错ModuleNotFoundError_No_module_named_lzma</title>
+      <link>/ops/python%E6%8A%A5%E9%94%99modulenotfound_no_module_named_lzma/</link>
+      <pubDate>Thu, 23 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/python%E6%8A%A5%E9%94%99modulenotfound_no_module_named_lzma/</guid>
+      <description>执行Python脚本时报错  File &amp;quot;/usr/local/python3.9/lib/python3.9/site-packages/pooch/processors.py&amp;quot;, line 14, in &amp;lt;module&amp;gt; import lzma File &amp;quot;/usr/local/python3.9/lib/python3.9/lzma.py&amp;quot;, line 27, in &amp;lt;module&amp;gt; from _lzma import * ModuleNotFoundError: No module named &#39;_lzma&#39; 修复方法一：backports  安装 backports.lzma  yum install xz-devel -y yum install python-backports-lzma -y pip3.9 install backports.lzma  修改 lzma.py vim /usr/local/python3.9/lib/python3.9/lzma.py  #修改前 from _lzma import * from _lzma import _encode_filter_properties, _decode_filter_properties #修改后 try: from _lzma import * from _lzma import _encode_filter_properties, _decode_filter_properties except ImportError: from backports.</description>
+    </item>
+    
+    <item>
+      <title>MySQL压力测试之MySQLslap</title>
+      <link>/mysql/mysql%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E4%B9%8Bmysqlslap/</link>
+      <pubDate>Mon, 10 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E4%B9%8Bmysqlslap/</guid>
+      <description>使用语法如下： mysqlslap [options] 参数 [options]  &amp;ndash;auto-generate-sql, -a 自动生成测试表和数据，表示用mysqlslap工具自己生成的SQL脚本来测试并发压力。 &amp;ndash;auto-generate-sql-load-type=type 测试语句的类型。代表要测试的环境是读操作还是写操作还是两者混合的。取值包括：read，key，write，update和mixed(默- 认)。 &amp;ndash;auto-generate-sql-add-auto-increment 代表对生成的表自动添加auto_increment列，从5.1.18版本开始支持。 &amp;ndash;number-char-cols=N, -x N 自动生成的测试表中包含多少个字符类型的列，默认1 &amp;ndash;number-int-cols=N, -y N 自动生成的测试表中包含多少个数字类型的列，默认1 &amp;ndash;number-of-queries=N 总的测试查询次数(并发客户数×每客户查询次数) &amp;ndash;query=name,-q 使用自定义脚本执行测试，例如可以调用自定义的一个存储过程或者sql语句来执行测试。 &amp;ndash;create-schema 代表自定义的测试库名称，测试的schema，MySQL中schema也就是database。 &amp;ndash;commint=N 多少条DML后提交一次。 &amp;ndash;compress, -C 如果服务器和客户端支持都压缩，则压缩信息传递。 &amp;ndash;concurrency=N, -c N 表示并发量，也就是模拟多少个客户端同时执行select。可指定多个值，以逗号或者&amp;ndash;delimiter参数指定的值做为分隔符。例如：- &amp;ndash;concurrency=100,200,500。 &amp;ndash;engine=engine_name, -e engine_name 代表要测试的引擎，可以有多个，用分隔符隔开。例如：&amp;ndash;engines=myisam,innodb。 &amp;ndash;iterations=N, -i N 测试执行的迭代次数，代表要在不同并发环境下，各自运行测试多少次。 &amp;ndash;only-print 只打印测试语句而不实际执行。 &amp;ndash;detach=N 执行N条语句后断开重连。 &amp;ndash;debug-info, -T 打印内存和CPU的相关信息。  优点：  可以针对某些特定类型的语句进行测试， 例如：  mysqlslap --no-defaults -h 127.0.0.1 -P 3307 --query=敏感列无索引where查询.sql --create-schema=db_test --concurrency=10,20 mysqlslap --no-defaults -h 127.</description>
+    </item>
+    
+    <item>
+      <title>MySQL5.7实例无限重启故障定位及解决</title>
+      <link>/mysql/mysql5.7%E5%AE%9E%E4%BE%8B%E6%97%A0%E9%99%90%E9%87%8D%E5%90%AF%E6%95%85%E9%9A%9C%E5%AE%9A%E4%BD%8D%E5%8F%8A%E8%A7%A3%E5%86%B3/</link>
+      <pubDate>Fri, 30 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql5.7%E5%AE%9E%E4%BE%8B%E6%97%A0%E9%99%90%E9%87%8D%E5%90%AF%E6%95%85%E9%9A%9C%E5%AE%9A%E4%BD%8D%E5%8F%8A%E8%A7%A3%E5%86%B3/</guid>
+      <description>故障开始时间：2023-06-30 09:18 故障实例：BI大数据业务
+ 环境  系统：CentOS Linux release 7.8.2003 (Core) MySQL: 5.7.28-log MySQL Community Server (GPL) 部署：多实例部署，当前实例bufferPool:8G 集群：3台主机  主：51 备：52 (和51做双主) 从：53 （同步自52）    故障现象  收到报警，该实例频繁报连接异常和恢复 检查发现该MySQL实例频繁重启 1.该实例访问量很小，不是资源不足引起 2.和研发确认该实例相关的业务最近未发生变更 3.DBA内部确认最近该实例没有做配置变更 4.报错时系统日志无异常报错 5.MySQL正常运行时可以提供服务，但1分钟左右就会自动shutdown 6.慢日志里没有异常SQL 7.MySQL错误日志里只有实例启动后自检的warinning 以及  2023-06-30T10:15:35.534553+08:00 0 [Warning] CA certificate ca.pem is self signed. 2023-06-30T10:15:35.546909+08:00 0 [Warning] Recovery from master pos 59075485 and file mysql-bin.***** for channel &#39;&#39;. Previous relay log pos and relay log file had been set to 416, /data/mysql******/relaylognew/relay-bin.</description>
+    </item>
+    
+    <item>
+      <title>MySQL的参数对比方法</title>
+      <link>/mysql/mysql%E7%9A%84%E5%8F%82%E6%95%B0%E5%AF%B9%E6%AF%94%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Mon, 10 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E7%9A%84%E5%8F%82%E6%95%B0%E5%AF%B9%E6%AF%94%E6%96%B9%E6%B3%95/</guid>
+      <description>什么时候需要对比MySQL参数  迁移时，从一个集群到另一个集群 升级时，从一个版本到另一个版本 巡检时，需要关注重点参数是否有人为修改过 其他时候，自己去想  怎么对比 实例少时，比如两个集群的几组实例  可以去每台机器上把重点参数打印出来 手动对比  大量数据库实例的对比，需要用脚本工具实现 第一步，建一个收集表 CREATE TABLE `info_variables` ( `instanceid` int NOT NULL DEFAULT &#39;0&#39;, `var_key` varchar(100) NOT NULL DEFAULT &#39;&#39;, `var_value` varchar(1000) NOT NULL DEFAULT &#39;&#39;, `linkname` varchar(50) NOT NULL DEFAULT &#39;&#39;, clustertype varchar(10) not null default &#39;&#39;, `_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY (`instanceid`,`var_key`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8; 第二步，建一个收集任务  我是在dboop平台上配置的，执行show global variables再 insert 到info_variables表  第三步，清理指标 delete from info_variables where var_key like &#39;wsrep%&#39;; delete from info_variables where var_key like &#39;performance_schema_%&#39;; delete from info_variables where var_key like &#39;ssl_%&#39;; delete from info_variables where var_key like &#39;log%&#39;; delete from info_variables where var_key like &#39;group%&#39;; delete from info_variables where var_key like &#39;validate%&#39;; delete from info_variables where var_key like &#39;gtid%&#39;; delete from info_variables where var_value like &#39;%/%&#39;; delete from info_variables where var_key in ( &#39;datadir &#39;, &#39;hostname &#39;, &#39;innodb_data_home_dir &#39;, &#39;innodb_log_group_home_dir &#39;, &#39;innodb_undo_directory &#39;, &#39;port &#39;, &#39;relay_log &#39;, &#39;relay_log_basename &#39;, &#39;relay_log_index &#39;, &#39;report_port &#39;, &#39;server_id &#39;, &#39;slave_load_tmpdir &#39;, &#39;socket &#39;, &#39;tmpdir &#39; ); 第四步，形成报告  可以按需求出报告或报表 甚至做可视化的参数对比页面  重点关注参数 时间类：  explicit_defaults_for_timestamp time_zone  自增主键：  auto_increment_increment auto_increment_offset innodb_autoextend_increment innodb_autoinc_lock_mode  连接属性：  join_buffer_size max_tmp_tables wait_timeout max_allowed_packet max_connections  字符编码：  character_set_server transaction_isolation collation_connection collation_database collation_server  mode:  sql_mode   以上参数的变化和不一致，可能会在迁移或升级过程中带来严重的后果，需慎重。</description>
+    </item>
+    
+    <item>
+      <title>vscode在mac上用PyQt5制作窗口应用</title>
+      <link>/ops/python%E5%88%B6%E4%BD%9Cmac%E7%A8%8B%E5%BA%8F/</link>
+      <pubDate>Tue, 20 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/python%E5%88%B6%E4%BD%9Cmac%E7%A8%8B%E5%BA%8F/</guid>
+      <description>环境准备  vscode python3 (我用的是python3.9)  安装PyQt5 pip3 install PyQt5 pip3 install PyQt5-tools VSCode中安装和配置pyqt插件 安装了后点设置
+Qtdesigner：这里写入designer.app的完整路径 {这里写python的安装绝对路径}/site-packages/qt5_applications/Qt/bin/Designer.app/Contents/MacOS/Designer
+至此就完成了环境准备
+设计一个窗体程序 建一个项目文件夹，然后右键新建一个form 打开的design窗口，拖动控件，完成窗体设计 保存窗体到 form1.ui 直接cmd+s 保存即可，这里的form1名字可以随意起
+编译form1.ui到py文件 右键选compile
+这里还可以继续调整生成py文件（如果有需要的话）
+新建一个启动文件 main.py import sys from PyQt5.QtWidgets import QMainWindow,QApplication,QWidget from Ui_form1 import Ui_Dialog #导入你写的界面类 class MyMainWindow(QMainWindow,Ui_Dialog): #这里也要记得改 def __init__(self,parent =None): super(MyMainWindow,self).__init__(parent) self.setupUi(self) if __name__ == &amp;quot;__main__&amp;quot;: app = QApplication(sys.argv) myWin = MyMainWindow() myWin.show() sys.exit(app.exec_()) 调试和生成程序 调试代码 用pyton单应用启动调试main.py ，顺利的话会出现刚刚设计好的窗体。 如果有报错的话，解决它
+安装pyinstall  pip3 install pyinstaller 编译和生成一个可执行文件  sudo pyinstaller --windowed --onefile --clean --noconfirm main.</description>
+    </item>
+    
+    <item>
+      <title>Sysbench做压力测试</title>
+      <link>/ops/sysbench%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/</link>
+      <pubDate>Sat, 12 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/sysbench%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/</guid>
+      <description>0.环境 1.安装sysbench  curl -s https://packagecloud.io/install/repositories/akopytov/sysbench/script.rpm.sh | sudo bash yum -y install sysbench 2.执行压测 10.10.0.1 上执行 sysbench /usr/share/sysbench/oltp_read_write.lua --tables=5 --table_size=2000000 --mysql-user=dba --mysql-password******* --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest prepare sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest --tables=5 --table_size=2000000 --threads=300 --time=120 --report-interval=60 run &amp;gt;&amp;gt; /root/sb/proxy300.log sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest --tables=5 --table_size=2000000 --threads=20 --time=120 --report-interval=10 run sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest --tables=5 --table_size=2000000 --threads=20 --time=120 --report-interval=10 run sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.</description>
+    </item>
+    
+    <item>
+      <title>服务器过保日期批量查询python</title>
+      <link>/ops/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E4%BF%9D%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2python%E8%84%9A%E6%9C%AC/</link>
+      <pubDate>Sat, 09 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E4%BF%9D%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2python%E8%84%9A%E6%9C%AC/</guid>
+      <description>浪潮服务器过保查询  import json import urllib import requests # def chenck_hardware_info(sn): url = &#39;https://www.inspur.com/eportal/ui&#39; sn_file = &amp;quot;/tm/sn.text&amp;quot; def request_datatime(sn): params = { &amp;quot;struts.portlet.action&amp;quot;: &amp;quot;/portlet/download-front!serverConfig.action&amp;quot;, &amp;quot;sn&amp;quot;: sn, &amp;quot;src&amp;quot;: &amp;quot;inspur&amp;quot;, &amp;quot;language&amp;quot;: &amp;quot;CN&amp;quot;, &amp;quot;pageId&amp;quot;: &amp;quot;2317460&amp;quot;, &amp;quot;moduleId&amp;quot;: &amp;quot;82efecfc33da48b4a66567cb3dcbe5f3&amp;quot; } headers = { &amp;quot;Referer&amp;quot;: &amp;quot;https://www.inspur.com/eportal/ui?pageId=2317460&amp;quot;, &amp;quot;Cookie&amp;quot;: &amp;quot;JSESSIONID=****; ........(这里写cookie地址)&amp;quot; } r = requests.post(url, headers=headers, params=urllib.parse.urlencode(params)) resp = r.text[1:len(r.text)-1] resp = json.loads(resp) #print(resp[&#39;Date&#39;]) return resp[&#39;warranty1&#39;] def post_info(sn): r1 = request_datatime(sn) url = &amp;quot;http://cmdbbackend.dev.tujia.com/api/inventoryitem/sn/update/life&amp;quot; headers = { &amp;quot;OPS-Token&amp;quot;:&amp;quot;IHmioqYhb0XgBAsEiHeK_guibinw&amp;quot;, &amp;quot;Content-Type&amp;quot;:&amp;quot;application/json&amp;quot; } data = [{ &amp;quot;serialNo&amp;quot;: sn, &amp;quot;contractPeriod&amp;quot;: r1 }] r = requests.</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_grep,sed,awk,find命令</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_grepsedawkfind%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Wed, 07 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_grepsedawkfind%E5%91%BD%E4%BB%A4/</guid>
+      <description>grep ##zcat 是用于查看压缩的文件 ##gzip 套件包含许多可以 “在原地” 处理压缩文件的实用程序。zcat、zgrep、zless、zdiff 等实用程序的作用分别与 cat、grep、less 和 diff 相同，但是它们操作压缩的文件。 zcat web.log.gz | grep aqzt.com | head ###Grep &#39;OR&#39; 或操作 grep &amp;quot;pattern1\|pattern2&amp;quot; file.txt grep -E &amp;quot;pattern1|pattern2&amp;quot; file.txt grep -e pattern1 -e pattern2 file.txt egrep &amp;quot;pattern1|pattern2&amp;quot; file.txt awk &#39;/pattern1|pattern2/&#39; file.txt sed -e &#39;/pattern1/b&#39; -e &#39;/pattern2/b&#39; -e d file.txt #找出文件（filename）中包含123或者包含abc的行 grep -E &#39;123|abc&#39; filename #用egrep同样可以实现 egrep &#39;123|abc&#39; filename #awk 的实现方式 awk &#39;/123|abc/&#39; filename ###Grep &#39;AND&#39; 与操作 grep -E &#39;pattern1.*pattern2&#39; file.txt # in that order grep -E &#39;pattern1.</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_scp和rsync</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_scp%E5%92%8Crsync/</link>
+      <pubDate>Sat, 15 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_scp%E5%92%8Crsync/</guid>
+      <description>scp 从本地复制到远程 在本地服务器上将/data/mysqlbackup目录下所有的文件传输到服务器10.0.0.2的/data/mysqlbackup目录下，命令为：
+scp -r /data/mysqlbackup root@10.0.0.2:/data/mysqlbackup
+从远程复制到本地 在本地服务器上操作，将服务器10.0.0.2上/data/mysqlbackup/目录下所有的文件全部复制到本地的/root目录下，命令为： scp -r root@10.0.0.2:/data/mysqlbackup /root
+rsync  time=$(date &#39;+%Y-%m-%d-%H-test1_binlog.0001&#39;) time1=$(date &#39;+%Y-%m-%d-%H-test2_binlog.0001&#39;) #cp /data/mysqlbackup/log/test1_binlog.0001 /data/mysqlbackup/log/$time #cp /data/mysqlbackup/log/test2_binlog.0001 /data/mysqlbackup/log/$time1 /usr/bin/rsync -av --bwlimit=10000 /data/mysqlbackup/log/test1_binlog.0001 /data/mysqlbackup/log/$time /usr/bin/rsync -av --bwlimit=10000 /data/mysqlbackup/log/test2_binlog.0001 /data/mysqlbackup/log/$time1 cat /dev/null &amp;gt; /data/mysqlbackup/log/test1_binlog.0001 cat /dev/null &amp;gt; /data/mysqlbackup/log/test2_binlog.0001 find /data/mysqlbackup/log/ -ctime +5 -exec rm -f {} \; ##剪切参考，IO速度限制的cp和mv(限速1024 KB/s) ##cp: rsync --bwlimit=1024 {src} {dest} ##mv: rsync --bwlimit=1024 --remove-source-files {src} {dest} ##使用ssh方式rsync，不用服务端，简单方便，SSH需要认证，就不用每次输入密码 #ssh-keygen -t rsa -N &#39;&#39; -f ~/.</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_ssh无密码认证(linux互信)</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_ssh%E6%97%A0%E5%AF%86%E7%A0%81%E8%AE%A4%E8%AF%81/</link>
+      <pubDate>Fri, 14 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_ssh%E6%97%A0%E5%AF%86%E7%A0%81%E8%AE%A4%E8%AF%81/</guid>
+      <description>A机添加B机ssh信任 # B机执行 ssh-keygen -t rsa 一路回车 cat /root/.ssh/idrsa.pub # A机执行 vim /root/.ssh/authorized_keys 将B机的pub信息加入 ssh ssh-keygen -t rsa -N &amp;quot;&amp;quot; -f ~/.ssh/id_rsa -q -b 2048 -C &amp;quot;test@ppabc.cn&amp;quot; ssh无密码认证 RSA ssh-keygen -t rsa cat ~/.ssh/id_rsa.pub &amp;gt;&amp;gt; ~/.ssh/authorized_keys chmod 600 ~/.ssh/authorized_keys ssh无密码认证 DSA ssh-keygen -t dsa -P &#39;&#39; -f ~/.ssh/id_dsa cat ~/.ssh/id_dsa.pub &amp;gt;&amp;gt; ~/.ssh/authorized_keys chmod 600 ~/.ssh/authorized_keys 查看生产的密匙 cat ~/.ssh/id_dsa
+用ssh -v 显示详细的登陆信息查找原因： ssh -v localhost 拷贝本地生产的key到远程服务器端（两种方法）  方法1  cat ~/.ssh/id_dsa.pub | ssh 远程用户名@远程服务器ip &#39;cat - &amp;gt;&amp;gt; ~/.</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_iptables</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_iptables/</link>
+      <pubDate>Fri, 07 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_iptables/</guid>
+      <description>安装和启动 systemctl status iptables yum install iptables-services systemctl start iptables #启动 systemctl status iptables #查看运行状态 systemctl restart iptables.service #重启 systemctl stop iptables.service #停止 systemctl enable iptables.service #设置开机启动 systemctl disable iptables.service #禁止开机启动 常用命令 iptables -h #查询帮助 iptables -L -n #列出（filter表）所有规则 iptables -L -n --line-number #列出（filter表）所有规则，带编号 iptables -L -n -t nat #列出（nat表）所有规则 iptables -F #清除（filter表）中所有规则 iptables -F -t nat #清除（nat表）中所有规则 service iptables save #保存配置（保存配置后必须重启iptables） systemctl restart iptables.service #重启 查看： iptables -L -n --line-number iptables -t nat -A PREROUTING -p tcp -d 127.</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_date和time</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_time/</link>
+      <pubDate>Thu, 06 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_time/</guid>
+      <description>日期加减  ####昨天日期（1天以前） date -d last-day +%Y-%m-%d date -d &amp;quot;1 days ago&amp;quot; +%Y-%m-%d date -d &#39;-1 days&#39; +%Y-%m-%d ####下周一日期 date -d &#39;next monday&#39; +%Y-%m-%d ####明天日期 date -d next-day +%Y-%m-%d date -d &#39;1 days&#39; +%Y-%m-%d ####前天 （2天以前） ‘n days ago&#39; 表示n天前的那一天 date -d &amp;quot;2 days ago&amp;quot; +%Y-%m-%d ####上个月的今天 date -d last-month +%Y-%m-%d ####下个月的今天 date -d next-month +%Y-%m-%d ###当前时间 date +%Y-%m-%d_%H_%M_%S ###注意 : 当你不希望出现无意义的 0 时(比如说 1999/03/07)，则可以在标记中插入 – 符号 ###比如说 date +%-H:%-M:%-S 会把时分秒中无意义的 0 给去掉，像是原本的 08:09:04 会变为 8:9:4。 date +%Y%-m%-d ##201766 日期方面 : %a : 星期几 (Sun.</description>
+    </item>
+    
+    <item>
+      <title>常用脚本_python</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_python/</link>
+      <pubDate>Wed, 05 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_python/</guid>
+      <description>python安装 yum install -y gcc zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel yum install -y libffi-devel cd /opt/ wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tar.xz tar -xvJf Python-3.7.0.tar.xz mkdir -p /usr/local/python3 cd Python-3.7.4 ./configure --prefix=/usr/local/python3 make &amp;amp;&amp;amp; make install ln -s /usr/local/python3/bin/python3 /usr/local/bin/python3 ln -s /usr/local/python3/bin/pip3 /usr/local/bin/pip3 python3 -V pip3 -V </description>
+    </item>
+    
+    <item>
+      <title>常用脚本_linux性能</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E6%80%A7%E8%83%BD%E6%9F%A5%E7%9C%8B/</link>
+      <pubDate>Sat, 01 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E6%80%A7%E8%83%BD%E6%9F%A5%E7%9C%8B/</guid>
+      <description>System_info wget https://www.dboop.com/download/System_info.sh &amp;amp;&amp;amp; sh System_info.sh cpu wget https://www.dboop.com/download/cpu.sh &amp;amp;&amp;amp; sh cpu.sh disk wget https://www.dboop.com/download/disk.sh &amp;amp;&amp;amp; sh disk.sh iostat  wget https://www.dboop.com/download/iostat.sh &amp;amp;&amp;amp; sh iostat.sh loadavg  wget https://www.dboop.com/download/loadavg.sh &amp;amp;&amp;amp; sh loadavg.sh memory wget https://www.dboop.com/download/memory.sh &amp;amp;&amp;amp; sh memory.sh show_disks  wget https://www.dboop.com/download/show_disks.sh &amp;amp;&amp;amp; sh show_disks.sh swap  wget https://www.dboop.com/download/swap.sh &amp;amp;&amp;amp; sh swap.sh vmstat wget https://www.dboop.com/download/vmstat.sh &amp;amp;&amp;amp; sh vmstat.sh 内存 # 查内存占用情况 ps -e -o &#39;pid,comm,args,pcpu,rsz,vsz,stime,user,uid&#39; # 其中rsz是是实际内存 ps -e -o &#39;pid,comm,args,pcpu,rsz,vsz,stime,user,uid&#39; | grep java | sort -nrk5 # 其中rsz为实际内存，上例实现按内存排序，由大到小 # 查内存占用情况 ps -aux | sort -k4nr | head -n 10 # 使用指令查看占用的物理内存， ps aux|awk &#39;{sum+=$6} END {print sum/1024}&#39; # 使用指令，核实进程的最大使用内存量 ps -eo pid,rss,pmem,pcpu,vsz,args --sort=rss # 查内存命令 ps p 916 -L -o pcpu,pmem,pid,tid,time,tname,cmd # 排查高CPU占用介绍的PS命令 ps -mp 9004 -o THREAD,tid,time,rss,size,%mem # 分析具体的对象数目和占用内存大小 jmap -histo:live [pid] # 利用MAT工具分析是否存在内存泄漏等等。 jmap -dump:live,format=b,file=xxx.</description>
+    </item>
+    
+    <item>
+      <title>MySQL常用脚本_AlterTable</title>
+      <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_altertable/</link>
+      <pubDate>Mon, 12 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_altertable/</guid>
+      <description>速记  当修改表结构的时候有三种选项: ALTER TABLE t1 ALTER COLUMN ... ALTER TABLE t1 CHANGE COLUMN ... ALTER TABLE t1 MODIFY COLUMN ... 容易记混 一般我们这样记 Change column 无所不能 Modify column 不能给列改名,其他都行 Alter Column 最弱,改点默认值什么的(但是他也有好处,非常快和安全)  增  增加列(单列)  ALTER TABLE t1 ADD col-name col-type comment &#39;xxx&#39;;  增加列(多列)  ALTER TABLE t1 ADD col-name col-type comment &#39;xxx&#39;, ADD col-name col-type(col-length) comment &#39;xxx&#39;;  增加表字段并指明字段放置为第一列  ALTER TABLE t1 add col-name col-type COMMENT &#39;sss&#39; FIRST;  增加表字段并指明字段放置为特定列后面  ALTER TABLE t1 add col-name col-type after col-name-1; 删  删除列  ALTER TABLE t1 DROP col-name;  删除表中主键  Alter TABLE t1】 drop primary key 改  修改字段类型  - 使用MODIFY修改字段类型 ALTER TABLE t1 modify column col-name col-type; - 使用CHANGE修改字段类型 ALTER TABLE t1 change col-name col-name col-type;  修改列名  使用CHANGE修改字段名称 ALTER TABLE t1 change old-col-name new-col-name col-type;  修改表名  - 重命名表1 ALTER TABLE t1 RENAME 【表新名字】 - 重命名表2 RENAME TABLE t1 to new-table-name;  修改默认值  - 为字段设置NULL和DEFAULT ALTER TABLE t1 modify col-name col-type not null default 100; - 修改字段的默认值 ALTER TABLE t1 alter col-name set default 10000; -字段删除默认值 ALTER TABLE t1 alter col-name drop default; </description>
+    </item>
+    
+    <item>
+      <title>MySQL常用脚本_binlog解析和回滚</title>
+      <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_binlog/</link>
+      <pubDate>Sat, 10 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_binlog/</guid>
+      <description>解析binlog 方法1:mysqlbinlog mysqlbinlog --no-defaults --base64-output=decode-rows -vv --database=dboop --start-datetime=&#39;2020-10-11 00:00:00&#39; --stop-datetime=&#39;2020-10-11 15:00:00&#39; mysql-bin.000075 &amp;gt;75.sql 常用参数 database：只列出该数据库下的binlog数据，但无法过滤由触发器执行的SQL。 base64-output=decode-rows -vv：显示具体 SQL 语句。 skip-gtids=true：忽略 GTID 显示。  输出结果  # at 20001 #201011 12:04:09 server id 1 end_log_pos 20094 CRC32 0x2b305ac Query thread_id=53 exec_time=0 error_code=0 SET TIMESTAMP=1651011012/*!*/; BEGIN /*!*/; 上面输出包括信息：
+ position: 位于文件中的位置，即第一行的（# at 20001）,说明该事件记录从文件第20001个字节开始 timestamp: 事件发生的时间戳，即第二行的（#201011 12:04:09） server id: 服务器标识（1） end_log_pos 表示下一个事件开始的位置（即当前事件的结束位置+1） thread_id: 执行该事件的线程id （thread_id=53） exec_time: 事件执行的花费时间 error_code: 错误码，0意味着没有发生错误 type:事件类型Query  方法2:my2sql wget https://www.</description>
+    </item>
+    
+    <item>
+      <title>MySQL常用脚本_故障定位</title>
+      <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E6%95%85%E9%9A%9C%E5%AE%9A%E4%BD%8D/</link>
+      <pubDate>Mon, 05 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E6%95%85%E9%9A%9C%E5%AE%9A%E4%BD%8D/</guid>
+      <description>当前正在运行的SQL select id,user,db,info,Command,Time,State from information_schema.processlist where info is not null and user not in (&#39;dba&#39;,&#39;repl&#39;) order by time desc limit 50; -- 杀连接 select concat(&#39;kill &#39;,id,&#39;;&#39;) as ids from information_schema.processlist where time&amp;gt;50 and info is not null and user like &#39;%&#39; and db like &#39;%&#39; order by time desc ; -- 杀连接shell mysqlw -h 127.0.0.1 -P 3306 -e &amp;quot;select concat(&#39;kill &#39;,id,&#39;;&#39;) as ids from information_schema.processlist where db like &#39;dboop%&#39; and user like &#39;%&#39; &amp;quot; &amp;gt;&amp;gt;3306kill.</description>
+    </item>
+    
+    <item>
+      <title>MySQL常用脚本_mysqldump</title>
+      <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_mysqldump/</link>
+      <pubDate>Sun, 04 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_mysqldump/</guid>
+      <description>如果用loginpath的可以用
+  mysqldump --login-path=dba 代替 mysqldump -uroot -p123456 常用命令 备份整个实例(dump全实例) mysqldump -uroot -p123456 -h127.0.0.1 -P3306 --single-transaction --column-statistics=0 --skip_add_locks --skip-lock-tables --master-data=2 -A | gzip &amp;gt; /data/mysqlbackup/dboop_dump`date &#39;+%m-%d-%Y&#39;`.sql.gz 备份实例中的用户库(用于实例迁移或升级) mysql -uroot -p123456 -h127.0.0.1 -P3306 -e &amp;quot;show databases&amp;quot; |grep -Ev &amp;quot;Database|information_schema|mysql|performance_schema&amp;quot; | xargs mysqldump -uroot -p123456 -h127.0.0.1 -P3306 --single-transaction --column-statistics=0 --skip_add_locks --skip-lock-tables --master-data=2 --databases &amp;gt; /data/mysqlbackup/dboop_dump0401.sql -- 此时mysql.user用户也没有迁移过来,如果需要迁移用户,参考: https://www.dboop.com/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E7%94%A8%E6%88%B7%E7%9B%B8%E5%85%B3/ 导出db1、db2两个数据库的所有数据 mysqldump -uroot -p123456 --set-gtid-purged=OFF --skip_add_locks --skip-lock-tables --databases db1 db2 &amp;gt; /data/mysqlbackup/dboop_dump0401.sql 导出db1中的a1、a2表 mysqldump -uroot -p123456 --set-gtid-purged=OFF --skip_add_locks --skip-lock-tables --databases db1 --tables a1 a2 &amp;gt; /data/mysqlbackup/dboop_dump0401.</description>
+    </item>
+    
+    <item>
+      <title>MySQL常用脚本_用户相关</title>
+      <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E7%94%A8%E6%88%B7%E7%9B%B8%E5%85%B3/</link>
+      <pubDate>Fri, 02 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E7%94%A8%E6%88%B7%E7%9B%B8%E5%85%B3/</guid>
+      <description>生成随机密码 select substring(md5(rand()), 1, 15); select left(replace(uuid(), &#39;-&#39;, &#39;.&#39;),15); 创建用户及赋权 MySQL5.6及以前 grant select on 库名.* to `用户名`@`主机名` identified by &#39;密码&#39;; MySQL5.7+ create user `用户名`@`主机名` identified by &#39;密码&#39;; grant select on 库名.* to `用户名`@`主机名`; MySQL8.0 create user `用户名`@`主机名`identified with mysql_native_password by &#39;密码&#39;; GRANT select on 库名.* TO `用户名`@`主机名`; 常用语句 -- 创建一个管理员帐号 create user &#39;dba&#39;@&#39;%&#39; IDENTIFIED BY &#39;********&#39;; GRANT ALL PRIVILEGES ON *.* TO &#39;dba&#39;@&#39;%&#39; WITH GRANT OPTION; -- 创建一个复制帐号 create user repl@&#39;%&#39; identified with mysql_native_password by &#39;********&#39;; GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.</description>
+    </item>
+    
+    <item>
+      <title>MySQL常用脚本_免密登录login-path设置</title>
+      <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95loginpath/</link>
+      <pubDate>Thu, 01 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95loginpath/</guid>
+      <description>保存账号信息 mysql_config_editor set --login-path=dba --user=root --host=127.0.0.1 --password 其中可配置项
+-h,–host=name 添加host到登陆文件中 -G,–login-path=name 在登录文件中为login path添加名字（默认为client） -p,–password 在登陆文件中添加密码（该密码会被mysql_config_editor自动加密） -u,–user 添加用户名到登陆文件中 -S,–socket=name 添加sock文件路径到登陆文件中 -P,–port=name 添加登陆端口到登陆文件中 查看配置 mysql_config_editor print -all 删除配置
+mysql_config_editor remove --login-path=dba 登陆数据库
+mysql --login-path=dba </description>
+    </item>
+    
+  </channel>
+</rss>

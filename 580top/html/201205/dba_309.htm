@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>oracle存储过程的源代码</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="存储过程&nbsp;包含三部分：&nbsp;声明，执行部分，异常。&nbsp;可以有无参数程序和带参数存储过程。&nbsp;无参程序语法&nbsp;1&nbsp;create&nbsp;or&nbsp;replace&nbsp;procedure&nbsp;noparpro2&nbsp;as&nbsp;&nbsp;&nbsp;;3&nbsp;begin4&nbsp;&nbsp;;5&nbsp;exoracle存储过程的源代码" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a href="../Oracle/l_7_1.htm" class="hover"　title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../Oraclezhishi/l_8_1.htm" title="Oracle基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../Oracleha/l_9_1.htm" title="Oracle高可用性和HA">高可用性和HA</a>|</li><li><a  href="../Oracleyouhua/l_10_1.htm" title="Oracle性能与优化">性能与优化</a>|</li><li><a  href="../Oracleguzhang/l_11_1.htm" title="Oracle故障与解决">故障与解决</a>|</li><li><a  href="../Oraclebi/l_12_1.htm" title="Oracle商业应用">Oracle商业应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../Oracle/l_7_1.htm">Oracle</a>&nbsp;&gt;&nbsp;<a href="../Oraclezhishi/l_8_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>oracle存储过程的源代码</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   存储过程&nbsp;包含三部分：&nbsp;声明，执行部分，异常。&nbsp;可以有无参数程序和带参数存储过程。&nbsp;无参程序语法&nbsp;1&nbsp;create&nbsp;or&nbsp;replace&nbsp;procedure&nbsp;NoParPro2&nbsp;as&nbsp;&nbsp;&nbsp;;3&nbsp;begin4&nbsp;&nbsp;;5&nbsp;exception6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;7&nbsp;end;8存储过程 包含三部分： 声明，执行部分，异常。&nbsp;可以有无参数程序和带参数存储过程。&nbsp;无参程序语法&nbsp;1 create or replace procedure NoParPro2 as&nbsp;&nbsp; ;3 begin4&nbsp; ;5 exception6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;7 end;8<br />&nbsp;&nbsp; 带参存储过程实例&nbsp;&nbsp;1 create or replace procedure queryempname(sfindno emp.empno%type) as&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sName emp.ename%type;&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sjob emp.job%type;&nbsp;4 begin&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ....&nbsp;7 exception&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ....14 end;15<br />&nbsp;&nbsp; 带参数存储过程含赋值方式&nbsp;&nbsp;1 create or replace procedure runbyparmeters&nbsp; (isal in emp.sal%type,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sname out varchar,sjob in out varchar)&nbsp;2&nbsp; as icount number;&nbsp;3&nbsp; begin&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; select count(*) into icount from emp where sal&gt;isal and job=sjob;&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if icount=1 then&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ....&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ....12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end if;13&nbsp; exception14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; when too_many_rows then15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DBMS_OUTPUT.PUT_LINE('返回值多于1行');16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; when others then17&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DBMS_OUTPUT.PUT_LINE('在RUNBYPARMETERS过程中出错！');18&nbsp; end;19<br />&nbsp; 过程调用&nbsp; 方式一&nbsp;1 declare&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; realsal emp.sal%type;&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; realname varchar(40);&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; realjob varchar(40);&nbsp;5&nbsp; begin&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; realsal:=1100;&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; realname:='';&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; realjob:='CLERK';&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; runbyparmeters(realsal,realname,realjob);&nbsp;&nbsp;&nbsp;&nbsp; －－必须按顺序10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DBMS_OUTPUT.PUT_LINE(REALNAME||'&nbsp;&nbsp; '||REALJOB);11&nbsp; END;12<br />&nbsp; 方式二&nbsp;1 declare&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; realsal emp.sal%type;&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; realname varchar(40);&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; realjob varchar(40);&nbsp;5 begin&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; realsal:=1100;&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; realname:='';&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; realjob:='CLERK';&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; runbyparmeters(sname=&gt;realname,isal=&gt;realsal,sjob=&gt;realjob);&nbsp; －－指定值对应变量顺序可变10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DBMS_OUTPUT.PUT_LINE(REALNAME||'&nbsp;&nbsp; '||REALJOB);11 END;12<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

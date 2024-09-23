@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>微软mcitp认证70-450考试：列几个样题和答案解析11-15 </title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="questio n 11you are a professio nal level sql sever 2008 database administrator in an internatio nal corporatio n named wiikigo. you are experienced in managing databases in an enterprise-level organi微软mcitp认证70-450考试：列几个样题和答案解析11-15 " />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a href="../kaoshi/l_34_1.htm" class="hover"　title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../microsoft/l_35_1.htm" title="微软认证"><span class="zc_666">微软认证</span></a>|</li><li><a  href="../OracleCTP/l_36_1.htm" title="Oracle认证">Oracle认证</a>|</li><li><a  href="../ruankao/l_37_1.htm" title="软考数据库工程师">软考数据库工程师</a>|</li><li><a  href="../siji/l_38_1.htm" title="计算机四级数据库工程师">计算机四级数据库工程师</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../kaoshi/l_34_1.htm">DBA考试</a>&nbsp;&gt;&nbsp;<a href="../microsoft/l_35_1.htm">微软认证</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>微软mcitp认证70-450考试：列几个样题和答案解析11-15 </h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   <p>QUESTIo n 11</p>
+<p>You are a professio nal level SQL Sever 2008 Database Administrator in an internatio nal corporatio n named Wiikigo. </p>
+<p>You are experienced in managing databases in an enterprise-level organizatio n, optimizing and sustaining the database life cycle. In the company, your job is to implement solutio ns o n security, troubleshooting, deployment and optimizatio n. A SQL Server 2008 infrastructure is managed by you. </p>
+<p>A maintenance strategy should be designed for a missio n-critical database, and a large table named Orders is co ntained by the database. </p>
+<p>Index maintenance operatio ns are co ntained in the design plan. When you design the strategy, the facts listed below should be taken into co nsideratio n. </p>
+<p>First, the users co ntinuously access to the Orders table in the database.<br />
+Seco ndly, a column of the xml data type is co ntained by Orders table. <br />
+Thirdly, the new rows are regularly added to the Orders table. <br />
+Fourthly, the average fragmentatio n for the clustered index of the Orders table is no more than 2 percent. </p>
+<p>A strategy should be designed to have the performance of the queries o n the table optimized. </p>
+<p>Which actio n will you perform?</p>
+<p>A.&nbsp;The clustered index of the Orders table should be dropped.<br />
+B.&nbsp;The clustered index of the Orders table offline should be rebuilt o nce a mo nth.<br />
+C.&nbsp;The clustered index of the Orders table should be excluded from scheduled reorganizing or rebuilding operatio ns.<br />
+D.&nbsp;The clustered index of the Orders table should be reorganized by reducing the fill factor.</p>
+<p>&nbsp;<br />
+QUESTIo n 11</p>
+<p>Answer: C</p>
+<p>Explanatio n/Reference:</p>
+<p>As the users will co ntinously access the database and there is o ne cluster index, the cluster index could not be unavaillable because the leaf pages of the clustered index co ntains the table data.<br />
+Furthermore, the cluster index has never o ne fragmentatio n of more than 2%, this means it doesn't need to be reordered.</p>
+<p>With this, you can be sure that answer A,B and D are wro ng.</p>
+<p><br />
+易混淆型，题目要性能，所以重做把集群索引排除。</p>
+<p><br />
+&nbsp;<br />
+QUESTIo n 12</p>
+<p>You are a professio nal level SQL Sever 2008 Database Administrator in an internatio nal corporatio n named Wiikigo. </p>
+<p>You are experienced in managing databases in an enterprise-level organizatio n, optimizing and sustaining the database life cycle. In the company, your job is to implement solutio ns o n security, troubleshooting, deployment and optimizatio n. A SQL Server 2008 instance is managed by you. </p>
+<p>The security requirements should be designed for a new database applicatio n. </p>
+<p>A code segment is utilized by the applicatio n, and the code segment includes the following compo nents:<br />
+A method that the registry is accessed o n the SQL Server, a method that the file system is accessed o n a network file server, and a class definitio n that public static fields are utilized. <br />
+SQL CLR integratio n is utilized by the code segment, and the code segment is implemented as a single assembly. </p>
+<p>Since you are the technical support, you are required to make sure that the applicatio n should be successfully deployed to the instance. </p>
+<p>Which actio n will you perform?</p>
+<p>A.&nbsp;The SAFE code access security should be utilized for the assembly.<br />
+B.&nbsp;All public static fields should be replaced with public fields.<br />
+C.&nbsp;All public static fields should be utilized with public static read-o nly fields. And then the assembly shouldbe registered by utilizing the regasm.exe utility before deployment.<br />
+D.&nbsp;All public static fields should be replaced with public static read-o nly fields. And then the EXTERNAL_ACCESS code access security should be utilized for the assembly.</p>
+<p>&nbsp;<br />
+QUESTIo n 12</p>
+<p>Answer: D</p>
+<p>Explanatio n/Reference:</p>
+<p>Creates a managed applicatio n module that co ntains class metadata and managed code as an object in an instance of SQL Server. By referencing this module, commo n language runtime (CLR) functio ns, stored procedures, triggers, user-defined aggregates, and user-defined types can be created in the database. </p>
+<p>PERMISSIo n_SET { SAFE | EXTERNAL_ACCESS | UNSAFE } <br />
+Specifies a set of code access permissio ns that are granted to the assembly when it is accessed by SQL Server. If not specified, SAFE is applied as the default.</p>
+<p>We recommend using SAFE. SAFE is the most restrictive permissio n set. Code executed by an assembly with SAFE permissio ns cannot access external system resources such as files, the network, enviro nment variables, or the registry. </p>
+<p>EXTERNAL_ACCESS enables assemblies to access certain external system resources such as files, networks, enviro nmental variables, and the registry.</p>
+<p><br />
+独特型，记外部存取。</p>
+<p><br />
+&nbsp;<br />
+QUESTIo n 13</p>
+<p>You are a professio nal level SQL Sever 2008 Database Administrator in an internatio nal corporatio n named Wiikigo. You are experienced in managing databases in an enterprise-level organizatio n, <br />
+optimizing and sustaining the database life cycle. </p>
+<p>In the company, your job is to implement solutio ns o n security, troubleshooting, deployment and optimizatio n. A SQL Server 2008 instance is managed by you. The security requirements should be designed for a new database applicatio n, and the applicatio n will be deployed to the instance. </p>
+<p>A table is co nsisted by the new database, and the table is created by utilizing the following code segment: </p>
+<p>CREATE TABLE CK_DISCOUNTS <br />
+( <br />
+ProductID INT NOT NULL IDENTITY(1,1) <br />
+Discount VARBINARY (MAX) FILESTREAM <br />
+) </p>
+<p>Since you are the technical support, you should utilize the maximum secure method to protect the Bo nusPlan column from the access of unauthorized users. </p>
+<p>Which actio n will you perform to finish the task?</p>
+<p>A.&nbsp;To finish the task, Transparent data encryptio n should be utilized.<br />
+B.&nbsp;To finish the task, the NTFS file system security should be utilized and the access of the database files should be limited to the SQL Server 2008 Service account.<br />
+C.&nbsp;To finish the task, the Trustworthy optio n for the database should be utilized.<br />
+D.&nbsp;To finish the task, the Advanced Encryptio n Standard encryptio n should be utilized o n all columns in the database.</p>
+<p>&nbsp;<br />
+QUESTIo n 13</p>
+<p>Answer: B</p>
+<p><br />
+Explanatio n/Reference:</p>
+<p>The column Bo nusPln is of type FILESTREAM this means that the data of this column is saved outside of the database o n the filesystem. So, you have to protect those files by the NTFS security.</p>
+<p><br />
+&nbsp;<br />
+QUESTIo n 14</p>
+<p>You are a professio nal level SQL Sever 2008 Database Administrator in an internatio nal corporatio n named Wiikigo. </p>
+<p>You are experienced in managing databases in an enterprise-level organizatio n, optimizing and sustaining the database life cycle. In the company, your job is to implement solutio ns o n security, troubleshooting, deployment and optimizatio n. </p>
+<p>A SQL Server 2008 infrastructure is managed by you. A database is included by an instance. And a large table named OrderDetails is included by the database. </p>
+<p>o nly DML statements o n the last three mo nths data are executed by the applicatio n queries. Administrative audits are managed mo nthly o n data which is lo nger than four mo nths. </p>
+<p>The performance problems listed below are found by you in the database. <br />
+&nbsp;The performance of the applicatio n queries against the OrderDetail table is poor. <br />
+&nbsp;It takes a lo ng time to perform the maintenance tasks against the database, index defragmentatio n is co ntained. </p>
+<p>The performance problems should be solved with o n impact o n the server performance. Which actio n will you perform?</p>
+<p>A.&nbsp;A database snapshot should be created for the OrderDetails table every four mo nths. And then, the queries should be changed to utilize the present snapshot.<br />
+B.&nbsp;An additio nal table named OrderDetailsHistory should be created for data older than four mo nths. </p>
+<p>And then, the OrderDetails and OrderDetailsHistory tables should be partitio ned in two parts by utilizing the OrderDate column. </p>
+<p>At last, a SQL Server Agent job that runs every mo nth should be created and the ALTER TABLE...SWITCH Transact-SQL statement should be utilized to remove data that is lo nger than four mo nths to the OrderDetailsHistory table.<br />
+C.&nbsp;An additio nal table named OrderDetailsHistory should be created for data lo nger than four mo nths. <br />
+And then, a SQL Server Agent job that runs the following Transact-SQL statement every mo nth should be created. <br />
+INSERT INTO OrderDetailsHistory SELECT * FROM OrderDetails WHERE DATEDIFF(m,OrderDate,GETDATE())&gt;4<br />
+D.&nbsp;An additio nal table named OrderDetailsHistory should be created for data older than four mo nths. <br />
+And then, the following Transact-SQL statement should be utilized. <br />
+CREATE TRIGGER trgMoveData o n OrderDetails<br />
+AFTER INSERT <br />
+AS INSERT INTO OrderDetailsHistory SELECT * FROM<br />
+OrderDetailsWHERE DATEDIFF(m,OrderDate,GETDATE())&gt;4</p>
+<p>&nbsp;<br />
+QUESTIo n 14</p>
+<p>Answer: B</p>
+<p><br />
+Explanatio n/Reference:<br />
+The easiest way to deal with history tables is to use partitio nned tables and the switch command should be use to attach the old data to the history table.</p>
+<p><br />
+&nbsp;<br />
+QUESTIo n 15</p>
+<p>You are a professio nal level SQL Sever 2008 Database Administrator in an internatio nal corporatio n named Wiikigo. You are experienced in managing databases in an enterprise-level organizatio n, <br />
+optimizing and sustaining the database life cycle. </p>
+<p>In the company, your job is to implement solutio ns o n security, troubleshooting, deployment and optimizatio n. SQL Server 2008 instances at five sites are managed by you. </p>
+<p>A missio n-critical database is shared by the five sites. According to the business requirements, the users at each site should be enabled to access and change data o n all sites with minimal latency. </p>
+<p>In additio n, data loss should be minimized if a server fails. </p>
+<p>A high-availability solutio n should be designed, and the business requirements should be satisfied. </p>
+<p>Which actio n should be included in your solutio n?</p>
+<p>A.&nbsp;Failover clustering should be included.<br />
+B.&nbsp;Asynchro nous database mirroring without a witness server should be included.<br />
+C.&nbsp;Peer-to-Peer replicatio n should be included.<br />
+D.&nbsp;Log shipping to servers at two of the sites to offer read-o nly replicatio ns of data should be included.</p>
+<p>&nbsp;<br />
+QUESTIo n 15</p>
+<p>Answer: C</p>
+<p><br />
+Explanatio n/Reference:<br />
+As required from the business, the o nly way to deal with this request is the Peer-to-Peer replicatio n as by default the databases are synchro nized co ntinuously o n each site.</p>
+<p><br />
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+	
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

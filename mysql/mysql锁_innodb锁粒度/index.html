@@ -1,0 +1,465 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL的锁:innodb锁粒度详解| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL的锁:innodb锁粒度详解</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#锁定义">锁定义</a>
+      <ul>
+        <li><a href="#lock_rec_not_gap锁">lock_rec_not_gap锁</a></li>
+        <li><a href="#lock_gap锁">lock_gap锁</a></li>
+        <li><a href="#lock_ordinary锁">lock_ordinary锁</a></li>
+        <li><a href="#lock_insert_intention锁">lock_insert_intention	锁</a></li>
+      </ul>
+    </li>
+    <li><a href="#原则和优化">原则和优化</a></li>
+    <li><a href="#测试环境准备">测试环境准备</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#例子1update不存在的数据有二级索引">例子1:update不存在的数据（有二级索引）</a>
+      <ul>
+        <li><a href="#事务1">事务1:</a></li>
+        <li><a href="#锁范围">锁范围</a></li>
+        <li><a href="#事务2">事务2:</a></li>
+      </ul>
+    </li>
+    <li><a href="#例子2update数据命中二级索引">例子2:update数据（命中二级索引）</a>
+      <ul>
+        <li><a href="#事务1-1">事务1:</a></li>
+        <li><a href="#锁范围-1">锁范围</a></li>
+        <li><a href="#事务2-1">事务2:</a></li>
+      </ul>
+    </li>
+    <li><a href="#例子3update数据二级索引范围">例子3:update数据（二级索引范围）</a>
+      <ul>
+        <li><a href="#事务1-2">事务1:</a></li>
+        <li><a href="#锁范围-2">锁范围</a></li>
+        <li><a href="#事务2-2">事务2:</a></li>
+      </ul>
+    </li>
+    <li><a href="#例子3update数据无索引">例子3:update数据（无索引）</a>
+      <ul>
+        <li><a href="#事务1-3">事务1:</a></li>
+        <li><a href="#锁范围-3">锁范围</a></li>
+        <li><a href="#事务2-3">事务2:</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="锁定义">锁定义</h2>
+<h3 id="lock_rec_not_gap锁">lock_rec_not_gap锁</h3>
+<blockquote>
+<p>Record Locks</p>
+<ul>
+<li>A record lock is a lock on an index record. For example, SELECT c1 FROM t WHERE c1 = 10 FOR UPDATE; prevents any other transaction from inserting, updating, or deleting rows where the value of t.c1 is 10.</li>
+<li>Record locks always lock index records, even if a table is defined with no indexes. For such cases, InnoDB creates a hidden clustered index and uses this index for record locking. See Section 15.6.2.1, “Clustered and Secondary Indexes”.</li>
+</ul>
+</blockquote>
+<ul>
+<li>中文名：记录锁，行锁</li>
+<li>又名：record lock</li>
+<li>锁定范围：锁定记录，但不锁gap。</li>
+<li>详细说明：仅锁住记录本身，不锁前面的gap</li>
+<li>常见于：
+<ul>
+<li>RC下的行锁大多数都是这个锁类型</li>
+<li>RR下的主键、唯一索引等值条件下加锁</li>
+<li>RR下的非唯一索引加锁时（lock_ordinary），也会同时回溯到主键上加lock_rec_not_gap锁。</li>
+<li>但唯一性约束检测时，即使是在RC下，总是要先加lock_s或者lock_ordinary锁。</li>
+</ul>
+</li>
+</ul>
+<h3 id="lock_gap锁">lock_gap锁</h3>
+<blockquote>
+<p>Gap Locks</p>
+<ul>
+<li>A gap lock is a lock on a gap between index records, or a lock on the gap before the first or after the last index record. For example, SELECT c1 FROM t WHERE c1 BETWEEN 10 and 20 FOR UPDATE; prevents other transactions from inserting a value of 15 into column t.c1, whether or not there was already any such value in the column, because the gaps between all existing values in the range are locked.</li>
+<li>A gap might span a single index value, multiple index values, or even be empty.</li>
+<li>
+<blockquote>
+<ul>
+<li>Gap locks are part of the tradeoff between performance and concurrency, and are used in some transaction isolation levels and not others.</li>
+</ul>
+</blockquote>
+</li>
+<li>Gap locking is not needed for statements that lock rows using a unique index to search for a unique row. (This does not include the case that the search condition includes only some columns of a multiple-column unique index; in that case, gap locking does occur.) For example, if the id column has a unique index, the following statement uses only an index-record lock for the row having id value 100 and it does not matter whether other sessions insert rows in the preceding gap:<code>SELECT * FROM child WHERE id = 100;</code>&gt; - If id is not indexed or has a nonunique index, the statement does lock the preceding gap.</li>
+<li>It is also worth noting here that conflicting locks can be held on a gap by different transactions. For example, transaction A can hold a shared gap lock (gap S-lock) on a gap while transaction B holds an exclusive gap lock (gap X-lock) on the same gap. The reason conflicting gap locks are allowed is that if a record is purged from an index, the gap locks held on the record by different transactions must be merged.</li>
+<li>Gap locks in InnoDB are “purely inhibitive”, which means that their only purpose is to prevent other transactions from inserting to the gap. Gap locks can co-exist. A gap lock taken by one transaction does not prevent another transaction from taking a gap lock on the same gap. There is no difference between shared and exclusive gap locks. They do not conflict with each other, and they perform the same function.</li>
+<li>Gap locking can be disabled explicitly. This occurs if you change the transaction isolation level to READ COMMITTED. In this case, gap locking is disabled for searches and index scans and is used only for foreign-key constraint checking and duplicate-key checking.</li>
+<li>There are also other effects of using the READ COMMITTED isolation level. Record locks for nonmatching rows are released after MySQL has evaluated the WHERE condition. For UPDATE statements, InnoDB does a “semi-consistent” read, such that it returns the latest committed version to MySQL so that MySQL can determine whether the row matches the WHERE condition of the UPDATE.</li>
+</ul>
+</blockquote>
+<ul>
+<li>中文名：间隙锁</li>
+<li>又名：gap lock</li>
+<li>锁定范围：锁定一个范围，但不包含记录本身。</li>
+<li>详细说明：只锁住索引记录之间、或第一条索引记录（INFIMUM）之前、又或最后一条索引记录（SUPEREMUM）之后的范围，并不锁住记录本身</li>
+<li>常见于：RR级别下，对非唯一索引记录当前读时，除了对命中的记录加lock_ordinary锁，还会对该记录之后的gap加gap lock，这是为了保证可重复读的需要，避免其他事务插入数据造成幻读。 innodb有两条虚拟记录，最小记录和最大记录，用来构建B+tree。 如果条件是where &lt;= n, 这时会从n开始到最小值（虚拟最小记录）之间范围加锁 如果条件是where &gt;= n, 这时会从n开始到最大值（虚拟最小记录）之间范围加锁</li>
+</ul>
+<h3 id="lock_ordinary锁">lock_ordinary锁</h3>
+<blockquote>
+<p>next-key lock</p>
+<ul>
+<li>A next-key lock is a combination of a record lock on the index record and a gap lock on the gap before the index record.</li>
+<li>InnoDB performs row-level locking in such a way that when it searches or scans a table index, it sets shared or exclusive locks on the index records it encounters. Thus, the row-level locks are actually index-record locks. A next-key lock on an index record also affects the “gap” before that index record. That is, a next-key lock is an index-record lock plus a gap lock on the gap preceding the index record. If one session has a shared or exclusive lock on record R in an index, another session cannot insert a new index record in the gap immediately before R in the index order.</li>
+<li>Suppose that an index contains the values 10, 11, 13, and 20. The possible next-key locks for this index cover the following intervals, where a round bracket denotes exclusion of the interval endpoint and a square bracket denotes inclusion of the endpoint:
+- <code>(negative infinity, 10] (10, 11] (11, 13] (13, 20] (20, positive infinity) </code></li>
+<li>For the last interval, the next-key lock locks the gap above the largest value in the index and the “supremum” pseudo-record having a value higher than any value actually in the index. The supremum is not a real index record, so, in effect, this next-key lock locks only the gap following the largest index value.</li>
+<li>By default, InnoDB operates in REPEATABLE READ transaction isolation level. In this case, InnoDB uses next-key locks for searches and index scans, which prevents phantom rows (see Section 15.7.4, “Phantom Rows”).</li>
+</ul>
+</blockquote>
+<ul>
+<li>中文名：普通锁</li>
+<li>又名：next-key lock</li>
+<li>锁定范围：lock_ordinary锁=lock_rec_not_gap锁 + lock_gap锁锁定记录本身和前面的gap，注意这里是前开后闭区间。</li>
+<li>详细说明：RR级别下，利用next-key lock来避免产生幻读 当innodb_locks_unsafe_for_binlog=1时，lock_ordinary会降级为lock_rec_not_gap，相当于降级到RC。 8.0版本取消了参数innodb_locks_unsafe_for_binlog，即不再允许RR级别的幻读情景。</li>
+</ul>
+<h3 id="lock_insert_intention锁">lock_insert_intention	锁</h3>
+<blockquote>
+<p>Insert Intention Locks</p>
+<ul>
+<li>An insert intention lock is a type of gap lock set by INSERT operations prior to row insertion. This lock signals the intent to insert in such a way that multiple transactions inserting into the same index gap need not wait for each other if they are not inserting at the same position within the gap. Suppose that there are index records with values of 4 and 7. Separate transactions that attempt to insert values of 5 and 6, respectively, each lock the gap between 4 and 7 with insert intention locks prior to obtaining the exclusive lock on the inserted row, but do not block each other because the rows are nonconflicting.</li>
+<li>The following example demonstrates a transaction taking an insert intention lock prior to obtaining an exclusive lock on the inserted record. The example involves two clients, A and B.</li>
+</ul>
+</blockquote>
+<ul>
+<li>中文名：意向插入锁</li>
+<li>又名：insert锁</li>
+<li>锁定范围：当插入索引记录的时候用来判断是否有其他事务的范围锁冲突，如果有就需要等待。</li>
+<li>详细说明：同一个GAP中，只要不是同一个位置就可以有多个插入意向锁并存。 例如5~10区间，同时插入6、8就不会相互冲突阻塞，而同时插入9就会引发冲突阻塞等待。 插入意向锁和间隙锁(gap lock)并不兼容，一个gap加了lock gap后，无法再加insert_intention。</li>
+</ul>
+<h2 id="原则和优化">原则和优化</h2>
+<ul>
+<li>原则 1：加锁的基本单位是 next-key lock。next-key lock 是前开后闭区间。</li>
+<li>原则 2：只有访问到的对象才会加锁。</li>
+<li>优化 1：
+<ul>
+<li>索引上的等值查询，</li>
+<li>命中唯一索，退化为行锁。</li>
+<li>命中普通索引，左右两边的GAP Lock + Record Lock。</li>
+</ul>
+</li>
+<li>优化 2：
+<ul>
+<li>索引上的等值查询，未命中，所在的Net-Key Lock，退化为GAP Lock 。</li>
+</ul>
+</li>
+<li>索引在范围查询：
+<ol>
+<li>等值和范围分开判断。</li>
+<li>索引在范围查询的时候 都会访问到所在区间不满足条件的第一个值为止。</li>
+<li>如果使用了倒叙排序，按照倒叙排序后，</li>
+</ol>
+</li>
+</ul>
+<h2 id="测试环境准备">测试环境准备</h2>
+<h5 id="准备脚本">准备脚本</h5>
+<pre><code>CREATE TABLE `dboop_locktest` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `age` int NOT NULL DEFAULT '0',
+  `gender` tinyint NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  KEY `idx_dboop_locktest_age` (`age`),
+  KEY `idx_dboop_locktest_name` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci 
+
+
+
+
+insert into dboop_locktest(username,age,gender) 
+values
+('aaa',0,0),
+('bbb',5,1),
+('aaa',6,1),
+('bbb',7,1),
+('aaa',9,1),
+('ccc',10,0),
+('ddd',15,0),
+('eee',20,1),
+('fff',25,1)
+;
+
+</code></pre><h5 id="验证">验证</h5>
+<pre><code>select * from dboop_locktest;
++----+----------+-----+--------+
+| id | username | age | gender |
++----+----------+-----+--------+
+|  1 | aaa      |   0 |      0 |
+|  2 | bbb      |   5 |      1 |
+|  3 | aaa      |   6 |      1 |
+|  4 | bbb      |   7 |      1 |
+|  5 | aaa      |   9 |      1 |
+|  6 | ccc      |  10 |      0 |
+|  7 | ddd      |  15 |      0 |
+|  8 | eee      |  20 |      1 |
+|  9 | fff      |  25 |      1 |
++----+----------+-----+--------+
+
+
+</code></pre><h2 id="例子1update不存在的数据有二级索引">例子1:update不存在的数据（有二级索引）</h2>
+<h3 id="事务1">事务1:</h3>
+<pre><code>begin ;
+update dboop_locktest set username='ggg' where age=4;
+</code></pre><h3 id="锁范围">锁范围</h3>
+<p>优化 2：索引上的等值查询，未命中，所在的Net-Key Lock，退化为GAP Lock 。</p>
+<p>根据lock_ordinary锁的定义，需要锁：</p>
+<ul>
+<li>表dboop_locktest的ix锁</li>
+<li>age=4的二级索引对应的行（这里因为没有符合条件的记录）+（0～5]的间隙锁</li>
+</ul>
+<pre><code>+----------------+------------------------+-----------+-----------+-------------+-----------+
+| OBJECT_NAME    | INDEX_NAME             | LOCK_TYPE | LOCK_MODE | LOCK_STATUS | LOCK_DATA |
++----------------+------------------------+-----------+-----------+-------------+-----------+
+| dboop_locktest | NULL                   | TABLE     | IX        | GRANTED     | NULL      |
+| dboop_locktest | idx_dboop_locktest_age | RECORD    | X,GAP     | GRANTED     | 5, 2      |
++----------------+------------------------+-----------+-----------+-------------+-----------+
+</code></pre><h3 id="事务2">事务2:</h3>
+<pre><code>insert into dboop_locktest(username,age,gender)  values ('bbb',-1,1); --成功
+insert into dboop_locktest(username,age,gender)  values ('bbb',1,1);  --失败 
+insert into dboop_locktest(username,age,gender)  values ('bbb',2,1);  --失败 
+insert into dboop_locktest(username,age,gender)  values ('bbb',3,1);  --失败 
+insert into dboop_locktest(username,age,gender)  values ('bbb',4,1);  --失败 
+insert into dboop_locktest(username,age,gender)  values ('bbb',5,1);  --成功
+</code></pre><h2 id="例子2update数据命中二级索引">例子2:update数据（命中二级索引）</h2>
+<h3 id="事务1-1">事务1:</h3>
+<pre><code>begin ;
+update dboop_locktest set username='ggg' where age=15;
+</code></pre><h3 id="锁范围-1">锁范围</h3>
+<p>索引上的等值查询，如果命中唯一索引，退化为行锁。如果命中普通索引，左右两边的GAP Lock + Record Lock。</p>
+<p>根据lock_ordinary锁的定义，需要锁：</p>
+<ul>
+<li>表dboop_locktest的ix锁</li>
+<li>age=15的二级索引（15，7）lock_ordinary锁 (10,15] +15 =(10,15)</li>
+<li>主键id=7的record锁</li>
+<li>左右两边的GAP Lock ，（15～20]</li>
+</ul>
+<pre><code>+----------------+------------------------+-----------+---------------+-------------+-----------+
+| OBJECT_NAME    | INDEX_NAME             | LOCK_TYPE | LOCK_MODE     | LOCK_STATUS | LOCK_DATA |
++----------------+------------------------+-----------+---------------+-------------+-----------+
+| dboop_locktest | NULL                   | TABLE     | IX            | GRANTED     | NULL      |
+| dboop_locktest | idx_dboop_locktest_age | RECORD    | X             | GRANTED     | 15, 7     |
+| dboop_locktest | PRIMARY                | RECORD    | X,REC_NOT_GAP | GRANTED     | 7         |
+| dboop_locktest | idx_dboop_locktest_age | RECORD    | X,GAP         | GRANTED     | 20, 8     |
++----------------+------------------------+-----------+---------------+-------------+-----------+
+</code></pre><h3 id="事务2-1">事务2:</h3>
+<pre><code>insert into dboop_locktest(username,age,gender)  values ('bbb',10,1);  --失败 
+insert into dboop_locktest(username,age,gender)  values ('bbb',12,1);  --失败 
+insert into dboop_locktest(username,age,gender)  values ('bbb',15,1);  --失败 
+insert into dboop_locktest(username,age,gender)  values ('bbb',16,1);  --失败 
+insert into dboop_locktest(username,age,gender)  values ('bbb',20,1);  --成功
+update dboop_locktest  set username='ggg' where id=7; --失败 
+update dboop_locktest  set username='ggg' where id=6; --成功
+update dboop_locktest  set username='ggg' where id=8; --成功
+
+</code></pre><h2 id="例子3update数据二级索引范围">例子3:update数据（二级索引范围）</h2>
+<h3 id="事务1-2">事务1:</h3>
+<pre><code>begin ;
+update dboop_locktest set username='ggg' where age&gt;=14 and age&lt;17 ;
+</code></pre><h3 id="锁范围-2">锁范围</h3>
+<ul>
+<li>索引在范围查询：
+1.等值和范围分开判断。
+2.索引在范围查询的时候 都会访问到所在区间不满足条件的第一个值为止。
+3.如果使用了倒叙排序，按照倒叙排序后，</li>
+</ul>
+<h4 id="根据lock_ordinary锁的定义需要锁">根据lock_ordinary锁的定义，需要锁：</h4>
+<ul>
+<li>表dboop_locktest的ix锁</li>
+<li>age=15的二级索引（15，7）lock_ordinary锁 (10,15] +15 =(10,15)</li>
+<li>age=20的二级索引（20，8）lock_ordinary锁 (15,20] +20 =(15,20)  参考：索引在范围查询的时候 都会访问到所在区间不满足条件的第一个值为止。</li>
+<li>主键id=7的record锁</li>
+<li>主键id=8的record锁</li>
+</ul>
+<pre><code>+----------------+------------------------+-----------+---------------+-------------+-----------+
+| OBJECT_NAME    | INDEX_NAME             | LOCK_TYPE | LOCK_MODE     | LOCK_STATUS | LOCK_DATA |
++----------------+------------------------+-----------+---------------+-------------+-----------+
+| dboop_locktest | NULL                   | TABLE     | IX            | GRANTED     | NULL      |
+| dboop_locktest | idx_dboop_locktest_age | RECORD    | X             | GRANTED     | 15, 7     |
+| dboop_locktest | idx_dboop_locktest_age | RECORD    | X             | GRANTED     | 20, 8     |
+| dboop_locktest | PRIMARY                | RECORD    | X,REC_NOT_GAP | GRANTED     | 7         |
+| dboop_locktest | PRIMARY                | RECORD    | X,REC_NOT_GAP | GRANTED     | 8         |
++----------------+------------------------+-----------+---------------+-------------+-----------+
+</code></pre><h3 id="事务2-2">事务2:</h3>
+<pre><code>insert into dboop_locktest(username,age,gender)  values ('bbb',9,1); --成功
+insert into dboop_locktest(username,age,gender)  values ('bbb',10,1);  --失败 
+insert into dboop_locktest(username,age,gender)  values ('bbb',12,1);  --失败 
+insert into dboop_locktest(username,age,gender)  values ('bbb',15,1);  --失败 
+insert into dboop_locktest(username,age,gender)  values ('bbb',16,1);  --失败 
+insert into dboop_locktest(username,age,gender)  values ('bbb',20,1);  --成功
+update dboop_locktest  set username='ggg' where id=7; --失败 
+update dboop_locktest  set username='ggg' where id=6; --成功
+update dboop_locktest  set username='ggg' where id=8; --失败
+
+</code></pre><h2 id="例子3update数据无索引">例子3:update数据（无索引）</h2>
+<h3 id="事务1-3">事务1:</h3>
+<pre><code>begin ;
+update dboop_locktest set username='ggg' where  gender=1 ;
+</code></pre><h3 id="锁范围-3">锁范围</h3>
+<p>对无索引列的情况，需要对表中的所有行都加上lock_ordinary锁+最大间隙锁 = 锁全表记录</p>
+<p>根据lock_ordinary锁的定义，需要锁：</p>
+<ul>
+<li>表dboop_locktest的ix锁</li>
+<li>对表中所有行的lock_ordinary锁（包括gender&lt;&gt;1的行）</li>
+<li>对表dboop_locktest，id值最大到正无穷supremum pseudo-record锁，（14&ndash;无穷大）</li>
+</ul>
+<pre><code>+----------------+------------+-----------+-----------+-------------+------------------------+
+| OBJECT_NAME    | INDEX_NAME | LOCK_TYPE | LOCK_MODE | LOCK_STATUS | LOCK_DATA              |
++----------------+------------+-----------+-----------+-------------+------------------------+
+| dboop_locktest | NULL       | TABLE     | IX        | GRANTED     | NULL                   |
+| dboop_locktest | PRIMARY    | RECORD    | X         | GRANTED     | supremum pseudo-record |
+| dboop_locktest | PRIMARY    | RECORD    | X         | GRANTED     | 1                      |
+| dboop_locktest | PRIMARY    | RECORD    | X         | GRANTED     | 2                      |
+| dboop_locktest | PRIMARY    | RECORD    | X         | GRANTED     | 3                      |
+| dboop_locktest | PRIMARY    | RECORD    | X         | GRANTED     | 4                      |
+| dboop_locktest | PRIMARY    | RECORD    | X         | GRANTED     | 5                      |
+| dboop_locktest | PRIMARY    | RECORD    | X         | GRANTED     | 6                      |
+| dboop_locktest | PRIMARY    | RECORD    | X         | GRANTED     | 7                      |
+| dboop_locktest | PRIMARY    | RECORD    | X         | GRANTED     | 8                      |
+| dboop_locktest | PRIMARY    | RECORD    | X         | GRANTED     | 9                      |
+| dboop_locktest | PRIMARY    | RECORD    | X         | GRANTED     | 13                     |
+| dboop_locktest | PRIMARY    | RECORD    | X         | GRANTED     | 14                     |
++----------------+------------+-----------+-----------+-------------+------------------------+
+</code></pre><h3 id="事务2-3">事务2:</h3>
+<pre><code>insert into dboop_locktest(username,age,gender)  values ('bbb',11,1); 
+insert into dboop_locktest(username,age,gender)  values ('bbb',20,1); 
+insert into dboop_locktest(username,age,gender)  values ('bbb',25,0);
+insert into dboop_locktest(username,age,gender)  values ('bbb',300,0);
+insert into dboop_locktest(username,age,gender)  values ('bbb',-300,0);
+update dboop_locktest  set username='ggg' where id=7;
+update dboop_locktest  set username='ggg' where id=6; 
+update dboop_locktest  set username='ggg' where id=8; 
+insert into dboop_locktest(id,username,age,gender)  values (11,'bbb',11,1); 
+</code></pre><p>以上语句全部失败。</p>
+<p>&ndash;
+done</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2021/02/13</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/%E9%94%81">锁</a> <a href="/categories/innodb">innodb</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

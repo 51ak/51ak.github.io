@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>proxy on Classic</title>
+    <link>/categories/proxy/</link>
+    <description>Recent content in proxy on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 06 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/proxy/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL Group Replication(MGR集群)增加节点和迁移节点</title>
+      <link>/mysql/mysqlgroupreplicationmgr%E9%9B%86%E7%BE%A4%E5%A2%9E%E5%8A%A0%E8%8A%82%E7%82%B9%E5%92%8C%E8%BF%81%E7%A7%BB%E8%8A%82%E7%82%B9/</link>
+      <pubDate>Thu, 06 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysqlgroupreplicationmgr%E9%9B%86%E7%BE%A4%E5%A2%9E%E5%8A%A0%E8%8A%82%E7%82%B9%E5%92%8C%E8%BF%81%E7%A7%BB%E8%8A%82%E7%82%B9/</guid>
+      <description>MySQL Group Replication 多主结构的3节点需要切到另外三个节点上，任务需要先加3个节点到集群中，再删掉原来的3个节点。
+ 环境   原实例：
+ 172.0.2.30:3309 172.0.2.31:3309 172.0.2.32:3309    新实例：
+ 172.0.2.83:3309 172.0.2.84:3309 172.0.2.85:3309    修改host - 修改6台主机的/etc/hosts 172.0.2.30 dba-mysql3309-230 dba-mysql3309-230.dboop.com 172.0.2.31 dba-mysql3309-231 dba-mysql3309-231.dboop.com 172.0.2.32 dba-mysql3309-232 dba-mysql3309-232.dboop.com 172.0.2.83 dba-mysql3309-83 dba-mysql3309-83.dboop.com 172.0.2.84 dba-mysql3309-84 dba-mysql3309-84.dboop.com 172.0.2.85 dba-mysql3309-85 dba-mysql3309-85.dboop.com 旧实例上增加seed  检查状态  mysqlw -h 172.0.2.30 -P 3309 -e &amp;quot;show global variables like &#39;group_replication_group_seeds&#39;&amp;quot;; mysqlw -h 172.0.2.31 -P 3309 -e &amp;quot;show global variables like &#39;group_replication_group_seeds&#39;&amp;quot;; mysqlw -h 172.</description>
+    </item>
+    
+    <item>
+      <title>MySQL中间件对比:ProxySQL/MaxScale/ShardingSphere</title>
+      <link>/mysql/mysql%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/</link>
+      <pubDate>Thu, 03 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/</guid>
+      <description>MySQL中件间对比 目标：对比以下3款MySQL中件间
+ ProxySQL MaxScale ShardingSphere  一.Proxy基础能力 兼容性  ProxySQL:良好 MaxScale:mairdb更友好，MGR支持不好 ShardingSphere:良好  发行方  ProxySQL:sysown MaxScale:mairdb ShardingSphere:京东  发布/更新/生态  ProxySQL:c++, 5.1k stars,最新版v2.4.4 1个半月前发布 MaxScale:c,1.6k stars,最新版22.08.2 3个半月前发布 ShardingSphere:java,17.6k stars,最新版5.2.1 16天前发布  运维便利性  ProxySQL:简单 MaxScale:普通 ShardingSphere:复杂（配置文件多且复杂）  二.Proxy高可用架构支持 主从架构下的从库故障  如何探测到   ALL: 每N秒主动探测一次
+  如何响应故障   ALL:探测不到，主动处理: - ShardingSphere:从路由表中标记下线 - proxysql:从group中标记下线 - MaxScale:标记下线
+  切换后状态   ALL:复制拓扑可用
+  影响时长   ALL:1-5 秒</description>
+    </item>
+    
+    <item>
+      <title>MySQL高可用组件之ProxySQL</title>
+      <link>/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Bproxysql/</link>
+      <pubDate>Tue, 25 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Bproxysql/</guid>
+      <description>ProxySQL是什么 介绍  MySQL一款开源的中间件的产品 支持读写分离 支持 Query 路由功能 支持动态指定某个SQL进行缓存 支持动态加载（无需重启ProxySQL服务） 故障切换和SQL过滤功能。  ProxySQL初始化 安装 wget https://github.com/sysown/proxysql/releases/download/v2.4.4/proxysql-2.4.4-1-centos7.x86_64.rpm rpm -ivh proxysql-2.4.4-1-centos7.x86_64.rpm 产生报错： warning: proxysql-2.4.4-1-centos7.x86_64.rpm: Header V4 RSA/SHA512 Signature, key ID 8217c97e: NOKEY error: Failed dependencies: gnutls is needed by proxysql-2.4.4-1.x86_64 libgnutls.so.28()(64bit) is needed by proxysql-2.4.4-1.x86_64 libgnutls.so.28(GNUTLS_1_4)(64bit) is needed by proxysql-2.4.4-1.x86_64 libgnutls.so.28(GNUTLS_3_0_0)(64bit) is needed by proxysql-2.4.4-1.x86_64 libgnutls.so.28(GNUTLS_3_1_0)(64bit) is needed by proxysql-2.4.4-1.x86_64 执行： yum install -y gnutls rpm -ivh proxysql-2.4.4-1-centos7.x86_64.rpm 检查安装情况  rpm -ql proxysql /etc/logrotate.</description>
+    </item>
+    
+    <item>
+      <title>MySQL高可用组件之orchestrator</title>
+      <link>/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Borchestrator/</link>
+      <pubDate>Mon, 17 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Borchestrator/</guid>
+      <description>orchestrator是什么 介绍  GitHub公司的用go语言编写并开源的一个MySQL高可用管理工具 MySQL高可用性和复制拓扑管理工具，支持复制拓扑结构的调整，自动故障转移和手动主从切换等。 提供Web界面展示MySQL复制的拓扑关系及状态，通过Web可更改MySQL实例的复制关系和部分配置信息 同时也提供命令行和api接口，方便运维管理。 相对比MHA来看最重要的是解决了管理节点的单点问题，其通过raft协议保证本身的高可用。  特点  自动发现MySQL的复制拓扑，并且在web上展示。 重构复制关系，可以在web进行拖图来进行复制关系变更。 检测主异常，并可以自动或手动恢复，通过Hooks进行自定义脚本。 支持命令行和web界面管理复制。  功能限制  slave不能手动提升为master 不支持多源复制 不支持并行复制 不支持与PXC联合使用  注意事项  对主机名依赖严重，习惯用ip来管理实例的，需要注意确保主机名可解析 主从拓扑结果目前不支持两个实例互为主备或环形结构 自动故障转移，只负责将主从切换了，把从设置为主，其他的变更（dns或proxy变更以及运维信息的变更等需要自己写hook脚本）  orchestrator的工作原理 orchestrator的探测机制  orchestrator会每隔InstancePollSeconds（默认5s）时间用以下SQL去被监控的实例上读取实例状态  show global status like &#39;Uptime&#39; select @@global.hostname, ifnull(@@global.report_host, &#39;&#39;), @@global.server_id, @@global.version, @@global.version_comment, @@global.read_only, @@global.binlog_format, @@global.log_bin, @@global.log_slave_updates show master status show global status like &#39;rpl_semi_sync_%_status&#39; select @@global.gtid_mode, @@global.server_uuid, @@global.gtid_executed, @@global.gtid_purged, @@global.master_info_repository = &#39;TABLE&#39;, @@global.binlog_row_image show slave status select count(*) &amp;gt; 0 and MAX(User_name) !</description>
+    </item>
+    
+    <item>
+      <title>从零写一个兼容MySQL/Oracle的Proxy中件间（四）:性能测试和改进</title>
+      <link>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B44/</link>
+      <pubDate>Tue, 18 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B44/</guid>
+      <description>续： 从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》 从零写一个兼容MySQL/Oracle的Proxy中件间（二）:SQL捕获和改写 从零写一个兼容MySQL/Oracle的Proxy中件间（三）:MySQL协议捕获和转发
+1.过去的三个文章我们实现了以下功能]  Oracle登录捕获：捕获了Oracle通信协议中的用户登录包 Oracle用户解析：抓到了用户传用户名和密码的内容（密码是加密串） SQL请求包：同时通过对比，确定了用户发送SQL请求的通信包 OracleSQL日志：分析这些包，把SQL语句拿出来，记到日志里。 OracleSQL改写：用户发起的SQL 经过中间层改写到了服务端收到的是另一个SQL执行返回结果。 MySQL兼容：增加配置文件，使中间件可以支持两种数据库 MySQL协议解析：将经过proxy的MySQL包里的SQL语句解析出来，记录到日志  在没更新的这几天里我又偷偷完成了配置变更等小功能。现在中件间其实已经在理论上可以发布使用了
+在投入使用前，在测试环境对这个半成品的中件间做了些基准测试。
+在测试环境上生成了5张表，每张表200万行数据，对其进行直连和proxy模式压测。
+以下是测试报告： 结论是：加了Proxy，性能下降了14% ，在情理之中，一般的SQL中间层因为多了层中转，响应时间会降低20ms左右。tps/qps在不做连接池的情况下会下降10%。 分析性能下降的原因：
+因为在proxy存把经过的网络包都拆开来分析其中的内容，且把SQL语句存在日志里，这些步骤是比较费资源和时间的。
+为了提升Proxy性能，降低中间层的性能影响，我们加了个配置参数
+cat /data/proxy/conf/proxy3308.cnf [basic] logfile = /data/proxy/log/3308.log daemon = true [proxy] proxytype = mysql bind = 0.0.0.0:3308 server = 127.0.0.2:3308 isssl = false iscatchquery = false #增加是否“拆包” false时，Proxy进入高性能模式 iscatchlogin = false maxsquerylsize = 16384 当 iscatchquery=false时，Proxy进入高性能模式
+if Iscatchquery { #只有iscatchquery为true时才解析包。 switch ProxyType { case &amp;quot;mysql&amp;quot;: log.Printf(&amp;quot;mysql:sqlPipeMySQL\n&amp;quot;) sqlPipeMySQL(srcCon, dstCon) case &amp;quot;oracle&amp;quot;: log.</description>
+    </item>
+    
+    <item>
+      <title>从零写一个兼容MySQL/Oracle的Proxy中件间（三）:MySQL协议捕获和转发</title>
+      <link>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B43/</link>
+      <pubDate>Mon, 10 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B43/</guid>
+      <description>续： 从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》 从零写一个兼容MySQL/Oracle的Proxy中件间（二）:SQL捕获和改写
+1.过去的两天我们实现了以下功能]  Oracle登录捕获：捕获了Oracle通信协议中的用户登录包 Oracle用户解析：抓到了用户传用户名和密码的内容（密码是加密串） SQL请求包：同时通过对比，确定了用户发送SQL请求的通信包 OracleSQL日志：分析这些包，把SQL语句拿出来，记到日志里。 OracleSQL改写：用户发起的SQL 经过中间层改写到了服务端收到的是另一个SQL执行返回结果。   MySQL兼容：增加配置文件，使中件间可以支持两种数据库 MySQL协议解析：将经过proxy的MySQL包里的SQL语句解析出来，记录到日志  开始动手：
+步骤一：中件间可以同时支持MySQL和Oracle 中件间的配置应该放在哪，理论上是想放在MySQL或zk里，当配置有变更的时候，中件间获得变更，但这个实现有点麻烦，可能得写好久，就先一个本地的配置文件
+准备一个配置文件
+proxy] proxytype = mysql bind = 0.0.0.0:1106 server = 10.26.*.*:3307 isssl = false iscatchquery = true iscatchlogin = false maxsquerysize = 4096 [proxybak] #proxytype = oracle #bind = 0.0.0.0:1106 #server = 10.26.*.*:1521 #isssl = false #iscatchquery = true #iscatchlogin = false #maxsquerylsize = 4096 然后在通信进程中收到包时处理
+func (t *Proxy) pipeSend(dstCon, srcCon *Conn, chSend chan int64) { defer pipeClose(dstCon) switch ProxyType { case &amp;quot;mysql&amp;quot;: log.</description>
+    </item>
+    
+    <item>
+      <title>从零写一个兼容MySQL/Oracle的Proxy中件间（二）:SQL捕获和改写</title>
+      <link>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B42/</link>
+      <pubDate>Thu, 06 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B42/</guid>
+      <description>续上一篇： 从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》
+0.前言 昨天的文字里写开发这个中间件的原由和要解决的问题，有朋友留言
+网上有现成的开源中间件为啥不用。
+ 答：网上有很多MySQL的中件间，Oralce目前还没有可以免费使用的中件间. 这可能就是开源和闭源的差别。
+ Oracle自带的功能已经可以实现想要的功能（高可用/审计日志）
+ 答：
+ Oracle官方的高可用方案RAC，无疑是非常非常非常优秀的,但我们现有的硬件不支持做跨机房RAC,以及我们迁移时需要proxy中间层来降低业务中断时间。 Oracle的审计日志太笨重/不支持慢日志/不支持SQL黑名单。   1.昨天我们实现了以下功能]  捕获了Oracle通信协议中的用户登录包 抓到了用户传用户名和密码的内容（密码是加密串） 同时通过对比，确定了用户发送SQL请求的通信包   SQL日志：分析这些包，把SQL语句拿出来，记到日志里。 SQL改写：用户发起的SQL 经过中间层改写到了服务端收到的是另一个SQL执行返回结果。  开始动手：
+步骤一：从Oracle通信包中分解出SQL语句 已知有以下两种head的包是在传递SQL
+0x1 0xf 0x0 0x0 0x6 0x0 0x0 0x0 0x0 0x0 0x11 0x6b 0x4 0xa5 0x10 0x0 0x0 0x35 0x1c 0x0 0x0 0x1 0x0 0x0 0x0 0x3 0x5e 0x5 0x61 0x80 0x0 0x0 0x0 0x0 0x0 0x0 0xfe 0xff 0xff 0xff 0x1 0x0 0x0 0x0 0x6 0x0 0x0 0x0 0x0 0x0 0x3 0x5e 0x6 0x61 0x80 0x0 0x0 0x0 0x0 0x0 0x0 0xfe 0xff 0xff 0xff 0xff 0xff 0xff 0xff 0x24 0x0 0x0 0x0 0xfe 0xff 0xff 0xff 0xff 0xff 0xff 1.</description>
+    </item>
+    
+    <item>
+      <title>从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》</title>
+      <link>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B41/</link>
+      <pubDate>Wed, 05 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B41/</guid>
+      <description>0.前言 MySQL由于开源的原因，有各式各样的中件间Proxy ，极大的丰富了做高可用或迁移的方案，习惯了MySQL生态圈的灵活和便利，Oracle官方不开源代码和协议，没有中间件proxy，显得很笨重。
+比如以下的方案就会很不好办：
+ 实时抓取Oralce的访问SQL日志 慢日志捕获和收集 高可用中件间Proxy在故障时自动切换 SQL访问黑名单。  基于以上的一些困难，打算自己从头写一个兼容MySQL/Oracle的中件间，希望从中件间层同时支持两种数据库。方便我们做数据库的高可用管理和从Oracle到MySQL的迁移。
+这个计划是在年前的2021年最后一次组内会议上提出来的构想。元旦放假期间我就一直在想这事怎么搞
+问题的难点在于：Oracle的client/server端通信没有文档的说明，没人能说清楚Oracle是怎么交互的。
+这两天用最原始的方法抓包，一个包一个包的去看，找到包的规律，分析它的通信协议。竟然发现这个方法可行
+1.步骤 1.写一个Python脚本去连接（192.168.1.1:1521）上的Oracle  #!/usr/bin/env python ## coding: utf-8 import cx_Oracle conn = cx_Oracle.connect(&#39;dboopreader/dbooppassword@192.168.1.1:1521/testdb&#39;) print(&amp;quot;连接成功&amp;quot;) conn.close() print(&amp;quot;连接关闭&amp;quot;) 通过wireshark抓包，发现一次简单的连接，有38个通信包。
+2.捕获这些包，发现它的规律 挨个点开这些包，发现了一些有用的信息，然后发现wireshark的包看起来不方便， 本地模拟一个端口1522端口，劫持这些请求，打印出来，得到如下这种的tcp包
+抓到:127.0.0.1到192.168.1.1的包 二进制展示如下: 0.0x7 0xaf 0x0 0x0 0x6 0x0 0x0 0x0 0x0 0x0 0x2 0x54 0x3 0x54 0x3 0x3 0x2a 0x6 0x1 0x1 20.0x1 0x6f 0x1 0x1 0xc 0x1 0x1 0x1 0x1 0x1 0x1 0x1 0x7f 0xff 0x3 0xe 0x3 0x3 0x1 0x1 40.</description>
+    </item>
+    
+  </channel>
+</rss>

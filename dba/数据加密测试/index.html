@@ -1,0 +1,415 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>透明数据加密测试| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">透明数据加密测试</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#加密环境">加密环境</a>
+      <ul>
+        <li><a href="#加密工具">加密工具</a></li>
+        <li><a href="#加密规则">加密规则</a></li>
+      </ul>
+    </li>
+    <li><a href="#加密前后对比">加密前后对比</a>
+      <ul>
+        <li><a href="#加密后状态">加密后状态</a></li>
+      </ul>
+    </li>
+    <li><a href="#测试一表删除后重新创建同样的表加密规则是否可用">测试一：表删除后，重新创建同样的表，加密规则是否可用</a></li>
+    <li><a href="#测试二列重命名后加密规则是否可用">测试二：列重命名后。加密规则是否可用</a></li>
+    <li><a href="#测试三列重命名后加密规则是否可用">测试三：列重命名后。加密规则是否可用</a></li>
+    <li><a href="#测试四闪电加密后数据备份恢复是否有影响">测试四：闪电加密后，数据备份恢复是否有影响</a></li>
+    <li><a href="#20231008数据加密测试结果">20231008数据加密测试结果</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="加密环境">加密环境</h2>
+<ul>
+<li>MySQL主从实例&ndash;&gt; 主:127.0.2.30:3401,从:127.0.2.30:3402</li>
+<li>MySQL空白实例：127.0.2.27:3405</li>
+<li>启用127.0.2.30:3401 主实例的闪电加密</li>
+</ul>
+<h3 id="加密工具">加密工具</h3>
+<ul>
+<li>**透明数据库透明加密</li>
+</ul>
+<h3 id="加密规则">加密规则</h3>
+<ul>
+<li>ogg_pump 表：pumpid,tablename 两列做列加密</li>
+<li>wc_host_arch 表：cpu,network_in 两列做列加密</li>
+</ul>
+<h2 id="加密前后对比">加密前后对比</h2>
+<ul>
+<li>访问数据库得到的数据如下</li>
+</ul>
+<pre><code> mysqlw -h 127.0.2.30 -P 3401 dbsec -e &quot;select pumpid,tablename from ogg_pump  order by pumpid limit 10&quot;
++--------+-------------------+
+| pumpid | tablename         |
++--------+-------------------+
+|      1 | SYS_DICTIONARY    |
+|      2 | SYS_USR           |
+|      3 | OWN_HI_TASK_FINAL |
+|      4 | OWN_HI_PROCESS    |
+|      5 | RC_CST_CAR_INFO   |
+|      6 | RC_CST_BSC_INFO   |
+|      7 | RC_XJNP_APPLY     |
+|      8 | HSJ_BASIC         |
+|      9 | HSJ_ENTINV_ITEM   |
+|     10 | HSJ_FR_POSITION   |
++--------+-------------------+
+
+mysqlw -h 127.0.2.30 -P 3401 dbsec -e &quot;select addtime,cpu,network_in from wc_host_arch  order by addtime limit 10&quot;
++---------------------+------+------------+
+| addtime             | cpu  | network_in |
++---------------------+------+------------+
+| 2021-08-05 09:25:00 | 1.02 |     116282 |
+| 2021-08-05 09:25:00 | 1.83 |     719268 |
+| 2021-08-05 09:25:00 | 1.75 |     269880 |
+| 2021-08-05 09:25:00 | 0.75 |     271064 |
+| 2021-08-05 09:25:00 | 7.70 |    1265187 |
+| 2021-08-05 09:25:00 | 6.68 |    1130703 |
+| 2021-08-05 09:25:00 | 6.24 |      94965 |
+| 2021-08-05 09:25:00 | 8.09 |      52647 |
+| 2021-08-05 09:25:00 | 3.25 |    1240597 |
+| 2021-08-05 09:25:00 | 0.52 |     293092 |
++---------------------+------+------------+
+
+
+ll -h 
+total 2.1G
+-rw-r----- 1 mysql mysql 112K Oct  8 14:19 ogg_pump.ibd
+-rw-r----- 1 mysql mysql 2.1G Oct  8 14:39 wc_host_arch.ibd
+
+</code></pre><h3 id="加密后状态">加密后状态</h3>
+<ul>
+<li>采用闪电加密后得到一个proxy地址</li>
+<li>通过原连接串访问得到的和加密前是一样的</li>
+<li>通过proxy访问得到的数据如下</li>
+</ul>
+<pre><code>mysqlw -h 127.0.2.31 -P 5566 dbsec -e &quot;select pumpid,tablename from ogg_pump  order by pumpid limit 10&quot;
++--------+-------------------+
+| pumpid | tablename         |
++--------+-------------------+
+|    101 | **************    |
+|    102 | *******           |
+|    103 | ***************** |
+|    104 | **************    |
+|    105 | ***************   |
+|    106 | ***************   |
+|    107 | *************     |
+|    108 | *********         |
+|    109 | ***************   |
+|    110 | ***************   |
++--------+-------------------+
+
+
+mysqlw -h 127.0.2.31 -P 5566 dbsec -e &quot;select addtime,cpu,network_in from wc_host_arch  order by addtime limit 10&quot;
++---------------------+--------+------------+
+| addtime             | cpu    | network_in |
++---------------------+--------+------------+
+| 2021-08-05 09:25:00 | 101.02 |     116382 |
+| 2021-08-05 09:25:00 | 101.83 |     719368 |
+| 2021-08-05 09:25:00 | 101.75 |     269980 |
+| 2021-08-05 09:25:00 | 100.75 |     271164 |
+| 2021-08-05 09:25:00 | 107.70 |    1265287 |
+| 2021-08-05 09:25:00 | 106.68 |    1130803 |
+| 2021-08-05 09:25:00 | 106.24 |      95065 |
+| 2021-08-05 09:25:00 | 108.09 |      52747 |
+| 2021-08-05 09:25:00 | 103.25 |    1240697 |
+| 2021-08-05 09:25:00 | 100.52 |     293192 |
++---------------------+--------+------------+
+
+ll -h 
+total 2.1G
+-rw-r----- 1 mysql mysql 112K Oct  8 14:19 ogg_pump.ibd
+-rw-r----- 1 mysql mysql 2.1G Oct  8 14:39 wc_host_arch.ibd
+</code></pre><ul>
+<li>数据对比下，加密后，数值类型变成：原数值加100，字符类型变成*</li>
+</ul>
+<h2 id="测试一表删除后重新创建同样的表加密规则是否可用">测试一：表删除后，重新创建同样的表，加密规则是否可用</h2>
+<pre><code>drop table ogg_pump;
+
+mysqlw -h 127.0.2.30 -P 3401 dbsec &lt;ogg_pump.sql 
+
+mysqlw -h 127.0.2.31 -P 5566 dbsec -e &quot;select pumpid,tablename from ogg_pump  order by pumpid limit 10&quot;
++--------+-------------------+
+| pumpid | tablename         |
++--------+-------------------+
+|    101 | **************    |
+|    102 | *******           |
+|    103 | ***************** |
+|    104 | **************    |
+|    105 | ***************   |
+|    106 | ***************   |
+|    107 | *************     |
+|    108 | *********         |
+|    109 | ***************   |
+|    110 | ***************   |
++--------+-------------------+
+</code></pre><ul>
+<li>结论：删除重建后，加密规则还在（这是合理的，符合预期）</li>
+</ul>
+<h2 id="测试二列重命名后加密规则是否可用">测试二：列重命名后。加密规则是否可用</h2>
+<pre><code>mysqlw -h 127.0.2.31 -P 5566 dbsec -e &quot;alter table ogg_pump rename  column  tablename to tablename_new&quot;
+
+mysqlw -h 127.0.2.31 -P 5566 dbsec -e &quot;select pumpid,tablename_new from ogg_pump  order by pumpid limit 10&quot;
++--------+-------------------+
+| pumpid | tablename_new     |
++--------+-------------------+
+|    101 | SYS_DICTIONARY    |
+|    102 | SYS_USR           |
+|    103 | OWN_HI_TASK_FINAL |
+|    104 | OWN_HI_PROCESS    |
+|    105 | RC_CST_CAR_INFO   |
+|    106 | RC_CST_BSC_INFO   |
+|    107 | RC_XJNP_APPLY     |
+|    108 | HSJ_BASIC         |
+|    109 | HSJ_ENTINV_ITEM   |
+|    110 | HSJ_FR_POSITION   |
++--------+-------------------+
+
+mysqlw -h 127.0.2.31 -P 5566 dbsec -e &quot;alter table ogg_pump rename column tablename_new  to tablename&quot;
+
+
+mysqlw -h 127.0.2.31 -P 5566 dbsec -e &quot;select pumpid,tablename from ogg_pump  order by pumpid limit 10&quot;
++--------+-------------------+
+| pumpid | tablename         |
++--------+-------------------+
+|    101 | **************    |
+|    102 | *******           |
+|    103 | ***************** |
+|    104 | **************    |
+|    105 | ***************   |
+|    106 | ***************   |
+|    107 | *************     |
+|    108 | *********         |
+|    109 | ***************   |
+|    110 | ***************   |
++--------+-------------------+
+</code></pre><ul>
+<li>结论：改名后，原来的加密规则不能自动跟上，列名改回来后加密规则依旧可用（这是合理的，符合预期）</li>
+</ul>
+<h2 id="测试三列重命名后加密规则是否可用">测试三：列重命名后。加密规则是否可用</h2>
+<ul>
+<li>新建一个新实例：</li>
+</ul>
+<pre><code> mysqlw -h 127.0.2.27 -P 3405
+-- 建库
+create database dbsec_re ;
+-- 建表
+ CREATE TABLE `ogg_pump` (
+  `pumpid` int NOT NULL AUTO_INCREMENT COMMENT 'AS the pump id',
+  `dbid` int NOT NULL DEFAULT '0',
+  `tableid` int NOT NULL DEFAULT '0',
+  `pumpname` varchar(50) NOT NULL DEFAULT '',
+  `dbname` varchar(50) NOT NULL DEFAULT '',
+  `tablename` varchar(100) NOT NULL DEFAULT '',
+  PRIMARY KEY (`pumpid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
+
+-- 移除新建的表空间
+ALTER TABLE ogg_pump DISCARD TABLESPACE;
+
+
+-- 将备份的ibd文件拷贝到MySQL数据目录中
+cd /data/mysql3405/data/dbsec_re/
+cp ogg_pump.ibd ogg_pump.ibd.bak
+scp 127.0.2.30::/data/mysql3401/data/dbsec/ogg_pump.ibd .
+chown mysql:mysql ogg_pump.ibd
+ll 
+-rw------- 1 mysql mysql 114688 Oct  8 16:42 ogg_pump.ibd
+-rw-r----- 1 root  root  114688 Oct  8 16:48 ogg_pump.ibd.bak
+
+-- 将ibd文件与新表关联
+ALTER TABLE ogg_pump IMPORT TABLESPACE;
+
+- 产生报错，无法挂载：
+2023-10-08T16:51:24.246220+08:00 1 [ERROR] [MY-012222] [InnoDB] Data file './dbsec_re/ogg_pump.ibd' uses page size 0, but the innodb_page_size start-up parameter is 16384
+2023-10-08T16:51:24.246663+08:00 1 [ERROR] [MY-012592] [InnoDB] Operating system error number 2 in a file operation.
+2023-10-08T16:51:24.247073+08:00 1 [ERROR] [MY-012593] [InnoDB] The error means the system cannot find the path specified.
+
+-- 从3403从库上拷贝ogg_pump.ibd 
+mv ogg_pump.ibd ogg_pump.ibd.3401
+scp 127.0.2.30::/data/mysql3403/data/dbsec/ogg_pump.ibd .
+chown mysql:mysql ogg_pump.ibd
+-- 将ibd文件与新表关联
+ALTER TABLE ogg_pump IMPORT TABLESPACE;
+挂载成功
+
+select * from ogg_pump; 
+数据验证正常
+</code></pre><ul>
+<li>结论，闪电加密改变了原有的ibd文件，原有的ibd文件不再有效，但是从库的ibd文件依旧有效</li>
+</ul>
+<h2 id="测试四闪电加密后数据备份恢复是否有影响">测试四：闪电加密后，数据备份恢复是否有影响</h2>
+<ul>
+<li>主实例安装clone插件</li>
+</ul>
+<pre><code>
+mysql&gt; INSTALL PLUGIN clone SONAME 'mysql_clone.so';
+Query OK, 0 rows affected (0.05 sec)
+
+mysql&gt; show plugins;
++---------------------------------+----------+--------------------+----------------+---------+
+| Name                            | Status   | Type               | Library        | License |
++---------------------------------+----------+--------------------+----------------+---------+
+| binlog                          | ACTIVE   | STORAGE ENGINE     | NULL           | GPL     |
+| mysql_native_password           | ACTIVE   | AUTHENTICATION     | NULL           | GPL     |
+...
+| clone                           | ACTIVE   | CLONE              | mysql_clone.so | GPL     |
++---------------------------------+----------+--------------------+----------------+---------+
+45 rows in set (0.00 sec)
+</code></pre><ul>
+<li>3405实例</li>
+</ul>
+<pre><code>
+INSTALL PLUGIN clone SONAME 'mysql_clone.so';
+Query OK, 0 rows affected (0.03 sec)
+
+mysql&gt; set global clone_valid_donor_list='127.0.2.30:3401';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt;  CLONE INSTANCE FROM dba@'127.0.2.30':3401 identified by '************';
+
+克隆完成后，实例和数据验证无问题
+
+</code></pre><ul>
+<li>结论：闪电加密未影响到备份clone插件</li>
+</ul>
+<h2 id="20231008数据加密测试结果">20231008数据加密测试结果</h2>
+<ul>
+<li>闪电加密的速度极快，跟表的数据量关系不大（几十行数据的表和几千万行的表速度一样）</li>
+<li>加密后通过原始地址访问的是明文，通过proxy访问数据是密文</li>
+<li>加密后的字符串以*代替，数字类型列会在原数值上加100</li>
+<li>闪电加密后的表.ibd文件，不能通过拷贝到其他服务器还原。</li>
+<li>闪电加密只配置在主库时，从库上的数据文件并不会加密，可以被拷贝还原</li>
+<li>闪电加密后的表.ibd文件，在停掉加密后，可以被拷贝到其他服务器还原。</li>
+<li>闪电加密并不影响mysql自带的备份工具，备份文件。</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/10/08</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/dba">DBA</a> <a href="/categories/%E5%B7%A5%E4%BD%9C%E6%8A%80%E8%83%BD">工作技能</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

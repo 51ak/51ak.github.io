@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySQL Internals Optimizer</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="优化器（theoptimizer）<br/>&nbsp;这篇描述mysql查询优化器的工作原理。mysql查询优化器主要为执行的查询决断最有效的路线（routine，走向）。<br/>&nbsp;<br/>一。源代码和概念<br/><br/>&nbsp;这部分讨论优化器关键概念，术语，及在mysql源代码怎么对应的。<br/>&nbsp;<br/>1.定义<br/>&nbsp;狭MySQL Internals Optimizer" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化">性能与优化</a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlzhishi/l_14_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>MySQL Internals Optimizer</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   优化器（The Optimizer）<br />&nbsp;这篇描述MySQL查询优化器的工作原理。MySQL查询优化器主要为执行的查询决断最有效的路线（routine，走向）。<br />&nbsp;<br />一。源代码和概念<br /><br />&nbsp;这部分讨论优化器关键概念，术语，及在MySQL源代码怎么对应的。<br />&nbsp;<br />1.定义<br />&nbsp;狭义定义：优化器，就是DBMS为查询时决断要往哪种执行路径的一系列路线。<br />&nbsp;MySQL是经常调整查询的路线，所以你得把这篇描述的逻辑和在源代码里的做比较。为了使比较容易些，这里会包含相关文件和路径的注解，例如源代码/sql/sql_select.cc，optimize_cond()函数。<br />&nbsp;当一个查询被转成另一种查询时，其结果是一样的，就会发生语句转化。如下这个查询<br />SELECT ... WHERE 5 = a<br />就会被转化成为<br /><br />SELECT ... WHERE a = 5<br />&nbsp;最明显的语句转化是少的，有些语句转化，是为了更快的执行。<br />&nbsp;<br />2.优化器源代码<br />&nbsp;如下伪代码显示了/sql/sql_select.cc中handle_select()函数的逻辑结构。（源代码/sql/sql_select.cc处理SQL查询）<br />handle_select()<br />&nbsp;&nbsp; <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>_select()<br />&nbsp;&nbsp;&nbsp;&nbsp; JOIN::PRepare()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; setup_fields()<br />&nbsp;&nbsp;&nbsp;&nbsp; JOIN::optimize()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* optimizer is from here ... */<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; optimize_cond()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; opt_sum_query()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; make_join_statistics()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; get_quick_record_count()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; choose_plan()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Find the best way to&nbsp;access&nbsp;tables */<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* as specified by the user.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; optimize_straight_join()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; best_access_path()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Find a (sub-)optimal plan among all or subset */<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* of all possible query plans where the user&nbsp;&nbsp;&nbsp; */<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* controls the exhaustiveness of the search.&nbsp;&nbsp; */<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; greedy_search()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; best_extension_by_limited_search()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; best_access_path()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Perform an exhaustive search for an optimal plan */<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; find_best()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; make_join_select()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* ... to here */<br />&nbsp;&nbsp;&nbsp;&nbsp; JOIN::exec()<br />&nbsp;缩进行显示了哪个函数调用哪个函数，如handle_select()函数调用<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>_select()函数，<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>_select()函数会调用JOIN::prepare()、JOIN::optimize()、JOIN::exec()，以及类推。<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>_select()函数的第一部分是调用JOIN::prepare()，此函数用来上下文分析、元数据建立和一些语句转化。查询优化器函数JOIN::optimize()和其所有优化处理中的子路线。当执行完JOIN::optimize()函数后，JOIN::exec()接管并完成JOIN::optimize()函数优化决断后的执行工作。<br />&nbsp;虽然有JOIN字出现，其实查询优化器的工作会处理所有的查询类型，不单单JOIN联接查询。<br />&nbsp;<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sqlserver执行计划缓存 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Sqlserver执行计划缓存</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+<p>DBCC FREEPROCCACHE    &ndash;清除执行计划缓存</p>
+
+<pre><code class="language-select">
+1. 使用存储过程，或者 sp_executesql 的方式调用会被重复使用的语句，而不要直接用 ad-hoc 语句或者 dynamic SQL 。
+
+2. 在语句里引用对象（表、视图、存储过程等），到带上它的 schema 名字，而不光是对象自己的名字。
+
+3. 将 数据库 Parameterization 属性设置成 Forced
+这个属性是开启数据库强制参数化。也就是说，对于在这个数据库下运行的大部分语句，SQL Server 都会先参数化，再运行。如果应用经常用 adhoc 的方式调用一样的语句，强制参数化可能会有所帮助
+4. 统计信息更新
+统计信息手工或者自动更新后，对和它有关的执行计划都不再能重用，而会产生重编译。
+
+5. Create Procedure ... with Recompile 选项 和 Exce ... with Recomplie 选项
+在重建或者调用存储过程的时候使用 &quot;with Recomplie&quot;，会强制 Sql Server 在调用这个存储过程的时候，永远都要先编译，再运行。
+6. 用户使用了 sp_recomplie
+
+7. 用户在调用语句的时候，使用了 &quot;Keep Plan&quot; 或者 &quot;KeepFixed Plan&quot; 这样的查询提示
+```declare @p1 int
+exec sp_prepexec @p1 output,N'@P0 bigint',N'select top 1 r.reser_no,r.card_no,r.op_date,r.payment,r.order_from
+        from reserve r with(nolock)
+        where r.card_no = @P0 and r.reser_status!=''ERR''
+        order by r.op_date;        ',190000000048182868
+select @p1
+</code></pre>
+
+</main>
+<h2 class="date">发布日期:2019/03/02</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/sqlserver">sqlserver</a> <a href="/categories/dbcc">DBCC</a> <a href="/categories/sql%E6%8A%80%E5%B7%A7">SQL技巧</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

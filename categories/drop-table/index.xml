@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>drop table on Classic</title>
+    <link>/categories/drop-table/</link>
+    <description>Recent content in drop table on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 26 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="/categories/drop-table/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL的drop/truncate Table影响分析和最佳实践</title>
+      <link>/dba/droptable/</link>
+      <pubDate>Thu, 26 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/droptable/</guid>
+      <description>0.前言 MySQL上直接Drop张大表,会有什么影响，能否直接写个 drop table ; 或者 truncate table ; 甚至是delete * from 如果这张表足够大，比如1亿行记录，drop 的时间需要多久，期间我的MySQL是否能正常访问？
+首先明确一点，现在讨论的是要删掉的大表一定是没人访问的表，否则如果这张表仍然还有被高频的访问，你敢直接删那基本上就是茅坑里点灯，找死！ 如果MySQL版本是5.5.23以下，直接DROP一张大表，也是守着茅坑睡觉，离死不远。 好，现在明确了这张表肯定没人访问了，你的MySQL版本也足够新，并不表示你就远离了茅坑，但如果这张表足够大，仍然有被崩到的风险。
+大表：我们定义为5000万行以上，或者单表文件大于100G
+我们要讨论的是innodb存储引擎,myisam等存储引擎，DROP 表又快又安全
+1.drop table 的风险和避免方法 Drop table 要做的主要有3件事：  把硬盘上的这个文件删了 把内存中的这个库已经加载加来的Page删了，腾出空间 把MySQL元数据字典中这张表关联信息删了  可能会引起的风险有3种：  MySQL长时间阻塞其他事务执行，大量请求堆积，实例假死。(锁) 磁盘IO被短时间大量占用，数据库性能明显下降(IO) 内存里的page大量置换，引起线程阻塞，实例假死（内存)  解决和避免的方法3种：  io占用的问题，对这个表建一个硬链，使Drop table 表的时候并没有真的去磁盘上删那个巨大的ibd文件，事后再用truncate的方式慢慢的删除这个文件，如果是SSD盘和卡,drop table后再直接rm文件也没问题 内存和IO占用的问题，升级MySQL版本   MySQL 5.5.23 引入了 lazy drop table 来优化改进了drop 操作影响(改进，改进，并没有说完全消除!!!拐杖敲黑板3次)
+  MySQL5.7.8 拆分了AHI共用一个全局的锁结构 btr_search_latch
+  MySQL8.0 解决了truncate table 的风险
+   道路千万行，低峰第一条。选择低峰时间段，找个夜深人静，月黑风高的时候是更好的选择。  2.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SQL集合函数中利用case when then技巧</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="我们都知道sql中适用casewhenthen来转化数据库中的信息<br/>比如select(casesexwhen0then'男'else'女'end)assexfromstudentinfo<br/>那么在集合函数中它有什么用呢？<br/>假设数据库有一张表名为student的表。<br/><br/>如果现在要你根据这张表，查出江西省男女个数，广东省SQL集合函数中利用case when then技巧" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA">高可用性和HA</a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化">性能与优化</a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决">故障与解决</a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserverzhishi/l_2_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>SQL集合函数中利用case when then技巧</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   我们都知道SQL中适用case when then来转化数据库中的信息<br />比如 select (case sex when 0 then '男' else '女' end) AS sex from studentInfo<br />那么在集合函数中它有什么用呢 ？<br />假设数据库有一张表名为student的表。<br /><br />如果现在要你根据这张表，查出江西省男女个数，广东省男生个数，浙江省男女个数 怎么写SQL语句？即要生成下结果表<br /><br />答案是:select sex ,count ( case province when '广东省' then '广东省' end )as 广东省 ,count ( case province when '江西省' then '江西省' end )as 江西省 ,count ( case province when '浙江省' then '浙江省' end )as 浙江省 from student group by sex<br />count()函数即根据给定的范围和group by(统计方式) 而统计行数据的条数<br />我们一步步来理解上面语句<br />1. select sex from student (查询数据表中的存在的男女条数)<br /><br />2.select sex, count (*) as num from student group by sex (查询表中男女数量)<br /><br />3.select sex ,province, count (*)as num from student group by sex,province (查询各省男女数量)<br /><br />重点来了，如果我把count(*) 中的 *号换成任一列名呢？ 如count(province) 会怎样？<br />4.select sex ,province, count (province)as num from student group by sex,province (查询各省男女数量)<br />结果跟上图一样：这说明换不换都一样。又有count (province)等价于 count(case province when '浙江省' then '浙江省' else province end )<br />但是如果我们缩小范围呢即count(case province when '浙江省' then '浙江省' end ) 那么请看下面<br />5.select sex ,province, count ( case province when '浙江省' then '浙江省' end )as num from student group by sex,province<br /><br />即统计男女数量范围限定在浙江省 再精简一下即下面<br />6.select sex, count ( case province when '浙江省' then '浙江省' end ) as 浙江省 from student group by sex<br /><br />已经接近我们的要求了，现在只要加上另几个字段就是了<br />7.select sex ,count ( case province when '广东省' then '广东省' end )as 广东省 ,count ( case province when '江西省' then '江西省' end )as 江西省 ,count ( case province when '浙江省' then '浙江省' end )as 浙江省 from student group by sex<br /><br />小结：当然实现有很多种方法 可以多个子查询拼接起来也不无可厚非。我这只是一种思路<br />补充：case when then 知识点<br />(1) select (case province when '浙江省' then '浙江' when '江西省' then '江西' end ) as 省份 from student<br /><br />如果默认范围如果没全包含则为空 像上图的广东省为空<br />(2)select (case province when '浙江省' then '浙江' when '江西省' then '江西' else province end ) as 省份 from student<br /><br /><br /><br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

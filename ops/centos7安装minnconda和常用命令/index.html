@@ -1,0 +1,358 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Centos7安装minnconda和常用命令| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Centos7安装minnconda和常用命令</span></h1>
+</div>
+
+
+  <main>
+    <h2 id="下载">下载</h2>
+<ul>
+<li>官网：https://docs.anaconda.com/miniconda/</li>
+<li>找到下载地方：</li>
+<li><img src="/img/2024/071000000071141726207482.png" alt="minnconda下载页"></li>
+<li>这里演示的是x86服务器</li>
+</ul>
+<pre><code>mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm ~/miniconda3/miniconda.sh
+
+
+</code></pre><h2 id="使用">使用</h2>
+<h3 id="常用命令">常用命令</h3>
+<ul>
+<li>验证安装</li>
+</ul>
+<pre><code>source ~/miniconda3/bin/activate
+conda --version
+
+</code></pre><ul>
+<li>安装包</li>
+</ul>
+<blockquote>
+<p><code>conda install package_name</code> 例如：<code>conda install numpy</code></p>
+</blockquote>
+<ul>
+<li>安装特定版本的包</li>
+</ul>
+<blockquote>
+<p><code>conda install package_name=versio</code> 例如：<code>conda install numpy=1.18.1</code></p>
+</blockquote>
+<ul>
+<li>更新包</li>
+</ul>
+<blockquote>
+<p><code>conda update package_name</code>例如： <code>conda update numpy</code></p>
+</blockquote>
+<ul>
+<li>移除包</li>
+</ul>
+<blockquote>
+<p><code>conda remove package_name</code> # 例如：<code>conda remove numpy</code></p>
+</blockquote>
+<ul>
+<li>查看已安装的包</li>
+</ul>
+<blockquote>
+<p><code>conda list</code></p>
+</blockquote>
+<ul>
+<li>查看存在哪些虚拟环境</li>
+</ul>
+<blockquote>
+<p><code>conda env list</code></p>
+</blockquote>
+<ul>
+<li>克隆环境：</li>
+</ul>
+<blockquote>
+<p><code>conda create --name new_env_name --clone old_env_name</code></p>
+</blockquote>
+<ul>
+<li>验证克隆的环境</li>
+</ul>
+<blockquote>
+<p><code>conda activate new_env</code></p>
+</blockquote>
+<ul>
+<li>查看支持的python版本</li>
+</ul>
+<blockquote>
+<p><code>conda search python</code></p>
+</blockquote>
+<h3 id="虚拟环境">虚拟环境</h3>
+<ul>
+<li>创建一个运行makeimg的虚拟环境</li>
+</ul>
+<blockquote>
+<p><code>conda create --name makeimg python=3.12</code></p>
+</blockquote>
+<pre><code>The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    expat-2.6.3                |       h6a678d5_0         176 KB
+    openssl-3.0.15             |       h5eee18b_0         5.2 MB
+    python-3.12.5              |       h5148396_1        34.6 MB
+    wheel-0.44.0               |  py312h06a4308_0         141 KB
+    ------------------------------------------------------------
+                                           Total:        40.1 MB
+
+The following NEW packages will be INSTALLED:
+
+  _libgcc_mutex      pkgs/main/linux-64::_libgcc_mutex-0.1-main 
+  _openmp_mutex      pkgs/main/linux-64::_openmp_mutex-5.1-1_gnu 
+  bzip2              pkgs/main/linux-64::bzip2-1.0.8-h5eee18b_6 
+  ca-certificates    pkgs/main/linux-64::ca-certificates-2024.7.2-h06a4308_0 
+  expat              pkgs/main/linux-64::expat-2.6.3-h6a678d5_0 
+  ld_impl_linux-64   pkgs/main/linux-64::ld_impl_linux-64-2.38-h1181459_1 
+  libffi             pkgs/main/linux-64::libffi-3.4.4-h6a678d5_1 
+  libgcc-ng          pkgs/main/linux-64::libgcc-ng-11.2.0-h1234567_1 
+  libgomp            pkgs/main/linux-64::libgomp-11.2.0-h1234567_1 
+  libstdcxx-ng       pkgs/main/linux-64::libstdcxx-ng-11.2.0-h1234567_1 
+  libuuid            pkgs/main/linux-64::libuuid-1.41.5-h5eee18b_0 
+  ncurses            pkgs/main/linux-64::ncurses-6.4-h6a678d5_0 
+  openssl            pkgs/main/linux-64::openssl-3.0.15-h5eee18b_0 
+  pip                pkgs/main/linux-64::pip-24.2-py312h06a4308_0 
+  python             pkgs/main/linux-64::python-3.12.5-h5148396_1 
+  readline           pkgs/main/linux-64::readline-8.2-h5eee18b_0 
+  setuptools         pkgs/main/linux-64::setuptools-72.1.0-py312h06a4308_0 
+  sqlite             pkgs/main/linux-64::sqlite-3.45.3-h5eee18b_0 
+  tk                 pkgs/main/linux-64::tk-8.6.14-h39e8969_0 
+  tzdata             pkgs/main/noarch::tzdata-2024a-h04d1e81_0 
+  wheel              pkgs/main/linux-64::wheel-0.44.0-py312h06a4308_0 
+  xz                 pkgs/main/linux-64::xz-5.4.6-h5eee18b_1 
+  zlib               pkgs/main/linux-64::zlib-1.2.13-h5eee18b_1 
+
+
+Proceed ([y]/n)? y
+
+
+Downloading and Extracting Packages:
+                                                                                                                                                                                                                                                                                                        
+Preparing transaction: done                                                                                                                                                                                                                                                                             
+Verifying transaction: done                                                                                                                                                                                                                                                                             
+Executing transaction: done                                                                                                                                                                                                                                                                             
+#
+# To activate this environment, use
+#
+#     $ conda activate makeimg
+#
+# To deactivate an active environment, use
+#
+#     $ conda deactivate
+</code></pre><ul>
+<li>进入环境</li>
+</ul>
+<blockquote>
+<p><code>source ~/miniconda3/bin/activate</code>
+<code>conda activate makeimg</code></p>
+</blockquote>
+<ul>
+<li>在虚拟环境安装模块</li>
+</ul>
+<blockquote>
+<p><code>pip install 模块名 -i https://pypi.tuna.tsinghua.edu.cn/simple</code></p>
+</blockquote>
+<ul>
+<li>退出环境</li>
+</ul>
+<blockquote>
+<p><code>conda deactivate</code></p>
+</blockquote>
+<ul>
+<li>删除虚拟环境(慎用！！！)</li>
+</ul>
+<blockquote>
+<p><code>conda env remove -n makeimg </code></p>
+</blockquote>
+<h2 id="补充centos7上直接安装python312">补充：centos7上直接安装python3.12</h2>
+<ul>
+<li>如果不需要minnconda可以直接安装python3</li>
+</ul>
+<h3 id="准备工作">准备工作</h3>
+<pre><code>yum groupinstall -y &quot;Development Tools&quot;
+yum install -y openssl-devel bzip2-devel libffi-devel
+mkdir /usr/local/python312
+</code></pre><h3 id="更新到openssl到11版本">更新到openssl到1.1版本</h3>
+<ul>
+<li>检查</li>
+</ul>
+<pre><code>openssl version
+OpenSSL 1.0.2k-fips  26 Jan 2017
+</code></pre><ul>
+<li>更新</li>
+</ul>
+<pre><code>wget https://openssl.org/source/old/1.1.1/openssl-1.1.1w.tar.gz
+#如果上面的地址不可用了，到这里找：https://openssl.org/source/old/1.1.1/index.html
+tar -zxvf openssl-1.1.1w.tar.gz
+cd openssl-1.1.1w/
+./config --prefix=/usr/local/openssl --openssldir=/usr/local/openssl shared zlib
+ make -j$(nproc)
+ make install
+</code></pre><ul>
+<li>验证</li>
+<li><code>openssl version</code></li>
+</ul>
+<blockquote>
+<p>报错：openssl: error while loading shared libraries: libssl.so.1.1: cannot open shared object file: No such file or directory</p>
+</blockquote>
+<ul>
+<li>报错处理：</li>
+</ul>
+<pre><code>ln -s /usr/local/openssl/lib/libssl.so.1.1 /usr/lib64/libssl.so.1.1
+ln -s /usr/local/openssl/lib/libcrypto.so.1.1 /usr/lib64/libcrypto.so.1.1
+</code></pre><ul>
+<li>覆盖原版本</li>
+</ul>
+<pre><code>cd /usr/bin/
+mv openssl openssl.bak2024
+ln -s /usr/local/openssl/bin/openssl /usr/bin/openssl
+</code></pre><ul>
+<li>验证</li>
+<li><code>openssl version</code></li>
+</ul>
+<pre><code>openssl version
+OpenSSL 1.1.1w  11 Sep 2023
+
+# 成功
+</code></pre><h3 id="安装python312">安装python3.12</h3>
+<pre><code>cd /usr/local/python312
+wget https://www.python.org/ftp/python/3.12.6/Python-3.12.6.tar.xz
+tar xvf Python-3.12.6.tar.xz
+cd Python-3.12.6
+ ./configure --enable-optimizations --with-openssl=/usr/local/openssl
+ make -j$(nproc)
+ make install  #make altinstall --&gt;为了避免覆盖系统默认的 Python 版本。
+
+ python3.12 --version
+
+whereis pip
+ln -s /usr/local/bin/pip3.12 /usr/local/bin/pip3
+
+
+pip3 install --upgrade pip -i https://pypi.tuna.tsinghua.edu.cn/simple
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2024/09/12</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/centos">centos</a> <a href="/categories/python">python</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

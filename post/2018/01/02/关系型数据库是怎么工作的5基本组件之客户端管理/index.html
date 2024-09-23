@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>关系型数据库是怎么工作的5:基本组件之客户端管理 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">关系型数据库是怎么工作的5:基本组件之客户端管理</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+<nav id="TableOfContents">
+<ul>
+<li><a href="#基本组件-前4节">基本组件(前4节)</a>
+<ul>
+<li><a href="#核心组件">核心组件:</a></li>
+<li><a href="#工具">工具:</a></li>
+<li><a href="#查询管理器">查询管理器：</a></li>
+<li><a href="#数据管理器">数据管理器:</a></li>
+</ul></li>
+<li><a href="#客户端管理器">客户端管理器</a></li>
+</ul>
+</nav>
+
+
+<main>
+
+
+<h1 id="基本组件-前4节">基本组件(前4节)</h1>
+
+<ol>
+<li><a href="https://www.dboop.com/post/2017/09/09/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%841%E5%BC%95%E8%A8%80/">引言</a></li>
+<li><a href="https://www.dboop.com/post/2017/09/10/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%842%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/">时间复杂度</a></li>
+<li><a href="https://www.dboop.com/post/2017/09/11/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%843%E5%90%88%E5%B9%B6%E6%8E%92%E5%BA%8F/">合并排序</a></li>
+<li><a href="https://www.dboop.com/post/2017/09/12/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%844%E6%95%B0%E7%BB%84.%E6%A0%91.%E5%93%88%E5%B8%8C%E8%A1%A8/">数组.树.哈希表</a></li>
+</ol>
+
+<p>我们刚介绍的是数据库内部的基本原理</p>
+
+<p>数据库是一个可以轻松访问和修改的**信息的集合*。 但是一堆简单的文件也可以做到这一点。 实际上，最简单的数据库（如SQLite）仅是一堆文件。 但是SQLite是精心设计的一堆文件因为它可以:
+- 使用事务去确保数据安全和交易连续性
+- 快速处理数据,即使是几百万行数据</p>
+
+<p>通俗来说,数据库可以如下图所示</p>
+
+<p><img src="/img/global_overview.png" alt="db_global_overview" title="db_global_overview" /></p>
+
+<p>在写这部分前,我看了很多书和论文,不同的数据库对基础组件的称呼不同.所以不要关注我是怎么组织数据库理念的,也不要关注我是怎么给这些处理过程命名的.因为这篇文章的需要我做了一些取舍.忽略这些组件的差异;总的思路是将整个数据库系统分成以下几个组件:</p>
+
+<h2 id="核心组件">核心组件:</h2>
+
+<ul>
+<li><strong>进程管理器</strong> : 很多数据库有个*进程/线程*池需要处理.此外，为了获得纳秒级的性能，某些现代数据库使用自己的线程管理而不是操作系统线程管理。</li>
+<li><strong>网络管理器</strong> : 网络I/O是一个关键点，尤其是对于分布式数据库。 这就是为什么某些数据库拥有自己的管理器的原因</li>
+<li><strong>文件管理器</strong> : 磁盘I/O是数据库最大(或者说是每一位)的瓶劲.拥有一个自身的文件管理理可以很好的的适配或替代操作系统文件管理器</li>
+<li><strong>内存管理器</strong> : 为了避免磁盘I/O需要大量的内存.处理大量的内存你需要一个高效的内存管理器,尤其是你有很多查询同时用到内存的情况下</li>
+<li><strong>安全管理器</strong> : 用于管理用户的身份验证和授权</li>
+<li><strong>客户端管理器</strong> : 用于管理客户端的连接</li>
+<li>&hellip;&hellip;</li>
+</ul>
+
+<h2 id="工具">工具:</h2>
+
+<ul>
+<li><strong>备份管理器</strong> : 用于保存和还原数据库。。</li>
+<li><strong>恢复管理器</strong> : 崩溃后以一致状态重新启动数据库</li>
+<li><strong>监视管理器</strong> : 用于记录数据库的活动并提供监视数据库的工具</li>
+<li><strong>后台管理器</strong> : 用于存储元数据（如表的名称和结构），并提供工具来管理数据库，模式，表空间，…</li>
+<li>&hellip;&hellip;</li>
+</ul>
+
+<h2 id="查询管理器">查询管理器：</h2>
+
+<ul>
+<li><strong>查询解析器</strong> ：检查查询是否有效</li>
+<li><strong>查询重写器</strong> ：预优化查询</li>
+<li><strong>查询优化器</strong> ：优化查询</li>
+<li><strong>查询执行器</strong> ：编译并执行查询</li>
+</ul>
+
+<h2 id="数据管理器">数据管理器:</h2>
+
+<ul>
+<li><strong>事务处理器</strong> ：处理事务</li>
+<li><strong>缓存管理器</strong> ：在使用数据之前先将其放入内存中，然后在将其写入磁盘之前先将其放入内存中</li>
+<li><strong>数据访问管理器</strong> ：访问磁盘上的数据</li>
+</ul>
+
+<p>在这篇文章的剩余部分,我将着重讲述一个数据库系统如何用下面三个过程来处理SQL查询的
+- 客户端管理器
+- 查询管理器
+- 数据管理器(这里也会讲<em>恢复管理器</em>)</p>
+
+<h1 id="客户端管理器">客户端管理器</h1>
+
+<p><img src="/img/client_manager.png" alt="客户端管理" title="Client manager" /></p>
+
+<p>客户端管理器是处理与客户通信的部分。客户端可以是（Web）服务器或最终用户/最终应用程序。客户端管理器提供了通过一组不同的API访问数据库,常见的有：JDBC，ODBC，OLE-DB…</p>
+
+<p>它还可以提供私有的数据库访问API。</p>
+
+<p> </p>
+
+<p>当您连接到数据库时：</p>
+
+<ul>
+<li><strong>客户端管理器</strong>首先检查您的身份验证（您的登录名和密码），然后检查您是否具有该数据库的授权。这些访问权限由您的DBA设置。</li>
+<li>然后，它检查是否存在可用于管理查询的进程（或线程）。</li>
+<li>它还会检查数据库是否负载过重。</li>
+<li>它可以等待片刻以获取所需的资源。如果此等待达到超时，它将关闭连接并给出可读的错误消息。</li>
+<li>然后它将您的SQL发送到查询管理器并处理您的查询</li>
+<li>由于查询处理不是“所有结果或全无”的进程，因此，一旦它从查询管理器获取数据，它将部分结果存储在缓冲区中并开始发送给您。</li>
+<li>出现问题时，它将停止连接，为您提供易于理解的报错解释并释放资源。</li>
+</ul>
+
+<p>本篇文章分以下章节，当前第5节, 下一节是重点：</p>
+
+<ol>
+<li><a href="https://www.dboop.com/post/2017/09/09/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%841%E5%BC%95%E8%A8%80/">引言</a></li>
+<li><a href="https://www.dboop.com/post/2017/09/10/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%842%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/">时间复杂度</a></li>
+<li><a href="https://www.dboop.com/post/2017/09/11/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%843%E5%90%88%E5%B9%B6%E6%8E%92%E5%BA%8F/">合并排序</a></li>
+<li><a href="https://www.dboop.com/post/2017/09/12/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%844%E6%95%B0%E7%BB%84.%E6%A0%91.%E5%93%88%E5%B8%8C%E8%A1%A8/">数组.树.哈希表</a></li>
+<li><a href="https://www.dboop.com/post/2018/01/02/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%845%E5%9F%BA%E6%9C%AC%E7%BB%84%E4%BB%B6%E4%B9%8B%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%AE%A1%E7%90%86/">客户端管理</a></li>
+<li><a href="https://www.dboop.com/post/2018/01/08/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%846sql%E6%9F%A5%E8%AF%A2/">SQL查询</a></li>
+<li><a href="https://www.dboop.com/post/2018/01/11/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%847%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86/">数据管理</a></li>
+</ol>
+
+</main>
+<h2 class="date">发布日期:2018/01/02</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%90%86%E8%AE%BA">数据库理论</a> <a href="/categories/%E7%BF%BB%E8%AF%91">翻译</a> <a href="/categories/%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93">关系型数据库</a> <a href="/categories/mysql">mysql</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E8%BD%AC%E8%AF%91">转译</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

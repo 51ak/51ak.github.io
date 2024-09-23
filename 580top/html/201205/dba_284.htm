@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access技巧：使ACCESS数据库保持同步</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="同步（synchronization）是数据库在网络环境中应用所要涉及到的一个重要概念。其基本过程大致分以下几个步骤：首先把一个数据库设为可复制副本属性，使其成为设计正本（vb中称设计原版，access中称设计母版）；然后根据应用程序的实现需要从设计正本复制出多个副本（vb中称复本），这些副本组成一个副本集合（设计正本也被看做是第一个的、初始的副本）；最后在集中任何复本的数据或结构被更改会时启Access技巧：使ACCESS数据库保持同步" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a href="../othersql/l_19_1.htm" class="hover"　title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../nosql/l_20_1.htm" title="NoSQL">NoSQL</a>|</li><li><a  href="../sysbase/l_21_1.htm" title="Sybase">Sybase</a>|</li><li><a  href="../db2/l_22_1.htm" title="DB2">DB2</a>|</li><li><a  href="../access/l_23_1.htm" title="Access"><span class="zc_666">Access</span></a>|</li><li><a  href="../infomix/l_24_1.htm" title="Informix">Informix</a>|</li><li><a  href="../sqlsql/l_25_1.htm" title="其他">其他</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../othersql/l_19_1.htm">其他数据库</a>&nbsp;&gt;&nbsp;<a href="../access/l_23_1.htm">Access</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>Access技巧：使ACCESS数据库保持同步</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   　　同步（Synchronization）是数据库在网络环境中应用所要涉及到的一个重要概念。其基本过程大致分以下几个步骤：首先把一个数据库设为可复制副本属性，使其成为设计正本（VB中称设计原版，ACCESS中称设计母版）；然后根据应用程序的实现需要从设计正本复制出多个副本（VB中称复本），这些副本组成一个副本集合（设计正本也被看做是第一个的、初始的副本）；最后在集中任何复本的数据或结构被更改会时启用同步机制把改变发送并且应用于此复本集中的<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>成员，使得副本集中的成员在数据或结构上保持一致性。实现同步的这一过程被称为同步化。VB6.0为实现同步，在数据库对象中提供了多个属性与方法来实现这一过程，以下介绍主要的几个属性与方法，分别对应同步化的几个步骤：<br />　　1．Replicable属性：<br />　　Replicable属性用来使一个数据库对象或数据库中的表对象、查询对象等对象成为可复制副本的，即成为设计正本。但数据库对象并不提供Replicable这一属性，因此首先要用CreatePropety方法来创建它，然后把它添加到对象的属性集中，最后再给它赋值，使数据库成为设计正本。对于数据库对象而言，把Replicable属性设置为“T”将使数据库对象成为可复制的。以下代码将使VB6.0安装目录下附带的Nwind.mdb数据库成为一个设计正本（为确保安全建议在操作前备份这一库文件）：<br /><br /><br />　　Private Sub Command1_Click()<br />　　Dim dbNwind As Database<br />　　'如果末引用DAO则一定要先引用<br />　　Dim prpNew As Property<br />　　Set dbNwind = OpenDatabase("Nwind.mdb", True)<br />　　With dbNwind<br />　　'建立Replicable属性，如果已经存在该属性则程序略过这一步<br />　　On Error Resume Next<br />　　Set prpNew = .CreateProperty("Replicable", dbText, "T")<br />　　.Properties.Append prpNew<br />　　'设置数据库的Replicable属性为True<br />　　.Properties("Replicable") = "T"<br />　　.Close<br />　　End With<br />　　End Sub<br /><br />　　2．MakeReplica方法：<br />　　MakeReplica方法从设计正本复制出一个新的完全副本。其语法为：database.MakeReplica replica, description, options，其中replica是代表一个新副本路径名称的字符串；description是对正在创建的新副本的一个描述字符串；options是一个可选项，可以是dbRepMakePartial常量（创建一个部分副本）或dbRepMakeReadOnly常量（防止用户修改新副本中的可复制对象），如果要建立的是一个只读式的部分副本，则要加入参数常量 dbRepMakeReadOnly + dbRepMakePartial 。<br />　　在第一个例子中，在关闭数据库之前加入代码：.MakeReplica "NwReplica", "replica of nwind.mdb"，则从Nwind.mdb设计正本复制出一个名为NwReplica.mdb的副本，位置在Nwind.mdb同一目录中。以下是一个通过传递参数的形式，在实际应用中可供灵活调用的函数，每调用该函数一次即可实现新建一个副本：<br />Function MakeAdditionalReplica(strReplicableDB As String, strNewReplica As String, intOptions As Integer) As Integer<br />　　Dim dbsTemp As Database<br />　　On Error GoTo ErrorHandler<br />　　Set dbsTemp = OpenDatabase(strReplicableDB)<br />　　' 如果在调用此函数时，intOptions处末给出参数, 则忽略该参数项，<br />　　'默认建立一个完全的、可读/写的副本，否则就利用提供的参数按要求建立副本&nbsp;<br />　　If intOptions = 0 Then<br />　　dbsTemp.MakeReplica strNewReplica, "Replica of " &amp; strReplicableDB<br />　　Else&nbsp;<br />　　dbsTemp.MakeReplica strNewReplica, "Replica of " &amp; strReplicableDB, intOptions<br />　　End If<br />　　dbsTemp.Close<br />　　ErrorHandler:<br />　　Select Case Err<br />　　Case 0:<br />　　MakeAdditionalReplica = 0<br />　　Exit Function<br />　　Case Else:<br />　　MsgBox "Error " &amp; Err &amp; " : " &amp; Error<br />　　MakeAdditionalReplica = Err<br />　　Exit Function<br />　　End Select<br />　　End Function<br /><br />　　3．Synchronize方法：<br />　　Synchronize方法使两个完全副本（包括设计正本）同步化。其语法为：database.Synchronize pathname, exchange。其中pathname为要同步的目标副本的路径名称字符串（串中的 .mdb扩展名可省略）；exchange用来标识两个数据库之间的同步方向（如表一），这是一个可选项，默认为表中的第三个选项，即双向交换。利用表中第四个dbRepSyncInternet常量选项，还可对通过Internet互联的数据库进行同步化，<br />　　这时要将代表本地网络路径选项pathname用URL地址来代替。<br />　　表一、同步化方向常量<br /><br />常量同步化方向DbRepExportChanges从数据库到副本路径名称DbRepImportChanges从副本路径名称到数据库DbRepImpExpChanges双向交换改变（默认）DbRepSyncInternet在通过Internet路径连接的数据库之间传递改变<br />&nbsp;<br />　　在同步化操作之前，要确保已经利用 Replicable属性使一个数据库初始出设计正本，并且利用MakeReplica方法复制出了一个以上的副本。<br />　　以下通过在第一个例子添加的副本复制语句之后，加入如下语句：.Synchronize "NwReplica.mdb", dbRepExportChanges，实现把数据库Nwind的设计正本的任何改变传递给副本 NwReplica。我们可以在Nwind.mdb库中改变一些数据内容，然后再运行这一例子，我们会发现Nwind.mdb库的改变已经反映在NwReplica.mdb这一副本中了。<br />　　以上语句实现从数据库到副本路径名称的同步（把设计正本的数据或结构改变传递给副本），把dbRepExportChanges常量改为dbRepImportChanges和dbRepImpExpChanges可分别实现从副本路径名称到数据库(数据库接收副本上的改变)以及双向交换(两者间的双向数据传递)同步。<br />　　Synchronize方法还可对通过Internet互联的数据库进行同步化，以下语句实现本地数据库正本与位于Internet服务器上的一个副本同步化：dbNwind.Synchronize "www.mycompany.myserver.com" &amp; "/files/NwReplica.mdb", dbRepImpExpChanges + dbRepSyncInternet<br />　　4．PopulatePartial 方法：<br />　　上面介绍利用Synchronize方法使两个完全副本同步化，不会出现问题，但如果用一个完全副本来同步一个部分副本，因为部分副本是由副本过滤器来从完全副本来过滤重新生成的，因此可能在部分副本中产生所谓的“孤立”记录，即这些记录不能再与<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>副本保持同步。要解决这一问题引入了另一个称为PopulatePartial的方法，该方法与Synchronize方法类似，只不过它是实现部分副本与完全副本的同步，在同步时，首先清除部分副本中的所有记录，然后根据当前副本的过滤器来重新生成部分副本，这样就解决了“孤立”记录的问题。其语法为：database.PopulatePartial dbname。dbname是完全副本的路径名称。由于篇幅所限以及其与Synchronize方法的相似性，因此在此不再累述，更详细的描述请参阅相关的联机帮助。<br /><br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

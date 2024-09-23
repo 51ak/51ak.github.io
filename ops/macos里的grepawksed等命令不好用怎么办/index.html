@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MacOS里的grep,sed,awk等命令不好用怎么办| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MacOS里的grep,sed,awk等命令不好用怎么办</span></h1>
+</div>
+
+
+  <main>
+    <h2 id="问题">问题</h2>
+<ul>
+<li>工作用的电脑是mac</li>
+<li>经常发现linux上常用的sed,grep命令用不起来，各种报错</li>
+<li>后来查了一下发现mac里的sed和linux的不是一个版本的软件</li>
+</ul>
+<blockquote>
+<p>Mac OS X uses BSD sed and not GNU sed.
+When you use a GNU sed extension with Mac OS X sed, you get different results, or failures.
+Classically, sed does not support numeric offsets, forwards or backwards. You&rsquo;ll need to revise your script to work on Mac OS X.</p>
+</blockquote>
+<h2 id="解决">解决</h2>
+<h3 id="使用以下命令安装gnu命令套件">使用以下命令安装GNU命令套件：</h3>
+<pre><code>brew install coreutils
+</code></pre><h3 id="使用以下命令安装gnu-sed">使用以下命令安装gnu-sed：</h3>
+<pre><code>brew install gnu-sed --with-default-names
+</code></pre><h3 id="以上命令安装的gnu套件的命令都是带有g前缀的">以上命令安装的gnu套件的命令都是带有g前缀的</h3>
+<ul>
+<li>gcat &ndash;&gt; linux里的cat</li>
+<li>gsed &ndash;&gt; linux里的sed</li>
+<li>ggrep &ndash;&gt; linux里的grep</li>
+<li>gawk &ndash;&gt; linux里的awk</li>
+<li>&hellip;</li>
+</ul>
+<h3 id="如果想直接代替不输入g前缀则">如果想直接代替，不输入g前缀则</h3>
+<pre><code>vim .bash_profile 
+加上
+export PATH=&quot;/usr/local/opt/coreutils/libexec/gnubin:$PATH&quot;
+export MANPATH=&quot;/usr/local/opt/coreutils/libexec/gnuman:$MANPATH&quot;
+</code></pre><p>然后source一下。</p>
+<h2 id="意外处理">意外处理</h2>
+<ul>
+<li>如果在执行<code>brew install coreutils</code>遇到报错:<code>Error: Permission denied @ apply2files - /usr/local/lib/docker/cli-plugins</code></li>
+<li>执行：<code>sudo chown -R $(whoami) $(brew --prefix)/*</code></li>
+<li>再 <code> brew cleanup</code> 下，即可</li>
+</ul>
+<p>享受正常的grep sed awk 吧。mac自带的没法用</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2021/07/27</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E8%BF%90%E7%BB%B4">运维</a> <a href="/categories/centos">centos</a> <a href="/categories/mac">mac</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

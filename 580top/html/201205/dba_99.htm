@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySQL账户创建方式</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="1.mysql用户创建：shell>mysql--user=rootmysqlmysql>grantallprivilegeson*.*tomonty@localhostidentifiedby'something'withgrantoption;<br/>mysql>grantallprivilegeson*.*tomonty@"%"identMySQL账户创建方式" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化">性能与优化</a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlzhishi/l_14_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>MySQL账户创建方式</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   1.<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>用户创建：shell> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> --user=root <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>> GRANT ALL PRIVILEGES ON *.* TO monty@localhost IDENTIFIED BY 'something' WITH GRANT OPTION;<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>> GRANT ALL PRIVILEGES ON *.* TO monty@"%" IDENTIFIED BY 'something' WITH GRANT OPTION;<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>> GRANT RELOAD,PROCESS ON *.* TO admin@localhost;<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>> GRANT USAGE ON *.* TO dummy@localhost;<br />这些GRANT语句安装3个新用户：<br />monty<br />可以从任何地方连接服务器的一个完全的超级用户，但是必须使用一个口令'something'做这个。注意，我们必须对monty@localhost和monty@"%"发出GRANT语句。如果我们增加localhost条目，对localhost的匿名用户条目在我们从本地主机连接接时由<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>_install_db创建的条目将优先考虑，因为它有更特定的Host字段值，所以以user表排列顺序看更早到来。<br />admin<br />可以从localhost没有一个口令进行连接并且被授予reload和process管理权限的用户。这允许用户执行<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>admin reload、<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>admin refresh和<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>admin flush-*命令，还有<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>admin processlist。没有授予数据库有关的权限。他们能在以后通过发出另一个GRANT语句授权。 dummy<br />可以不用一个口令连接的一个用户，但是只能从本地主机。全局权限被设置为'N'--USAGE权限类型允许你无需权限就可设置一个用户。它假定你将在以后授予数据库相关的权限。<br />2.通过直接修改授权表设置用户权限，运行这些命令(注意，在结束时FLUSH PRIVILEGES)：<br />shell> <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a> --user=root <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a><br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>> INSERT INTO user (Host,User,Password) VALUES('localhost','custom',PASSWORD('stupid'));<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>> INSERT INTO user (Host,User,Password) VALUES('server.domain','custom',PASSWORD('stupid'));<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>> INSERT INTO user (Host,User,Password) VALUES('whitehouse.gov','custom',PASSWORD('stupid'));<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>> INSERT INTO db     (Host,Db,User,Select_priv,Insert_priv,Update_priv,Delete_priv,  Create_priv,Drop_priv)<br />    VALUES  ('localhost','bankaccount','custom','Y','Y','Y','Y','Y','Y');<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>> INSERT INTO db<br />    (Host,Db,User,Select_priv,Insert_priv,Update_priv,Delete_priv, Create_priv,Drop_priv)<br />    VALUES ('whitehouse.gov','expenses','custom','Y','Y','Y','Y','Y','Y');<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>> INSERT INTO db (Host,Db,User,Select_priv,Insert_priv,Update_priv,Delete_priv, Create_priv,Drop_priv)<br />    VALUES('%','customer','custom','Y','Y','Y','Y','Y','Y');<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>> FLUSH PRIVILEGES;<br /> <br />3.改动密码时有时候会遇到忘记先前的密码，这时可以采用以下方式：<br />修改你的my.ini 配置文件，<br />在里面的 [<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d]节中某处加入下面的一行<br />skip-grant-tables<br />然后保存，重启 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>d 服务，这样你可以使用任何用户名以超级管理员的身体登录 MySQL 服务了。<br />然后转到<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>数据库中修改user表：<br />update user set password=PASSword('1234') where user='root';<br />一定记住要用password函数，否则将来将要输入的密码是‘1234’的密文。<br />最后删除上面所添中的内容，重启服务。<br />另外，如果可以从本机或其它机器上找到可以正常使用的MySql数据库，那么也可拷贝其<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>库中的文件名为user的相关文件，覆盖忘记密码的数据库中的同名文件，这样也能以被拷贝者的账户密码登录。<br />4.如何设置MySql账户使其可以从远程访问服务器<br />在5.0版本中，其实有一个图形界面的配置向导工具，在设置root账户密码时，可以选择是否允许其从远程访问。默认情况下是不允许的。<br />在命令行下，可以有两种大同小异的方法来作此设置：<br />(1)<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>>GRANT ALL PRIVILEGES ON *.* TO root@localhost IDENTIFIED BY 'something' WITH GRANT OPTION;<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>>GRANT ALL PRIVILEGES ON *.* TO root@"%" IDENTIFIED BY 'something' WITH GRANT OPTION;<br />第一句增加了一个root用户授权通过本地机(localhost)访问，密码“something”。<br />第二句则是使用通配符，授与root用户从任何其它主机发起的访问。<br />(2)亦可直接使用update语句修改user表：使用root用户或<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>用户登录<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>，转到<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>数据库<br />update user set host='localhost' where user='root';<br />flush privileges;//只允许root在本机登录<br />update user set host='%' where user='root';<br />flush privileges;//允许root远程访问<br />注意，以上一定要加flush语句。<br />另外，如果要建新用户，则用grant语句比较方便，记住语句grant总是创建新用户。<br />5.关于MySql的3306端口<br />一次在服务器上新装5.0.18时，提示3306端口已被占用，强制使用该端口，则发现所连接上的数据库是4.1.8版本，始终无法访问到新创建的服务器。后来发现机器上原来装有一个<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>服务器，4.1.8版本。<br />此时，应重新配置新版本的数据库， 将端口设为<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>的，如3307，那么在访问时，可以通过加上选项：--port=3307来访问，在.net程序中也须将连接字符串添上port=3307,即可。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

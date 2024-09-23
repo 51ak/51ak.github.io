@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>mysql foreign key(外键) 说明与实例</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="一,什么是foreignkey，及其完整性<br/>个人觉得，foreignkey就是表与表之间的某种约定的关系，由于这种关系的存在，我们能够让表与表之间的数据，更加的完整，关连性更强。关于完整性，关连性我举个例子，大家就会明白了。<br/>有二张表，一张是用户表，一张是订单表：<br/>1，如果我删除了用户表里的用户，那么订单表里面根这个用户有关的数据，就成了无头数据了，不完整了。<bmysql foreign key(外键) 说明与实例" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化">性能与优化</a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlzhishi/l_14_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>mysql foreign key(外键) 说明与实例</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   一,什么是foreign key，及其完整性<br />个人觉得，foreign key就是表与表之间的某种约定的关系，由于这种关系的存在，我们能够让表与表之间的数据，更加的完整，关连性更强。关于完整性，关连性我举个例子，大家就会明白了。<br />有二张表，一张是用户表，一张是订单表：<br />1，如果我删除了用户表里的用户，那么订单表里面根这个用户有关的数据，就成了无头数据了，不完整了。<br />2，如果我在订单表里面，随便插入了一条数据，这个订单在用户表里面，没有与之对应的用户。这样数据也不完整了。<br />如果有外键的话，就方便多了，可以不让用户删除数据，或者删除用户的话，通过外键同样删除订单表里面的数据，这样也能让数据完整。<br />二，使用foreign key，遵守以下几点规则<br />1，有外键约束的表，必须是innodb型<br />2，外键约束的二个表，本来就相关系的表，并且要有索引关系，如果没有，创建外键时也可以创建索引。<br />3，不支持对外键列的索引前缀。这样的后果之一是BLOB和TEXT列不被包括在一个外键中，这是因为对这些列的索引必须总是包含一个前缀长度。<br />4，<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>外键的名子在数据库内要是唯一的<br />三，创建foreign key的语法规则<br />[CONSTRAINT symbol] FOREIGN KEY [id] (index_col_name, ...)&nbsp;&nbsp;&nbsp; REFERENCES tbl_name (index_col_name, ...)&nbsp;&nbsp;&nbsp; [ON DELETE {RESTRICT | CASCADE | SET NULL | NO ACTION}]&nbsp;&nbsp;&nbsp; [ON UPDATE {RESTRICT | CASCADE | SET NULL | NO ACTION}]<br />四，外键维护数据完整性的5种方式<br />1，CASCADE: 从父表删除或更新且自动删除或更新子表中匹配的行。ON DELETE CASCADE和ON UPDATE CASCADE都可用。在两个表之间，你不应定义若干在父表或子表中的同一列采取动作的ON UPDATE CASCADE子句。<br />2，SET NULL: 从父表删除或更新行，并设置子表中的外键列为NULL。如果外键列没有指定NOT NULL限定词，这就是唯一合法的。ON DELETE SET NULL和ON UPDATE SET NULL子句被支持。<br />3，NO ACTION: 在ANSI SQL-92标准中，NO ACTION意味这不采取动作，就是如果有一个相关的外键值在被参考的表里，删除或更新主要键值的企图不被允许进行（Gruber, 掌握SQL, 2000:181）。 InnoDB拒绝对父表的删除或更新操作。<br />4，RESTRICT: 拒绝对父表的删除或更新操作。NO ACTION和RESTRICT都一样，删除ON DELETE或ON UPDATE子句。（一些数据库系统有延期检查，并且NO ACTION是一个延期检查。在MySQL中，外键约束是被立即检查的，所以NO ACTION和RESTRICT是同样的）。<br />5，SET DEFAULT: 这个动作被解析程序识别，但InnoDB拒绝包含ON DELETE SET DEFAULT或ON UPDATE SET DEFAULT子句的表定义。<br />五，实例说明foreign key的用法<br /><a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; CREATE TABLE `user` (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //创建用户表&nbsp;&nbsp;-&gt;&nbsp;&nbsp; `id` int(11) NOT NULL auto_increment COMMENT '用户ID',&nbsp;&nbsp;-&gt;&nbsp;&nbsp; `name` varchar(50) NOT NULL default '' COMMENT '名称',&nbsp;&nbsp;-&gt;&nbsp;&nbsp; `sex` int(1) NOT NULL default '0' COMMENT '0为男，1为女',&nbsp;&nbsp;-&gt;&nbsp;&nbsp; PRIMARY KEY&nbsp; (`id`)&nbsp;&nbsp;-&gt; ) ENGINE=innodb&nbsp; DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;&nbsp;&nbsp; //innodb引擎&nbsp;&nbsp;Query OK, 0 rows affected, 1 warning (0.11 sec)&nbsp;&nbsp;&nbsp;&nbsp;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; insert into user (name,sex)values("tank",1),("zhang",2);&nbsp;&nbsp; //插入二条数据&nbsp;&nbsp;Query OK, 2 rows affected (0.00 sec)&nbsp;&nbsp;Records: 2&nbsp; Duplicates: 0&nbsp; Warnings: 0&nbsp;&nbsp;&nbsp;&nbsp;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; create table `order` (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //创建订单表&nbsp;&nbsp;-&gt;&nbsp; `order_id` int(11) not null auto_increment comment '订单ID',&nbsp;&nbsp;-&gt;&nbsp; `u_id` int(11) not null default '0' comment '用户ID',&nbsp;&nbsp;-&gt;&nbsp; `username` varchar(50) not null default '' comment '用户名',&nbsp;&nbsp;-&gt;&nbsp; `money` int(11) not null default '0' comment '钱数',&nbsp;&nbsp;-&gt;&nbsp; `datetime` timestamp not null default current_timestamp comment '生成时&nbsp;&nbsp;间',&nbsp;&nbsp;-&gt;&nbsp; primary key(`order_id`),&nbsp;&nbsp;-&gt;&nbsp; index (`u_id`),&nbsp;&nbsp;-&gt;&nbsp; FOREIGN KEY order_f_key (u_id) REFERENCES user(id)&nbsp;&nbsp;&nbsp;&nbsp; //创建外键&nbsp;&nbsp;-&gt; )ENGINE=innodb&nbsp; DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;&nbsp;&nbsp;&nbsp; //innodb引擎&nbsp;&nbsp;Query OK, 0 rows affected, 1 warning (0.06 sec)&nbsp;&nbsp;&nbsp;&nbsp;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; INSERT INTO `order` (`u_id`, `username`, `money`, `datetime`) VALUES ('1', 'tank','2222',&nbsp;&nbsp;CURRENT_TIMESTAMP);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //插入一条订单&nbsp;&nbsp;Query OK, 1 row affected (0.00 sec)&nbsp;&nbsp;&nbsp;&nbsp;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; delete from user where id =1;&nbsp;&nbsp;&nbsp; //删除用户1，不给删除，因为order表里面有和这条数据有关连的数据&nbsp;&nbsp;ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`test/order`, CONSTRAINT `order_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`))&nbsp;&nbsp;&nbsp;&nbsp;//下面在order里面插入一条数据u_id为5用户，在user表里面根本没有，所以插入不进去。&nbsp;&nbsp;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; INSERT INTO `order` (`u_id`, `username`, `money`, `datetime`) VALUES ('5', 'good','123',&nbsp; CURRENT_TIMESTAMP);&nbsp;&nbsp;ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`test/order`, CONSTRAINT `order_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`))&nbsp;&nbsp;&nbsp;&nbsp;//把u_id改成2就可以插进去了，因为user表里面有id=2的用户&nbsp;&nbsp;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; INSERT INTO `order` (`u_id`, `username`, `money`, `datetime`) VALUES ('2', 'zhang','3452',&nbsp; CURRENT_TIMESTAMP);&nbsp;&nbsp;Query OK, 1 row affected (0.00 sec)&nbsp;&nbsp;&nbsp;&nbsp;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; show create table `order`\G;&nbsp;&nbsp;&nbsp;&nbsp; //查看创建表的数据，为的是查看foreign key的名子，还有order二边要有`这个符号&nbsp;&nbsp;*************************** 1. row ***************************&nbsp;&nbsp;Table: order&nbsp;&nbsp;Create Table: CREATE TABLE `order` (&nbsp;&nbsp;`order_id` int(11) NOT NULL auto_increment COMMENT '订单ID',&nbsp;&nbsp;`u_id` int(11) NOT NULL default '0' COMMENT '用户ID',&nbsp;&nbsp;`username` varchar(50) NOT NULL default '' COMMENT '用户名',&nbsp;&nbsp;`money` int(11) NOT NULL default '0' COMMENT '钱数',&nbsp;&nbsp;`datetime` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT '生成时间',&nbsp;&nbsp;PRIMARY KEY&nbsp; (`order_id`),&nbsp;&nbsp;KEY `u_id` (`u_id`),&nbsp;&nbsp;CONSTRAINT `order_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `user` (`id`)&nbsp;&nbsp;) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8&nbsp;&nbsp;1 row in set (0.00 sec)&nbsp;&nbsp;&nbsp;&nbsp;ERROR:&nbsp;&nbsp;No query specified&nbsp;&nbsp;&nbsp;&nbsp;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; alter table `order` drop foreign key order_ibfk_1;&nbsp;&nbsp; //删除foreign key，<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>里面没有修改foreign key的命令&nbsp;&nbsp;Query OK, 2 rows affected (0.10 sec)&nbsp;&nbsp;Records: 2&nbsp; Duplicates: 0&nbsp; Warnings: 0&nbsp;&nbsp;&nbsp;&nbsp;//删除后在新增&nbsp;&nbsp;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; alter table `order` add foreign key(u_id) references user(id) on delete cascade on update cascade;&nbsp;&nbsp;Query OK, 2 rows affected (0.00 sec)&nbsp;&nbsp;Records: 2&nbsp; Duplicates: 0&nbsp; Warnings: 0&nbsp;&nbsp;&nbsp;&nbsp;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt; update user set id=6 where id=1;&nbsp;&nbsp;&nbsp;&nbsp; //更新user表里面的id&nbsp;&nbsp;Query OK, 1 row affected (0.05 sec)&nbsp;&nbsp;Rows matched: 1&nbsp; Changed: 1&nbsp; Warnings: 0&nbsp;&nbsp;&nbsp;&nbsp;<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>&gt;&nbsp;select&nbsp;* from `order` where u_id=6;&nbsp;&nbsp; //order表里面的数据，也根着改变了。&nbsp;&nbsp;+----------+------+----------+-------+---------------------+&nbsp;&nbsp;| order_id | u_id | username | money | datetime&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;+----------+------+----------+-------+---------------------+&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2 |&nbsp;&nbsp;&nbsp; 6 | tank&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp; 2222 | 2010-11-25 22:18:57 |&nbsp;&nbsp;+----------+------+----------+-------+---------------------+&nbsp;&nbsp;1 row in set (0.00 sec)&nbsp;<br />foreign key只能用于innodb，并且对数据进行操作时，会对外键关联的表进行检索，会影响效率的。所以对外键的使用，要根据个人的实际情况<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

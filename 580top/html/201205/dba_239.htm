@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SQL Server数据库备份多种方法</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="sql&nbsp;server数据库备份有两种方式，一种是使用backupdatabase将数据库文件备份出去，另外一种就是直接拷贝数据库文件mdf和日志文件ldf的方式。下面将主要讨论一下后者的备份与恢复。本文假定您能熟练使用sqlserverenterprisemanager(sqlserver企业管理器)和sqlserverquweyanalyser(sqlserver查询SQL Server数据库备份多种方法" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA">高可用性和HA</a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化">性能与优化</a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决">故障与解决</a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserverzhishi/l_2_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>SQL Server数据库备份多种方法</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   SQL&nbsp;Server数据库备份有两种方式，一种是使用BACKUP DATABASE将数据库文件备份出去，另外一种就是直接拷贝数据库文件mdf和日志文件ldf的方式。下面将主要讨论一下后者的备份与恢复。本文假定您能熟练使用SQL Server EntERPrise Manager(SQL Server企业管理器)和SQL Server Quwey Analyser(SQL Server查询分析器)<br />&nbsp; 1.正常的备份、SQL数据库恢复方式<br />&nbsp; 正常方式下，我们要备份一个数据库，首先要先将该数据库从运行的数据服务器中断开，或者停掉整个数据库服务器，然后复制文件。<br />&nbsp; 卸下数据库的命令：Sp_detach_db 数据库名<br />&nbsp; 连接数据库的命令：<br />Sp_attach_db或者sp_attach_single_file_db&nbsp;s_attach_db [@dbname =] ′dbname′, [@filename1 =] ′filename_n′ [,...16]&nbsp;sp_attach_single_file_db [@dbname =] ′dbname′, [@physname =] ′physical_name′&nbsp;&nbsp; 使用此方法可以正确恢复SQL Sever7.0和SQL Server 2000的数据库文件，要点是备份的时候一定要将mdf和ldf两个文件都备份下来，mdf文件是数据库数据文件，ldf是数据库日志文件。<br />&nbsp; 例子：<br />&nbsp; 假设数据库为test，其数据文件为test_data.mdf，日志文件为test_log.ldf。下面我们讨论一下如何备份、恢复该数据库。<br />&nbsp; 卸下数据库：sp_detach_db 'test'<br />&nbsp; 连接数据库：<br />sp_attach_db 'test','C:Program FilesMicrosoft SQL ServerMSSQLDatatest_data.mdf','C:Program FilesMicrosoft SQL ServerMSSQLDatatest_log.ldf'&nbsp;sp_attach_single_file_db 'test','C:Program FilesMicrosoft SQL ServerMSSQLDatatest_data.mdf'&nbsp;&nbsp; 2.只有mdf文件的恢复技术<br />&nbsp; 由于种种原因，我们如果当时仅仅备份了mdf文件，那么恢复起来就是一件很麻烦的事情了。<br />&nbsp; 如果您的mdf文件是当前数据库产生的，那么很侥幸，也许你使用sp_attach_db或者sp_attach_single_file_db可以恢复数据库，但是会出现类似下面的提示信息<br />&nbsp; 设备激活错误。<br />&nbsp; 物理文件名 'C:Program FilesMicrosoft SQL ServerMSSQLdatatest_Log.LDF' 可能有误。<br />&nbsp; 已创建名为 'C:Program FilesMicrosoft SQL ServerMSSQLDatatest_log.LDF' 的新日志文件。<br />&nbsp; 但是，如果您的数据库文件是从<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>计算机上复制过来的，那么很不幸，也许上述办法就行不通了。你也许会得到类似下面的错误信息<br />&nbsp; 服务器: 消息 1813，级别 16，状态 2，行 1<br />&nbsp; 未能打开新数据库 'test'。CREATE DATABASE 将终止。<br />&nbsp; 设备激活错误。物理文件名 'd:test_log.LDF' 可能有误。<br />&nbsp; 怎么办呢？别着急，下面我们举例说明恢复办法。<br />&nbsp; A．我们使用默认方式建立一个供恢复使用的数据库(如test)。可以在SQL Server Enterprise Manager里面建立。<br />&nbsp; B．停掉数据库服务器。<br />&nbsp; C．将刚才生成的数据库的日志文件test_log.ldf删除，用要恢复的数据库mdf文件覆盖刚才生成的数据库数据文件test_data.mdf。<br />&nbsp; D．启动数据库服务器。此时会看到数据库test的状态为“置疑”。这时候不能对此数据库进行任何操作。<br />&nbsp; E．设置数据库允许直接操作系统表。此操作可以在SQL Server Enterprise Manager里面选择数据库服务器，按右键，选择“属性”，在“服务器设置”页面中将“允许对系统目录直接修改”一项选中。也可以使用如下语句来实现。<br />use master&nbsp;go&nbsp;sp_configure 'allow updates',1&nbsp;go&nbsp;reconfigure with override&nbsp;go&nbsp;&nbsp; F．设置test为紧急修复模式:<br />update sysdatabases set status=-32768 where dbid=DB_ID('test')&nbsp;&nbsp; 此时可以在SQL Server Enterprise Manager里面看到该数据库处于“只读置疑脱机紧急模式”可以看到数据库里面的表，但是仅仅有系统表<br />&nbsp; G．下面执行真正的恢复操作，重建数据库日志文件:<br />dbcc rebuild_log('test','C:Program FilesMicrosoft SQL ServerMSSQLDatatest_log.ldf')&nbsp;&nbsp; 执行过程中，如果遇到下列提示信息：<br />&nbsp; 服务器: 消息 5030，级别 16，状态 1，行 1 未能排它地锁定数据库以执行该操作。<br />&nbsp; DBCC 执行完毕。如果 DBCC 输出了错误信息，请与系统管理员联系。<br />&nbsp; 说明您的<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>程序正在使用该数据库，如果刚才您在F步骤中使用SQL Server Enterprise Manager打开了test库的系统表，那么退出SQL Server Enterprise Manager就可以了。<br />&nbsp; 正确执行完成的提示应该类似于：<br />&nbsp; 警告: 数据库 'test' 的日志已重建。已失去事务的一致性。应运行 DBCC CHECKDB 以验证物理一致性。将必须重置数据库选项，并且可能需要删除多余的日志文件。<br />&nbsp; DBCC 执行完毕。如果 DBCC 输出了错误信息，请与系统管理员联系。<br />&nbsp; 此时打开在SQL Server Enterprise Manager里面会看到数据库的状态为“只供DBO使用”。此时可以访问数据库里面的用户表了。<br />&nbsp; H．验证数据库一致性: dbcc checkdb('test')<br />&nbsp; 一般执行结果如下：<br />&nbsp; CHECKDB 发现了 0 个分配错误和 0 个一致性错误（在数据库 'test' 中）。<br />&nbsp; DBCC 执行完毕。如果 DBCC 输出了错误信息，请与系统管理员联系。<br />&nbsp; I．设置数据库为正常状态<br />sp_dboption 'test','dbo use only','false'&nbsp;&nbsp; 如果没有出错，那么恭喜，现在就可以正常的使用恢复后的数据库啦。<br />&nbsp; J．最后一步，我们要将步骤E中设置的“允许对系统目录直接修改”一项恢复。因为平时直接操作系统表是一件比较危险的事情。当然，我们可以在SQL Server Enterprise Manager里面恢复，也可以使用如下语句完成:<br />sp_configure 'allow updates',0&nbsp;go&nbsp;reconfigure with override&nbsp;go<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>oracle on Classic</title>
+    <link>/categories/oracle/</link>
+    <description>Recent content in oracle on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 30 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/oracle/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Centos7安装cx_Oracle驱动</title>
+      <link>/oracle/centos7%E5%AE%89%E8%A3%85cx_oracle%E9%A9%B1%E5%8A%A8/</link>
+      <pubDate>Tue, 30 Jul 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/centos7%E5%AE%89%E8%A3%85cx_oracle%E9%A9%B1%E5%8A%A8/</guid>
+      <description>安装说明  一台cents7的机器上没有安装过oracle python脚本需要调用远程oracle数据库，需要cx_oracle数据库  python3.9 /data/script/datasec/test.py #产生报错 .... File &amp;quot;/data/script/datasec/newSQL.py&amp;quot;, line 3, in &amp;lt;module&amp;gt; import cx_Oracle ModuleNotFoundError: No module named &#39;cx_Oracle&#39;  这个cx_Oracle驱动非常不好装 以下是安装cx_Oracle的标准步骤  安装Oracle客户端  https://www.oracle.com/database/technologies/instant-client/linux-x86-64-downloads.html 在这个网站找到合适的版本，我下的是11.2版本，不同的系统下不同的版本 选择好后，需要用户名密码登陆 下载和安装   wget &amp;quot;https://download.oracle.com/otn/linux/instantclient/11204/oracle-instantclient11.2-basic-11.2.0.4.0-1.x86_64.rpm&amp;quot; rpm -ivh oracle-instantclient11.2-basic-11.2.0.4.0-1.x86_64.rpm  安装完后，会有个目录：  ll /usr/lib/oracle/11.2/client64/lib/ total 183252 -rw-r--r-- 1 root root 53865194 Aug 25 2013 libclntsh.so.11.1 -rw-r--r-- 1 root root 7996693 Aug 25 2013 libnnz11.so -rw-r--r-- 1 root root 1973074 Aug 25 2013 libocci.</description>
+    </item>
+    
+    <item>
+      <title>利用OracleGoldenGate(ogg) 从Oracle同步数据到MySQL</title>
+      <link>/oracle/%E5%88%A9%E7%94%A8oraclegoldengateogg-%E4%BB%8Eoracle%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE%E5%88%B0mysql/</link>
+      <pubDate>Thu, 18 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/%E5%88%A9%E7%94%A8oraclegoldengateogg-%E4%BB%8Eoracle%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE%E5%88%B0mysql/</guid>
+      <description>案例A：增加增量同步 1.增加extract进程 dblogin userid GOLDENGATE@{{ Oracle server url }},password {{ Oracle Password }} register extract E02 database add extract E02,integrated tranlog, begin now add EXTTRAIL /data/ogg19oracle/dirdat/eb, extract E02,MEGABYTES 100 add schematrandata {{ oracle.Schema }} 编辑ogg文件  vim /data/ogg19oracle/dirprm/e02.prm  extract e02 setenv (NLS_LANG=AMERICAN_AMERICA.ZHS16GBK) userid GOLDENGATE@{{ Oracle server url }},password {{ Oracle Password }} exttrail /data/ogg19oracle/dirdat/eb GETUPDATEAFTERS GETUPDATEBEFORES NOCOMPRESSDELETES NOCOMPRESSUPDATES table {{ SCOTT.AAAA }}; table {{ SCOTT.BBBB }}; 2.增加pump进程  add extract p02 exttrailsource /data/ogg19oracle/dirdat/eb add rmttrail /data/ogg19mysql/dirdat/eb, extract p02 3.</description>
+    </item>
+    
+    <item>
+      <title>OracleGoldenGate运维常用命令</title>
+      <link>/oracle/oraclegoldengate%E8%BF%90%E7%BB%B4%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4ogg/</link>
+      <pubDate>Mon, 08 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oraclegoldengate%E8%BF%90%E7%BB%B4%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4ogg/</guid>
+      <description>常用命令 1. 管理(MGR)进程命令 INFO MANAGER 返回有关管理器端口和进程id的信息。 START MANAGER 开启管理进程 STATUS MANAGER 返回管理进程状态 STOP MANAGER 停止管理进程 2. 采集(EXTRACT)进程命令 ADD EXTRACT 添加一个采集组 ALTER EXTRACT 更改采集组的属性 CLEANUP EXTRACT 删除采集组的运行历史记录 DELETE EXTRACT 删除采集组。 INFO EXTRACT 返回有关采集组的信息。 KILL EXTRACT 强制终止采集组。 LAG EXTRACT 返回有关采集延迟的信息。 REGISTER EXTRACT 向Oracle数据库注册采集组START EXTRACT 启动采集组 STATS EXTRACT 返回处理采集的统计信息。 STATUS EXTRACT 返回采集组的状态 STOP EXTRACT 停止采集组。 FORCEAPPEND 允许data pump在现有的初始加载文件上添加新的跟踪文件 UNREGISTER EXTRACT 从Oracle数据库注销采集组。 3. 回放(Replicat)进程命令 ADD REPLICAT 添加一个复制组 ALTER REPLICAT 更改复制组的属性。 CLEANUP REPLICAT 删除复制组的运行历史。 DELETE REPLICAT 删除一个复制组。 INFO REPLICAT 返回关于复制组的信息。 KILL REPLICAT 强制终止一个复制组。 LAG REPLICAT 返回关于复制延迟的信息。 REGISTER REPLICAT 向Oracle数据库注册一个复制组。 START REPLICAT 启动一个复制组。 STATS REPLICAT 返回处理一个复制组的统计信息。 STATUS REPLICAT 返回一个复制组的状态。 STOP REPLICAT 停止复制组。 4.</description>
+    </item>
+    
+    <item>
+      <title>8种常用于数据库的数据结构</title>
+      <link>/dba/8%E7%A7%8D%E5%B8%B8%E7%94%A8%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</link>
+      <pubDate>Tue, 02 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/8%E7%A7%8D%E5%B8%B8%E7%94%A8%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</guid>
+      <description>1.跳跃表(skipList) 什么是skiplist  跳跃表（skiplist）是一种随机化的数据， 由 William Pugh 在论文《Skip lists: a probabilistic alternative to balanced trees》中提出， 跳跃表以有序的方式在层次化的链表中保存元素， 效率和平衡树媲美 —— 查找、删除、添加等操作都可以在对数期望时间下完成， 并且比起平衡树来说， 跳跃表的实现要简单直观得多。  图示    用途：  Redis  2.哈希索引（Hash Index） 什么是hash Index  基于哈希表实现，只有精确匹配索引所有列的查询才有效。对于每一行数据，存储引擎都会对所有的索引列计算一个哈希码（hash code），哈希码是一个较小的值，并且不同键值的行计算出来的哈希码也不一样。哈希索引将所有的哈希码存储在索引中，同时在哈希表中保存指向每个数据行的指针。 哈希索引可细分为静态哈希和动态哈希这两大类，  静态哈希  基于散列技术的文件组织使我们能够避免访问索引结构，同时也提供了一种构造索引的方法。在对散列的描述中，使用桶(bucket)来表示能存储一条或多条记录的一个存储单位。通常一个桶就是一个磁盘块，但也可能大于或者小于一个磁盘块。 散列索引将散列函数作用于搜索码以确定对应的桶， 然后将此搜索码以及对应的指针存入此桶(或溢出桶)中。 静态散列最大的缺点在于必须在实现系统时选择确定的散列函数。此后若被索引的文件变大或缩小，要想再改变散列函数就不容易了。因为散列函数 h 将搜索码值映射到桶地址的固定集合 B 上： 根据当前文件大小选择散列函数，这样的选择会使得性能随着数据库的增大而下降。换言之，初始时集合 B 太小，一个桶就会包含许多不同的搜索码值的记录，从而可能发生桶溢出。当文件变大时，性能就会受到影响。 根据将来某个时刻文件的预计大小选择散列函数。 尽管这样可以避免性能下降，但是初始时会造成相当大的空间浪费。  动态哈希  针对静态散列技术出现的问题，动态散列（dynamic hashing）技术允许散列函数动态改变，以适应数据库增大或缩小的需要 当数据库增大或缩小时，可扩充散列可以通过桶的分裂或合并来适应数据库大小的变化，这样可以保持空间的使用效率。此外，由于重组每次仅作用于一个桶，因此所带来的性能开销较低。  图示    3.ssTable 什么是ssTable  SSTable文件是memtable 数据到一定阈值写入文件形成的，由于内存容量总是有限的，将一定量数据写入磁盘可以存放更多数据，所以leveldb相比redis能存放更多数据。既然数据持久化到磁盘，那么还有必然涉及到从磁盘中查询数据，从磁盘中查询数据与从内存中查询数据的效率是不一样的，所以SSTable 数据组织方式必然与众不同，因为必须要提高查询效率，不能给一个key就去遍历所有SSTable。因此本文的另一个目的就是学习SSTable 文件如何组织key-value，提高查询效率。为了提高内存中数据查询效率 我们学习了各种数据结构如红黑树，散列表，那么SSTable是学习如何提高文件查询数据效率的一个很好例子。  图示    4.</description>
+    </item>
+    
+    <item>
+      <title>Oracle处理归档日志archivelog空间报警</title>
+      <link>/oracle/oracle%E5%A4%84%E7%90%86%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97archivelog%E7%A9%BA%E9%97%B4%E6%8A%A5%E8%AD%A6/</link>
+      <pubDate>Fri, 29 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E5%A4%84%E7%90%86%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97archivelog%E7%A9%BA%E9%97%B4%E6%8A%A5%E8%AD%A6/</guid>
+      <description>查看归档日志空间占用率  select * from v$flash_recovery_area_usage; --查看空间占用率 select * from v$recovery_file_dest; --查看归档日志的存放地址; show parameter recovery; --查看归档空间大小 增加表空间大小（磁盘空间足够的话） alter system set db_recovery_file_dest_size=250G; --请归档空间增大到250G 删除过期文件 export ORACLE_SID=****** rman target / crosscheck archivelog all; //查看可以所有的归档文件 delete expired archivelog all; //清空过期的归档文件 delete force noprompt ARCHIVELOG ALL COMPLETED BEFORE &#39;trunc(SYSDATE)-90&#39;; //清除90天前的归档文件 quit </description>
+    </item>
+    
+    <item>
+      <title>定时收集Oracle索引信息</title>
+      <link>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86oracle%E7%B4%A2%E5%BC%95%E4%BF%A1%E6%81%AF/</link>
+      <pubDate>Mon, 26 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86oracle%E7%B4%A2%E5%BC%95%E4%BF%A1%E6%81%AF/</guid>
+      <description>需求  把Oracle各实例的索引信息，统一收集存储到一张表里  建表 在dboop库中建表
+ CREATE TABLE `info_indexs` ( `dbid` int NOT NULL DEFAULT &#39;0&#39;, `table_name` varchar(255) NOT NULL DEFAULT &#39;&#39;, `index_name` varchar(255) NOT NULL DEFAULT &#39;&#39;, `index_type` varchar(64) NOT NULL DEFAULT &#39;&#39;, `uniq_type` varchar(64) NOT NULL DEFAULT &#39;&#39;, `num_rows` int NOT NULL DEFAULT 0, `sample_size` int NOT NULL DEFAULT 0, `last_analyzed` datetime null, `column_name` varchar(2000) NOT NULL DEFAULT &#39;&#39;, `cstatus` smallint NOT NULL DEFAULT &#39;1&#39;, `dba_freshtime` datetime NOT NULL DEFAULT &#39;1990-01-01 00:00:00&#39;, PRIMARY KEY (`dbid`,`table_name`,`index_name`), KEY `idx_info_indexs_time` (`dba_freshtime`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ; 实现数据字典收集入库 建Oracle采集任务  &amp;lt;!</description>
+    </item>
+    
+    <item>
+      <title>Oracle增加表审计</title>
+      <link>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1/</link>
+      <pubDate>Wed, 10 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E5%A2%9E%E5%8A%A0%E8%A1%A8%E5%AE%A1%E8%AE%A1/</guid>
+      <description>增加表审计 # 查看现在有哪些审计对象 select * from dba_obj_audit_opts; # 开启审计 audit select,update,insert,delete on 用户.表名 by access # 关闭审计 noaudit select,update,insert,delete on 用户.表名 # 查看审计结果 select * from dba_audit_trail 清空审计 sqlplus / as sysdba truncate table sys.aud$; ``</description>
+    </item>
+    
+    <item>
+      <title>自动化流程:数据找回(二:Oracle部分)</title>
+      <link>/dba/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B_%E6%95%B0%E6%8D%AE%E6%89%BE%E5%9B%9E%E9%97%AA%E5%9B%9E_2/</link>
+      <pubDate>Fri, 03 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B_%E6%95%B0%E6%8D%AE%E6%89%BE%E5%9B%9E%E9%97%AA%E5%9B%9E_2/</guid>
+      <description>续上一篇： 自动化流程:数据找回(一:MySQL数据闪回)
+上一篇说的是
+ 1.数据找回的作用 2.MySQL数据找回自动化流程功能演示 3.自动化流程的代码配置  这篇主要介绍Oracle的数据找回自动化流程.
+一些改进  改进1:Oracle数据找回功能从利用OGG改到用归档日志  上一篇的结尾,说Oracle的数据找回.要用到OGG+Kafka的方案. ​最终经过对比验证,换了更好的Oracle原生归档日志方案   改进2:增加了操作类型的筛选项,这样可以针对指定的操作(例如:delete)进行redo和undo  Oracle数据回退功能的方案对比 当尝试做Oracle数据回退功能时有以下几个方案
+ Oracle数据闪回功能 ,优:自带的功能,速度快,简单 缺:需要开启闪回段,闪回的时间太短(平均约30分钟内) 全备和日志还原,优:30天内数据可回退 ,缺:慢,需要资源大,复杂不利于自动化脚本 OGG,因为我们的环境大部分重点表都做了OGG到kafka的订阅, 所以可以直接扫描kafka的信息来获取指定表的变更, 优:资源占用少,快,开发难度低 缺: 如果要回退的这张表没有做OGG订阅怎么办? 归档日志解析, 优:7天内任意时间点可回退 ,缺: 每次回退的时间段不能太长  我们完成了方案3和方案4的代码开发工作,最终选用了方案4: 归档日志解析
+ 脚本化实现难度小 7天内任意时间点,能满足90%的业务需求 回滚速度快,举个例子:  研发提交流程,要求看A数据库里Order表在周三上午10:00-10:30的所有修改动作,提交申请后,大约10秒内就可以完成这个流程.   覆盖的范围大,线上/测试/开发 环境的所有库表都支持 占用资源少,对线上影响小  Oracle数据回退功能演示  在测试环境还原一次全库的历史快照只需要 0.4秒,非常的快速!!!  小结 当数据库有了这个功能以后:
+ 研发可以在改错数据的时候,快速提交流程回退数据 当有奇怪的线上数据问题时,可以很方便的生成redoSQL,重放过去某个时间段的数据修改 数据库有大量写入时,快速的定位是哪张表,什么样的SQL引起的  </description>
+    </item>
+    
+    <item>
+      <title>万物不如MySQL_万物皆可Join</title>
+      <link>/dba/%E4%B8%87%E7%89%A9%E7%9A%86%E5%8F%AFsql/</link>
+      <pubDate>Thu, 25 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E4%B8%87%E7%89%A9%E7%9A%86%E5%8F%AFsql/</guid>
+      <description>当前数据库架构越来越复杂
+  数据库MongoDB,Redis,Es,Kafka,Postgresql&amp;hellip;
+  加上传统的关系型数据库（MySQL,Oracle,SQLServer)
+  你是否因为各种数据库的查询语言不同而头晕眼花，到处撞墙！
+   你是否各种分库分表后，不同的数据库之前没办法join联合查询而一蹶不振   你是否业务同学发给你一个excel，让你查这些订单的明细而不知所措，来回倒腾。   你是否在焦急的等待着BI大数据同事帮你把不同数据源的表都抽到一起才能join出想要的数据？   怎么办？怎么办？ 没办法!!! 拆开的数据库没办法放在一台服务器上 各种数据库也没办法统一成一种 大数据部门的同步任务正在走流程 走完的流程，他们也不能保证数据同步任务不中断 Excel不是数据库不能用SQL 怎么办？怎么办？ 这种混乱就没人能治吗？ 不要让这些问题挡住你前进的脚本 dboop平台的统一查询平台横空出世 不再区分数据库类型 所有的数据库种类都支持MySQL语法 是的，你没有听错 不管什么类型的数据库 统统只需要记住MySQL语法了 Oracle,SQLServer,MongoDB,kafka DBA在运维的每一种数据库 都可以当成MySQL一样使用了  kafka当成MySQL Mongo当成MySQL  而且这些表都是可以互相join ,union 的   现在我们来休验一下这神奇的黑科技 第一步 我们有个这样的excel 第二步 把excel上传到平台上 第三步 得到一个可以查询的excel文件 第四步 用excel join MySQL 这就是我们说的： 几个问题 问题1:查询会不会影响线上业务  绑定了dba的高可用架构系统，可以自动路由到专门给bi取数服务的专用只读实例上。不会对线上应用产生影响 理论上bi抽数进程会和它产生资源抢占，但是因为bi抽数多数是凌晨进行，两个并不冲突
+ 问题2:查询的性能怎样  快，非常快，普通的单表查询0.</description>
+    </item>
+    
+    <item>
+      <title>定时收集存储过程函数视图信息入库(Oracle,MySQL)</title>
+      <link>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%87%BD%E6%95%B0%E8%A7%86%E5%9B%BE%E4%BF%A1%E6%81%AForaclemysql/</link>
+      <pubDate>Thu, 04 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/%E5%AE%9A%E6%97%B6%E6%94%B6%E9%9B%86%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%87%BD%E6%95%B0%E8%A7%86%E5%9B%BE%E4%BF%A1%E6%81%AForaclemysql/</guid>
+      <description>需求 下午接到运维转来的一个权限申请流程：大数据部门研发要求开通保垒机权限。以方便在保垒机上安装SQL客户端去查看存储过程和视图的内容
+保垒机直连数据库查询，这种不可控的方式，早在去年我就把这个历史问题给禁止掉了，没想到现在还有人要求开通
+经过沟通得知，对方想查看Oracle数据库里的一些老的存储过程的代码。而DBA平台上只有表结构相关的数据字典，没有存储过程和视图的数据字典
+所以，别慌，不就这点需求吗，马上就可以加上。
+ 为什么DBA平台上的数据字典不包括存储过程和视图？ 因为存储过程/函数/视图 也是被我禁掉的，研发人员上线不可以写存储过程和视图。 所以就没想过要在DBA运维平台上做这块功能
+ 但是因为
+ 历史原因，以前的Oracle数据库上已经存在很多的视图和存储过程 第三方原因，公司采购的一些第三方服务和软件，带了存储过程和视图 这些被禁止使用的数据库对象，也需要做统一维护  拆解  这些数据库对象的信息用定时任务收集线上的表结构到本地，存为两份 一份入库，做为快照信息，展示给用户。 一份落本地文件，上传到git，用git做版本管理   为什么不在用户请求查看某个数据库对象的信息时，实时查询给用户？
+ 1.因为历史原因，我们有的库有几万个数据库对象，当用户选择一个库时，list列表加载很慢，所以一开始设计的时候，我们做了快照 2.一份快照，还可以用作数据库对象的git版本管理   建表 在dboop库中建表
+ CREATE TABLE `info_objects` ( `objectid` int NOT NULL AUTO_INCREMENT, `dbid` int NOT NULL DEFAULT &#39;0&#39;, `TABLE_SCHEMA` varchar(64) NOT NULL DEFAULT &#39;&#39;, `object_name` varchar(255) NOT NULL DEFAULT &#39;&#39;, `object_type` varchar(64) NOT NULL DEFAULT &#39;&#39;, `object_text` longtext, `cstatus` smallint NOT NULL DEFAULT &#39;1&#39;, `dba_freshtime` datetime NOT NULL DEFAULT &#39;1990-01-01 00:00:00&#39;, PRIMARY KEY (`objectid`), UNIQUE KEY `idx_infoobjects_id` (`dbid`,`object_name`,`object_type`), KEY `idx_info_objects_time` (`dba_freshtime`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 实现数据字典收集入库 建Oracle采集任务  &amp;lt;!</description>
+    </item>
+    
+    <item>
+      <title>Oracle运维DBA常用命令集合</title>
+      <link>/oracle/oracle%E8%BF%90%E7%BB%B4dba%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Wed, 30 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E8%BF%90%E7%BB%B4dba%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</guid>
+      <description>-- 写在开始 linesize/pagesize set linesize 9999 set pagesize 9999 查看ORACLE SID
+select * from v$instance select instance_name,host_name from v$instance; 查看数据库的运行天数
+select INSTANCE_NAME,round(sysdate-STARTUP_TIME) run_day from gv$instance; 查看alert log
+show parameter dump; 查看当前DB的scn
+select dbms_flashback.get_system_change_number from dual; select current_scn from v$database; scn转时间戳
+select scn_to_timestamp(991159) scn from dual; 时间转换为scn
+select timestamp_to_scn(to_timestamp(&#39;2019-01-27 18:19:20.123456789&#39;,&#39;YYYY-MM-DD HH24:MI:SS.FF&#39;)) scn from dual; scn和时间的对应关系
+select scn,to_char(time_dp,&#39;yyyy-mm-dd hh24:mi:ss&#39;) time from sys.smon_scn_time where rownum&amp;lt;10 order by 1,2; 查看数据库所有用户及用户状态
+-- SYSADM用户是线上应用用户 select USERNAME,ACCOUNT_STATUS from dba_users; select current_scn from v$database; 查看存储过程数量</description>
+    </item>
+    
+    <item>
+      <title>Oracle实时慢日志收集和展示</title>
+      <link>/oracle/oracle%E6%80%8E%E6%A0%B7%E5%AE%9E%E6%97%B6%E6%94%B6%E9%9B%86%E5%B1%95%E7%A4%BA%E6%85%A2%E6%9F%A5%E8%AF%A2/</link>
+      <pubDate>Fri, 11 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E6%80%8E%E6%A0%B7%E5%AE%9E%E6%97%B6%E6%94%B6%E9%9B%86%E5%B1%95%E7%A4%BA%E6%85%A2%E6%9F%A5%E8%AF%A2/</guid>
+      <description>Oracle怎样实时收集展示慢查询？ 当网上搜相关问题或问一个身边的OracleDBA ，通常会有两种类型的答案
+ 看awr报告 扔过来一段SQL脚本。   类似于MySQL的慢日志方案：Slowlog--logstash--&amp;gt;es--&amp;gt;MySQL--&amp;gt;web页
+但Oracle没有现成的slowlog可以用。
+ 所以我们先后采用尝试了以下三种方法。
+方法一：定时收集awr报告 我们去年和黄老师一起尝试了定时生成awr报告，获取topSQL入库后，再收集展示的方法，这个方案需要对OracleAWR的缓存表理解得很深入，黄老师哼哼哧哧花了一个月时间，最终完成了统一收集，并通过web页展示，但总体效果不好。 主要缺点在于
+ 不能做到实时，甚至不能准实时（取决于多长时间生成一次awr报告） 只能每个实例取topSQL 方案呆板且不理性 总结：实现难度大，效果差  方法二：Oracle中间件记录慢查询 去年年底的时候我们在写一个Oracle中件间，业务访问Oracle数据库需要连接到Proxy上，然后在Proxy上记录查询日志，这种方法理论上是完全可以的，但是当我去尝试去实现这个功能的时候发现很困难，因为我们采用了端口中转的方式，可以抓到客户端和服务端的通信包，但是不能对应上这些通信包的对应关系。这就导致计算SQL执行时间这一步没法实现。 然后我们架构组也在做jdbc层的中件间，这个是100%可以轻松实现的，但只适用于java程序，对于非java代码访问数据库就无能为力了 总结：收集得很准，但开发工作量大，需要很长的时间
+方法三：定时直接读取正在执行的SQL 这个方案是我们年前做了一个Oracle长时间无响应SQL的报警功能（超过60秒没执行完的SQL会发钉钉报警），然后一次故障处理时，法爷说这个功能改一下刚好可以做慢查询收集整理。
+于是我们快速的试了下这个方案（代价很小，花了半个小时就完成了，任务配置和报表展示）
+ 新建存放慢SQL信息的表一个字典表/一个慢SQL表（5分钟） 配置一个每分钟去所有Oracle实例上收集的任务（15分钟） 配合已有CMDB信息，完成慢SQL和研发负责人的对应，写一个SQL （5分钟） 用这个SQL配置出来一张可展示的报表，设置成全体研发可见（5分钟） 总结：零开发工作，只要建个表，配置一个定时job和报表，就可以完成，效果不错  得到这样的一张这样的：实时展示Oracle慢查询的报表 &amp;ndash; done</description>
+    </item>
+    
+    <item>
+      <title>从零写一个兼容MySQL/Oracle的Proxy中件间（四）:性能测试和改进</title>
+      <link>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B44/</link>
+      <pubDate>Tue, 18 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B44/</guid>
+      <description>续： 从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》 从零写一个兼容MySQL/Oracle的Proxy中件间（二）:SQL捕获和改写 从零写一个兼容MySQL/Oracle的Proxy中件间（三）:MySQL协议捕获和转发
+1.过去的三个文章我们实现了以下功能]  Oracle登录捕获：捕获了Oracle通信协议中的用户登录包 Oracle用户解析：抓到了用户传用户名和密码的内容（密码是加密串） SQL请求包：同时通过对比，确定了用户发送SQL请求的通信包 OracleSQL日志：分析这些包，把SQL语句拿出来，记到日志里。 OracleSQL改写：用户发起的SQL 经过中间层改写到了服务端收到的是另一个SQL执行返回结果。 MySQL兼容：增加配置文件，使中间件可以支持两种数据库 MySQL协议解析：将经过proxy的MySQL包里的SQL语句解析出来，记录到日志  在没更新的这几天里我又偷偷完成了配置变更等小功能。现在中件间其实已经在理论上可以发布使用了
+在投入使用前，在测试环境对这个半成品的中件间做了些基准测试。
+在测试环境上生成了5张表，每张表200万行数据，对其进行直连和proxy模式压测。
+以下是测试报告： 结论是：加了Proxy，性能下降了14% ，在情理之中，一般的SQL中间层因为多了层中转，响应时间会降低20ms左右。tps/qps在不做连接池的情况下会下降10%。 分析性能下降的原因：
+因为在proxy存把经过的网络包都拆开来分析其中的内容，且把SQL语句存在日志里，这些步骤是比较费资源和时间的。
+为了提升Proxy性能，降低中间层的性能影响，我们加了个配置参数
+cat /data/proxy/conf/proxy3308.cnf [basic] logfile = /data/proxy/log/3308.log daemon = true [proxy] proxytype = mysql bind = 0.0.0.0:3308 server = 127.0.0.2:3308 isssl = false iscatchquery = false #增加是否“拆包” false时，Proxy进入高性能模式 iscatchlogin = false maxsquerylsize = 16384 当 iscatchquery=false时，Proxy进入高性能模式
+if Iscatchquery { #只有iscatchquery为true时才解析包。 switch ProxyType { case &amp;quot;mysql&amp;quot;: log.Printf(&amp;quot;mysql:sqlPipeMySQL\n&amp;quot;) sqlPipeMySQL(srcCon, dstCon) case &amp;quot;oracle&amp;quot;: log.</description>
+    </item>
+    
+    <item>
+      <title>从零写一个兼容MySQL/Oracle的Proxy中件间（三）:MySQL协议捕获和转发</title>
+      <link>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B43/</link>
+      <pubDate>Mon, 10 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B43/</guid>
+      <description>续： 从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》 从零写一个兼容MySQL/Oracle的Proxy中件间（二）:SQL捕获和改写
+1.过去的两天我们实现了以下功能]  Oracle登录捕获：捕获了Oracle通信协议中的用户登录包 Oracle用户解析：抓到了用户传用户名和密码的内容（密码是加密串） SQL请求包：同时通过对比，确定了用户发送SQL请求的通信包 OracleSQL日志：分析这些包，把SQL语句拿出来，记到日志里。 OracleSQL改写：用户发起的SQL 经过中间层改写到了服务端收到的是另一个SQL执行返回结果。   MySQL兼容：增加配置文件，使中件间可以支持两种数据库 MySQL协议解析：将经过proxy的MySQL包里的SQL语句解析出来，记录到日志  开始动手：
+步骤一：中件间可以同时支持MySQL和Oracle 中件间的配置应该放在哪，理论上是想放在MySQL或zk里，当配置有变更的时候，中件间获得变更，但这个实现有点麻烦，可能得写好久，就先一个本地的配置文件
+准备一个配置文件
+proxy] proxytype = mysql bind = 0.0.0.0:1106 server = 10.26.*.*:3307 isssl = false iscatchquery = true iscatchlogin = false maxsquerysize = 4096 [proxybak] #proxytype = oracle #bind = 0.0.0.0:1106 #server = 10.26.*.*:1521 #isssl = false #iscatchquery = true #iscatchlogin = false #maxsquerylsize = 4096 然后在通信进程中收到包时处理
+func (t *Proxy) pipeSend(dstCon, srcCon *Conn, chSend chan int64) { defer pipeClose(dstCon) switch ProxyType { case &amp;quot;mysql&amp;quot;: log.</description>
+    </item>
+    
+    <item>
+      <title>从零写一个兼容MySQL/Oracle的Proxy中件间（二）:SQL捕获和改写</title>
+      <link>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B42/</link>
+      <pubDate>Thu, 06 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B42/</guid>
+      <description>续上一篇： 从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》
+0.前言 昨天的文字里写开发这个中间件的原由和要解决的问题，有朋友留言
+网上有现成的开源中间件为啥不用。
+ 答：网上有很多MySQL的中件间，Oralce目前还没有可以免费使用的中件间. 这可能就是开源和闭源的差别。
+ Oracle自带的功能已经可以实现想要的功能（高可用/审计日志）
+ 答：
+ Oracle官方的高可用方案RAC，无疑是非常非常非常优秀的,但我们现有的硬件不支持做跨机房RAC,以及我们迁移时需要proxy中间层来降低业务中断时间。 Oracle的审计日志太笨重/不支持慢日志/不支持SQL黑名单。   1.昨天我们实现了以下功能]  捕获了Oracle通信协议中的用户登录包 抓到了用户传用户名和密码的内容（密码是加密串） 同时通过对比，确定了用户发送SQL请求的通信包   SQL日志：分析这些包，把SQL语句拿出来，记到日志里。 SQL改写：用户发起的SQL 经过中间层改写到了服务端收到的是另一个SQL执行返回结果。  开始动手：
+步骤一：从Oracle通信包中分解出SQL语句 已知有以下两种head的包是在传递SQL
+0x1 0xf 0x0 0x0 0x6 0x0 0x0 0x0 0x0 0x0 0x11 0x6b 0x4 0xa5 0x10 0x0 0x0 0x35 0x1c 0x0 0x0 0x1 0x0 0x0 0x0 0x3 0x5e 0x5 0x61 0x80 0x0 0x0 0x0 0x0 0x0 0x0 0xfe 0xff 0xff 0xff 0x1 0x0 0x0 0x0 0x6 0x0 0x0 0x0 0x0 0x0 0x3 0x5e 0x6 0x61 0x80 0x0 0x0 0x0 0x0 0x0 0x0 0xfe 0xff 0xff 0xff 0xff 0xff 0xff 0xff 0x24 0x0 0x0 0x0 0xfe 0xff 0xff 0xff 0xff 0xff 0xff 1.</description>
+    </item>
+    
+    <item>
+      <title>从零写一个兼容MySQL/Oracle的Proxy中件间（一）《初识Oracle的通信协议》</title>
+      <link>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B41/</link>
+      <pubDate>Wed, 05 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/proxy/%E4%BB%8E%E9%9B%B6%E5%86%99%E4%B8%80%E4%B8%AA%E5%85%BC%E5%AE%B9mysqloracle%E7%9A%84proxy%E4%B8%AD%E4%BB%B6%E9%97%B41/</guid>
+      <description>0.前言 MySQL由于开源的原因，有各式各样的中件间Proxy ，极大的丰富了做高可用或迁移的方案，习惯了MySQL生态圈的灵活和便利，Oracle官方不开源代码和协议，没有中间件proxy，显得很笨重。
+比如以下的方案就会很不好办：
+ 实时抓取Oralce的访问SQL日志 慢日志捕获和收集 高可用中件间Proxy在故障时自动切换 SQL访问黑名单。  基于以上的一些困难，打算自己从头写一个兼容MySQL/Oracle的中件间，希望从中件间层同时支持两种数据库。方便我们做数据库的高可用管理和从Oracle到MySQL的迁移。
+这个计划是在年前的2021年最后一次组内会议上提出来的构想。元旦放假期间我就一直在想这事怎么搞
+问题的难点在于：Oracle的client/server端通信没有文档的说明，没人能说清楚Oracle是怎么交互的。
+这两天用最原始的方法抓包，一个包一个包的去看，找到包的规律，分析它的通信协议。竟然发现这个方法可行
+1.步骤 1.写一个Python脚本去连接（192.168.1.1:1521）上的Oracle  #!/usr/bin/env python ## coding: utf-8 import cx_Oracle conn = cx_Oracle.connect(&#39;dboopreader/dbooppassword@192.168.1.1:1521/testdb&#39;) print(&amp;quot;连接成功&amp;quot;) conn.close() print(&amp;quot;连接关闭&amp;quot;) 通过wireshark抓包，发现一次简单的连接，有38个通信包。
+2.捕获这些包，发现它的规律 挨个点开这些包，发现了一些有用的信息，然后发现wireshark的包看起来不方便， 本地模拟一个端口1522端口，劫持这些请求，打印出来，得到如下这种的tcp包
+抓到:127.0.0.1到192.168.1.1的包 二进制展示如下: 0.0x7 0xaf 0x0 0x0 0x6 0x0 0x0 0x0 0x0 0x0 0x2 0x54 0x3 0x54 0x3 0x3 0x2a 0x6 0x1 0x1 20.0x1 0x6f 0x1 0x1 0xc 0x1 0x1 0x1 0x1 0x1 0x1 0x1 0x7f 0xff 0x3 0xe 0x3 0x3 0x1 0x1 40.</description>
+    </item>
+    
+    <item>
+      <title>Oracle新建A用户默认访问B用户的表和视图</title>
+      <link>/oracle/oracle%E6%96%B0%E5%BB%BAa%E7%94%A8%E6%88%B7%E9%BB%98%E8%AE%A4%E8%AE%BF%E9%97%AEb%E7%94%A8%E6%88%B7%E7%9A%84%E8%A1%A8%E5%92%8C%E8%A7%86%E5%9B%BE/</link>
+      <pubDate>Mon, 03 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/oracle%E6%96%B0%E5%BB%BAa%E7%94%A8%E6%88%B7%E9%BB%98%E8%AE%A4%E8%AE%BF%E9%97%AEb%E7%94%A8%E6%88%B7%E7%9A%84%E8%A1%A8%E5%92%8C%E8%A7%86%E5%9B%BE/</guid>
+      <description>原因  在oracle 中schema与用户是一一对应的关系 A用户默认访问的是Aschema下的表 业务需求建立用户A可以查询B用户建立的表；会报错：表和视图不存在 以下是解决方法  方案一：改写SQL  A用户查询时带上B用户的schema  select * from A.table 方案二：手动指定current_schema  临时修改A用户的schema，执行下面SQL事件  alter session set current_schema=B; select * from table; 方案三：触发器  增加A用户的登录trigger  create or replace trigger {triggername} after logon on A.schema begin execute immediate &#39;alter session set current_schema=B&#39;; 方案四：增加同义词  增加A用户的同义词  # 用管理账号执行 grant create synonym to A # 用A账号执行 CREATE SYNONYM TEST FOR B.TEST; .... #把所有的表和视图都加上 总结  方法1.</description>
+    </item>
+    
+  </channel>
+</rss>

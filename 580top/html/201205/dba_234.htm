@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SQL Server 2008中的CDC</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="cdc（changedatacapture:变更数据捕获）这个功能是sql&nbsp;server&nbsp;2008企业版的功能，它提供了一种新的机制，对表格数据的更新进行跟踪，在数据仓库的建设过程中，通过这种技术，可以简化从业务数据库导入数据的复杂度。<br/>&nbsp;<br/>之前我有过两篇文章介绍，最近因为又在和有关客户介绍这方面的应用。发现之前的例子不是那么完整和清楚，特此再SQL Server 2008中的CDC" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识">基础知识</a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA"><span class="zc_666">高可用性和HA</span></a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化">性能与优化</a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决">故障与解决</a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserverha/l_3_1.htm">高可用性和HA</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>SQL Server 2008中的CDC</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   CDC（Change Data Capture:变更数据捕获）这个功能是SQL&nbsp;Server&nbsp;2008企业版的功能，它提供了一种新的机制，对表格数据的更新进行跟踪，在数据仓库的建设过程中，通过这种技术，可以简化从业务数据库导入数据的复杂度。<br />&nbsp;<br />之前我有过两篇文章介绍，最近因为又在和有关客户介绍这方面的应用。发现之前的例子不是那么完整和清楚，特此再整理一篇出来，给大家参考<br />&nbsp;<br />SQL Server 2008 的CDC功能<br />关于CDC功能的答疑<br />&nbsp;<br />1. 准备一个数据库，里面准备一个表，Orders<br />2. 启用数据库级别的CDC选项--在数据库级别启用CDC功能EXEC sys.sp_cdc_enable_db 这个命令执行完之后，会在系统表里面添加6个表格<br /><br />&nbsp;<br />3.在需要做数据捕获的表上面启用CDC选项EXEC sys.sp_cdc_enable_table @source_schema='dbo',@source_name='Orders',@capture_instance='Orders',@supports_net_changes=0,@role_name=null&nbsp;<br />【备注】关于这个存储过程的具体用法和有关参数的含义，请参考<br />http://msdn.microsoft.com/en-us/library/bb522475.aspx<br />&nbsp;<br />执行之后，会有如下的输出消息<br /><br />这个提示的意思是说，要启动SQL Server Agent。因为CDC功能是要通过一个两个作业来自动化完成的<br /><br />&nbsp;<br />与此同时，执行上面的命令还将在系统表中添加一个表格<br /><br />&nbsp;<br />还会添加一个函数<br /><br />&nbsp;<br />4.插入或者更新数据测试CDC功能--插入或者更新数据测试CDC功能INSERT Orders(CustomerID) VALUES('Microsoft');INSERT Orders(CustomerID) VALUES('Google');<br />UPDATE Orders SET CustomerID='Yahoo' WHERE OrderID=1DELETE FROM Orders WHERE OrderID=2这个范例插入两行数据，紧接着又对第一行更新，然后还删除了第二行，所以最终只有一行数据<br /><br />那么，我们来看看CDC做了什么事情呢？<br />SELECT * FROM cdc.Orders_CT<br />我们可以来解释一下上面结果的含义<br />__$operation=2的情况，表示新增<br />__$operation=3或者4，表示更新，3表示旧值，4表示新值<br />__$operation=1的情况，表示删除<br />&nbsp;<br />很好理解，不是吗？<br />但是，我们一般都是需要按照时间范围进行检索，对吧，所以，需要使用下面的语法进行查询<br />--按照时间范围查询CDC结果DECLARE @from_lsn BINARY(10),@end_lsn BINARY(10)DECLARE @start_time DATETIME = '2011-8-10 00:00:00'DECLARE @end_time DATETIME ='2011-8-11 00:00:00'SELECT @from_lsn=sys.fn_cdc_map_time_to_lsn('smallest greater than or equal',@start_time)SELECT @end_lsn=sys.fn_cdc_map_time_to_lsn(' largest less than or equal',@end_time)SELECT * FROM cdc.fn_cdc_get_all_changes_Orders(@from_lsn,@end_lsn,'all')&nbsp;<br />关于sys.fn_cdc_map_time_to_lsn这个函数，请参考<br />http://msdn.microsoft.com/en-us/library/bb500137.aspx<br />查询的结果如下<br /><br />&nbsp;<br />如果需要包含更新操作的旧值，则可以以下的语法<br />DECLARE @from_lsn BINARY(10),@end_lsn BINARY(10)DECLARE @start_time DATETIME = '2011-8-10 00:00:00'DECLARE @end_time DATETIME ='2011-8-11 00:00:00'SELECT @from_lsn=sys.fn_cdc_map_time_to_lsn('smallest greater than or equal',@start_time)SELECT @end_lsn=sys.fn_cdc_map_time_to_lsn(' largest less than or equal',@end_time)SELECT * FROM cdc.fn_cdc_get_all_changes_Orders(@from_lsn,@end_lsn,'all update old')<br /><br />&nbsp;<br />通常，为了方便起见，我们会将这个查询定义为一个存储过程，如下<br />--定义存储过程来进行查询CREATE PROC GetOrdersCDCResult(@start_time DATETIME,@end_time DATETIME)ASBEGIN    DECLARE @from_lsn BINARY(10),@end_lsn BINARY(10)    SELECT @from_lsn=sys.fn_cdc_map_time_to_lsn('smallest greater than or equal',@start_time)    SELECT @end_lsn=sys.fn_cdc_map_time_to_lsn(' largest less than or equal',@end_time)    SELECT * FROM cdc.fn_cdc_get_all_changes_Orders(@from_lsn,@end_lsn,'all')END<br />然后，每次需要用的时候，就直接调用即可<br />--执行存储过程EXEC GetOrdersCDCResult '2011-8-10','2011-8-11'<br />5.结合SSIS实现事实表的增量更新下面展示了一个SSIS 包的设计，这里面读取CDC的数据，先进行一些查找，然后按照__$operation的值拆分成为三个操作，分别进行插入，更新和删除，这样就可以实现对事实表的增量更新<br /><br />&nbsp;<br />&nbsp;<br />本文所有的代码如下<br />USE SampleDatabaseGO<br />--在数据库级别启用CDC功能EXEC sys.sp_cdc_enable_db <br />--在需要做数据捕获的表格上面启用CDC功能EXEC sys.sp_cdc_enable_table @source_schema='dbo',@source_name='Orders',@capture_instance='Orders',@supports_net_changes=0,@role_name=null<br />--插入或者更新数据测试CDC功能INSERT Orders(CustomerID) VALUES('Microsoft');INSERT Orders(CustomerID) VALUES('Google');<br />UPDATE Orders SET CustomerID='Yahoo' WHERE OrderID=1DELETE FROM Orders WHERE OrderID=2<br />--查询CDC的结果SELECT * FROM cdc.Orders_CT<br />--按照时间范围查询CDC结果DECLARE @from_lsn BINARY(10),@end_lsn BINARY(10)DECLARE @start_time DATETIME = '2011-8-10 00:00:00'DECLARE @end_time DATETIME ='2011-8-11 00:00:00'SELECT @from_lsn=sys.fn_cdc_map_time_to_lsn('smallest greater than or equal',@start_time)SELECT @end_lsn=sys.fn_cdc_map_time_to_lsn(' largest less than or equal',@end_time)SELECT * FROM cdc.fn_cdc_get_all_changes_Orders(@from_lsn,@end_lsn,'all')<br />--定义存储过程来进行查询CREATE PROC GetOrdersCDCResult(@start_time DATETIME,@end_time DATETIME)ASBEGIN    DECLARE @from_lsn BINARY(10),@end_lsn BINARY(10)    SELECT @from_lsn=sys.fn_cdc_map_time_to_lsn('smallest greater than or equal',@start_time)    SELECT @end_lsn=sys.fn_cdc_map_time_to_lsn(' largest less than or equal',@end_time)    SELECT * FROM cdc.fn_cdc_get_all_changes_Orders(@from_lsn,@end_lsn,'all')END<br />--执行存储过程EXEC GetOrdersCDCResult '2011-8-10','2011-8-11'
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

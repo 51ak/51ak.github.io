@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>mysql导入数据大小设置方法</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="mysql导入数据库文件最大限制2048kb和phpmyadmin导入数据最大限制2048kb的解决方法&nbsp;<br/>解决办法：<br/><br/><br/>1、打开php.ini。找到upload_max_filesize、memory_limit、post_max_size这三个参数!<br/>(在默认的情况下,php只允许最大的上传数据为2m,也就是mysql导入数据大小设置方法" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化">性能与优化</a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlzhishi/l_14_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>mysql导入数据大小设置方法</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   MySQL导入数据库文件最大限制2048KB和phpmyadmin导入数据最大限制2048KB的解决方法&nbsp;<br />　　解决办法：<br /><br /><br />　　1、打开php.ini。找到 upload_max_filesize 、 memory_limit 、 post_max_size 这三个参数!<br />　　(在默认的情况下,php只允许最大的上传数据为2M,也就是2048KB,而极限的最大使用内存memory_limit也仅为128M，Post的最大也为2M)<br /><br /><br />　　2、按您的服务器的实际性能配置进行如下改动：(注意：以下是按我的服务器性能和硬件配置进行的更改..)<br /><br /><br />　　upload_max_filesize = 8M (上传最大极限设定为8M,这个应该足够一般的文件WEB上传了)&nbsp;<br /><br /><br />　　memory_limit = 512M (因为服务器的内存为2GB,所以这里加到512M不过份吧，呵)&nbsp;<br /><br /><br />　　post_max_size = 8M (Post数据最大也设置为8MB,这个跟upload_max一样)<br />　　3、改完之后，我重新启动系统，再重新执行导入命令后：<br /><br /><br />　　Import has been successfully finished, 399 queries executed.<br />　　(显示导入成功,有多少个请求处理成功…)<br /><br /><br />　　(备注：改完后当你在到phpMyadmin的导入命令行时，虽然(有时候可能会仍然显示为:最大限制:2048KB/Max: 2,048KiB);但实际上你已经可以导入不超过8M的MySQL数据库.sql导出的备份文件了! 另，改完php.ini后，别忘了重启一下web服务或者是服务器哟!重启后升效!)<br /><br /><br />　　就此记录，希望对遇到同样问题的朋友有所帮助~&nbsp;<br /><br /><br />　　本地测试php程序的程序，经常需要通过Phpmyadmin导入数据库文件，碰到phpmyadmin导入数据最大限制2048KB出错。&nbsp;<br /><br /><br />　　错误提示:You&nbsp;PRobably tried to upload too large file. Please refer to documentation for ways to workaround this limit。<br />　　原来用phpmyadmin导入<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>数据库时，默认<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>数据库最大只能导入2M。&nbsp;<br /><br /><br />　　下面给出解决方法：<br /><br /><br />　　大多数情况都是修改PHP5文件夹下面的php.ini中的upload_max_filesize，但修改了这个以后，还是提示这个问题;<br />　　那么更改如下几处：<br />　　修改 PHP.ini<br /><br /><br />　　file_uploads on 　　　 是否允许通过HTTP上传文件的开关。默认为ON即是开<br />　　upload_tmp_dir 　　--　　文件上传至服务器上存储临时文件的地方，如果没指定就会用系统默认的临时文件夹<br />　　upload_max_filesize 20m 　 望文生意，即允许上传文件大小的最大值。默认为2M<br /><br /><br />　　post_max_size 30m 　　　 指通过表单POST给PHP的所能接收的最大值，包括表单里的所有值。默认为8M<br />　　说明<br />　　一般地，设置好上述四个参数后，在网络正常的情况下，上传8M的大体积文件，只设置上述四项还一定能行的通。除非你的网络真有100M/S的上传高速，否则你还得继续设置下面的参数,那就是设置它的时间，<br />　　max_execution_time 300 每个PHP页面运行的最大时间值(秒)，默认30秒&nbsp;<br /><br /><br />　　max_input_time 300 每个PHP页面接收数据所需的最大时间，默认60秒&nbsp;<br /><br /><br />　　memory_limit 80m 每个PHP页面所吃掉的最大内存，默认8M，如果你机子的内存足够大的话，还可以设置大点儿&nbsp;<br /><br /><br />　　设定 POST 数据所允许的最大大小。此设定也影响到文件上传。要上传大文件，该值必须大于 upload_max_filesize。<br />　　如果配置脚本中激活了内存限制，memory_limit 也会影响文件上传。通常说，memory_limit 应该比 post_max_size 要大。<br /><br /><br />　　附重新启动iis的有效方法：<br />　　将以下内容存为iisadmin.bat然后 运行即可重启<br />　　@ ECHO ##### IIS重启 #####<br />　　@pause&nbsp;<br /><br /><br />　　net stop w3svc<br />　　net stop iisadmin<br />　　net start w3svc&nbsp;<br /><br /><br />　　net start iisadmin<br />　　MySQL导入导出数据实现方法 　一般人用 phpmyadmin 里面的数据库导入，导出功能，非常方便。但是在实际应用中，我发现如下几个问题：<br /><br /><br />　　1 数据库超过一定尺寸，比如6M 这时使用导出一般没问题，可以正确的保存到本机硬盘上面，但是导入则不行!原因是：一般的 PHP.INI 里面设置临时文件/上传文件的大小限制为2M，而phpmyadmin使用了上传的方式，造成失败。&nbsp;<br /><br /><br />　　2 导出到硬盘的 .SQL 文件在导回时，经常出现由于某些单引号的问题引起失败，造成导入失败，只能用 <a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>等应用程序导入了。<br />　　我的数据库已经超过10M，所以必须解决这个问题。我的思路：<br />　　导出： 用phpmyadmin 保存数据库/表格结构，用脚本读取数据库内容并保存到文件里面!<br />　　导入： 用phpmyadmin 恢复数据库/表格结构，用脚本读取文件，然后保存到库里面!<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

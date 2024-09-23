@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mysql升级 on Classic</title>
+    <link>/categories/mysql%E5%8D%87%E7%BA%A7/</link>
+    <description>Recent content in mysql升级 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 20 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/mysql%E5%8D%87%E7%BA%A7/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL5.7升级到8.0(二):配置和参数</title>
+      <link>/mysql/mysql5.7%E5%8D%87%E7%BA%A7%E5%88%B08.0%E7%9A%84%E5%8F%98%E6%9B%B42%E9%85%8D%E7%BD%AE%E5%92%8C%E5%8F%98%E5%8C%96/</link>
+      <pubDate>Thu, 20 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql5.7%E5%8D%87%E7%BA%A7%E5%88%B08.0%E7%9A%84%E5%8F%98%E6%9B%B42%E9%85%8D%E7%BD%AE%E5%92%8C%E5%8F%98%E5%8C%96/</guid>
+      <description>研发：MySQL5.7升级到8.0(一):SQL语法变化
+  DBA：MySQL5.7升级到8.0(二):配置和参数
+   Note：这里面是升级到8.0,需要DBA参与修改部分或注意部分
+ 1.配置文件.cnf变化 以下参数变化 expire-logs-days =&amp;gt; binlog_expire_logs_seconds # 替换 expire-logs-days tx_isolation =&amp;gt; transaction_isolation tx_read_only =&amp;gt; transaction_read_only innodb_undo_logs =&amp;gt; innodb_rollback_segments have_query_cache = no # 永远为 NO expire-logs-days 后续可能废弃, 使用 binlog_expire_logs_seconds (目前还支持) 以下参数不再支持 innodb_stats_sample_pages innodb_locks_unsafe_for_binlog innodb_file_format innodb_file_format_check innodb_file_format_max innodb_large_prefix ignore_builtin_innodb skip-symbolic-links # 默认即 skip-symbolic-links. sync_frm # 8.0 版本去掉了 .frm 文件, 内置在 ibd 文件中 sql_log_bin # 仅支持会话级别设置 query_cache_xxx # 缓存相关的系统变量 metadata_locks_cache_size metadata_locks_hash_instances date_format datetime_format time_format max_tmp_tables 2.</description>
+    </item>
+    
+    <item>
+      <title>MySQL5.7升级到8.0(一):SQL语法变化</title>
+      <link>/mysql/mysql5.7%E5%8D%87%E7%BA%A7%E5%88%B08.0%E7%9A%84%E5%8F%98%E6%9B%B41sql%E8%AF%AD%E6%B3%95/</link>
+      <pubDate>Mon, 14 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql5.7%E5%8D%87%E7%BA%A7%E5%88%B08.0%E7%9A%84%E5%8F%98%E6%9B%B41sql%E8%AF%AD%E6%B3%95/</guid>
+      <description>研发：MySQL5.7升级到8.0(一):SQL语法变化
+  DBA：MySQL5.7升级到8.0(二):配置和参数
+   Note：这里面是升级到8.0,需要开发人员参与修改部分或注意部分
+   不常用 废弃了 GROUP BY 分组的排序 ASC 和 DESC, 存储过程中包含此语法的无法正常执行;
+  不常用 最新版可能不支持 &amp;amp;&amp;amp;, ||, ! 的语法, 需要使用标准 SQL 的 AND, OR, NOT 进行替换;
+  不常用 外键的名字在整个 schema 中必须唯一;
+  常用 支持公共表表达式cte, 窗口函数 不再支持5.6，5.7 的土方法实现递规这种写法废了！不能再用了
+ SELECT * FROM(SELECT @rn:= CASE WHEN @id = id THEN @rn + 1 ELSE 1 END AS rownum,@id:= id as id, volume, dateFROM(SELECT * from table_001 WHERE fdate &amp;lt;= &#39;2022-02-16&#39; ORDER BY id, date DESC) a ,(SELECT @rn=0, @id=0) b )aWHERE rownum &amp;lt;= 5   不常用 支持备份锁(backup lock)</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Linux服务器共享目录Centos7| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Linux服务器共享目录Centos7</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#101001-上执行">10.10.0.1 上执行</a></li>
+    <li><a href="#1010023-上执行">10.10.0.2/3 上执行</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h1 id="0环境">0.环境</h1>
+<p>服务器：</p>
+<ul>
+<li>10.10.0.1 源机器</li>
+<li>10.10.0.2 目标机器1</li>
+<li>10.10.0.3 目标机器2
+目标：
+将10.10.0.1机器上的 /public/downloadnew 文件夹共享给10.10.0.2/3两台机器</li>
+</ul>
+<p>三台机器共享写入 /data/www/dboop/static/download目录</p>
+<h1 id="1安装nfs">1.安装nfs</h1>
+<pre><code>yum -y install nfs-utils rpcbind
+# 开机启动
+systemctl enable rpcbind.service
+systemctl enable nfs-server.service
+
+# 重启服务
+systemctl restart rpcbind.service
+systemctl restart nfs-server.service
+</code></pre><h1 id="2共享设置">2.共享设置</h1>
+<h2 id="101001-上执行">10.10.0.1 上执行</h2>
+<pre><code>mkdir /public/downloadnew
+ln -s /public/downloadnew /data/www/dboop/static/download -f
+
+
+vim /etc/exports
+#输入
+/public 10.10.0.2(insecure,rw,sync,no_root_squash) 10.10.0.3(insecure,rw,sync,no_root_squash) 
+
+exportfs -rv
+</code></pre><h2 id="1010023-上执行">10.10.0.2/3 上执行</h2>
+<pre><code>vim /etc/fstab 
+#输入
+10.10.0.1:/public  /mnt/public       nfs    defaults 0 0
+mkdir /mnt/public
+mount  -a 
+
+df -h 
+
+
+ln -s /mnt/public/downloadnew /data/www/dboop/static/download -f
+
+</code></pre><p>到此 10.10.0.1/2/3 三台机器共同写入读取 /data/www/dboop/static/download</p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2021/03/21</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E8%BF%90%E7%BB%B4">运维</a> <a href="/categories/centos">centos</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

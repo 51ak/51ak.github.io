@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Oracle中rownum的使用</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="在使用oracle中使用rownum，会有些误解，现整理下网友们的文章，希望能有所帮助，呵呵对于oracle的rownum问题，很多资料都说不支持&gt;,&gt;=,=,between...and，只能用以上符号(&lt;、&lt;=、!=)，并非说用&gt;,&gt;=,=,between..and时会提示sql语法错误，而是经常是查不出一条记录来，还会出现似乎是莫名其妙的结果来，其Oracle中rownum的使用" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a href="../Oracle/l_7_1.htm" class="hover"　title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../Oraclezhishi/l_8_1.htm" title="Oracle基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../Oracleha/l_9_1.htm" title="Oracle高可用性和HA">高可用性和HA</a>|</li><li><a  href="../Oracleyouhua/l_10_1.htm" title="Oracle性能与优化">性能与优化</a>|</li><li><a  href="../Oracleguzhang/l_11_1.htm" title="Oracle故障与解决">故障与解决</a>|</li><li><a  href="../Oraclebi/l_12_1.htm" title="Oracle商业应用">Oracle商业应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../Oracle/l_7_1.htm">Oracle</a>&nbsp;&gt;&nbsp;<a href="../Oraclezhishi/l_8_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>Oracle中rownum的使用</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   在使用<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>中使用Rownum，会有些误解，现整理下网友们的文章，希望能有所帮助，呵呵对于 <a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a> 的 rownum 问题，很多资料都说不支持&gt;,&gt;=,=,between...and，只能用以上符号(&lt;、&lt;=、!=)，并非说用&gt;,&gt;=,=,between..and 时会提示SQL语法错误，而是经常是查不出一条记录来，还会出现似乎是莫名其妙的结果来，其实您只要理解好了这个 rownum 伪列的意义就不应该感到惊奇，同样是伪列，rownum 与 rowid 可有些不一样，下面以例子说明假设某个表 t1(c1) 有 20 条记录如果用 select rownum,c1 from t1 where rownum &lt; 10, 只要是用小于号，查出来的结果很容易地与一般理解在概念上能达成一致，应该不会有任何疑问的。可如果用 select rownum,c1 from t1 where rownum &gt; 10 (如果写下这样的查询语句，这时候在您的头脑中应该是想得到表中后面10条记录)，你就会发现，显示出来的结果要让您失望了，也许您还会怀疑是不谁删了一些记录，然后查看记录数，仍然是 20 条啊？那问题是出在哪呢？先好好理解 rownum 的意义吧。因为ROWNUM是对结果集加的一个伪列，即先查到结果集之后再加上去的一个列 (强调：先要有结果集)。简单的说 rownum 是对符合条件结果的序列号。它总是从1开始排起的。所以你选出的结果不可能没有1，而有<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>大于1的值。所以您没办法期望得到下面的结果集：11 aaaaaaaa12 bbbbbbb13 ccccccc.................rownum &gt;10 没有记录，因为第一条不满足去掉的话，第二条的ROWNUM又成了1，所以永远没有满足条件的记录。或者可以这样理解：ROWNUM是一个序列，是<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>数据库从数据文件或缓冲区中读取数据的顺序。它取得第一条记录则rownum值为1，第二条为2，依次类推。如果你用&gt;,&gt;=,=,between...and这些条件，因为从缓冲区或数据文件中得到的第一条记录的rownum为1，则被删除，接着取下条，可是它的rownum还是1，又被删除，依次类推，便没有了数据。有了以上从不同方面建立起来的对 rownum 的概念，那我们可以来认识使用 rownum 的几种现像1. select rownum,c1 from t1 where rownum != 10 为何是返回前9条数据呢？它与 select rownum,c1 from tablename where rownum &lt; 10 返回的结果集是一样的呢？因为是在查询到结果集后，显示完第 9 条记录后，之后的记录也都是 != 10,或者 &gt;=10,所以只显示前面9条记录。也可以这样理解，rownum 为9后的记录的 rownum为10，因条件为 !=10，所以去掉，其后记录补上，rownum又是10，也去掉，如果下去也就只会显示前面9条记录了2. 为什么 rownum &gt;1 时查不到一条记录，而 rownum &gt;0 或 rownum &gt;=1 却总显示所以的记录因为 rownum 是在查询到的结果集后加上去的，它总是从1开始3. 为什么 between 1 and 10 或者 between 0 and 10 能查到结果，而用 between 2 and 10 却得不到结果原因同上一样，因为 rownum 总是从 1 开始从上可以看出，任何时候想把 rownum = 1 这条记录抛弃是不对的，它在结果集中是不可或缺的，少了rownum=1 就像空中楼阁一般不能存在，所以你的 rownum 条件要包含到 1 但如果就是想要用 rownum &gt; 10 这种条件的话话就要用嵌套语句,把 rownum 先生成，然后对他进行查询。select * from (selet rownum as rn，t1.* from a where ...)where rn &gt;10一般代码中对结果集进行分页就是这么干的。另外：rowid 与 rownum 虽都被称为伪列，但它们的存在方式是不一样的，rowid 可以说是物理存在的，表示记录在表空间中的唯一位置ID，在DB中唯一。只要记录没被搬动过，rowid是不变的。rowid 相对于表来说又像表中的一般列，所以以 rowid 为条件就不会有 rownum那些情况发生。另外还要注意：rownum不能以任何基表的名称作为前缀。<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>的rownum是在提取记录就已经生成，它先于排序操作，所以必须使用子查询先排序。ROWNUM值的分配是在查询的谓词解析之后，任何排序和聚合之前进行的。执行顺序：FROM/WHERE子句先被执行.根据FROM/WHERE子句输出的行, ROWNUM被分配给他们并自增长.SELECT 被应用.GROUP BY 被应用.HAVING is 被应用.ORDER BY 被应用.分页可以这样写select * from(select a.*,rownum row_num from(select * from mytable t order by t.id desc) a) b where b.row_num between 1 and 10ROWNUM对性能的影响ROWNUM可以避免<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>在磁盘上进行排序。rownum无法避免全表扫描的发生，但是它可以避免对整个表数据的排序操作，在指定了rownum后，排序操作在内存中可以轻松完成。
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

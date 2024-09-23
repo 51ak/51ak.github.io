@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySQL技巧:Limit关键字优化</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="我们对数据库的操作经常要用到返回指定数据的操作，有时候需要返回指定的几行数据。如现在有一个b/s架构的应用程序，其每一页可能只显示30条记录。此时为了提高显示的效率，一般就要求数据库一次只返回三十条纪录。等用户按下一页的时候，再从数据库中返回30条记录，以此类推。这可以缩短数据显示的时间。当查询的基表比较大时，这个措施非常有效。此时可以使用limit关键字来实现这个需求。limit子句可以被用于强MySQL技巧:Limit关键字优化" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识">基础知识</a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化"><span class="zc_666">性能与优化</span></a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlyouhua/l_16_1.htm">性能与优化</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>MySQL技巧:Limit关键字优化</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   我们对数据库的操作经常要用到返回指定数据的操作，有时候需要返回指定的几行数据。如现在有一个B/S架构的应用程序，其每一页可能只显示30条记录。此时为了提高显示的效率，一般就要求数据库一次只返回三十条纪录。等用户按下一页的时候，再从数据库中返回30条记录，以此类推。这可以缩短数据显示的时间。当查询的基表比较大时，这个措施非常有效。此时可以使用Limit关键字来实现这个需求。Limit子句可以被用于强制Select查询语句返回指定的记录数量。　　通常情况下，Limit关键字可以接受一个或者两个数字参数。需要注意的是，这个参数必须是一个整数常量。如果用户给定两个参数，则第一个参数表示第一个返回记录行的偏移量，第二个参数则表示返回记录行的最大数据。另外需要提醒的是，初始记录行的偏移量是0，而不是1。不少用户会在这里犯错误。<br />　　虽然使用了Limit语句来限制返回的记录数，从而可以提高应用程序的工作效率。但是其也会给系统的性能带来一些负面影响。如可能会导致全表扫描等等。为此笔者给出一些Limit关键字的优化的建议，以供大家参考。<br />　　建议一：灵活使用Limit 0子句<br />　　根据Limit关键字的定义，如果参数为0的话，则其返回的是空记录。这看起来好像没有多少的意义。其实不然。在实际工作中，灵活使用这个0参数，能够给我们带来很大的收获。<br />　　如现在数据库工程师想要确认一下某个查询语句的有效性，如果直接运行这个查询语句，需要等待其返回的记录。如果涉及的纪录数量比较多，或者运算逻辑比较复杂，那么需要等到比较长的时间。此时就可以在Select查询语句中，使用Limit 0子句。只要查询语句没有语法上的错误，这就可以让数据库快速的返回一个空集合。从而帮助数据库设计人员迅速的判断查询语句的有效性。另外这个空集和中还会返回某个表的各个字段的数据类型。即通过这个Limit 0子句还可以查询某个表的表结构。<br />　　可见灵活应用Limir 0子句，确实能够给我们带来不小的收益。不过需要注意的是，在某些特定的场合下，这个子句可能不会奏效。如通常情况下，在Monitor工作环境中不支持这个Limit 0子句。此时结果只会显示Empty Set，而不是我们所需要的结果。<br />　　建议二：Limit与Group By结合使用<br />　　Group By关键字主要用来对数据进行分类汇总。不过在分类汇总之前，往往需要对数据先进性排序。而Limit语句用来指定显示的结果数量时，往往也需要涉及到纪录的分类汇总与排序的问题。如现在一个学校成绩管理系统中，需要对学生的总分进行排序。即先对学生各科成绩进行汇总，然后显示其排名为前50的纪录。此时就需要同时用到Group By子句和Limit子句。其实从这个案例中我们也可以看出，这两个子句相互依赖的特性。正是因为这种特性(经常相互结合使用)，为此结合Group By子句可以提高Limit的查询效率。<br />　　这主要是因为两者如果一起使用的话，Limit关键字将不会再重复计算任何不必要的Group By的值。换句话说，在某些情况下，Group By子句能够通过顺序来读取键或者在键上做排序来解决分类汇总时的排序问题，然后再计算摘要直到关键字的值的改变为止。如此的话，两个子句所需要做的一些共同性的工作，只要做一次即可。这就可以从另外一次角度用来提高应用系统的性能。相比先做一个视图对数据进行分类汇总的运算，再使用一个查询语句来抽取特定数量的记录，效率就要高一点。因为后者是将两个子句分开来使用，就无法享受到结合使用所体现的优势。<br />建议三：使用SQL_calc_found_rows来提高子句的灵活性<br />　　默认情况下，Limit子句返回用户所指定的记录行数。只要数据库已经发送了用户所需要的行数，则数据库系统会放弃剩余的查询。即上面这个学生成绩的案例中，如果用户只需要返回总分成绩排名前50的学生，则数据库只返回50条记录，然后终止查询作业。<br />　　但是在某些特定的情况下，用户可能仍然需要继续后续的查询呢?如用户出了查询某些特定的记录，还需要知道总的记录数量，此时该如何处理?如现在用户需要知道排名前50的学生信息，同时需要知道总分在500分以上的总人数。此时单独使用Limit子句可能无法满足用户的需求，因为其只关心前面50条记录。如果要实现这个需求的话，往往需要结合SQL_calc_found_rows关键字。<br />　　这个关键字的主要用途就是能够在查询时为数据库管理员事先准备好符合Where条件语句的记录数目。然后用户只要在随后执行一条Select Found_ROWS语句之后，就可以获得符合条件的记录总数。不过需要注意的是，使用这个关键字会带来一定的副作用。即带有这个关键字的查询语句，是无法使用数据缓存的。故在某些情况下会降低数据查询的性能。故一般情况下，这个关键字只用于Where条件语句比较复杂的情况。当然这只是一个出于性能考虑的建议，而并不是技术上的限制。即即使Where条件语句不复杂，也可以使用这个关键字，不会出现语法上的错误。只是其在性能上并不是很理想。<br />　　建议四：与Distinct关键字共同使用时的特殊现象<br />　　Distinct关键字主要用来过滤重复的记录。而Limit关键字则主要用来指定记录所返回的行数。如果这两个关键字共同使用时，会出现什么样的情况呢?如果从字面意思去理解，数据库会返回指定的不重复的记录数。如Limit的参数为50，则数据库返回50条不重复的记录数。然后后续的查询就会停止。如果查询的记录中有重复记录，则数据库查询的实际数量往往要比Limit关键字所指定的数量要多。<br />　　在实际工作中，这条语句的作用还是很大的。如现在有一张员工考勤信息的表格。现在数据库管理员需要统计缺勤次数排名前20的员工人数。此时为了防止有重复的记录，就可以在查询语句中加一个Distinct关键字，用来过滤重复的记录数。从而可以避免采用多个查询语句来完成这个需求。<br />　　建议五：Limit与索引之间的关系<br />　　如果数据库管理员决定使用Limit子句来指定需要显示的记录数，那么最好能够最大限度的使用索引，以避免全表扫描，提高工作效率。即当数据库选择做完整的表扫描时，可以在某些情况下使用索引。<br />　　如现在数据库管理员决定将Limit子句与Order BY子句一起使用。数据库一旦找到了排序结果的第一个RowCount行，则系统将会结束排序，而并不会对整个表进行排序。如果单独使用Order By子句的话，则会对整个表进行排序。虽然如此，但是排序必定要浪费一定的时间。此时数据库管理员如果决定使用索引，则可以在很大程度上提高这个查询的效率。<br />　　对于这个内容，笔者要强调一个问题。如果必须要进行文件排序，则必须选择所有匹配查询，并且在确定已经找到第一个行之前，必须对他们的大部分内容进行了排序。特别需要强调的是，在任何情况下，一旦找到了行，则就不需要再排序结果的<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>部分，数据库会自动结束排序。<br />　　可见Limit子句其本质的功能是限制用户的纪录数量。但是其还有很多别的用途。如快速判断查询语句的有效性、计算表所需要的空间等等。不过其也有一定的副作用，可能会带系统的运行带来一些负面的影响。此时最好能够采取一些措施来提高系统运行的性能。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

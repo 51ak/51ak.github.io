@@ -1,0 +1,504 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL的事务隔离和MVCC| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL的事务隔离和MVCC</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#0前言为什么要写这篇文章">0.前言:为什么要写这篇文章？</a>
+      <ul>
+        <li><a href="#事务隔离和mvcc的重要性">事务隔离和mvcc的重要性</a></li>
+        <li><a href="#另一方面的原因是现有的资料对mvcc写得不够直观">另一方面的原因是现有的资料对mvcc写得不够直观</a></li>
+      </ul>
+    </li>
+    <li><a href="#环境准备">环境准备</a>
+      <ul>
+        <li><a href="#建一张表dboopuser并insert几条数据">建一张表dboopuser并insert几条数据</a></li>
+        <li><a href="#初始状态">初始状态</a></li>
+      </ul>
+    </li>
+    <li><a href="#1事务隔离级别">1.事务隔离级别</a>
+      <ul>
+        <li><a href="#可重复读-rr级别">可重复读 （RR级别）</a></li>
+        <li><a href="#已提交读-rc级别">已提交读 （RC级别）</a></li>
+      </ul>
+    </li>
+    <li><a href="#2readview">2.ReadView</a>
+      <ul>
+        <li><a href="#什么是mvcc">什么是mvcc</a></li>
+        <li><a href="#什么是readview">什么是ReadView</a></li>
+        <li><a href="#readview存放的内容">ReadView存放的内容</a></li>
+        <li><a href="#readview如何控制访问行为">ReadView如何控制访问行为</a></li>
+      </ul>
+    </li>
+    <li><a href="#实例演示rr级别">实例演示（RR级别）</a>
+      <ul>
+        <li><a href="#初始状态-1">初始状态</a></li>
+        <li><a href="#测试步骤1">测试步骤1</a></li>
+        <li><a href="#真实存储分析">真实存储分析</a></li>
+        <li><a href="#mvcc原理实现逻辑">Mvcc原理实现逻辑</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="0前言为什么要写这篇文章">0.前言:为什么要写这篇文章？</h2>
+<h3 id="事务隔离和mvcc的重要性">事务隔离和mvcc的重要性</h3>
+<p>不同于很多MySQL的原理，只需要DBA掌握，事务对于研发人员也是必须掌握的知识点和原理。并发程度越高，数据库里的锁和事务越明显，越重要。所以：<!-- raw HTML omitted -->数据库事务和mvcc是研发和DBA都要熟练掌握的<!-- raw HTML omitted --></p>
+<h3 id="另一方面的原因是现有的资料对mvcc写得不够直观">另一方面的原因是现有的资料对mvcc写得不够直观</h3>
+<p>现有的对mvcc原理的讲解停留在画图阶段，我觉得<!-- raw HTML omitted -->光画图还不够，要实打实的一个字节一个字节的看MySQL真实的数据文件是怎么实现的<!-- raw HTML omitted -->。利用自研的<code>MySQL数据文件分析工具</code>（ 参考：<a href="/mysql/mysql%E5%8E%9F%E7%90%86_innodb%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F%E8%AF%A6%E8%A7%A3/">innodb存储格式</a> )。可以很直观的把mvcc实现的底层逻辑给展示出来。</p>
+<blockquote>
+<p>以下两篇文章，可以协助你更好的理解本章节的内容</p>
+</blockquote>
+<ul>
+<li><a href="/mysql/mysql%E7%9A%84%E8%A1%8C%E6%A0%BC%E5%BC%8Fcompact_redundant_dynamic_compressed/">MySQL行格式(compact,redundant,dynamic,compressed)</a> )</li>
+<li><a href="/mysql/mysql%E7%9A%84%E4%BA%8B%E5%8A%A1id_trx_id/">MySQ事务id:trx_id</a> )</li>
+</ul>
+<h2 id="环境准备">环境准备</h2>
+<ul>
+<li>MySQL版本:8.0.22</li>
+<li>事务隔离级别:REPEATABLE-READ  (默认隔离级别)</li>
+</ul>
+<h3 id="建一张表dboopuser并insert几条数据">建一张表dboopuser并insert几条数据</h3>
+<pre><code>drop table dboopuser;
+create table dboopuser(
+userid int unsigned  not null primary key ,
+age smallint unsigned not null  default 0,
+username varchar(20) not null default '',
+userimg varchar(255) not null default ''
+) ENGINE=InnoDB  COMMENT='测试user表--用于mvcc测试20220727' ;
+
+
+insert into dboopuser(userid,age,username,userimg) values(9527,25,'cccccccccc','http://www.dboop.com/img/user/2002_innodbtrx_527.jpg');
+insert into dboopuser(userid,age,username,userimg) values(9528,15,'dddddddddddddd','http://www.dboop.com/img/user/2002_innodbtrx_528.jpg');
+insert into dboopuser(userid,age,username,userimg) values(9529,25,'eeeeeeeeeeeeeeeee','http://www.dboop.com/img/user/2002_innodbtrx_529.jpg');
+insert into dboopuser(userid,age,username,userimg) values(9530,26,'zhangsan01','http://www.dboop.com/img/user/2002_innodbtrx_530.jpg');
+insert into dboopuser(userid,age,username,userimg) values(9531,27,'zhangsan02','http://www.dboop.com/img/user/2002_innodbtrx_531.jpg');
+insert into dboopuser(userid,age,username,userimg) values(9532,28,'zhangsan03','http://www.dboop.com/img/user/2002_innodbtrx_532.jpg');
+insert into dboopuser(userid,age,username,userimg) values(9533,29,'zhangsan04','http://www.dboop.com/img/user/2002_innodbtrx_533.jpg');
+insert into dboopuser(userid,age,username,userimg) values(9534,29,'zhangsan05','http://www.dboop.com/img/user/2002_innodbtrx_534.jpg');
+insert into dboopuser(userid,age,username,userimg) values(9535,29,'zhangsan06','http://www.dboop.com/img/user/2002_innodbtrx_535.jpg');
+
+
+</code></pre><h3 id="初始状态">初始状态</h3>
+<h4 id="文件信息">文件信息</h4>
+<p>我们在文件系统中看到data目录多了一个<code>dboopuser.ibd</code>文件</p>
+<pre><code>ll /data/mysql3406/data/dboop_test
+total 80
+-rw-r----- 1 mysql mysql 114688 Jul 28 20:19 dboopuser.ibd
+</code></pre><p>注意这里的文件大小：<!-- raw HTML omitted -->114688<!-- raw HTML omitted -->  用它除以16384（16k) 刚好等于 <!-- raw HTML omitted -->7<!-- raw HTML omitted --></p>
+<p>因为MySQL是用页来组织文件的，所以这里用了7页，每页16k。</p>
+<h4 id="图解用可视化工具查看这个文件">图解：用可视化工具查看这个文件</h4>
+<p><img src="/img/2022/innodb_mvcc01.png" alt="innodb_mvcc01"></p>
+<p>工具的介绍和使用说明，参看以前录的视频:<a href="/mysql/mysql%E5%8E%9F%E7%90%86_innodb%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F%E8%AF%A6%E8%A7%A3/">innodb存储格式</a>
+通过可视化工具，我们可以直观的看到这7个页的类型。这里我们重点要关注的是第4页</p>
+<h4 id="图解查看bree-页详细内容">图解：查看Bree 页详细内容</h4>
+<p>点开page 4 这个Btree页查看16k字节的详细内容</p>
+<p><img src="/img/2022/innodb_mvcc03.png" alt="innodb_mvcc03"></p>
+<p>上图的图形化展示，我们可以看到我们insert的9条数据，在ibd文件的第4个page中，具体的存放方式。</p>
+<ul>
+<li>前38个字节是file header 文件头</li>
+<li>38-94字节是page header 记录了当前页的一些信息</li>
+<li>94-16376字节 是正式存放数据的地方</li>
+<li>重点要关注的是每行记录的trid和rollpointer 这个后面会用到。（非常重要）</li>
+</ul>
+<h4 id="分析具体的一条record记录">分析具体的一条record记录</h4>
+<p>上面的图上，我们找到了这个想要的9条记录，现在来分析它</p>
+<pre><code>Row:007f,delete_flag:0,min_rec:0,row_id:9527,trx_id:2387,roll_pointer:1,2,225,272,data:(25,cccccccccc..),next_offset:0x58--&gt;0xd7
+Row:00d7,delete_flag:0,min_rec:0,row_id:9528,trx_id:2389,roll_pointer:1,1,226,272,data:(15,dddddddddd..),next_offset:0x5c--&gt;0x133
+Row:0133,delete_flag:0,min_rec:0,row_id:9529,trx_id:2396,roll_pointer:1,1,230,272,data:(25,eeeeeeeeee..),next_offset:0x5f--&gt;0x192
+Row:0192,delete_flag:0,min_rec:0,row_id:9530,trx_id:2398,roll_pointer:1,2,231,272,data:(26,zhangsan01..),next_offset:0x58--&gt;0x1ea
+Row:01ea,delete_flag:0,min_rec:0,row_id:9531,trx_id:2404,roll_pointer:1,1,234,272,data:(27,zhangsan02..),next_offset:0x58--&gt;0x242
+Row:0242,delete_flag:0,min_rec:0,row_id:9532,trx_id:2406,roll_pointer:1,2,235,272,data:(28,zhangsan03..),next_offset:0x58--&gt;0x29a
+Row:029a,delete_flag:0,min_rec:0,row_id:9533,trx_id:2408,roll_pointer:1,1,235,272,data:(29,zhangsan04..),next_offset:0x58--&gt;0x2f2
+Row:02f2,delete_flag:0,min_rec:0,row_id:9534,trx_id:2410,roll_pointer:1,2,236,272,data:(29,zhangsan05..),next_offset:0x58--&gt;0x34a
+Row:034a,delete_flag:0,min_rec:0,row_id:9535,trx_id:2412,roll_pointer:1,1,236,272,data:(29,zhangsan06..),next_offset:-0x2da--&gt;0x0
+
+</code></pre><p>需要记住以下几个关键的信息</p>
+<ul>
+<li>delete_flag:是否删除</li>
+<li>row_id:主键</li>
+<li>trx_id:写入这条记录的trx_id(重要/mvcc理解的重点)</li>
+<li>roll_pointer:（重要，这是指向undolog的指针) 举例<code>roll_pointer:1,2,225,272</code>代表：roll_pointer:是否是insert,undolog的segmentid,undolog的pagenum,undolog的offset</li>
+<li>data:行数据，这里我们做了缩略展示</li>
+</ul>
+<h2 id="1事务隔离级别">1.事务隔离级别</h2>
+<ul>
+<li>未提交读 Read uncommitted</li>
+<li>已提交读（又叫:不可重复读） Read committed</li>
+<li>可重复读 Repeatable read</li>
+<li>串行化 Serializable</li>
+</ul>
+<p>以下4个隔离级别，从上往下，要求越来越严重，通常我们只会用到中间两个</p>
+<ul>
+<li>未提交读，会读到脏数据，产生幻读，一般不会使用。</li>
+<li>串行化，并发性能太差，也几乎不会用到。</li>
+</ul>
+<p>重点要理解的是</p>
+<h3 id="可重复读-rr级别">可重复读 （RR级别）</h3>
+<ul>
+<li>MySQL默认存储引擎innodb的默认的隔离级别</li>
+<li>通俗的讲：在一个事务中无论什么时候执行一样的select语句，能获得一样的结果(可重复读）</li>
+<li>实现的关键是：在一个事务开始时，生成一个ReadView，这个ReadView控制后续的访问行为。（这里有个很重要的概率ReadView，如果不知道，先记住这个词）</li>
+</ul>
+<h3 id="已提交读-rc级别">已提交读 （RC级别）</h3>
+<ul>
+<li>RC隔离级别，是除了RR级别外，使用得最多的隔离级别，线上的MySQL的隔离级别，几乎是：要么可重读级别，要么已提交读隔离级别</li>
+<li>通俗的讲：在一个事务中不管什么时候select，都是读取到已提交的数据，不会读到脏数据</li>
+<li>实现的关键是：在每一个select时都会生成一个ReadView，这个ReadView控制当前的访问行为。（跟上面的RR级级别的差异在，每次select都会生成readview）</li>
+</ul>
+<h2 id="2readview">2.ReadView</h2>
+<h3 id="什么是mvcc">什么是mvcc</h3>
+<p>MVCC （Multi-Version Concurrency Control ，多版本并发控制）指的就是在使用READ COMMITTD、REPEATABLE READ这两种隔离级别的事务在执行普通的SEELCT操作时访问记录的版本链的过程。</p>
+<p>** 注意：ReadView是理解MVCC的关键，是理解MySQL事务隔离级别的关键，是线上偶然发生的～莫名期妙的事务问题～定位的关键 **</p>
+<h3 id="什么是readview">什么是ReadView</h3>
+<p>官方文档的解释：</p>
+<blockquote>
+<p>An internal snapshot used by the MVCC mechanism of InnoDB. Certain transactions, depending on their isolation level, see the data values as they were at the time the transaction (or in some cases, the statement) started. Isolation levels that use a read view are REPEATABLE READ, READ COMMITTED, and READ UNCOMMITTED.</p>
+</blockquote>
+<p>翻译过来：</p>
+<ul>
+<li>Read View是一个数据库的内部快照，该快照被用于InnoDB存储引擎中的MVCC机制。</li>
+<li>简单来说：Read View就是一个快照，保存着数据库某个时刻的数据信息。</li>
+<li>Read View会根据事务的隔离级别决定在某个事务开始时，该事务能看到什么信息。就是说通过Read View，事务可以知道此时此刻能看到哪个版本的数据记录（有可能不是最新版本的，也有可能是最新版本的）。</li>
+<li>可重复读、读已提交、读未提交，这几个隔离级别都会使用Read View。</li>
+</ul>
+<h3 id="readview存放的内容">ReadView存放的内容</h3>
+<p>ReadView是个内存里的结构，里面存放了4块内容</p>
+<ul>
+<li>ReadView::id 创建该视图的事务ID；</li>
+<li>ReadView::m_ids 创建ReadView时，活跃的读写事务ID数组，有序存储；</li>
+<li>ReadView::m_low_limit_id 设置为当前最大事务ID；</li>
+<li>ReadView::m_up_limit_id m_ids集合中的最小值，如果m_ids集合为空，表示当前没有活跃读写事务，则设置为当前最大事务ID。</li>
+</ul>
+<h4 id="id表示生成该readview的事务的事务id">id：表示生成该readview的事务的事务id；</h4>
+<blockquote>
+<p>当前事务，假定当前的事务是00000100</p>
+</blockquote>
+<h4 id="m_ids生成readview时当前系统中活跃的读写事务id列表">m_ids：生成readview时，当前系统中活跃的读写事务id列表；</h4>
+<blockquote>
+<p>例如：创建事务00000100创建RV时,系统正在活跃的事务有0000095,0x000096,0000097那么0000095,0000096,0000097都会加入到00000100的m_ids中.</p>
+</blockquote>
+<h4 id="m_low_limit_id又叫min_trx_id生成readview时当前系统中活跃的读写事务中最小的事务id">m_low_limit_id：又叫min_trx_id，生成readview时，当前系统中活跃的读写事务中最小的事务id</h4>
+<blockquote>
+<p>也就是m_ids中最小的值；本例中的 0000095</p>
+</blockquote>
+<h4 id="m_up_limit_id又叫max_trx_id生成readview时系统中应该分配给下一个事务的id值">m_up_limit_id：又叫max_trx_id，生成readview时，系统中应该分配给下一个事务的id值；</h4>
+<blockquote>
+<p>本例中，下一个事务是00000101</p>
+</blockquote>
+<h3 id="readview如何控制访问行为">ReadView如何控制访问行为</h3>
+<h4 id="判断规则">判断规则</h4>
+<p>有了ReadView，在访问某条记录时，按照以下步骤判断记录的某个版本是否可见:</p>
+<ul>
+<li>undo log的数据中包含的trx_id是否符合min_trx_id和max_trx_id之间</li>
+<li>1.1 如果小于min_trx_id说明创建RV 之前 的时候这个trx_id就已经事务提交了,不活跃了，说明可以读。</li>
+<li>1.2 如果大于max_trx_id说明这个版本是在创建RV 之后 产生的，不可读。因为创建RV时你这个版本还不存在。</li>
+<li>1.3 如果是在这之间的再看步骤2</li>
+<li>查看trx_id是否包含m_id之中：</li>
+<li>2.1 包含说明创建RV的时候，还是活跃（没提交）事务。那么是不可见的，脏读；继续看步骤3</li>
+<li>2.2 不包含说明创建RV之前这个事务已经被提交了，那么是可见的。</li>
+<li>到了这里说明这条数据的变更版本在RV之内，则要查看creator_trx_id与trx_id是否一致:</li>
+<li>3.1 一致说明就是当前事务创建的；允许使用；</li>
+<li>3.2 否则说明是当前RV的其他事务操作的不能使用;</li>
+<li>基于上述规则，很好的解决了一致性读的问题；当前线程创建完RV之后，读到的数据都是相同的；不会读到其他事务未提交和后提交的数据。</li>
+</ul>
+<h2 id="实例演示rr级别">实例演示（RR级别）</h2>
+<h3 id="初始状态-1">初始状态</h3>
+<p>我们来看真实的<code>dboopuser</code>这张表的情况</p>
+<pre><code>mysql&gt; select * from dboopuser;
++--------+-----+-------------------+------------------------------------------------------+
+| userid | age | username          | userimg                                              |
++--------+-----+-------------------+------------------------------------------------------+
+|   9527 |  25 | cccccccccc        | http://www.dboop.com/img/user/2002_innodbtrx_527.jpg |
+|   9528 |  15 | dddddddddddddd    | http://www.dboop.com/img/user/2002_innodbtrx_528.jpg |
+|   9529 |  25 | eeeeeeeeeeeeeeeee | http://www.dboop.com/img/user/2002_innodbtrx_529.jpg |
+|   9530 |  26 | zhangsan01        | http://www.dboop.com/img/user/2002_innodbtrx_530.jpg |
+|   9531 |  27 | zhangsan02        | http://www.dboop.com/img/user/2002_innodbtrx_531.jpg |
+|   9532 |  28 | zhangsan03        | http://www.dboop.com/img/user/2002_innodbtrx_532.jpg |
+|   9533 |  29 | zhangsan04        | http://www.dboop.com/img/user/2002_innodbtrx_533.jpg |
+|   9534 |  29 | zhangsan05        | http://www.dboop.com/img/user/2002_innodbtrx_534.jpg |
+|   9535 |  29 | zhangsan06        | http://www.dboop.com/img/user/2002_innodbtrx_535.jpg |
++--------+-----+-------------------+------------------------------------------------------+
+9 rows in set (0.00 sec)
+
+一共有9条数据，用分析工具，读取其物理结构
+Row:007f,delete_flag:0,min_rec:0,row_id:9527,trx_id:2387,roll_pointer:1,2,225,272,data:(25,cccccccccc..),next_offset:0x58--&gt;0xd7
+Row:00d7,delete_flag:0,min_rec:0,row_id:9528,trx_id:2389,roll_pointer:1,1,226,272,data:(15,dddddddddd..),next_offset:0x5c--&gt;0x133
+Row:0133,delete_flag:0,min_rec:0,row_id:9529,trx_id:2396,roll_pointer:1,1,230,272,data:(25,eeeeeeeeee..),next_offset:0x5f--&gt;0x192
+Row:0192,delete_flag:0,min_rec:0,row_id:9530,trx_id:2398,roll_pointer:1,2,231,272,data:(26,zhangsan01..),next_offset:0x58--&gt;0x1ea
+Row:01ea,delete_flag:0,min_rec:0,row_id:9531,trx_id:2404,roll_pointer:1,1,234,272,data:(27,zhangsan02..),next_offset:0x58--&gt;0x242
+Row:0242,delete_flag:0,min_rec:0,row_id:9532,trx_id:2406,roll_pointer:1,2,235,272,data:(28,zhangsan03..),next_offset:0x58--&gt;0x29a
+Row:029a,delete_flag:0,min_rec:0,row_id:9533,trx_id:2408,roll_pointer:1,1,235,272,data:(29,zhangsan04..),next_offset:0x58--&gt;0x2f2
+Row:02f2,delete_flag:0,min_rec:0,row_id:9534,trx_id:2410,roll_pointer:1,2,236,272,data:(29,zhangsan05..),next_offset:0x58--&gt;0x34a
+Row:034a,delete_flag:0,min_rec:0,row_id:9535,trx_id:2412,roll_pointer:1,1,236,272,data:(29,zhangsan06..),next_offset:-0x2da--&gt;0x0
+</code></pre><h3 id="测试步骤1">测试步骤1</h3>
+<h4 id="线程1beginselect--from-dboopuser">线程1：begin；select * from dboopuser;</h4>
+<p>返回结果：</p>
+<pre><code>mysql&gt; begin;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt; select * from dboopuser;
++--------+-----+-------------------+------------------------------------------------------+
+| userid | age | username          | userimg                                              |
++--------+-----+-------------------+------------------------------------------------------+
+|   9527 |  25 | cccccccccc        | http://www.dboop.com/img/user/2002_innodbtrx_527.jpg |
+|   9528 |  15 | dddddddddddddd    | http://www.dboop.com/img/user/2002_innodbtrx_528.jpg |
+|   9529 |  25 | eeeeeeeeeeeeeeeee | http://www.dboop.com/img/user/2002_innodbtrx_529.jpg |
+|   9530 |  26 | zhangsan01        | http://www.dboop.com/img/user/2002_innodbtrx_530.jpg |
+|   9531 |  27 | zhangsan02        | http://www.dboop.com/img/user/2002_innodbtrx_531.jpg |
+|   9532 |  28 | zhangsan03        | http://www.dboop.com/img/user/2002_innodbtrx_532.jpg |
+|   9533 |  29 | zhangsan04        | http://www.dboop.com/img/user/2002_innodbtrx_533.jpg |
+|   9534 |  29 | zhangsan05        | http://www.dboop.com/img/user/2002_innodbtrx_534.jpg |
+|   9535 |  29 | zhangsan06        | http://www.dboop.com/img/user/2002_innodbtrx_535.jpg |
++--------+-----+-------------------+------------------------------------------------------+
+9 rows in set (0.00 sec)
+
+mysql&gt; select TRX_ID from INFORMATION_SCHEMA.INNODB_TRX where TRX_MYSQL_THREAD_ID = CONNECTION_ID();
++-----------------+
+| TRX_ID          |
++-----------------+
+| 421658589187480 |
++-----------------+
+1 row in set (0.00 sec)
+
+show engine innodb status \G
+*************************** 1. row ***************************
+  Type: InnoDB
+....
+------------
+TRANSACTIONS
+------------
+Trx id counter 2431
+
+</code></pre><h4 id="线程2beginupdate-dboopuser-set-age35-where-userid9528commit">线程2：begin;update dboopuser set age=35 where userid=9528;commit;</h4>
+<p>返回结果：</p>
+<pre><code>mysql&gt; begin;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt; update dboopuser set age=35 where userid=9528;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql&gt; select TRX_ID from INFORMATION_SCHEMA.INNODB_TRX where TRX_MYSQL_THREAD_ID = CONNECTION_ID();
++--------+
+| TRX_ID |
++--------+
+|   2432 |
++--------+
+1 row in set (0.00 sec)
+
+mysql&gt; commit;
+Query OK, 0 rows affected (0.02 sec)
+
+</code></pre><h4 id="线程3依次执行-beginselectupdatedeleteselect但不commit">线程3:依次执行 begin;select/update/delete/select，但不commit</h4>
+<p>返回结果：</p>
+<pre><code>mysql&gt; begin;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt; select * from dboopuser;
++--------+-----+-------------------+------------------------------------------------------+
+| userid | age | username          | userimg                                              |
++--------+-----+-------------------+------------------------------------------------------+
+|   9527 |  25 | cccccccccc        | http://www.dboop.com/img/user/2002_innodbtrx_527.jpg |
+|   9528 |  35 | dddddddddddddd    | http://www.dboop.com/img/user/2002_innodbtrx_528.jpg |
+|   9529 |  25 | eeeeeeeeeeeeeeeee | http://www.dboop.com/img/user/2002_innodbtrx_529.jpg |
+|   9530 |  26 | zhangsan01        | http://www.dboop.com/img/user/2002_innodbtrx_530.jpg |
+|   9531 |  27 | zhangsan02        | http://www.dboop.com/img/user/2002_innodbtrx_531.jpg |
+|   9532 |  28 | zhangsan03        | http://www.dboop.com/img/user/2002_innodbtrx_532.jpg |
+|   9533 |  29 | zhangsan04        | http://www.dboop.com/img/user/2002_innodbtrx_533.jpg |
+|   9534 |  29 | zhangsan05        | http://www.dboop.com/img/user/2002_innodbtrx_534.jpg |
+|   9535 |  29 | zhangsan06        | http://www.dboop.com/img/user/2002_innodbtrx_535.jpg |
++--------+-----+-------------------+------------------------------------------------------+
+9 rows in set (0.00 sec)
+
+mysql&gt; update dboopuser set username='aaaaaa' where userid=9529;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql&gt; delete from dboopuser where userid=9532;
+Query OK, 1 row affected (0.00 sec)
+
+mysql&gt; select * from dboopuser;
++--------+-----+----------------+------------------------------------------------------+
+| userid | age | username       | userimg                                              |
++--------+-----+----------------+------------------------------------------------------+
+|   9527 |  25 | cccccccccc     | http://www.dboop.com/img/user/2002_innodbtrx_527.jpg |
+|   9528 |  35 | dddddddddddddd | http://www.dboop.com/img/user/2002_innodbtrx_528.jpg |
+|   9529 |  25 | aaaaaa         | http://www.dboop.com/img/user/2002_innodbtrx_529.jpg |
+|   9530 |  26 | zhangsan01     | http://www.dboop.com/img/user/2002_innodbtrx_530.jpg |
+|   9531 |  27 | zhangsan02     | http://www.dboop.com/img/user/2002_innodbtrx_531.jpg |
+|   9533 |  29 | zhangsan04     | http://www.dboop.com/img/user/2002_innodbtrx_533.jpg |
+|   9534 |  29 | zhangsan05     | http://www.dboop.com/img/user/2002_innodbtrx_534.jpg |
+|   9535 |  29 | zhangsan06     | http://www.dboop.com/img/user/2002_innodbtrx_535.jpg |
++--------+-----+----------------+------------------------------------------------------+
+8 rows in set (0.00 sec)
+
+</code></pre><h4 id="线程1再次执行select--from-dboopuser">线程1：再次执行select * from dboopuser;</h4>
+<p>返回结果：</p>
+<pre><code>
+mysql&gt; select * from dboopuser;
++--------+-----+-------------------+------------------------------------------------------+
+| userid | age | username          | userimg                                              |
++--------+-----+-------------------+------------------------------------------------------+
+|   9527 |  25 | cccccccccc        | http://www.dboop.com/img/user/2002_innodbtrx_527.jpg |
+|   9528 |  15 | dddddddddddddd    | http://www.dboop.com/img/user/2002_innodbtrx_528.jpg |
+|   9529 |  25 | eeeeeeeeeeeeeeeee | http://www.dboop.com/img/user/2002_innodbtrx_529.jpg |
+|   9530 |  26 | zhangsan01        | http://www.dboop.com/img/user/2002_innodbtrx_530.jpg |
+|   9531 |  27 | zhangsan02        | http://www.dboop.com/img/user/2002_innodbtrx_531.jpg |
+|   9532 |  28 | zhangsan03        | http://www.dboop.com/img/user/2002_innodbtrx_532.jpg |
+|   9533 |  29 | zhangsan04        | http://www.dboop.com/img/user/2002_innodbtrx_533.jpg |
+|   9534 |  29 | zhangsan05        | http://www.dboop.com/img/user/2002_innodbtrx_534.jpg |
+|   9535 |  29 | zhangsan06        | http://www.dboop.com/img/user/2002_innodbtrx_535.jpg |
++--------+-----+-------------------+------------------------------------------------------+
+9 rows in set (0.00 sec)
+
+</code></pre><h3 id="真实存储分析">真实存储分析</h3>
+<h4 id="图解">图解：</h4>
+<p><img src="/img/2022/innodb_mvcc05.png" alt="innodb_mvcc05"></p>
+<h4 id="数据变化">数据变化</h4>
+<ul>
+<li>第2,3,6行的 trx_id,roll_pointer 都变了，其中2,3行的数据也变了</li>
+</ul>
+<h3 id="mvcc原理实现逻辑">Mvcc原理实现逻辑</h3>
+<h4 id="为什么事务1可以一直读取到第一次读到的原始表">为什么事务1，可以一直读取到第一次读到的原始表？</h4>
+<ul>
+<li>因为它的事务是只读的,trx_id是生成的是一个非常大的无意义的id</li>
+<li>当它生成的当前活跃事务列表的时候是空的，m_low_limit_id:2430，max_trxid:2431</li>
+<li>所以不管后面什么时候select * from dboopuser,它都只会找trx_id&lt;2431的</li>
+<li>如果发现有大于2431的，例如本例中的2,3,6行，它会按照roll_pointer去找到undolog中 过去的数据快照。把这一行的快照数据拼接出来，凑成结果返回</li>
+</ul>
+<h4 id="为什么事务3可以读取到事务2的数据">为什么事务3，可以读取到事务2的数据？</h4>
+<ul>
+<li>因为事务3开始的时候,事务2已提交了（这个试验做得不好，）</li>
+<li>主要是说明事务3不会去找第二行的rollpointer去找undolog</li>
+</ul>
+<h4 id="如果事务3最后rollback了会怎样">如果事务3，最后rollback了，会怎样？</h4>
+<p>如图所示，事备3回滚以后，数据又回到事务3开始前的状态（一模一样），这也是undolog的一个重要做用</p>
+<p><img src="/img/2022/innodb_mvcc06.png" alt="innodb_mvcc06"></p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/07/28</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/undolog">undolog</a> <a href="/categories/%E4%BA%8B%E5%8A%A1">事务</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

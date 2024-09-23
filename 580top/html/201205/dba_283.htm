@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access技巧：ACCESS外部数据的使用</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="何时使用导入或联接<br/>&nbsp;<br/>在access中，可以很方便地从外部数据库中获取数据，这些数据库包括现在所有的各种主流数据库，像dbase、sybase、oracle、foxpro等。这样你就不用去一个一个地重新输入原来的数据了。在access中，可以用“获取外部数据”命令来获取外部数据库的数据，这个命令包括两种方式“导入”和“链接表”。对于不同的外部数据库可以用不Access技巧：ACCESS外部数据的使用" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a href="../othersql/l_19_1.htm" class="hover"　title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../nosql/l_20_1.htm" title="NoSQL">NoSQL</a>|</li><li><a  href="../sysbase/l_21_1.htm" title="Sybase">Sybase</a>|</li><li><a  href="../db2/l_22_1.htm" title="DB2">DB2</a>|</li><li><a  href="../access/l_23_1.htm" title="Access"><span class="zc_666">Access</span></a>|</li><li><a  href="../infomix/l_24_1.htm" title="Informix">Informix</a>|</li><li><a  href="../sqlsql/l_25_1.htm" title="其他">其他</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../othersql/l_19_1.htm">其他数据库</a>&nbsp;&gt;&nbsp;<a href="../access/l_23_1.htm">Access</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>Access技巧：ACCESS外部数据的使用</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   　　何时使用导入或联接<br />&nbsp;<br />　　在<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>中，可以很方便地从外部数据库中获取数据，这些数据库包括现在所有的各种主流数据库，像Dbase、<a href="../../html/sysbase/l_21_1.htm" title="Sybase" >Sybase</a>、<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>、Foxpro等。这样你就不用去一个一个地重新输入原来的数据了。 在<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>中，可以用“获取外部数据”命令来获取外部数据库的数据，这个命令包括两种方式“导入”和“链接表”。对于不同的外部数据库可以用不同的获取方式。而且在<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>中，不光可以获取外部数据，还可以导出别的数据库，就是将用<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>建立的数据库保存为别的数据库形式，像FOXPRO，DBASE数据库等。<br />　　单击“文件”菜单中的“获取外部数据”项，弹出一个子菜单，上面有“导入”和“链接表”两个选项。我们单击其中的一个选项就可以实现导入或联接一个外部的数据库。虽然这两个命令的功用都是打开外部的一个数据库，并从中获取需要的数据，但在使用上，还是有差别的。　　在我们使用“导入”这个方法来获取外部数据时需要注意几个条件。一、需要我们打开的数据库文件相对来说比较小，而且不会被<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>数据库应用程序的用户频繁更改。二、不需要与<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>数据库应用程序的用户共享数据。三、你正在替换以前的数据库应用程序，而且不再需要以前的数据格式。四、在使用<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>数据库中的数据时，需要最佳性能。<br />&nbsp;　　使用“链接表”方法来获取外部数据时也需要注意几个条件：一、需要打开的文件比较大，甚至比本地<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库的最大容量（1GB）还要大。二、这个文件经常被<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>数据库应用程序的用户更改。三、必须在网络上与<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>数据库应用程序的用户共享这个文件。四、需要把应用程序分布到几个单独的用户那里，而且，你可能要不断更新开发的应用程序接口，将“应用程序”与数据分开可以更容易地更新应用程序，而不会干扰用户积累的数据。<br />&nbsp;　　 这就是为什么要在“获取外部数据”这个过程当中设置两种方法。如果要用的数据库并不大，但每天都可能要修改，而且由几个人来修改不同的部分，对于这种情况，最重要的是每天都有新的数据要处理，而单纯的将表导入进来，由于在<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>中开发新的系统需要一定的时间，在这段时间内就有可能有新的数据输入进来。开始导入的数据就有很多可能已经更新了。所以这时使用“链接表”就不会出现这种问题，干扰到别的用户积累的数据。当然在<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>中执行现在这台机器上的数据库文件是最快的，使用链接常常会因为很多原因使你的工作变得很慢，这点是你必须考虑的。<br /><br /><br />　　如何联接外部数据<br /><br />&nbsp;<br />　　我们先来打开一个<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库，<br /><br />　　单击“文件”菜单上的“获取外部数据”项，并单击其子菜单上的‘链接表’命令。现在弹出一个对话框，很像<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>中打开一个文件的对话框。<br /><br />　　我们现在导入一个DBASE数据库文件。先将鼠标移动到“文件类型”下拉框上，单击鼠标左键，弹出一个下拉列表。<br /><br /><br />　　这些文件类型链接的方法基本上是一样的，你只要选中相应的数据库类型，并且选中需要的数据库文件，就可以完成链接工作。<br />　　例如，现在我要将DBASE 5数据库文件“用户数据库.dbf”中的表链接到<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>中来，只要先在文件类型下拉框中选中“DBASE 5”，然后在“查找范围”下拉框中选中这个文件的所在目录，选择“用户数据库.DBF”项，双击，<br /><br />　　很快在屏幕上就会弹出一个提示框，告诉我们这次链接操作已经成功，单击“确定”按钮。<br />　　我们又回到“链接”对话框上了，将这个导入对话框关闭，现在会发现在数据库窗口的表对象中“已有的对象列表”中已经有了一个名字为“用户数据库”的表了。<br /><br />　　打开这个表看看，表中的数据和原来DBASE 5数据表中的数据是一致的。这样就能很方便地将原来的系统更新，不必担心数据转化的问题了。<br />&nbsp;<br />　　导入一个数据库文件<br />　　刚才我们已经知道如何使用“链接表”的方法来获得DBASE上的数据，现在讲讲怎样“导入”外部数据的方法。<br />　　打开一个<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库，单击“文件”菜单中的“获取外部数据”项，选择“导入”命令。<br /><br />　　我们先将鼠标移动到“文件类型”的下拉框上，单击鼠标左键，弹出下拉列表框里面列出了多种数据库文件类型。<br /><br /><br />　　现在要将PARADOX 数据库文件“库存.db”导入到<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>中来，只要先在“文件类型”下拉框中选中“Paradox”，然后在“查找范围”下拉框中选中这个文件的所在目录，选择“库存.db”文件，并单击“导入”按钮。<br /><br />　　<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>提示我们刚才导入PARADOX文件已经成功了。关闭导入对话框，会发现在数据库窗口的表对象中“已有的对象列表”中已经有了一个名字为“用户数据库”的表了。<br /><br />　　双击“库存”这一项，打开这个表看看，我们发现原来“导入”和“链接表”来获取外部数据的方法基本一样的。<br />&nbsp;<br />　　如何导出数据<br />　　刚才我们讲了两种获取外部数据的方式，而我们有时也需要将<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>生成的数据库中的数据导出，成为<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>类型数据库文件中的数据，以便别人使用，所以<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>也设置了一种导出功能。它和导入功能正好相反。<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>中凡是能导入的数据库文件格式，在导出数据库中的数据时也都是在导出时文件的一种选择类型。<br />　　如果我们要将表“书目”导出成一个DBASE 5中的表，可以先在“已有表列表”中选择这个表，<br /><br />　　然后单击“文件”菜单上的“导出”命令，先在导出的“保存类型”下拉框中选中DBASE 5，<br /><br /><br />然后选择要保存的位置，输入要保存的文件名，<br /><br />　　之后单击“保存”按钮就可以了。这样一个新的DBASE 5文件已经生成了。<br />　　现在的这个文件已经是一个独立的DBASE 5文件了。你可以随时使用别的软件调用这个新的DBASE 5文件了。<br />&nbsp;<br />　　如何导入一个SYBASE数据库中的表<br />　　在<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>中，要想导入一个SYBASE数据库中的表，并不能像导入DBASE表那么容易，这时会用到ODBC DATABASE，实际上在我们导入DBASE数据表的时候也用到了ODBC，但是因为<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>直接就带有DBASE的ODBC驱动程序，所以我们可以很方便地将这些数据表导入、链接或导出。而对于像SYBASE这样的数据库，<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>中并不带它的ODBC驱动程序。所以先要在WINDOWS的ODBC管理器中先添加SYBASE的ODBC驱动程序。如果WINDOWS的ODBC中已经有了SYBASE的驱动，只要像导入DBASE数据表那样，先在弹出的对话框中的“文件类型”下拉框中选择Odbc datebase，这时就会弹出一个“选定数据源”对话框，<br /><br />　　单击“机器数据源”选项卡，选中“Powersoft demo db V6”项，然后再单击“确定”按钮。并在导入对象列表中选择需要导入的<a href="../../html/sysbase/l_21_1.htm" title="Sybase" >Sybase</a>表就可以了。<br /><br />　　在科研中，常常用文本文件来保存程序的计算结果，当计算完成以后，所有的计算结果都会按照一定的顺序进行存储，但这样保存的数据在进行数据的再处理时非常不方便，如果能将这些数据输入相应的<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>数据库中就能很方便地对他们进行统计计算，分类和绘制图表了。为了实现这个目的，<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>就提供了导入这样的文本文件的能力。<br />　　例如现在要导入文本文件“data1.txt”，那就先单击“文件”菜单上的“导入”命令，选择“文本文件”类型，找到文本文件“data1.txt”，<br /><br /><br />　　什么是ODBC<br />&nbsp;<br />　　虽然很多数据库中都用SQL语言，而且SQL语言也有标准，但是大多数的软件公司在使用这种语言来处理其产品的特殊功能时，都有一些变化或者有所发展，还有，在标准建立以前，就已经发展了几个产品，所以生产这些产品的公司都发明了自己的SQL语法，这种语法与正式标准不同。<br />　　为了解决这个问题，在几年前，由三十多家著名的软硬件公司组成了一个组织，这个组织的目的是定义执行SQL的共同基础，以使其成员的产品都可以使用它来彼处交流数据，后来微软公司宣布了针对Windows操作系统设计的那个产品，就是使用这个接口来访问SQL数据库的的产品，并将这个产品正式称为开放数据库连接性标准，即ODBC，接着十多个数据库和应用软件供应商开始在他们的产品中提供ODBC支持。这样就使得在今天的<a href="../../html/access/l_23_1.htm" title="Access" >Access</a>中可以方便的从别的支持ODBC的数据库中获取数据。<br /><br /><br /><br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

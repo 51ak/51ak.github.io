@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>专题报道：《磁盘和存储》 - 数据库管理员DBA学习网站 </title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li><li><a href="../zt/l_index_1.htm" class="hover">网站专题</a></li></ul><ul class="sub"><li><a  href="../zt/l_sqlserver_1.htm" title="SQLServer专题">SQLServer</a>|</li><li><a  href="../zt/l_Oracle_1.htm" title="Oracle专题">Oracle</a>|</li><li><a  href="../zt/l_mysql_1.htm" title="MySQL专题">MySQL</a>|</li><li><a  href="../zt/l_othersql_1.htm" title="其他数据库专题">其他数据库</a>|</li><li><a  href="../zt/l_yunwei_1.htm" title="系统运维专题">系统运维</a>|</li><li><a  href="../zt/l_kaoshi_1.htm" title="DBA考试专题">DBA考试</a>|</li><li><a  href="../zt/l_dbahuati_1.htm" title="DBA话题专题">DBA话题</a>|</li></ul></div></div>
+<br class="clearfloat" />
+</div>
+ 
+ 
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../zt/l_index_1.htm">网站专题</a>&nbsp;&gt;&nbsp; <a href="../zt/l_yunwei_1.htm">系统运维</a>&nbsp;&gt;&nbsp;<a href="zt_18_1.htm">磁盘和存储</a></div>
+  <div id="sidebar1">
+
+  <div class='div_tab_tab'>
+	<div id="div_login_title">580top数据库:</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+ &nbsp;</div>    
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+   
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+    <div class="d9"><p>&nbsp;</p></div>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+
+
+    <div class="d3"><p>&nbsp;</p></div>
+    
+    <p>&nbsp;</p>
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  
+
+        <div id="contentdiv"> 
+            <div id="news_list">
+                   <div>
+                              <div class="d2"><h1>专题报道：《磁盘和存储》</h1><span>是利用磁记录技术在涂有磁记录介质的旋转圆盘上进行数据存储的辅助存储器。具有存储容量大、数据传输率高、存储数据可长期保存等特点。在计算机系统中，常用于存放操作系统、程序和数据，是主存储器的扩充。发展趋势是提高存储容量，提高数据传输率，减少存取时间，并力求轻、薄、短、小。磁盘存储器通常由磁盘、磁盘驱动器（或称磁盘机）和磁盘控制器构成。</span></div><UL><LI class=list_title><SPAN>2009/6/17 23:27:23</SPAN><a href="../200906/dba_611.htm"  title="从磁盘映像中挂载或提取指定分区 ">从磁盘映像中挂载或提取指定分区 </a>  <LI   class="text">　　最近在做虚拟机相关的事，需要处理一些磁盘和分区的映像文件。如何从一个磁盘映像中挂载指定的分区到本地 linux 文件系统呢？理论上说，可以用 dd 把该分区从磁盘映像中提取出来再挂载，不过 mount 提供了针对 loop 设备的偏移量参数，方便直接从磁盘映像中挂载指定分区。笔记如下：　　演示用的磁盘映像使用 qemu-img 制作。我们使用原生的 raw 格式，等价于磁盘上的原始数据流，保证<a href="../200906/dba_611.htm" title="从磁盘映像中挂载或提取指定分区 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="18" title="《磁盘和存储》专题">磁盘和存储</a></SPAN><SPAN>作者：Jian Lin</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2009/6/17 23:27:58</SPAN><a href="../200906/dba_610.htm"  title="从磁盘映像中挂载或提取指定的 LVM 逻辑卷 ">从磁盘映像中挂载或提取指定的 LVM 逻辑卷 </a>  <LI   class="text">　　前面提到了如何从磁盘映像中挂载或提取指定分区，现在我们再看看如何从含有 lvm 分区的映像中挂载或提取指定的逻辑卷（lv）。由于 lvm 分区内部有自己的盘区（pe）分配方法，因此逻辑卷在映像中并不一定是物理连续的，不能通过找到其偏移地址直接挂载。不过只要本地系统安装了 lvm 支持，就可以使用 lvm 自带的实用工具完成硬盘映像中逻辑卷的挂载。　　首先查看一下本地系统已经挂载过的物理卷（pv<a href="../200906/dba_610.htm" title="从磁盘映像中挂载或提取指定的 LVM 逻辑卷 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="18" title="《磁盘和存储》专题">磁盘和存储</a></SPAN><SPAN>作者：Jian Lin</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2009/7/4 13:34:08</SPAN><a href="../200907/dba_603.htm"  title="13 Linux的致命命令 ">13 Linux的致命命令 </a>  <LI   class="text">1. 这些命令将清除你的主目录，根或只是将整个磁盘清理:sudo rm -rf / rm -rf .* dd if=/dev/zero of=/dev/sda mkfs.ext3 /dev/hda whatever &gt; /dev/hda cd ~; for x in `ls`; do mv -f $x $y; y=$x; done find -type f -mtime +30 -exec <a href="../200907/dba_603.htm" title="13 Linux的致命命令 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="18" title="《磁盘和存储》专题">磁盘和存储</a></SPAN><SPAN>作者：ptubuntu</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2009/8/15 14:49:37</SPAN><a href="../200908/dba_592.htm"  title="MegaCli 学习 及R710 可选Raid卡分类 ">MegaCli 学习 及R710 可选Raid卡分类 </a>  <LI   class="text">megacli常用参数介绍megacli -adpcount 【显示适配器个数】megacli -adpgettime -aall 【显示适配器时间】megacli -adpallinfo -aall 【显示所有适配器信息】megacli -ldinfo -lall -aall 【显示所有逻辑磁盘组信息】megacli -pdlist -aall 【显示所有的物理信息】megacli -adpbb<a href="../200908/dba_592.htm" title="MegaCli 学习 及R710 可选Raid卡分类 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="18" title="《磁盘和存储》专题">磁盘和存储</a></SPAN><SPAN>作者：wubx</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2009/10/9 13:16:31</SPAN><a href="../200910/dba_584.htm"  title="t3sas raid卡驱动安装 ">t3sas raid卡驱动安装 </a>  <LI   class="text">前提：操作系统：redhat5.3 2.6.18-128.el5硬盘：二块硬盘组成，一块为73g硬盘，另一块为做好raid5后的硬盘。操作系统安装在第一块硬盘上，操作系统安装后无法正确探测出raid卡。安装：1.下载t3sas驱动程序。2.编译3.将编译好的驱动模块copy到/lib/modules/2.6.18-128.el5/updates目录形如：/lib/modules/2.6.18-12<a href="../200910/dba_584.htm" title="t3sas raid卡驱动安装 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="18" title="《磁盘和存储》专题">磁盘和存储</a></SPAN><SPAN>作者：懒人运维</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2010/1/18 13:31:55</SPAN><a href="../201001/dba_557.htm"  title="BSD的虚拟磁盘技术 ">BSD的虚拟磁盘技术 </a>  <LI   class="text">去掉开机自动加载虚拟磁盘并mount到/var,网上有资料说：it seems that you have set "varmfs=yes" in you /etc/rc.conf or /var is not popular writable然后按照下面的操作就可解决。vi /etc/rc.confvarmfs="no" populate_var="no"# mdconfig -a -t swa<a href="../201001/dba_557.htm" title="BSD的虚拟磁盘技术 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="18" title="《磁盘和存储》专题">磁盘和存储</a></SPAN><SPAN>作者：ArthurXF</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2010/1/23 13:02:43</SPAN><a href="../201001/dba_555.htm"  title="Linux下获取IO压力数据 ">Linux下获取IO压力数据 </a>  <LI   class="text"> linux 2.6内核版本后, 在proc文件系统中, 加入了存入磁盘io访问数据的文件diskstats, 查看文件就可以获得某一时刻的累计访问值. $ cat /proc/diskstats …… 8 0 sda 130767120 478199 2848404253 865895766 … 8 1 sda1 58 740 1598 96 2 0 4 0 0 96 96 8 2 sda2 4<a href="../201001/dba_555.htm" title="Linux下获取IO压力数据 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="18" title="《磁盘和存储》专题">磁盘和存储</a></SPAN><SPAN>作者：anysql</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2010/3/26 9:32:08</SPAN><a href="../201003/dba_534.htm"  title="linux磁盘管理学习笔记（上） ">linux磁盘管理学习笔记（上） </a>  <LI   class="text">要玩儿转linux，磁盘管理是必须的，为期三篇的文章，就详细将一下linux磁盘管理吧。本篇主要讲一下磁盘的相关基础知识。首先说说硬盘基础知识硬盘最小的物理组成单位为扇区（sector），数个扇区组成同心圆时，就成为柱面（cylinder）。1个硬盘分为两个区域，一个是mbr（主引导分区），一个是数据区域。mbr里记录了两个重要信息，分别是引导程序与磁盘分区表。分区表定义了“第n个磁盘块是从第x个<a href="../201003/dba_534.htm" title="linux磁盘管理学习笔记（上） ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="18" title="《磁盘和存储》专题">磁盘和存储</a></SPAN><SPAN>作者：西西鱼</SPAN>  </LI></UL>
+                            </div>
+                            <div class="sabrosus"><span class="disabled">首页</span><span class="disabled">上一页</span><span class="current">1</span><a href='zt_18_2.htm' title='第2页'>2</a><a href='zt_18_3.htm' title='第3页'>3</a><a href='zt_18_4.htm' title='第4页'>4</a><a href='zt_18_5.htm' title='第5页'>5</a><a href='zt_18_2.htm' title='下一页'>下一页</a><a href='zt_18_5.htm' title='尾页'>尾页</a><input type="hidden" value="1" id="page">&nbsp;&nbsp;<strong>分页：1/5页</strong></div>         
+            </div>        
+        </div>
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+	
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

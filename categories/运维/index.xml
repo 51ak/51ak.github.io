@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>运维 on Classic</title>
+    <link>/categories/%E8%BF%90%E7%BB%B4/</link>
+    <description>Recent content in 运维 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 07 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E8%BF%90%E7%BB%B4/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Canal常用配置项整理</title>
+      <link>/ops/canal%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9%E6%95%B4%E7%90%86%E5%92%8C%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86/</link>
+      <pubDate>Sat, 07 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/canal%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9%E6%95%B4%E7%90%86%E5%92%8C%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86/</guid>
+      <description>配置模板 ################################################# # 支持gtid的实例，应该打开了。以前我们默认是false canal.instance.gtidon=true # 源服务器的连接串 canal.instance.master.address=mysql3308.dboop.com:3308 canal.instance.dbUsername=canalreader canal.instance.dbPassword={password} canal.instance.connectionCharset = UTF-8 canal.instance.enableDruid=false # 下面这些项需要留空，有且只有需要丢了数据，重新指定binlog点的时候才配置，别乱写 canal.instance.master.journal.name= canal.instance.master.position= canal.instance.master.timestamp= canal.instance.master.gtid= # 启用或禁用时间序列数据库 (TSDB) 功能，用于存储 Canal 的元数据。 # 这个还挺重要的，强烈建议打开，这个在表结构变更时有用，具体可以看看原理 # 可以不写canal.instance.tsdb.url，默认保存在本地${canal.file.data.dir:../conf}/${canal.instance.destination:}路径下 canal.instance.tsdb.enable=true #canal.instance.tsdb.url=jdbc:mysql://127.0.0.1:3306/canal_tsdb #canal.instance.tsdb.dbUsername=canal #canal.instance.tsdb.dbPassword=canal # 过滤器,perl的正则表达式.用逗号分割，可以写多个 canal.instance.filter.regex=db01\\..*,db02\\..* #canal.instance.filter.black.regex= # 我们往kafka推消息的配置 canal.mq.topic=secCanal3308 canal.mq.partitionsNum=1 #我们用一个区，如果是分区 #canal.mq.partitionsNum=3 #canal.mq.partitionHash=test.table:id^name,.*\\..* # 下面几个如果行里有大json，超过1M有报错时，可以增加maxRequestSize #canal.mq.canalBatchSize = 500 #canal.mq.batchSize = 81920 #canal.mq.partitionsNum=1 #canal.mq.maxRequestSize = 2097152 ################################################# 我们没用到的配置项 # 我们不依赖与canal做这个切换，这里用不着,事实上这几项也确实不好用 # 也有可能是我们没用明白 #canal.instance.standby.address = #canal.instance.standby.journal.name = #canal.instance.standby.position = #canal.instance.standby.timestamp = #canal.</description>
+    </item>
+    
+    <item>
+      <title>信创和国产数据库</title>
+      <link>/dba/%E4%BF%A1%E5%88%9B%E5%92%8C%E5%9B%BD%E4%BA%A7%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
+      <pubDate>Fri, 10 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E4%BF%A1%E5%88%9B%E5%92%8C%E5%9B%BD%E4%BA%A7%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
+      <description>什么是“信创”  “信创”的全称是“信息技术应用创新产业”，旨在实现信息技术领域的自主可控，保障国家信息安全。信创产业的主体包括基础硬件、基础软件、应用软件、信息安全、系统集成等部分。 数字化基础设施的安全可控关系到经济发展，直接决定着供应链安全、产业链安全和信息化安全，进而决定国家安全。近年来，国际局势波诡云谲，在频繁的制裁断供事件下，科技自立自主自强变得更加迫在眉睫。“十四五”规划纲要已明确要将科技自立自强作为国家发展的战略支撑，2023年两会上发布的《政府工作报告》强调要建设现代化产业体系，推进科技自立自强。《数字中国建设整体布局规划》则提出要构筑自立自强的数字技术创新体系，筑牢可信可控的数字安全屏障。2022年我国中央及各地政府更是相继发布了上百条信创相关政策，构建具有完全自主知识产权的创新技术体系。 通俗的说是用国产硬件(芯片,存储,) 划重点:自主可控 划范围:基础硬件、基础软件、应用软件、信息安全、系统集成 在实际执行中核心的是：芯片、操作系统、数据库、中间件、整机  信创的主要厂商  芯片CPU：飞腾、鲲鹏、海光、龙芯、兆芯、申威 操作系OS：普华软件、中标麒麟、银河麒麟、统信UOS、红旗、中科方德、中兴新支点 数据库DB：武汉达梦、人大金仓、神州通用、南大通用、万里开源、华为GaussDB、阿里Oceanbase 中间件：东方通、金蝶、宝兰德、华宇软件、普元信息 办公软件：金山软件、福昕软件、万兴科技 安全保密：三六零、奇安信、中孚信息、万里红、格尔软件  信创的市场 行业  信创体系覆盖2+8+N个领域 2:即党、政 8:金融、电力、电信、石油、交通、教育、医疗、航空航天8个关于国计民生的重要行业 N:N个消费市场。N个行业中的办公OA、编辑类的国产软件。  市场规模  预计2023年中国信创产业规模将达20961.9亿元 2027年有望达到37011.3亿元  方向  信创的国有自主可控软硬件替代国外的商业软件一般采用两种方式进行 方向一：上云，通过将服务迁移或合并至阿里云，电信云，华为云，腾讯云&amp;hellip;由云厂商提供信创服务 方向二：自主替换，可以由单位自身的研发团队或第三方国产厂商支持完成软硬件服务的替换  信创的进展  进展非常快，趋势明确 除部分领域（芯片,操作系统）进展不顺利外 存储,数据库，整机，中件间等领域进展得非常顺利 大量的国产硬件,数据库已经完成了对国外商业软件的替换 部分单位和关键行业也完成私有云或公有云的迁移。 进展非常顺利的原因： 1.国家政策要求 2.国外商业软硬件有巨大的利润空间，这部分利润空间可以节省出来 最核心的信创是：芯片，存储，操作系统，数据库，通用软件 下面从我了解的角度来展开聊聊国产数据库的那点事 有哪些是真国产，哪些是假国产 哪些是真的自主研发，哪些是披着皮的洋鬼子  国产数据库 国产数据库的发展  国产数据库在信创政策出来之前 就已经在茁壮成长了 原因一：国外的商业数据库太贵了 一套oracle集群收费每年可能要到几十万块钱 正版的太贵，只能商业谈判走折扣 有的甚至直接用盗版 原因二：国外的开源数据库技术发展 主要是mysql,Pg的发展 给国内的厂商和技术团队提供了方便的二次开发定制的机会 等到信创的政策出来后 巨大的利润空间和强大的需求 引起国产数据库全面开花 这些年国产数据库的创业团队如雨后春笋一样 爆炸增长 其中有传统的老厂商 也有踩着互联网浪潮过来的创业新厂 这些国产数据库厂商不管有多少家 但总是逃不过以下三个大类 1.</description>
+    </item>
+    
+    <item>
+      <title>数据库故障演练纪实</title>
+      <link>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%95%85%E9%9A%9C%E6%BC%94%E7%BB%83%E7%BA%AA%E5%AE%9E/</link>
+      <pubDate>Tue, 26 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%95%85%E9%9A%9C%E6%BC%94%E7%BB%83%E7%BA%AA%E5%AE%9E/</guid>
+      <description> 敢不敢随机挑选几台数据库机器，拔掉网线？
+ 演练时间  2023-09-26 19:30  演练目的  模拟线上服务器异常时 1.业务产生的影响 2.数据库高可用的生效时间 3.业务影响程度  前期准备  DBA将负责的三条数据库线的机器列表提供给运维 由运维同学采用抽奖程序，随机每条业务线抽到一台服务器 DBA检查抽中的服务器上的数据库及影响的业务范围 拉上受影响业务线的研发负责人和相关人士 注：各种leader 开会沟通时间点和风险点 确认时间点2023-09-26 19:30 开始  实际演练过程 影响范围  部分业务线在切换时产生短暂报错（计划中，影响可忽略不计） 数据库这边高可用方案可正常发挥作用，流量切换和高可用都是按预期的进行 总体演练结果，非常顺利。  2023-09-27 更新  Redis的演练导致大数据部门的一个故障 表现为flink的任务卡住了。 排查时还跑错了key和任务，用时较长，故障影响较大 Redis_Cluster集群 ，从节点的断网，也会影响业务短暂异常，如果程序处理不好，会造成很大的问题  </description>
+    </item>
+    
+    <item>
+      <title>docker安装和常用命令</title>
+      <link>/ops/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</link>
+      <pubDate>Sun, 27 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</guid>
+      <description>安装  centos7 安装  安装需要的软件包  yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的  yum install -y yum-utils device-mapper-persistent-data lvm2 设置yum源 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo 可以查看所有仓库中所有docker版本，并选择特定版本安装  yum list docker-ce --showduplicates | sort -r Loading mirror speeds from cached hostfile Loaded plugins: fastestmirror docker-ce.x86_64 3:24.0.5-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.4-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.3-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.2-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.1-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.0-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.6-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.5-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.4-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.3-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.2-1.el7 docker-ce-stable docker-ce.</description>
+    </item>
+    
+    <item>
+      <title>关于数据安全_DBA篇</title>
+      <link>/dba/%E5%85%B3%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8_dba%E7%AF%87/</link>
+      <pubDate>Thu, 15 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E5%85%B3%E4%BA%8E%E6%95%B0%E6%8D%AE%E5%AE%89%E5%85%A8_dba%E7%AF%87/</guid>
+      <description>前言 明天有个会，大家一起商量一下怎么做好数据安全。提前整理一下思路：
+什么是数据安全  数据安全是指保护数据不被非法获取、篡改、破坏或泄露的一种技术和管理措施。 在我这里，数据安全要更具体一点 1.存储安全：数据只要写到数据库里了，就不会丢  1.1 存储上：多节点存储，防止物理损坏 MySQL高可用组件之ProxySQL 1.2 数据按固定的周期进行全备和日志备份 数据库备份管理制度 1.3 自动化脚本检查备份成功和验证 1.4 保证数据被意外删除后，还能找回来 自动化流程:数据找回(一:MySQL数据闪回) 自动化流程:数据找回(二:Oracle部分) 1.5 保证数据和数据库备份是双机房异地存储 数据库备份管理制度 1.6 额外做孤岛备份，以防止内网机房的病毒大面积感染 孤岛备份机和勒索病毒   2.账号策略：只有指定权限的用户可以访问可控范围内的数据（到库级别）  要求研发分业务存储库，不要混用数据库 账号自动化管理，权限限制在可控范围内 账号密码不分发给研发，由运维人员统一配置（这点很重要，为第三步的访问控制提供前题）   3.访问控制：将业务人员和运维人员隔离  业务人员指研发，产品，测试，大数据，风控&amp;hellip; 运维人员：DBA 运维 只有运维人员可以接触到线上数据库，研发和其他人员均不可连接到数据库机器和实例 将研发等业务人员和数据库的接触限定在两个方式内：1.通过程序代码操作数据库 2.通过DBA的Web平台操作数据库 线上查询和线上变更。走DBA提供的平台执行 限制DBA等运维人员，了解业务逻辑，杜绝DBA直接查询和修改线上业务数据 我为什么要反对DBA参与业务(出报表/改数据)   4.安全审计：线上的数据异常，要有日志可查  数据变更日志（binlog，归档日志等） MySQL的7种日志(四):BinLog SQL上线日志 （记录变更新镜像和更新后结果，方便快速回滚） 数据库多环境SQL上线 异常日志和慢日志收集到es 服务器操作日志，数据库账号变更日志 个人查询日志，部分线上查询审计日志   5.数据加密：数据库里的敏感信息应该加密存储  哪些属于敏感信息：手机号.卡号.身份证号.住址&amp;hellip; 首先需要把敏感信息标识出来。  为此我们开发了一个工具，在用户建表或者修改表结构时，会识别出来 外加一个兜底脚本，定时扫描SQL查询结果，如果发现有敏感信息未标识的就会提示出来   敏感信息标识后，不管底层是否做了加密存储，DBA和大数据平台都可以对这些字段做针对性的掩码，防止信息泄露 数据的加密存储，这个单做一节，详细说说    数据加密  如上一节最后说的，我们已经将敏感信息识别出来了，现在怎么做数据的加密存储。根据实际情况展开来说  新项目的数据加密  如果有开发资源：架构组开发一套通用的加密服务，新项目调用 如果没有开发资源： 研发用通用的加密算法对敏感信息进行可逆的加密（例AES)后入库  老项目的数据加密改造 方法一：数据库里存的是加密数据，研发存放和读取都是明文数据  应付审计之法。 优点是：库里的数据确实是加密的 缺点是：研发和业务人员查询时是明文的 这个需要借助第三方中间件来实现：（例如SphereEx） 我头一次听SphereEx讲他们的中件层加密时，觉得这个思路非常棒 这可能是比较节约开发资源的，又可以应付审计的一种加密方式。 这是它的优点也导致了一个缺点：研发查出来数据库里的信息还是明文，数据防泄露效果差 只防住了DBA和运维人员的泄密，而更关键的业务泄露并没防住 加了中间层，稳定性待考证 加密收益： 2颗星 ，加密工作量：1颗星  方法二：数据库里存的是明文数据，研发读取到前台展示的时候是密文的  防前台泄密之法 在SQL层将所有的查询接口都改造一下，需要花费不少的时间（2-3周） 优点是，前台用户看到的数据是加密或掩码的。解密记录是可审计的，防止信息泄漏 缺点是，数据库明文存储了，治标了但没治本 加密收益： 4颗星 ，加密工作量：3颗星  方法三：数据库里存的是密文数据，研发读取到前台展示的时候是密文的  这个就是把旧项目彻底改造了，存数据和读数据的地方都要改一下 这个改造的工作量非常大，但是效果是最彻底的 最完整的方案是分成三个角色 DBA提供存储，架构组提供加解密服务，研发存储和读取的都是密文 其中架构组是核心，提供整套加解密服务 研发参与成本最大，需要在写数据和读数据时修改代码 加密收益： 5颗星 ，加密工作量：4颗星  </description>
+    </item>
+    
+    <item>
+      <title>HDD、SSD、SAS、SATA、PCIE、NVME</title>
+      <link>/dba/hddssdsassatapcienvme/</link>
+      <pubDate>Tue, 10 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/hddssdsassatapcienvme/</guid>
+      <description>我的习惯   先说当我接到采购需求的时候,我通常会跟运维同事说我要选购下面的磁盘
+  pcie ssd 偶尔会强调要更高性能接口的ssd
+  ssd盘 大部分时候数据库都需要ssd
+  sas盘 这时候的意思是采购sas接口的硬盘,一般用来存放日志类的数据
+  sata盘 这是用来存放数据冷备份时候才用的盘
+  这是我的习惯事实上提法非常不标准,但是好像负责采购的和运维的同事也都能听得懂.事实上服务器硬盘
+  按存储介质分类:HDD盘,SSD盘
+  按接口标准分类:IDE,SATA,SAS,PCIE
+   下面的内容从多个网上的文章里整理而来,加了些个人看法
+ 硬盘接口 IDE接口 (已淘汰)  IDE接口，又叫ATA接口、PATA接口、并口。 最早是在1986年由康柏、西部数据等几家公司共同开发。 数据线长得是一条像布条的东西，传输数据慢， 由三部分组成：电源接口、跳线接口（用于区别主盘和从盘）、数据接口。  SCSI接口 (淘汰)  早此年IDE接口应用于PC，对应的服务器的接口是SCSI接口。 SCSI1:最早于1986年提出的,最大传输速率为5MB/s，支持7个设备。 SCSI2:Fast SCSI,1994年,10MB/s（10MHz,最大7个设备)。 SCSI2:Wide SCSI,1996年,20MB/s (10MHz,最大15个设备)。 SCSI3:1995年将总线频率大大地提高，并降低信号的干扰。  SATA接口 (还有不少)  SATA接口,又叫串口硬盘 2003年出现的，可以算是最为主流的硬盘接口形态。由于存在时间很长，SATA接口兼容性极强，几乎所有种类的主板都有SATA接口。 市面上固态硬盘SATA接口在性能标准上，一般采用SATA Ⅲ标准，理论最高速度为6Gbps。 大部分基于SATA接口的固态硬盘的读取性能正常会在500MB/S以上。 SATA数据接口（7针）电源接口（15针） 在SATA接口的基础上，后面又衍生出了两款产品。  SATA接口衍生:mSATA接口 (已淘汰)  mSATA接口是早期为了适应于超极本这类超薄设备而基于SATA开发的。可以看作SATA接口的mini版。 物理形态上有两种尺寸：全高（30mm50mm）和半高（30mm25mm）。  SATA接口衍生:SATA-e接口 (已淘汰)  SATA + PCI-Express的混合体，理论带宽达10Gbps，比SATA3.</description>
+    </item>
+    
+    <item>
+      <title>将没有parentid的二维表转换成json的树状结构(python版)</title>
+      <link>/ops/%E5%B0%86%E6%B2%A1%E6%9C%89parentid%E7%9A%84%E4%BA%8C%E7%BB%B4%E8%A1%A8%E8%BD%AC%E6%8D%A2%E6%88%90json%E7%9A%84%E6%A0%91%E7%8A%B6%E7%BB%93%E6%9E%84python%E7%89%88/</link>
+      <pubDate>Fri, 06 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B0%86%E6%B2%A1%E6%9C%89parentid%E7%9A%84%E4%BA%8C%E7%BB%B4%E8%A1%A8%E8%BD%AC%E6%8D%A2%E6%88%90json%E7%9A%84%E6%A0%91%E7%8A%B6%E7%BB%93%E6%9E%84python%E7%89%88/</guid>
+      <description>需求  数据库里有这样的二维表  (id,country,province,city) (1,&amp;quot;a&amp;quot;,&amp;quot;aa&amp;quot;,&amp;quot;aa1&amp;quot;), (&amp;quot;2&amp;quot;,&amp;quot;a&amp;quot;,&amp;quot;aa&amp;quot;,&amp;quot;aa2&amp;quot;), (&amp;quot;3&amp;quot;,&amp;quot;b&amp;quot;,&amp;quot;bb&amp;quot;,&amp;quot;bb1&amp;quot;), (&amp;quot;4&amp;quot;,&amp;quot;b&amp;quot;,&amp;quot;bb&amp;quot;,&amp;quot;bb2&amp;quot;), (&amp;quot;5&amp;quot;,&amp;quot;b&amp;quot;,&amp;quot;bb&amp;quot;,&amp;quot;bb3&amp;quot;), (&amp;quot;6&amp;quot;,&amp;quot;c&amp;quot;,&amp;quot;cc&amp;quot;,&amp;quot;cc1&amp;quot;), 转换成在json中可用的树状结构
+[{ &amp;quot;id&amp;quot;: &amp;quot;a&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;a&amp;quot;, &amp;quot;leaf&amp;quot;: false, &amp;quot;children&amp;quot;: [{ &amp;quot;id&amp;quot;: &amp;quot;a|aa&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;a&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;aa&amp;quot;, &amp;quot;leaf&amp;quot;: false, &amp;quot;children&amp;quot;: [{ &amp;quot;id&amp;quot;: 1, &amp;quot;parent_id&amp;quot;: &amp;quot;a|aa&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;aa1&amp;quot;, &amp;quot;leaf&amp;quot;: true }, { &amp;quot;id&amp;quot;: &amp;quot;2&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;a|aa&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;aa2&amp;quot;, &amp;quot;leaf&amp;quot;: true }] }] }, { &amp;quot;id&amp;quot;: &amp;quot;b&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;b&amp;quot;, &amp;quot;leaf&amp;quot;: false, &amp;quot;children&amp;quot;: [{ &amp;quot;id&amp;quot;: &amp;quot;b|bb&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;b&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;bb&amp;quot;, &amp;quot;leaf&amp;quot;: false, &amp;quot;children&amp;quot;: [{ &amp;quot;id&amp;quot;: &amp;quot;3&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;b|bb&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;bb1&amp;quot;, &amp;quot;leaf&amp;quot;: true }, { &amp;quot;id&amp;quot;: &amp;quot;4&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;b|bb&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;bb2&amp;quot;, &amp;quot;leaf&amp;quot;: true }, { &amp;quot;id&amp;quot;: &amp;quot;5&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;b|bb&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;bb3&amp;quot;, &amp;quot;leaf&amp;quot;: true }] }] }, { &amp;quot;id&amp;quot;: &amp;quot;c&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;c&amp;quot;, &amp;quot;leaf&amp;quot;: false, &amp;quot;children&amp;quot;: [{ &amp;quot;id&amp;quot;: &amp;quot;c|cc&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;c&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;cc&amp;quot;, &amp;quot;leaf&amp;quot;: false, &amp;quot;children&amp;quot;: [{ &amp;quot;id&amp;quot;: &amp;quot;6&amp;quot;, &amp;quot;parent_id&amp;quot;: &amp;quot;c|cc&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;cc1&amp;quot;, &amp;quot;leaf&amp;quot;: true }] }] }]  本来以为很好写的一小段,写起来发现还挺麻烦的  难点  二维表转json tree 还是比较常见的写法,但是这个二维表里没有parentid,所以上下级关系需要用country,province 两列来对齐生成  代码  我写了一个python版的实现   class jsontree_str_(): def __init__(self) -&amp;gt; None: pass def get_jsonstr_parentid(self,rows,columns): sb_rows=[] columnsi=len(columns) if len(rows)==0 or columnsi&amp;lt;3: return sb_rows dict_ids={} for row in rows: for i in range(1,columnsi): idstr=&amp;quot;|&amp;quot;.</description>
+    </item>
+    
+    <item>
+      <title>Python入门之书上没有的东西</title>
+      <link>/ops/python%E5%85%A5%E9%97%A8%E4%B9%8B%E4%B9%A6%E4%B8%8A%E6%B2%A1%E6%9C%89%E7%9A%84%E4%B8%9C%E8%A5%BF/</link>
+      <pubDate>Mon, 26 Sep 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/python%E5%85%A5%E9%97%A8%E4%B9%8B%E4%B9%A6%E4%B8%8A%E6%B2%A1%E6%9C%89%E7%9A%84%E4%B8%9C%E8%A5%BF/</guid>
+      <description>分享分  为Python零基础同学做了一场入门分享 准备了1个小时的ppt 现场因为有很多演示，共花了90分钟 还好今天没人过来抢会议室。  ppt 说重点：  三天打鱼两天晒网的学习Python是不现实的，每天抽小半个小时敲代码，坚持下去，一两个星期就能入门。 最先要学的不是基础知识，而是环境配置和工具的选择 基础知识不用啃得太死，差不多理解了有印象就行，后面随着练习会不断强化，自然就学会了 练习为王，千万不要死看书，不动手。 多写，多练习，遇到报错顺着问题解决，一开始有卡住的找朋友同事帮忙，后面要学着自己搜索 多利用搜索引擎，随着技能的提升，会不断的有新问题出现。 要针对一个具体的目标和小型项目来进行练习。  </description>
+    </item>
+    
+    <item>
+      <title>Sysbench做压力测试</title>
+      <link>/ops/sysbench%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/</link>
+      <pubDate>Sat, 12 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/sysbench%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/</guid>
+      <description>0.环境 1.安装sysbench  curl -s https://packagecloud.io/install/repositories/akopytov/sysbench/script.rpm.sh | sudo bash yum -y install sysbench 2.执行压测 10.10.0.1 上执行 sysbench /usr/share/sysbench/oltp_read_write.lua --tables=5 --table_size=2000000 --mysql-user=dba --mysql-password******* --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest prepare sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest --tables=5 --table_size=2000000 --threads=300 --time=120 --report-interval=60 run &amp;gt;&amp;gt; /root/sb/proxy300.log sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest --tables=5 --table_size=2000000 --threads=20 --time=120 --report-interval=10 run sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest --tables=5 --table_size=2000000 --threads=20 --time=120 --report-interval=10 run sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.</description>
+    </item>
+    
+    <item>
+      <title>服务器过保日期批量查询python</title>
+      <link>/ops/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E4%BF%9D%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2python%E8%84%9A%E6%9C%AC/</link>
+      <pubDate>Sat, 09 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%87%E4%BF%9D%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2python%E8%84%9A%E6%9C%AC/</guid>
+      <description>浪潮服务器过保查询  import json import urllib import requests # def chenck_hardware_info(sn): url = &#39;https://www.inspur.com/eportal/ui&#39; sn_file = &amp;quot;/tm/sn.text&amp;quot; def request_datatime(sn): params = { &amp;quot;struts.portlet.action&amp;quot;: &amp;quot;/portlet/download-front!serverConfig.action&amp;quot;, &amp;quot;sn&amp;quot;: sn, &amp;quot;src&amp;quot;: &amp;quot;inspur&amp;quot;, &amp;quot;language&amp;quot;: &amp;quot;CN&amp;quot;, &amp;quot;pageId&amp;quot;: &amp;quot;2317460&amp;quot;, &amp;quot;moduleId&amp;quot;: &amp;quot;82efecfc33da48b4a66567cb3dcbe5f3&amp;quot; } headers = { &amp;quot;Referer&amp;quot;: &amp;quot;https://www.inspur.com/eportal/ui?pageId=2317460&amp;quot;, &amp;quot;Cookie&amp;quot;: &amp;quot;JSESSIONID=****; ........(这里写cookie地址)&amp;quot; } r = requests.post(url, headers=headers, params=urllib.parse.urlencode(params)) resp = r.text[1:len(r.text)-1] resp = json.loads(resp) #print(resp[&#39;Date&#39;]) return resp[&#39;warranty1&#39;] def post_info(sn): r1 = request_datatime(sn) url = &amp;quot;http://cmdbbackend.dev.tujia.com/api/inventoryitem/sn/update/life&amp;quot; headers = { &amp;quot;OPS-Token&amp;quot;:&amp;quot;IHmioqYhb0XgBAsEiHeK_guibinw&amp;quot;, &amp;quot;Content-Type&amp;quot;:&amp;quot;application/json&amp;quot; } data = [{ &amp;quot;serialNo&amp;quot;: sn, &amp;quot;contractPeriod&amp;quot;: r1 }] r = requests.</description>
+    </item>
+    
+    <item>
+      <title>数据库备份管理制度</title>
+      <link>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E7%AE%A1%E7%90%86%E5%88%B6%E5%BA%A6/</link>
+      <pubDate>Thu, 23 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E7%AE%A1%E7%90%86%E5%88%B6%E5%BA%A6/</guid>
+      <description>备份策略  数据库备库节点上启用定时任务，每天0:10～6:10 全备（或增备)文件 至本地sas盘，每个实例压缩成一个备份文件。 生成的备份文件调用接口上传状态并断点续传止主备份备机 数据库备份在本地sas盘上保留1-3天的备份文件 辅备份机在0点-22点保持当天的备份文件夹和主备份机的同步 主备份机每天22:00 将当天的接收到的备份文件移至 yyyyMMdd 目录下 所有备份机每天23:00删除30天以上的过期备份文件  每个月的第一次数据库全备，永不过期删除（例如：如果db每天一次全备，则每月的1号备份永久保留）    备份周期  MySQL：每天1次全备，15分钟同步一次binlog日志，全备和日志保留30天 Oracle:每周1次全备,其余天数增备，实时保存日志，备份和日志保留30天 MongoDB:每天1次全备，全备保留30天  备份脚本（源机） 传输脚本（辅备份机） </description>
+    </item>
+    
+    <item>
+      <title>孤岛备份机和勒索病毒</title>
+      <link>/dba/%E5%AD%A4%E5%B2%9B%E5%A4%87%E4%BB%BD%E6%9C%BA%E5%92%8C%E5%8B%92%E7%B4%A2%E7%97%85%E6%AF%92/</link>
+      <pubDate>Wed, 22 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/dba/%E5%AD%A4%E5%B2%9B%E5%A4%87%E4%BB%BD%E6%9C%BA%E5%92%8C%E5%8B%92%E7%B4%A2%E7%97%85%E6%AF%92/</guid>
+      <description>勒索病毒 什么是勒索病毒？  勒索病毒就是那种中毒后 加密你的文件（通常是aes加密算法) 提示你去支付一些电子货币才能解开文件的一种病毒 通常是要求支付一定数量的比特币 像下面这种  怎么写一个勒索病毒？  如果让我写一个简单的勒索病毒 我可能会这样写 0.像指定的服务器（控制机）请求一个aes公钥 1.用这个公钥挨个给本地文件加密  1.1 遍历本地所有文件 1.2 给每个文件头加上一个特殊标记（不用多，10来个字节就行） 1.3 挨个用公钥加密所有文件   2.提示用户文件加密了，要求给钱 3.如果收到钱了就给他一个解密的代码 4.解密代码这样写  4.1 遍历本地所有文件 4.2 判断是否有特殊标记 4.3 如果有，则是加密文件 4.4 用私钥去解开这个文件   当然真实的勒索病毒会更加严谨，我只是描述一下思路 我也从来没写过  中了勒索病毒怎么办？  不差钱方案：给钱，然后寄希望于对方的人品。 运气好方案：这是个常见的普通勒索病毒，网上有很多的工具可以尝试解一下 报警：造成重大损失的可以公开报警，交给安全部门处理，当然这个破案的难度有点大，数据可能还是找不回来 补救方案：用备份来救命。  如果有备份，可以恢复文件，那这时候就基本上可以依靠本身的备份体系来恢复大部分损失（还是会有不可挽回的损失）    勒索病毒和备份体系的攻防  聪明的勒索病毒会攻击备份体系 1.本机备份：中了勒索病毒以后，本机备份几乎是99%也会中毒，几乎没啥用了 2.异机备份：如果是个人电脑中毒，很难会感染到备份机，但是如果是机房里的服务器中毒了，那么病毒极有可能会感染备份机。 3.异机房备份：同异机备份，主要还是一个服务器内网环境。 如何防止勒索病毒攻击备份体系呢？ 这就是我们接下来下说的孤岛备份机方案  孤岛备份机 什么是孤岛备份机？  它是一个特殊的备份机 1.它不和普通的服务器连网 2.本地不开任何端口，任何其他服务器不能请求它的任何服务 3.只和指定的一台机器直连（通常这台机器是个普通的备份机） 4.它只以视为“这台普通备份机”的备份机 5.它会定时拉取普通备份机上的指定目录 6.</description>
+    </item>
+    
+    <item>
+      <title>MacOS里的grep,sed,awk等命令不好用怎么办</title>
+      <link>/ops/macos%E9%87%8C%E7%9A%84grepawksed%E7%AD%89%E5%91%BD%E4%BB%A4%E4%B8%8D%E5%A5%BD%E7%94%A8%E6%80%8E%E4%B9%88%E5%8A%9E/</link>
+      <pubDate>Tue, 27 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/macos%E9%87%8C%E7%9A%84grepawksed%E7%AD%89%E5%91%BD%E4%BB%A4%E4%B8%8D%E5%A5%BD%E7%94%A8%E6%80%8E%E4%B9%88%E5%8A%9E/</guid>
+      <description>问题  工作用的电脑是mac 经常发现linux上常用的sed,grep命令用不起来，各种报错 后来查了一下发现mac里的sed和linux的不是一个版本的软件   Mac OS X uses BSD sed and not GNU sed. When you use a GNU sed extension with Mac OS X sed, you get different results, or failures. Classically, sed does not support numeric offsets, forwards or backwards. You&amp;rsquo;ll need to revise your script to work on Mac OS X.
+ 解决 使用以下命令安装GNU命令套件： brew install coreutils 使用以下命令安装gnu-sed： brew install gnu-sed --with-default-names 以上命令安装的gnu套件的命令都是带有g前缀的  gcat &amp;ndash;&amp;gt; linux里的cat gsed &amp;ndash;&amp;gt; linux里的sed ggrep &amp;ndash;&amp;gt; linux里的grep gawk &amp;ndash;&amp;gt; linux里的awk &amp;hellip;  如果想直接代替，不输入g前缀则 vim .</description>
+    </item>
+    
+    <item>
+      <title>git常用命令整理</title>
+      <link>/ops/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</link>
+      <pubDate>Thu, 25 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</guid>
+      <description>重新初始化，删掉历史版本记录  1、创建并切换到lastest_branch分支 git checkout --orphan latest_branch 2、添加所有文件 git add -A 3、提交更改 git commit -am &amp;quot;删除历史版本记录，初始化仓库&amp;quot; 4、删除分支 git branch -D master 5、将当前分支重命名 git branch -m master 6、强制更新存储库 git push -f origin master 新建 Git 仓库 # 把当前目录变更成一个 Git 仓库 $ git init # 新建一个目录，将其初始化为 Git 仓库 $ git init [project-name] # 克隆远程仓库 $ git clone [url] Git 配置信息 # 显示当前的 Git 配置 $ git config --list # 编辑 Git 配置文件 $ git config -e [--global] # 设置提交代码时的用户信息 $ git config [--global] user.</description>
+    </item>
+    
+    <item>
+      <title>Linux服务器共享目录Centos7</title>
+      <link>/ops/linux%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/</link>
+      <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/linux%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/</guid>
+      <description>0.环境 服务器：
+ 10.10.0.1 源机器 10.10.0.2 目标机器1 10.10.0.3 目标机器2 目标： 将10.10.0.1机器上的 /public/downloadnew 文件夹共享给10.10.0.2/3两台机器  三台机器共享写入 /data/www/dboop/static/download目录
+1.安装nfs yum -y install nfs-utils rpcbind # 开机启动 systemctl enable rpcbind.service systemctl enable nfs-server.service # 重启服务 systemctl restart rpcbind.service systemctl restart nfs-server.service 2.共享设置 10.10.0.1 上执行 mkdir /public/downloadnew ln -s /public/downloadnew /data/www/dboop/static/download -f vim /etc/exports #输入 /public 10.10.0.2(insecure,rw,sync,no_root_squash) 10.10.0.3(insecure,rw,sync,no_root_squash) exportfs -rv 10.10.0.2/3 上执行 vim /etc/fstab #输入 10.10.0.1:/public /mnt/public nfs defaults 0 0 mkdir /mnt/public mount -a df -h ln -s /mnt/public/downloadnew /data/www/dboop/static/download -f 到此 10.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>oracle 多行合并一行</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="有不少朋友问到这样的问题，如果是oracle10g以上一个wm_concat函数就可以解决。<br/>如果是oracle9i以下就有点麻烦了。<br/>&nbsp;<br/>表结构如下：<br/>name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&noracle 多行合并一行" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a href="../Oracle/l_7_1.htm" class="hover"　title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../Oraclezhishi/l_8_1.htm" title="Oracle基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../Oracleha/l_9_1.htm" title="Oracle高可用性和HA">高可用性和HA</a>|</li><li><a  href="../Oracleyouhua/l_10_1.htm" title="Oracle性能与优化">性能与优化</a>|</li><li><a  href="../Oracleguzhang/l_11_1.htm" title="Oracle故障与解决">故障与解决</a>|</li><li><a  href="../Oraclebi/l_12_1.htm" title="Oracle商业应用">Oracle商业应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../Oracle/l_7_1.htm">Oracle</a>&nbsp;&gt;&nbsp;<a href="../Oraclezhishi/l_8_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>oracle 多行合并一行</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   有不少朋友问到这样的问题，如果是<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a>10g以上 一个wm_concat函数就可以解决。<br />如果是<a href="../../html/Oracle/l_7_1.htm" title="oracle" >oracle</a> 9i以下就有点麻烦了。<br />&nbsp;<br />表结构如下：<br />NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Null&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Type<br />------------------------ ---------&nbsp;&nbsp; -----<br />N_SEC_CODE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NOT NULL CHAR(6)<br />C_RESEARCHER_CODE&nbsp;&nbsp;&nbsp; NOT NULL VARCHAR2(20)<br />此表保存了“股票”与“研究员”的对应关系数据，一般而言，对于同一只股票而言，可能有多个研究员<br />对其进行跟踪研究。所以目前遇到一个要求，需查询出每只股票和对应的研究员（研究员代码间，使用逗号分隔）。<br />例如有如下数据：<br />000297&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; chenpeng&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />000297&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; liusu&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />合并处理后需显示为：<br />000297&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; chenpeng,liusu<br />网上查了很多方法，但通常而言都是编写自定义多行文本合并函数，或者对支持的列数具有局限性。<br />最后在英文google中搜到如下比较巧的方法。不用在数据库中增加function，纯SQL一次性搞定，<br />而且扩充性很好，没有列的限制。<br />Code<br />SELECT&nbsp;&nbsp;&nbsp; n_sec_code, TRANSLATE (LTRIM (text, '/'), '*/', '*,') researcherList<br />&nbsp;&nbsp;&nbsp;&nbsp; FROM (SELECT ROW_NUMBER () OVER (PARTITION BY n_sec_code ORDER BY n_sec_code,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lvl DESC) rn,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; n_sec_code, text<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FROM (SELECT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; n_sec_code, LEVEL lvl,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SYS_CONNECT_BY_PATH (c_researcher_code,'/') text<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FROM (SELECT&nbsp;&nbsp;&nbsp; n_sec_code, c_researcher_code&nbsp;as&nbsp;c_researcher_code,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ROW_NUMBER () OVER (PARTITION BY n_sec_code ORDER BY n_sec_code,c_researcher_code) x<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FROM m_researcher_stock_rel<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ORDER BY n_sec_code, c_researcher_code) a<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CONNECT BY n_sec_code = PRIOR n_sec_code AND x - 1 = PRIOR x))<br />&nbsp;&nbsp;&nbsp; WHERE rn = 1<br />ORDER BY n_sec_code;<br />预想的结果成功出现，多行数据成功汇总到一行，特此分享与大家。对于你自己的应用中，只需要把SQL中“n_sec_code”<br />换为你的用来汇总的列，“c_researcher_code”替换为需合并文本的列，“m_researcher_stock_rel”替换为你的表名，就是这么简单。<br />SQL分析：<br />1、利用 “ROW_NUMBER () OVER (PARTITION BY&amp;hellip;…” 为按“股票代码”汇总后的数据行添加组内序号<br />2、“SYS_CONNECT_BY_PATH” 按组内序号相邻关系，为每一层进行不同行的“研究员代码”叠加<br />3、再次利用“股票代码”进行组内分组，但按第二部中的层次排倒序，增加调整后等级<br />4、取所有调整后等级为1的结果，即为所要求的数据行<br />方法很巧妙，值得学习。:-)<br />感谢网友@OctoberOne、@ericqliu的指点，在<a href="../../html/Oracle/l_7_1.htm" title="ORACLE" >ORACLE</a>10中可使用以下方法：<br />SELECT n_sec_code, wmsys.wm_concat (c_researcher_code) as result<br />FROM m_researcher_stock_rel<br />GROUP BY n_sec_code<br />&nbsp;<br />又一个示例：<br />WITH&nbsp;tab&nbsp;AS(select&nbsp;'01'&nbsp;no,'ss'&nbsp;name,&nbsp;10&nbsp;jiner,'麦子'&nbsp;you&nbsp;from&nbsp;dual&nbsp;union&nbsp;allselect&nbsp;'02'&nbsp;no,'dd'&nbsp;name,&nbsp;11&nbsp;jiner,'萝卜'&nbsp;you&nbsp;from&nbsp;dual&nbsp;union&nbsp;allselect&nbsp;'03'&nbsp;no,'cc'&nbsp;name,&nbsp;9&nbsp;jiner,'大豆'&nbsp;you&nbsp;from&nbsp;dual&nbsp;union&nbsp;allselect&nbsp;'01'&nbsp;no,'ss'&nbsp;name,&nbsp;10&nbsp;jiner,'白菜'&nbsp;you&nbsp;from&nbsp;dual)SELECT&nbsp;a.no, a.name, a.jiner,&nbsp;ltrim(MAX(sys_connect_by_path(you,&nbsp;',')),&nbsp;',') youFROM&nbsp;(SELECT&nbsp;row_number()&nbsp;over(PARTITION&nbsp;BY&nbsp;a.no, a.name, a.jiner&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ORDER&nbsp;BY&nbsp;a.no, a.name, a.jiner) rn,a.*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FROM&nbsp;tab a) aSTART&nbsp;WITH&nbsp;rn&nbsp;=&nbsp;1CONNECT&nbsp;BY&nbsp;PRIOR rn&nbsp;=&nbsp;rn&nbsp;-&nbsp;1&nbsp;AND&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a.no&nbsp;=&nbsp;PRIOR a.no&nbsp;AND&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a.name&nbsp;=&nbsp;PRIOR a.name&nbsp;AND&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a.jiner&nbsp;=&nbsp;PRIOR a.jinerGROUP&nbsp;BY&nbsp;a.no, a.name, a.jiner<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

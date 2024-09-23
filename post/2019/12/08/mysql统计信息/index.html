@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>mysql统计信息 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">mysql统计信息</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+<nav id="TableOfContents">
+<ul>
+<li><a href="#mysql统计信息相关的参数">MySQL统计信息相关的参数：</a>
+<ul>
+<li><a href="#1-innodb-stats-auto-recalc-mysql-5-7中默认为开启状态">1.innodb_stats_auto_recalc，MySQL 5.7中默认为开启状态</a></li>
+<li><a href="#2-innodb-stats-on-metadata-是否自动更新统计信息-mysql-5-7中默认为关闭状态">2. innodb_stats_on_metadata（是否自动更新统计信息），MySQL 5.7中默认为关闭状态</a></li>
+<li><a href="#3-innodb-stats-persistent-持久化统计信息开关-mysql-5-7中默认为打开-持久化存储统计信息">3. innodb_stats_persistent（持久化统计信息开关），MySQL 5.7中默认为打开，持久化存储统计信息</a></li>
+<li><a href="#4-innodb-stats-persistent-sample-pages-持久化更新统计信息时候索引页的取样页数-默认是20个page">4. innodb_stats_persistent_sample_pages （持久化更新统计信息时候索引页的取样页数） 默认是20个page</a></li>
+<li><a href="#5-innodb-stats-transient-sample-pages-临时性更新统计信息时候索引页的取样页数-默认值是8">5. innodb_stats_transient_sample_pages（临时性更新统计信息时候索引页的取样页数） 默认值是8</a></li>
+<li><a href="#6-innodb-stats-sample-pages-已弃用">6. innodb_stats_sample_pages 已弃用</a></li>
+</ul></li>
+<li><a href="#mysql统计信息更新时机">mysql统计信息更新时机</a>
+<ul>
+<li><a href="#持久化统计信息在以下情况会被自动更新">持久化统计信息在以下情况会被自动更新：</a></li>
+<li><a href="#非持久化统计信息在以下情况会被自动更新">非持久化统计信息在以下情况会被自动更新：</a></li>
+</ul></li>
+<li><a href="#持久化统计信息">持久化统计信息</a>
+<ul>
+<li><a href="#mysql-innodb-table-stats">mysql.innodb_table_stats</a></li>
+<li><a href="#mysql-innodb-index-stats">mysql.innodb_index_stats</a></li>
+</ul></li>
+</ul>
+</nav>
+
+
+<main>
+
+
+<h1 id="mysql统计信息相关的参数">MySQL统计信息相关的参数：</h1>
+
+<h2 id="1-innodb-stats-auto-recalc-mysql-5-7中默认为开启状态">1.innodb_stats_auto_recalc，MySQL 5.7中默认为开启状态</h2>
+
+<p>是否自动触发更新统计信息，仅影响持久化存储的统计信息的表，阈值是变化的数据超过表行数的10%。也就是说，一个表索引统计信息是持久化存储的，并且表中数据变化了超过10%，如果innodb_stats_auto_recalc为ON，就会自动更新统计信息，否则不会自动更新</p>
+
+<h2 id="2-innodb-stats-on-metadata-是否自动更新统计信息-mysql-5-7中默认为关闭状态">2. innodb_stats_on_metadata（是否自动更新统计信息），MySQL 5.7中默认为关闭状态</h2>
+
+<p>InnoDB在执show table status 或者访问INFORMATION_SCHEMA.TABLES或者INFORMATION_SCHEMA.STATISTICS 系统表的时候更新持久化统计信息（类似于ANALYZE TABLE），innodb_stats_on_metadata不管打开还是关闭，都不影响持久化存储统计信息</p>
+
+<p>某个索引的统计信息更新时间参考mysql.innodb_index_stats这个系统表</p>
+
+<pre><code class="language-sql">select * from mysql.innodb_index_stats
+ where table_name = 'info_dboop';
+</code></pre>
+
+<h2 id="3-innodb-stats-persistent-持久化统计信息开关-mysql-5-7中默认为打开-持久化存储统计信息">3. innodb_stats_persistent（持久化统计信息开关），MySQL 5.7中默认为打开，持久化存储统计信息</h2>
+
+<p>该选项设置为ON时候，统计信息会持久化存储到磁盘中，而不是存在在内存中，相反，如果是非持久化存储的（存在内存中），相应的统计信息会随着服务器的关闭而丢失。</p>
+
+<h2 id="4-innodb-stats-persistent-sample-pages-持久化更新统计信息时候索引页的取样页数-默认是20个page">4. innodb_stats_persistent_sample_pages （持久化更新统计信息时候索引页的取样页数） 默认是20个page</h2>
+
+<p>如果设置的过高(max65535)，那么在更新统计信息的时候，会增加ANALYZE TABLE的执行时间。
+MySQL可以在表上指定一个统计信息取样的page个数，并且可以修改表上的统计取样page个数</p>
+
+<pre><code class="language-sql">
+-- 创建表的时候指定一个统计取样page数据
+create table info_dboop
+(
+    id int,
+    username varchar(50)
+)ENGINE=InnoDB,
+STATS_PERSISTENT=1,
+STATS_AUTO_RECALC=1,
+STATS_SAMPLE_PAGES=25;
+
+--修改表的统计取样page数据
+ALTER TABLE info_dboop
+STATS_SAMPLE_PAGES 60
+
+</code></pre>
+
+<h2 id="5-innodb-stats-transient-sample-pages-临时性更新统计信息时候索引页的取样页数-默认值是8">5. innodb_stats_transient_sample_pages（临时性更新统计信息时候索引页的取样页数） 默认值是8</h2>
+
+<p>innodb_stats_persistent设置为disable的情况下，也即非持久化明确关闭的时候，innodb_stats_transient_sample_pages才生效，这个值是否生效，要依赖于innodb_stats_on_metadata，而innodb_stats_on_metadata又依赖于innodb_stats_persistent</p>
+
+<h2 id="6-innodb-stats-sample-pages-已弃用">6. innodb_stats_sample_pages 已弃用</h2>
+
+<h1 id="mysql统计信息更新时机">mysql统计信息更新时机</h1>
+
+<h2 id="持久化统计信息在以下情况会被自动更新">持久化统计信息在以下情况会被自动更新：</h2>
+
+<ul>
+<li>INNODB_STATS_AUTO_RECALC=ON 情况下，表中10%的数据被修改</li>
+<li>增加新的索引</li>
+</ul>
+
+<h2 id="非持久化统计信息在以下情况会被自动更新">非持久化统计信息在以下情况会被自动更新：</h2>
+
+<ul>
+<li>距上一次更新统计信息，表1/16的数据被修改</li>
+<li>执行ANALYZE TABLE</li>
+<li>innodb_stats_on_metadata=ON情况下，执SHOW TABLE STATUS, SHOW INDEX, 查询 INFORMATION_SCHEMA下的TABLES, STATISTICS</li>
+<li>启用&ndash;auto-rehash功能情况下，使用mysql client登录</li>
+<li>表第一次被打开</li>
+</ul>
+
+<h1 id="持久化统计信息">持久化统计信息</h1>
+
+<ul>
+<li><strong>非持久化统计信息的缺点显而易见，数据库重启后如果大量表开始更新统计信息</strong>，会对实例造成很大影响，所以目前都会使用持久化统计信息。</li>
+<li>持久化统计信息保存在表<strong>mysql.innodb_table_stats</strong>和<strong>mysql.innodb_index_stats</strong>。</li>
+</ul>
+
+<h2 id="mysql-innodb-table-stats">mysql.innodb_table_stats</h2>
+
+<ul>
+<li>database_name  数据库名</li>
+<li>table_name  表名</li>
+<li>last_update  统计信息最后一次更新时间</li>
+<li>n_rows 表的行数</li>
+<li>clustered_index_size  聚集索引的页的数量</li>
+<li>sum_of_other_index_sizes 其他索引的页的数量</li>
+</ul>
+
+<h2 id="mysql-innodb-index-stats">mysql.innodb_index_stats</h2>
+
+<ul>
+<li>database_name 数据库名</li>
+<li>table_name 表名</li>
+<li>index_name 索引名</li>
+<li>last_update 统计信息最后一次更新时间</li>
+<li>stat_name 统计信息名</li>
+<li>stat_value 统计信息的值</li>
+<li>sample_size 采样大小</li>
+<li>stat_description 类型说明</li>
+</ul>
+
+<pre><code class="language-sql">mysql&gt; SELECT * FROM mysql.innodb_table_stats where table_name='info_dboop'\G
+*************************** 1. row ***************************
+           database_name: db_monitor
+              table_name: info_dboop
+             last_update: 2019-12-08 12:26:22
+                  n_rows: 200
+    clustered_index_size: 1
+sum_of_other_index_sizes: 1
+
+
+mysql&gt; SELECT * FROM mysql.innodb_index_stats table_name='linkdb'\G
+*************************** 1. row ***************************
+   database_name: db_monitor
+      table_name: linkdb
+      index_name: PRIMARY
+     last_update: 2019-12-8 19:59:10
+       stat_name: n_diff_pfx01
+      stat_value: 2068
+     sample_size: 20
+stat_description: dbid
+*************************** 2. row ***************************
+   database_name: db_monitor
+      table_name: linkdb
+      index_name: PRIMARY
+     last_update: 2019-12-8 19:59:10
+       stat_name: n_leaf_pages
+      stat_value: 30
+     sample_size: NULL
+stat_description: Number of leaf pages in the index
+*************************** 3. row ***************************
+   database_name: db_monitor
+      table_name: linkdb
+      index_name: PRIMARY
+     last_update: 2019-12-8 19:59:10
+       stat_name: size
+      stat_value: 31
+     sample_size: NULL
+stat_description: Number of pages in the index
+*************************** 4. row ***************************
+   database_name: db_monitor
+      table_name: linkdb
+      index_name: idx_dbname
+     last_update: 2019-12-8 19:59:10
+       stat_name: n_diff_pfx01
+      stat_value: 1118
+     sample_size: 5
+stat_description: dbname
+*************************** 5. row ***************************
+   database_name: db_monitor
+      table_name: linkdb
+      index_name: idx_dbname
+     last_update: 2019-12-8 19:59:10
+       stat_name: n_diff_pfx02
+      stat_value: 1988
+     sample_size: 5
+stat_description: dbname,dbid
+*************************** 6. row ***************************
+   database_name: db_monitor
+      table_name: linkdb
+      index_name: idx_dbname
+     last_update: 2019-12-8 19:59:10
+       stat_name: n_leaf_pages
+      stat_value: 5
+     sample_size: NULL
+stat_description: Number of leaf pages in the index
+
+</code></pre>
+
+</main>
+<h2 class="date">发布日期:2019/12/08</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/%E4%BC%98%E5%8C%96">优化</a> <a href="/categories/%E7%B4%A2%E5%BC%95">索引</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

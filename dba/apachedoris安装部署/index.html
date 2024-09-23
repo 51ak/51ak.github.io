@@ -1,0 +1,344 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ApacheDoris在Centos7环境下的安装部署| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">ApacheDoris在Centos7环境下的安装部署</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#环境准备">环境准备</a>
+      <ul>
+        <li><a href="#linux版本-centos7">linux版本 Centos7:</a></li>
+        <li><a href="#系统最大打开文件句柄数">系统最大打开文件句柄数​</a></li>
+        <li><a href="#关闭交换分区swap">关闭交换分区（swap）​</a></li>
+        <li><a href="#检查文件系统">检查文件系统</a></li>
+        <li><a href="#gcc版本482">GCC版本(&gt;=4.8.2)</a></li>
+        <li><a href="#java版本18">JAVA版本(&gt;=1.8)</a></li>
+        <li><a href="#确认cpu是否支持avx2">确认cpu是否支持avx2</a></li>
+      </ul>
+    </li>
+    <li><a href="#安装">安装</a>
+      <ul>
+        <li><a href="#下载">下载</a></li>
+        <li><a href="#安装fe">安装fe</a></li>
+        <li><a href="#安装be">安装be</a></li>
+        <li><a href="#建库建表">建库，建表</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="环境准备">环境准备</h2>
+<h3 id="linux版本-centos7">linux版本 Centos7:</h3>
+<ul>
+<li><code>cat /etc/redhat-release</code></li>
+</ul>
+<h3 id="系统最大打开文件句柄数">系统最大打开文件句柄数​</h3>
+<pre><code>cat  etc/security/limits.conf 
+* soft nofile 65536
+* hard nofile 65536
+</code></pre><h3 id="关闭交换分区swap">关闭交换分区（swap）​</h3>
+<pre><code>swapoff -a
+sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+</code></pre><h3 id="检查文件系统">检查文件系统</h3>
+<pre><code> df -hT |grep &quot;ext4&quot;
+</code></pre><h3 id="gcc版本482">GCC版本(&gt;=4.8.2)</h3>
+<pre><code>gcc -v
+# gcc version 4.8.5 2015062
+
+</code></pre><h3 id="java版本18">JAVA版本(&gt;=1.8)</h3>
+<pre><code>java -version 
+# java version &quot;1.8.0_202&quot;
+</code></pre><h3 id="确认cpu是否支持avx2">确认cpu是否支持avx2</h3>
+<pre><code>cat /proc/cpuinfo | grep avx2
+
+</code></pre><h2 id="安装">安装</h2>
+<h3 id="下载">下载</h3>
+<pre><code>cd /data/software/
+wget https://apache-doris-releases.oss-accelerate.aliyuncs.com/apache-doris-2.0.3-bin-x64.tar.gz
+
+tar zxvf apache-doris-2.0.3-bin-x64.tar.gz
+
+cd cd apache-doris-2.0.3-bin-x64
+
+ll
+
+
+mkdir /data/doris5306
+mv * /data/doris5306/
+
+</code></pre><h3 id="安装fe">安装fe</h3>
+<h4 id="修改feconf">修改fe.conf</h4>
+<pre><code>cd /data/doris5306/fe
+vim conf/fe.conf
+#修改以下项
+http_port = 5030
+rpc_port = 5020
+query_port = 5306
+edit_log_port = 5010
+
+
+priority_networks = *.*.*.0/24
+</code></pre><h4 id="启动">启动</h4>
+<pre><code>./bin/start_fe.sh --daemon
+
+</code></pre><h4 id="验证">验证</h4>
+<pre><code>netstat -an |grep 5306
+tail -200f log/fe.log 
+
+ps -ef |grep doris5306
+netstat -anpt |grep {进程号}
+
+# 如果启动不了，看日志：排除java环境问题，端口被占用
+# 有些机器可能需要手动指定 $DORIS_HOME 这个变量
+ vim conf/fe.conf 
+ vim bin/start_fe.sh 
+ #DORIS_HOME=&quot;/data/doris5306/fe&quot;
+</code></pre><h4 id="停止">停止</h4>
+<pre><code>sh bin/stop_fe.sh 
+</code></pre><h3 id="安装be">安装be</h3>
+<h4 id="修改beconf">修改be.conf</h4>
+<pre><code># cd /data/doris5306/be
+# vim conf/be.conf
+priority_networks = 10.25.16.0/24
+
+be_port = 5160
+webserver_port = 5140
+heartbeat_service_port = 5150
+brpc_port = 5260
+
+
+</code></pre><h4 id="启动-1">启动</h4>
+<pre><code>./bin/start_be.sh --daemon
+#如果有报错 max_map_count：
+sysctl -w vm.max_map_count=2000000
+vim /etc/sysctl.conf
+</code></pre><h4 id="加集群">加集群</h4>
+<pre><code>mysql -h 127.0.0.1 -P 5306  -u root
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 3
+Server version: 5.7.99 Doris version doris-2.0.3-rc06-37d31a5
+
+Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql&gt; show frontends\G;
+*************************** 1. row ***************************
+             Name: fe_2e4de06c_fde0_4ce7_8560_11da267f1fbb
+             Host: 10.*.*.*
+      EditLogPort: 5010
+         HttpPort: 5030
+        QueryPort: 5306
+          RpcPort: 5020
+             Role: FOLLOWER
+         IsMaster: true
+        ClusterId: 1757269789
+             Join: true
+            Alive: true
+ReplayedJournalId: 2729
+    LastHeartbeat: 2023-12-25 19:34:04
+         IsHelper: true
+           ErrMsg: 
+          Version: doris-2.0.3-rc06-37d31a5
+ CurrentConnected: Yes
+1 row in set (0.07 sec)
+
+ERROR: 
+No query specified
+
+mysql&gt; SHOW BACKENDS\G
+Empty set (0.01 sec)
+
+
+mysql&gt; ALTER SYSTEM ADD BACKEND &quot;10.*.*.*:9050&quot;;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql&gt; SHOW BACKENDS\G
+*************************** 1. row ***************************
+              BackendId: 13800
+                   Host: 10.*.*.*
+          HeartbeatPort: 9050
+                 BePort: -1
+               HttpPort: -1
+               BrpcPort: -1
+          LastStartTime: NULL
+          LastHeartbeat: NULL
+                  Alive: false
+   SystemDecommissioned: false
+              TabletNum: 0
+       DataUsedCapacity: 0.000 
+     TrashUsedCapcacity: 0.000 
+          AvailCapacity: 1.000 B
+          TotalCapacity: 0.000 
+                UsedPct: 0.00 %
+         MaxDiskUsedPct: 0.00 %
+     RemoteUsedCapacity: 0.000 
+                    Tag: {&quot;location&quot; : &quot;default&quot;}
+                 ErrMsg: 
+                Version: 
+                 Status: {&quot;lastSuccessReportTabletsTime&quot;:&quot;N/A&quot;,&quot;lastStreamLoadTime&quot;:-1,&quot;isQueryDisabled&quot;:false,&quot;isLoadDisabled&quot;:false}
+HeartbeatFailureCounter: 0
+               NodeRole: 
+1 row in set (0.02 sec)
+
+</code></pre><h4 id="停止-1">停止</h4>
+<pre><code>./bin/stop_be.sh
+
+</code></pre><h3 id="建库建表">建库，建表</h3>
+<pre><code>create database dbtest;
+
+use dbtest;
+
+CREATE TABLE csv_data (
+account VARCHAR(255) NOT NULL COMMENT '',
+name VARCHAR(255) NOT NULL default '' COMMENT '姓名',
+organization VARCHAR(500) DEFAULT '' COMMENT '部门',
+gender smallint NOT NULL default '-1' COMMENT '性别',
+practice_status varchar(10) not null default '' COMMENT '',
+political_affiliation VARCHAR(50) DEFAULT ''COMMENT '政治面貌',
+education_degree VARCHAR(255) DEFAULT '' COMMENT '学历学位',
+email VARCHAR(255) DEFAULT '' COMMENT '邮箱',
+origin VARCHAR(255) DEFAULT '' COMMENT '来源'
+)
+ENGINE=OLAP
+UNIQUE KEY(account) 
+DISTRIBUTED BY HASH(account) BUCKETS 16
+;
+
+CREATE USER 'dba' IDENTIFIED BY 'your_passwd';
+grant all on *.* to dba;
+
+
+CREATE USER 'dbtest_w' IDENTIFIED BY 'your_passwd';
+GRANT ALL ON dbtest TO dbtest_w;
+
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/12/25</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/dba">DBA</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>windowscluter on Classic</title>
+    <link>/categories/windowscluter/</link>
+    <description>Recent content in windowscluter on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 12 Jan 2020 00:00:00 +0000</lastBuildDate><atom:link href="/categories/windowscluter/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>windowsCluster集群脑裂问题最佳实践</title>
+      <link>/sqlserver/windowscluster%E9%9B%86%E7%BE%A4%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/</link>
+      <pubDate>Sun, 12 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/sqlserver/windowscluster%E9%9B%86%E7%BE%A4%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/</guid>
+      <description>故障描述  WinSvr2008R2/Windows 故障转移集群 意外中断1分钟左右后自行恢复 导致SQLServer alwayson集群 中断访问，连接卡住无法提供访问  错误日志 从日志上来看，当时应该在这个时段节点dboopawo91和dboopawo92两台服务器发生了网络错误，我们看到在日志中显示，两台服务器互相联不通对方了，所以在他们的日志中显示，由于这些机器都无法联通，所以他们都被从群集中踢出。
+------------------------------------------------------------------------------ 节点dboopawo91报由于网络问题联系上不dboopawo92。 --------------------- 11/06/2015 12:13:02 AM Critical dboopawo91.server.dboop.com 1135 Microsoft-Windows-FailoverClustering Node Mgr NT AUTHORITY\SYSTEM Cluster node &#39;dboopawo92&#39; was removed from the active failover cluster membership. The Cluster service on this node may have stopped. This could also be due to the node having lost communication with other active nodes in the failover cluster. Run the Validate a Configuration wizard to check your network configuration.</description>
+    </item>
+    
+  </channel>
+</rss>

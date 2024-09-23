@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>51ak带你看MYSQL5.7源码1：main入口函数 | dboop.com</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  
+    
+    
+    
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+<header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left ">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+
+    </ul>
+  </nav>
+</header>
+
+  </head>
+
+  <body>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">51ak带你看MYSQL5.7源码1：main入口函数</span></h1>
+<h2 class="author">作者:51ak</h2>
+
+</div>
+
+
+
+<main>
+<p>去MYSQL官网下源码：<a href="https://dev.mysql.com/downloads/mysql/">https://dev.mysql.com/downloads/mysql/</a></p>
+
+<p>选 SOURCE  CODE</p>
+
+<p><img src="/img/mysql11.png" alt="mysql_dev1" /></p>
+
+<p>下载解压。选VS code来查看，</p>
+
+<p>用VS打开发现这些目录 ，根据了解到的目录结构说明，我们关注标红的两个目录，SQL是MYSQL的核心代码 ，STORGE里是各个存储引擎的代码</p>
+
+<p><img src="/img/mysql12.png" alt="mysql_dev1" /></p>
+
+<p>打开sql/main.cc 发现只有一个函数，引用了同级目录下的mysqld_main(int argc, char **argv);</p>
+
+<p><img src="/img/mysql13.png" alt="mysql_dev1" /></p>
+
+<p>F12跟过去，到了msyqld.cc下的这个过程 ，这里就是整个SERVER进程 的入口</p>
+
+<p><img src="/img/mysql14.png" alt="mysql_dev1" /></p>
+
+<p>接下来就一个巨大的代码段，来启动MYSQLD进程</p>
+
+<p>我按个人的理解加了注释如下：</p>
+
+<pre><code>#ifdef _WIN32
+int win_main(int argc, char **argv)
+#else
+int mysqld_main(int argc, char **argv)
+#endif
+{
+  /*
+    Perform basic thread library and malloc initialization,
+    to be able to read defaults files and parse options.
+  */
+  my_progname= argv[0]; /*注: 记下mysql进程名*/
+
+
+#ifndef _WIN32 
+#ifdef WITH_PERFSCHEMA_STORAGE_ENGINE
+  pre_initialize_performance_schema();
+#endif /*WITH_PERFSCHEMA_STORAGE_ENGINE */
+  // For windows, my_init() is called from the win specific mysqld_main
+  if (my_init())                 // init my_sys library &amp; pthreads
+  {
+    sql_print_error(&quot;my_init() failed.&quot;);
+    flush_error_log_messages();
+    return 1;
+  }
+#endif /* _WIN32 */
+
+  orig_argc= argc; 
+  orig_argv= argv;
+  my_getopt_use_args_separator= TRUE;
+  my_defaults_read_login_file= FALSE;
+  /*注: 这里是去读配置文件里的启动项,读的时候还带入了argv ，应该是argv优行，*/
+  if (load_defaults(MYSQL_CONFIG_NAME, load_default_groups, &amp;argc, &amp;argv))
+  {
+    flush_error_log_messages();
+    return 1;
+  }
+  my_getopt_use_args_separator= FALSE;
+  defaults_argc= argc;
+  defaults_argv= argv;
+  remaining_argc= argc;
+  remaining_argv= argv;
+
+  /* Must be initialized early for comparison of options name */
+  system_charset_info= &amp;my_charset_utf8_general_ci;
+
+  /* Write mysys error messages to the error log. */
+  local_message_hook= error_log_print;
+
+  int ho_error;
+
+#ifdef WITH_PERFSCHEMA_STORAGE_ENGINE
+  /*
+    Initialize the array of performance schema instrument configurations.
+  */
+  init_pfs_instrument_array();
+#endif /* WITH_PERFSCHEMA_STORAGE_ENGINE */
+ /*注: 这里跟过去发现还是在处理启动变量*/
+  ho_error= handle_early_options();
+
+#if !defined(_WIN32) &amp;&amp; !defined(EMBEDDED_LIBRARY)
+
+  if (opt_bootstrap &amp;&amp; opt_daemonize)
+  {
+    fprintf(stderr, &quot;Bootstrap and daemon options are incompatible.\n&quot;);
+    exit(MYSQLD_ABORT_EXIT);
+  }
+
+  if (opt_daemonize &amp;&amp; log_error_dest == disabled_my_option &amp;&amp;
+      (isatty(STDOUT_FILENO) || isatty(STDERR_FILENO)))
+  {
+    fprintf(stderr, &quot;Please enable --log-error option or set appropriate &quot;
+                    &quot;redirections for standard output and/or standard error &quot;
+                    &quot;in daemon mode.\n&quot;);
+    exit(MYSQLD_ABORT_EXIT);
+  }
+
+  if (opt_daemonize)
+  {
+    if (chdir(&quot;/&quot;) &lt; 0)
+    {
+      fprintf(stderr, &quot;Cannot change to root director: %s\n&quot;,
+                      strerror(errno));
+      exit(MYSQLD_ABORT_EXIT);
+    }
+
+    if ((pipe_write_fd= mysqld::runtime::mysqld_daemonize()) &lt; 0)
+    {
+      fprintf(stderr, &quot;mysqld_daemonize failed \n&quot;);
+      exit(MYSQLD_ABORT_EXIT);
+    }
+  }
+#endif
+ /*注: 还是在处理启动变量。。。*/
+  init_sql_statement_names();
+  sys_var_init();
+  ulong requested_open_files;
+  adjust_related_options(&amp;requested_open_files);
+
+#ifdef WITH_PERFSCHEMA_STORAGE_ENGINE
+  if (ho_error == 0)
+  {
+    if (!opt_help &amp;&amp; !opt_bootstrap)
+    {
+      /* Add sizing hints from the server sizing parameters. */
+      pfs_param.m_hints.m_table_definition_cache= table_def_size;
+      pfs_param.m_hints.m_table_open_cache= table_cache_size;
+      pfs_param.m_hints.m_max_connections= max_connections;
+      pfs_param.m_hints.m_open_files_limit= requested_open_files;
+      pfs_param.m_hints.m_max_prepared_stmt_count= max_prepared_stmt_count;
+
+      PSI_hook= initialize_performance_schema(&amp;pfs_param);
+      if (PSI_hook == NULL &amp;&amp; pfs_param.m_enabled)
+      {
+        pfs_param.m_enabled= false;
+        sql_print_warning(&quot;Performance schema disabled (reason: init failed).&quot;);
+      }
+    }
+  }
+#else
+  /*
+    Other provider of the instrumentation interface should
+    initialize PSI_hook here:
+    - HAVE_PSI_INTERFACE is for the instrumentation interface
+    - WITH_PERFSCHEMA_STORAGE_ENGINE is for one implementation
+      of the interface,
+    but there could be alternate implementations, which is why
+    these two defines are kept separate.
+  */
+#endif /* WITH_PERFSCHEMA_STORAGE_ENGINE */
+
+#ifdef HAVE_PSI_INTERFACE
+  /*
+    Obtain the current performance schema instrumentation interface,
+    if available.
+  */
+  if (PSI_hook)
+  {
+    PSI *psi_server= (PSI*) PSI_hook-&gt;get_interface(PSI_CURRENT_VERSION);
+    if (likely(psi_server != NULL))
+    {
+      set_psi_server(psi_server);
+
+      /*
+        Now that we have parsed the command line arguments, and have initialized
+        the performance schema itself, the next step is to register all the
+        server instruments.
+      */
+      init_server_psi_keys();
+      /* Instrument the main thread */
+      PSI_thread *psi= PSI_THREAD_CALL(new_thread)(key_thread_main, NULL, 0);
+      PSI_THREAD_CALL(set_thread_os_id)(psi);
+      PSI_THREAD_CALL(set_thread)(psi);
+
+      /*
+        Now that some instrumentation is in place,
+        recreate objects which were initialised early,
+        so that they are instrumented as well.
+      */
+      my_thread_global_reinit();
+    }
+  }
+#endif /* HAVE_PSI_INTERFACE */
+ /*注: ERRLOG初始化*/
+  init_error_log();
+
+  /* Initialize audit interface globals. Audit plugins are inited later. */
+  mysql_audit_initialize();
+
+#ifndef EMBEDDED_LIBRARY
+  Srv_session::module_init();
+#endif
+
+  /*
+    Perform basic query log initialization. Should be called after
+    MY_INIT, as it initializes mutexes.
+  */
+   /*注: QUERYLOG初始化*/
+  query_logger.init();
+
+  if (ho_error)
+  {
+    /*
+      Parsing command line option failed,
+      Since we don't have a workable remaining_argc/remaining_argv
+      to continue the server initialization, this is as far as this
+      code can go.
+      This is the best effort to log meaningful messages:
+      - messages will be printed to stderr, which is not redirected yet,
+      - messages will be printed in the NT event log, for windows.
+    */
+    flush_error_log_messages();
+    /*
+      Not enough initializations for unireg_abort()
+      Using exit() for windows.
+    */
+    exit (MYSQLD_ABORT_EXIT);
+  }
+
+  if (init_common_variables())
+    unireg_abort(MYSQLD_ABORT_EXIT);        // Will do exit
+ /*注: 系统信号初始化*/
+  my_init_signals();
+
+  size_t guardize= 0;
+#ifndef _WIN32
+  int retval= pthread_attr_getguardsize(&amp;connection_attrib, &amp;guardize);
+  DBUG_ASSERT(retval == 0);
+  if (retval != 0)
+    guardize= my_thread_stack_size;
+#endif
+
+#if defined(__ia64__) || defined(__ia64)
+  /*
+    Peculiar things with ia64 platforms - it seems we only have half the
+    stack size in reality, so we have to double it here
+  */
+  guardize= my_thread_stack_size;
+#endif
+
+  my_thread_attr_setstacksize(&amp;connection_attrib,
+                            my_thread_stack_size + guardize);
+
+  {
+    /* Retrieve used stack size;  Needed for checking stack overflows */
+    size_t stack_size= 0;
+    my_thread_attr_getstacksize(&amp;connection_attrib, &amp;stack_size);
+
+    /* We must check if stack_size = 0 as Solaris 2.9 can return 0 here */
+    if (stack_size &amp;&amp; stack_size &lt; (my_thread_stack_size + guardize))
+    {
+      sql_print_warning(&quot;Asked for %lu thread stack, but got %ld&quot;,
+                        my_thread_stack_size + guardize, (long) stack_size);
+#if defined(__ia64__) || defined(__ia64)
+      my_thread_stack_size= stack_size / 2;
+#else
+      my_thread_stack_size= static_cast&lt;ulong&gt;(stack_size - guardize);
+#endif
+    }
+  }
+
+#ifndef DBUG_OFF
+  test_lc_time_sz();
+  srand(static_cast&lt;uint&gt;(time(NULL)));
+#endif
+
+#ifndef _WIN32
+  if ((user_info= check_user(mysqld_user)))
+  {
+#if HAVE_CHOWN
+    if (unlikely(opt_initialize))
+    {
+      /* need to change the owner of the freshly created data directory */
+      MY_STAT stat;
+      char errbuf[MYSYS_STRERROR_SIZE];
+      bool must_chown= true;
+
+      /* fetch the directory's owner */
+      if (!my_stat(mysql_real_data_home, &amp;stat, MYF(0)))
+      {
+        sql_print_information(&quot;Can't read data directory's stats (%d): %s.&quot;
+                              &quot;Assuming that it's not owned by the same user/group&quot;,
+                              my_errno(),
+                              my_strerror(errbuf, sizeof(errbuf), my_errno()));
+      }
+      /* Don't change it if it's already the same as SElinux stops this */
+      else if(stat.st_uid == user_info-&gt;pw_uid &amp;&amp;
+              stat.st_gid == user_info-&gt;pw_gid)
+        must_chown= false;
+
+      if (must_chown &amp;&amp;
+          chown(mysql_real_data_home, user_info-&gt;pw_uid, user_info-&gt;pw_gid)
+         )
+      {
+        sql_print_error(&quot;Can't change data directory owner to %s&quot;, mysqld_user);
+        unireg_abort(1);
+      }
+    }
+#endif
+
+
+#if defined(HAVE_MLOCKALL) &amp;&amp; defined(MCL_CURRENT)
+    if (locked_in_memory) // getuid() == 0 here
+      set_effective_user(user_info);
+    else
+#endif
+      set_user(mysqld_user, user_info);
+  }
+#endif // !_WIN32
+
+  /*
+   initiate key migration if any one of the migration specific
+   options are provided.
+  */
+   /*注: 这一段应该是跟迁移有关的，不是很懂*/
+  if (opt_keyring_migration_source ||
+      opt_keyring_migration_destination ||
+      migrate_connect_options)
+  {
+    Migrate_keyring mk;
+    if (mk.init(remaining_argc, remaining_argv,
+                opt_keyring_migration_source,
+                opt_keyring_migration_destination,
+                opt_keyring_migration_user,
+                opt_keyring_migration_host,
+                opt_keyring_migration_password,
+                opt_keyring_migration_socket,
+                opt_keyring_migration_port))
+    {
+      sql_print_error(ER_DEFAULT(ER_KEYRING_MIGRATION_STATUS),
+                      &quot;failed&quot;);
+      log_error_dest= &quot;stderr&quot;;
+      flush_error_log_messages();
+      unireg_abort(MYSQLD_ABORT_EXIT);
+    }
+
+    if (mk.execute())
+    {
+      sql_print_error(ER_DEFAULT(ER_KEYRING_MIGRATION_STATUS),
+                      &quot;failed&quot;);
+      log_error_dest= &quot;stderr&quot;;
+      flush_error_log_messages();
+      unireg_abort(MYSQLD_ABORT_EXIT);
+    }
+
+    sql_print_information(ER_DEFAULT(ER_KEYRING_MIGRATION_STATUS),
+                          &quot;successfull&quot;);
+    log_error_dest= &quot;stderr&quot;;
+    flush_error_log_messages();
+    unireg_abort(MYSQLD_SUCCESS_EXIT);
+  }
+
+  /*
+   We have enough space for fiddling with the argv, continue
+  */
+  /*注：设置DATA变量*/
+  if (my_setwd(mysql_real_data_home,MYF(MY_WME)) &amp;&amp; !opt_help)
+  {
+    sql_print_error(&quot;failed to set datadir to %s&quot;, mysql_real_data_home);
+    unireg_abort(MYSQLD_ABORT_EXIT);        /* purecov: inspected */
+  }
+  /*注：设置BINLOG*/
+  //If the binlog is enabled, one needs to provide a server-id
+  if (opt_bin_log &amp;&amp; !(server_id_supplied) )
+  {
+    sql_print_error(&quot;You have enabled the binary log, but you haven't provided &quot;
+                    &quot;the mandatory server-id. Please refer to the proper &quot;
+                    &quot;server start-up parameters documentation&quot;);
+    unireg_abort(MYSQLD_ABORT_EXIT);
+  }
+
+  /* 
+   The subsequent calls may take a long time : e.g. innodb log read.
+   Thus set the long running service control manager timeout
+  */
+#if defined(_WIN32)
+  Service.SetSlowStarting(slow_start_timeout);
+#endif
+  /*注：这个很重要。核心模块在这里启动了*/
+  if (init_server_components())
+    unireg_abort(MYSQLD_ABORT_EXIT);
+
+  /*
+    Each server should have one UUID. We will create it automatically, if it
+    does not exist.
+   */
+  if (init_server_auto_options())
+  {
+    sql_print_error(&quot;Initialization of the server's UUID failed because it could&quot;
+                    &quot; not be read from the auto.cnf file. If this is a new&quot;
+                    &quot; server, the initialization failed because it was not&quot;
+                    &quot; possible to generate a new UUID.&quot;);
+    unireg_abort(MYSQLD_ABORT_EXIT);
+  }
+
+  /*注：下面这段跟SID有关*/
+  /*
+    Add server_uuid to the sid_map.  This must be done after
+    server_uuid has been initialized in init_server_auto_options and
+    after the binary log (and sid_map file) has been initialized in
+    init_server_components().
+
+    No error message is needed: init_sid_map() prints a message.
+
+    Strictly speaking, this is not currently needed when
+    opt_bin_log==0, since the variables that gtid_state-&gt;init
+    initializes are not currently used in that case.  But we call it
+    regardless to avoid possible future bugs if gtid_state ever
+    needs to do anything else.
+  */
+  global_sid_lock-&gt;wrlock();
+  int gtid_ret= gtid_state-&gt;init();
+  global_sid_lock-&gt;unlock();
+
+  if (gtid_ret)
+    unireg_abort(MYSQLD_ABORT_EXIT);
+
+  // Initialize executed_gtids from mysql.gtid_executed table.
+  if (gtid_state-&gt;read_gtid_executed_from_table() == -1)
+    unireg_abort(1);
+
+  if (opt_bin_log)
+  {
+    /*
+      Initialize GLOBAL.GTID_EXECUTED and GLOBAL.GTID_PURGED from
+      gtid_executed table and binlog files during server startup.
+    */
+    Gtid_set *executed_gtids=
+      const_cast&lt;Gtid_set *&gt;(gtid_state-&gt;get_executed_gtids());
+    Gtid_set *lost_gtids=
+      const_cast&lt;Gtid_set *&gt;(gtid_state-&gt;get_lost_gtids());
+    Gtid_set *gtids_only_in_table=
+      const_cast&lt;Gtid_set *&gt;(gtid_state-&gt;get_gtids_only_in_table());
+    Gtid_set *previous_gtids_logged=
+      const_cast&lt;Gtid_set *&gt;(gtid_state-&gt;get_previous_gtids_logged());
+
+    Gtid_set purged_gtids_from_binlog(global_sid_map, global_sid_lock);
+    Gtid_set gtids_in_binlog(global_sid_map, global_sid_lock);
+    Gtid_set gtids_in_binlog_not_in_table(global_sid_map, global_sid_lock);
+
+    if (mysql_bin_log.init_gtid_sets(&amp;gtids_in_binlog,
+                                     &amp;purged_gtids_from_binlog,
+                                     opt_master_verify_checksum,
+                                     true/*true=need lock*/,
+                                     NULL/*trx_parser*/,
+                                     NULL/*gtid_partial_trx*/,
+                                     true/*is_server_starting*/))
+      unireg_abort(MYSQLD_ABORT_EXIT);
+
+    global_sid_lock-&gt;wrlock();
+
+    purged_gtids_from_binlog.dbug_print(&quot;purged_gtids_from_binlog&quot;);
+    gtids_in_binlog.dbug_print(&quot;gtids_in_binlog&quot;);
+
+    if (!gtids_in_binlog.is_empty() &amp;&amp;
+        !gtids_in_binlog.is_subset(executed_gtids))
+    {
+      gtids_in_binlog_not_in_table.add_gtid_set(&amp;gtids_in_binlog);
+      if (!executed_gtids-&gt;is_empty())
+        gtids_in_binlog_not_in_table.remove_gtid_set(executed_gtids);
+      /*
+        Save unsaved GTIDs into gtid_executed table, in the following
+        four cases:
+          1. the upgrade case.
+          2. the case that a slave is provisioned from a backup of
+             the master and the slave is cleaned by RESET MASTER
+             and RESET SLAVE before this.
+          3. the case that no binlog rotation happened from the
+             last RESET MASTER on the server before it crashes.
+          4. The set of GTIDs of the last binlog is not saved into the
+             gtid_executed table if server crashes, so we save it into
+             gtid_executed table and executed_gtids during recovery
+             from the crash.
+      */
+      if (gtid_state-&gt;save(&amp;gtids_in_binlog_not_in_table) == -1)
+      {
+        global_sid_lock-&gt;unlock();
+        unireg_abort(MYSQLD_ABORT_EXIT);
+      }
+      executed_gtids-&gt;add_gtid_set(&amp;gtids_in_binlog_not_in_table);
+    }
+
+    /* gtids_only_in_table= executed_gtids - gtids_in_binlog */
+    if (gtids_only_in_table-&gt;add_gtid_set(executed_gtids) !=
+        RETURN_STATUS_OK)
+    {
+      global_sid_lock-&gt;unlock();
+      unireg_abort(MYSQLD_ABORT_EXIT);
+    }
+    gtids_only_in_table-&gt;remove_gtid_set(&amp;gtids_in_binlog);
+    /*
+      lost_gtids = executed_gtids -
+                   (gtids_in_binlog - purged_gtids_from_binlog)
+                 = gtids_only_in_table + purged_gtids_from_binlog;
+    */
+    DBUG_ASSERT(lost_gtids-&gt;is_empty());
+    if (lost_gtids-&gt;add_gtid_set(gtids_only_in_table) != RETURN_STATUS_OK ||
+        lost_gtids-&gt;add_gtid_set(&amp;purged_gtids_from_binlog) !=
+        RETURN_STATUS_OK)
+    {
+      global_sid_lock-&gt;unlock();
+      unireg_abort(MYSQLD_ABORT_EXIT);
+    }
+
+    /* Prepare previous_gtids_logged for next binlog */
+    if (previous_gtids_logged-&gt;add_gtid_set(&amp;gtids_in_binlog) !=
+        RETURN_STATUS_OK)
+    {
+      global_sid_lock-&gt;unlock();
+      unireg_abort(MYSQLD_ABORT_EXIT);
+    }
+
+    /*
+      Write the previous set of gtids at this point because during
+      the creation of the binary log this is not done as we cannot
+      move the init_gtid_sets() to a place before openning the binary
+      log. This requires some investigation.
+
+      /Alfranio
+    */
+    Previous_gtids_log_event prev_gtids_ev(&amp;gtids_in_binlog);
+
+    global_sid_lock-&gt;unlock();
+
+    (prev_gtids_ev.common_footer)-&gt;checksum_alg=
+      static_cast&lt;enum_binlog_checksum_alg&gt;(binlog_checksum_options);
+
+    if (prev_gtids_ev.write(mysql_bin_log.get_log_file()))
+      unireg_abort(MYSQLD_ABORT_EXIT);
+    mysql_bin_log.add_bytes_written(
+      prev_gtids_ev.common_header-&gt;data_written);
+
+    if (flush_io_cache(mysql_bin_log.get_log_file()) ||
+        mysql_file_sync(mysql_bin_log.get_log_file()-&gt;file, MYF(MY_WME)))
+      unireg_abort(MYSQLD_ABORT_EXIT);
+    mysql_bin_log.update_binlog_end_pos();
+
+    (void) RUN_HOOK(server_state, after_engine_recovery, (NULL));
+  }
+
+  /*注： 网络相关的初始化*/
+  if (init_ssl())
+    unireg_abort(MYSQLD_ABORT_EXIT);
+  if (network_init())
+    unireg_abort(MYSQLD_ABORT_EXIT);
+
+#ifdef _WIN32
+#ifndef EMBEDDED_LIBRARY
+  if (opt_require_secure_transport &amp;&amp;
+      !opt_enable_shared_memory &amp;&amp; !opt_use_ssl &amp;&amp;
+      !opt_initialize &amp;&amp; !opt_bootstrap)
+  {
+    sql_print_error(&quot;Server is started with --require-secure-transport=ON &quot;
+                    &quot;but no secure transports (SSL or Shared Memory) are &quot;
+                    &quot;configured.&quot;);
+    unireg_abort(MYSQLD_ABORT_EXIT);
+  }
+#endif
+
+#endif
+
+  /*
+   Initialize my_str_malloc(), my_str_realloc() and my_str_free()
+  */
+  my_str_malloc= &amp;my_str_malloc_mysqld;
+  my_str_free= &amp;my_str_free_mysqld;
+  my_str_realloc= &amp;my_str_realloc_mysqld;
+
+  error_handler_hook= my_message_sql;
+
+  /* Save pid of this process in a file */
+  if (!opt_bootstrap)
+    create_pid_file();
+
+
+  /* Read the optimizer cost model configuration tables */
+  if (!opt_bootstrap)
+    reload_optimizer_cost_constants();
+
+  if (mysql_rm_tmp_tables() || acl_init(opt_noacl) ||
+      my_tz_init((THD *)0, default_tz_name, opt_bootstrap) ||
+      grant_init(opt_noacl))
+  {
+    abort_loop= true;
+
+    delete_pid_file(MYF(MY_WME));
+
+    unireg_abort(MYSQLD_ABORT_EXIT);
+  }
+
+  if (!opt_bootstrap)
+    servers_init(0);
+
+  if (!opt_noacl)
+  {
+#ifdef HAVE_DLOPEN
+    udf_init();
+#endif
+  }
+
+  /*注：设置SHOW STATUS时的变量*/
+  init_status_vars();
+  /* If running with bootstrap, do not start replication. */
+  if (opt_bootstrap)
+    opt_skip_slave_start= 1;
+
+  /*注：初始化BINLOG的值了*/
+  check_binlog_cache_size(NULL);
+  check_binlog_stmt_cache_size(NULL);
+
+  binlog_unsafe_map_init();
+
+  /* If running with bootstrap, do not start replication. */
+  if (!opt_bootstrap)
+  {
+    // Make @@slave_skip_errors show the nice human-readable value.
+    set_slave_skip_errors(&amp;opt_slave_skip_errors);
+
+    /*
+      init_slave() must be called after the thread keys are created.
+    */
+    if (server_id != 0)
+      init_slave(); /* Ignoring errors while configuring replication. */
+  }
+
+#ifdef WITH_PERFSCHEMA_STORAGE_ENGINE
+  initialize_performance_schema_acl(opt_bootstrap);
+  /*
+    Do not check the structure of the performance schema tables
+    during bootstrap:
+    - the tables are not supposed to exist yet, bootstrap will create them
+    - a check would print spurious error messages
+  */
+  if (! opt_bootstrap)
+    check_performance_schema();
+#endif
+
+  initialize_information_schema_acl();
+
+  execute_ddl_log_recovery();
+  (void) RUN_HOOK(server_state, after_recovery, (NULL));
+
+  if (Events::init(opt_noacl || opt_bootstrap))
+    unireg_abort(MYSQLD_ABORT_EXIT);
+
+#ifndef _WIN32
+  //  Start signal handler thread.
+  start_signal_handler();
+#endif
+
+  /*注：启动了*/
+  if (opt_bootstrap)
+  {
+    start_processing_signals();
+
+    int error= bootstrap(mysql_stdin);
+    unireg_abort(error ? MYSQLD_ABORT_EXIT : MYSQLD_SUCCESS_EXIT);
+  }
+
+  if (opt_init_file &amp;&amp; *opt_init_file)
+  {
+    if (read_init_file(opt_init_file))
+      unireg_abort(MYSQLD_ABORT_EXIT);
+  }
+
+  /*
+    Event must be invoked after error_handler_hook is assigned to
+    my_message_sql, otherwise my_message will not cause the event to abort.
+  */
+  if (mysql_audit_notify(AUDIT_EVENT(MYSQL_AUDIT_SERVER_STARTUP_STARTUP),
+                         (const char **) argv, argc))
+    unireg_abort(MYSQLD_ABORT_EXIT);
+
+#ifdef _WIN32
+  create_shutdown_thread();
+#endif
+  start_handle_manager();
+
+  create_compress_gtid_table_thread();
+
+  sql_print_information(ER_DEFAULT(ER_STARTUP),
+                        my_progname,
+                        server_version,
+#ifdef HAVE_SYS_UN_H
+                        (opt_bootstrap ? (char*) &quot;&quot; : mysqld_unix_port),
+#else
+                        (char*) &quot;&quot;,
+#endif
+                         mysqld_port,
+                         MYSQL_COMPILATION_COMMENT);
+#if defined(_WIN32)
+  Service.SetRunning();
+#endif
+
+  start_processing_signals();
+
+#ifdef WITH_NDBCLUSTER_STORAGE_ENGINE
+  /* engine specific hook, to be made generic */
+  if (ndb_wait_setup_func &amp;&amp; ndb_wait_setup_func(opt_ndb_wait_setup))
+  {
+    sql_print_warning(&quot;NDB : Tables not available after %lu seconds.&quot;
+                      &quot;  Consider increasing --ndb-wait-setup value&quot;,
+                      opt_ndb_wait_setup);
+  }
+#endif
+
+  if (!opt_bootstrap)
+  {
+    /*
+      Execute an I_S query to implicitly check for tables using the deprecated
+      partition engine. No need to do this during bootstrap. We ignore the
+      return value from the query execution. Note that this must be done after
+      NDB is initialized to avoid polluting the server with invalid table shares.
+    */
+    if (!opt_disable_partition_check)
+    {
+      sql_print_information(
+              &quot;Executing 'SELECT * FROM INFORMATION_SCHEMA.TABLES;' &quot;
+              &quot;to get a list of tables using the deprecated partition &quot;
+              &quot;engine.&quot;);
+
+      sql_print_information(&quot;Beginning of list of non-natively partitioned tables&quot;);
+      (void) bootstrap_single_query(
+              &quot;SELECT TABLE_SCHEMA, TABLE_NAME FROM INFORMATION_SCHEMA.TABLES &quot;
+              &quot;WHERE CREATE_OPTIONS LIKE '%partitioned%';&quot;);
+      sql_print_information(&quot;End of list of non-natively partitioned tables&quot;);
+    }
+  }
+
+  /*
+    Set opt_super_readonly here because if opt_super_readonly is set
+    in get_option, it will create problem while setting up event scheduler.
+  */
+  set_super_read_only_post_init();
+
+  DBUG_PRINT(&quot;info&quot;, (&quot;Block, listening for incoming connections&quot;));
+
+  (void)MYSQL_SET_STAGE(0 ,__FILE__, __LINE__);
+
+  server_operational_state= SERVER_OPERATING;
+
+  (void) RUN_HOOK(server_state, before_handle_connection, (NULL));
+
+  /*注：设置连接池*/
+#if defined(_WIN32)
+  setup_conn_event_handler_threads();
+#else
+  mysql_mutex_lock(&amp;LOCK_socket_listener_active);
+  // Make it possible for the signal handler to kill the listener.
+  socket_listener_active= true;
+  mysql_mutex_unlock(&amp;LOCK_socket_listener_active);
+
+  if (opt_daemonize)
+    mysqld::runtime::signal_parent(pipe_write_fd,1);
+
+  mysqld_socket_acceptor-&gt;connection_event_loop();
+#endif /* _WIN32 */
+  server_operational_state= SERVER_SHUTTING_DOWN;
+
+  DBUG_PRINT(&quot;info&quot;, (&quot;No longer listening for incoming connections&quot;));
+
+  mysql_audit_notify(MYSQL_AUDIT_SERVER_SHUTDOWN_SHUTDOWN,
+                     MYSQL_AUDIT_SERVER_SHUTDOWN_REASON_SHUTDOWN,
+                     MYSQLD_SUCCESS_EXIT);
+
+  terminate_compress_gtid_table_thread();
+  /*
+    Save set of GTIDs of the last binlog into gtid_executed table
+    on server shutdown.
+  */
+  if (opt_bin_log)
+    if (gtid_state-&gt;save_gtids_of_last_binlog_into_table(false))
+      sql_print_warning(&quot;Failed to save the set of Global Transaction &quot;
+                        &quot;Identifiers of the last binary log into the &quot;
+                        &quot;mysql.gtid_executed table while the server was &quot;
+                        &quot;shutting down. The next server restart will make &quot;
+                        &quot;another attempt to save Global Transaction &quot;
+                        &quot;Identifiers into the table.&quot;);
+
+#ifndef _WIN32
+  mysql_mutex_lock(&amp;LOCK_socket_listener_active);
+  // Notify the signal handler that we have stopped listening for connections.
+  socket_listener_active= false;
+  mysql_cond_broadcast(&amp;COND_socket_listener_active);
+  mysql_mutex_unlock(&amp;LOCK_socket_listener_active);
+#endif // !_WIN32
+
+#ifdef HAVE_PSI_THREAD_INTERFACE
+  /*
+    Disable the main thread instrumentation,
+    to avoid recording events during the shutdown.
+  */
+  PSI_THREAD_CALL(delete_current_thread)();
+#endif
+
+  DBUG_PRINT(&quot;info&quot;, (&quot;Waiting for shutdown proceed&quot;));
+  int ret= 0;
+#ifdef _WIN32
+  if (shutdown_thr_handle.handle)
+    ret= my_thread_join(&amp;shutdown_thr_handle, NULL);
+  shutdown_thr_handle.handle= NULL;
+  if (0 != ret)
+    sql_print_warning(&quot;Could not join shutdown thread. error:%d&quot;, ret);
+#else
+  if (signal_thread_id.thread != 0)
+    ret= my_thread_join(&amp;signal_thread_id, NULL);
+  signal_thread_id.thread= 0;
+  if (0 != ret)
+    sql_print_warning(&quot;Could not join signal_thread. error:%d&quot;, ret);
+#endif
+  /*注：请理退出*/
+  clean_up(1);
+  mysqld_exit(MYSQLD_SUCCESS_EXIT);
+}
+　　
+</code></pre>
+
+<p>好了，第一天，只看这一节代码就够了</p>
+
+</main>
+<h2 class="date">发布日期:2018/03/21</h2>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/mysql%E6%BA%90%E7%A0%81">mysql源码</a> <a href="/categories/c">c</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
+

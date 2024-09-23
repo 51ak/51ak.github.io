@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>8种常用于数据库的数据结构| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">8种常用于数据库的数据结构</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1跳跃表skiplist">1.跳跃表(skipList)</a>
+      <ul>
+        <li><a href="#什么是skiplist">什么是skiplist</a></li>
+        <li><a href="#图示">图示</a></li>
+        <li><a href="#用途">用途：</a></li>
+      </ul>
+    </li>
+    <li><a href="#2哈希索引hash-index">2.哈希索引（Hash Index）</a>
+      <ul>
+        <li><a href="#什么是hash-index">什么是hash Index</a></li>
+        <li><a href="#图示-1">图示</a></li>
+      </ul>
+    </li>
+    <li><a href="#3sstable">3.ssTable</a>
+      <ul>
+        <li><a href="#什么是sstable">什么是ssTable</a></li>
+        <li><a href="#图示-2">图示</a></li>
+      </ul>
+    </li>
+    <li><a href="#4lsm树lsm-tree">4.LSM树(LSM Tree)</a>
+      <ul>
+        <li><a href="#什么是lsm-tree">什么是LSM Tree</a></li>
+        <li><a href="#图示-3">图示</a></li>
+      </ul>
+    </li>
+    <li><a href="#5b树b-tree">5.B树(B tree)</a>
+      <ul>
+        <li><a href="#什么是b-tree">什么是B tree</a></li>
+        <li><a href="#图示-4">图示</a></li>
+      </ul>
+    </li>
+    <li><a href="#6倒排索引inverted-index">6.倒排索引(inverted index)</a>
+      <ul>
+        <li><a href="#什么是inverted-index">什么是inverted index</a></li>
+        <li><a href="#图示-5">图示</a></li>
+      </ul>
+    </li>
+    <li><a href="#7后缀树suffix-tree">7.后缀树(Suffix tree)</a>
+      <ul>
+        <li><a href="#什么是suffix-tree">什么是Suffix tree</a></li>
+        <li><a href="#图示-6">图示</a></li>
+      </ul>
+    </li>
+    <li><a href="#8r树r-tree">8.R树(R Tree)</a>
+      <ul>
+        <li><a href="#什么是rm-tree">什么是RM Tree</a></li>
+        <li><a href="#图示-7">图示</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="1跳跃表skiplist">1.跳跃表(skipList)</h2>
+<h3 id="什么是skiplist">什么是skiplist</h3>
+<ul>
+<li>跳跃表（skiplist）是一种随机化的数据， 由 William Pugh 在论文《Skip lists: a probabilistic alternative to balanced trees》中提出， 跳跃表以有序的方式在层次化的链表中保存元素， 效率和平衡树媲美 —— 查找、删除、添加等操作都可以在对数期望时间下完成， 并且比起平衡树来说， 跳跃表的实现要简单直观得多。</li>
+</ul>
+<h3 id="图示">图示</h3>
+<ul>
+<li><img src="/img/2022auto/2024-01-02-17-17-51.png" alt="1.跳跃表(skipList)"></li>
+</ul>
+<h3 id="用途">用途：</h3>
+<ul>
+<li>Redis</li>
+</ul>
+<h2 id="2哈希索引hash-index">2.哈希索引（Hash Index）</h2>
+<h3 id="什么是hash-index">什么是hash Index</h3>
+<ul>
+<li>基于哈希表实现，只有精确匹配索引所有列的查询才有效。对于每一行数据，存储引擎都会对所有的索引列计算一个哈希码（hash code），哈希码是一个较小的值，并且不同键值的行计算出来的哈希码也不一样。哈希索引将所有的哈希码存储在索引中，同时在哈希表中保存指向每个数据行的指针。</li>
+<li>哈希索引可细分为静态哈希和动态哈希这两大类，</li>
+</ul>
+<h4 id="静态哈希">静态哈希</h4>
+<ul>
+<li>基于散列技术的文件组织使我们能够避免访问索引结构，同时也提供了一种构造索引的方法。在对散列的描述中，使用桶(bucket)来表示能存储一条或多条记录的一个存储单位。通常一个桶就是一个磁盘块，但也可能大于或者小于一个磁盘块。</li>
+<li>散列索引将散列函数作用于搜索码以确定对应的桶， 然后将此搜索码以及对应的指针存入此桶(或溢出桶)中。</li>
+<li>静态散列最大的缺点在于必须在实现系统时选择确定的散列函数。此后若被索引的文件变大或缩小，要想再改变散列函数就不容易了。因为散列函数 h 将搜索码值映射到桶地址的固定集合 B 上：</li>
+<li>根据当前文件大小选择散列函数，这样的选择会使得性能随着数据库的增大而下降。换言之，初始时集合 B 太小，一个桶就会包含许多不同的搜索码值的记录，从而可能发生桶溢出。当文件变大时，性能就会受到影响。</li>
+<li>根据将来某个时刻文件的预计大小选择散列函数。 尽管这样可以避免性能下降，但是初始时会造成相当大的空间浪费。</li>
+</ul>
+<h4 id="动态哈希">动态哈希</h4>
+<ul>
+<li>针对静态散列技术出现的问题，动态散列（dynamic hashing）技术允许散列函数动态改变，以适应数据库增大或缩小的需要</li>
+<li>当数据库增大或缩小时，可扩充散列可以通过桶的分裂或合并来适应数据库大小的变化，这样可以保持空间的使用效率。此外，由于重组每次仅作用于一个桶，因此所带来的性能开销较低。</li>
+</ul>
+<h3 id="图示-1">图示</h3>
+<ul>
+<li><img src="/img/2022auto/2024-01-02-17-24-50.png" alt="哈希索引"></li>
+</ul>
+<h2 id="3sstable">3.ssTable</h2>
+<h3 id="什么是sstable">什么是ssTable</h3>
+<ul>
+<li>SSTable文件是memtable 数据到一定阈值写入文件形成的，由于内存容量总是有限的，将一定量数据写入磁盘可以存放更多数据，所以leveldb相比redis能存放更多数据。既然数据持久化到磁盘，那么还有必然涉及到从磁盘中查询数据，从磁盘中查询数据与从内存中查询数据的效率是不一样的，所以SSTable 数据组织方式必然与众不同，因为必须要提高查询效率，不能给一个key就去遍历所有SSTable。因此本文的另一个目的就是学习SSTable 文件如何组织key-value，提高查询效率。为了提高内存中数据查询效率 我们学习了各种数据结构如红黑树，散列表，那么SSTable是学习如何提高文件查询数据效率的一个很好例子。</li>
+</ul>
+<h3 id="图示-2">图示</h3>
+<ul>
+<li><img src="/img/2022auto/2024-01-02-17-34-54.png" alt="3.ssTable"></li>
+</ul>
+<h2 id="4lsm树lsm-tree">4.LSM树(LSM Tree)</h2>
+<h3 id="什么是lsm-tree">什么是LSM Tree</h3>
+<ul>
+<li>LSM 树，即日志结构合并树（Log-Structured Merge-Tree）是Google BigTable 和 HBase 的基本存储算法，它是传统关系型数据库的 B+ 数的改进。算法的关注重心是 “如何在频繁的数据改动下保持系统读取速度的稳定性”，算法的核心在于尽量保证数据是顺序存储到磁盘上的，并且会有频繁地对数据进行整理，保证其顺序性。而顺序性就可以最大程度保证数据的读取性能稳定。</li>
+<li>一些主流的NoSQL数据库如HBase、Cassandra、LevelDB、RocksDB中，使用日志结构合并树（Log-structured Merge Tree，LSM Tree）来组织数据。</li>
+</ul>
+<h3 id="图示-3">图示</h3>
+<ul>
+<li><img src="/img/2022auto/2024-01-02-17-37-51.png" alt="4.LSM树(LSM Tree)"></li>
+</ul>
+<h2 id="5b树b-tree">5.B树(B tree)</h2>
+<h3 id="什么是b-tree">什么是B tree</h3>
+<ul>
+<li>B树（英语：B-tree）是一种自平衡的树，能够保持数据有序。这种数据结构能够让查找数据、顺序访问、插入数据及删除的动作，都在对数时间内完成。B树，概括来说是一个一般化的二叉查找树（binary search tree），可以拥有多于2个子节点。与自平衡二叉查找树不同，B树为系统大块数据的读写操作做了优化。B树减少定位记录时所经历的中间过程，从而加快存取速度。B树这种数据结构可以用来描述外部存储。这种数据结构常被应用在数据库和文件系统的实现上。</li>
+</ul>
+<h3 id="图示-4">图示</h3>
+<ul>
+<li><img src="/img/2022auto/2024-01-02-17-39-00.png" alt="5.B树(B tree)"></li>
+</ul>
+<h2 id="6倒排索引inverted-index">6.倒排索引(inverted index)</h2>
+<h3 id="什么是inverted-index">什么是inverted index</h3>
+<ul>
+<li>倒排索引源于实际应用中需要根据属性的值来查找记录。这种索引表中的每一项都包括一个属性值和具有该属性值的各记录的地址。由于不是由记录来确定属性值，而是由属性值来确定记录的位置，因而称为倒排索引(inverted index)。带有倒排索引的文件我们称为倒排索引文件，简称倒排文件(inverted file)。</li>
+</ul>
+<h3 id="图示-5">图示</h3>
+<ul>
+<li><img src="/img/2022auto/2024-01-02-17-40-32.png" alt="6.倒排索引(inverted index)"></li>
+</ul>
+<h2 id="7后缀树suffix-tree">7.后缀树(Suffix tree)</h2>
+<h3 id="什么是suffix-tree">什么是Suffix tree</h3>
+<ul>
+<li>后缀树（Suffix tree）是一种数据结构，能快速解决很多关于字符串的问题。后缀树的概念最早由Weiner于1973年提出，既而由McCreight在1976年和Ukkonen在1992年和1995年加以改进完善。</li>
+</ul>
+<h3 id="图示-6">图示</h3>
+<ul>
+<li><img src="/img/2022auto/2024-01-02-17-40-54.png" alt="7.后缀树(Suffix tree)"></li>
+</ul>
+<h2 id="8r树r-tree">8.R树(R Tree)</h2>
+<h3 id="什么是rm-tree">什么是RM Tree</h3>
+<ul>
+<li>R-tree是B-tree向多维空间发展的另一种形式，它将空间对象按范围划分，每个结点都对应一个区域和一个磁盘页，非叶结点的磁盘页中存储其所有子结点的区域范围，非叶结点的 所有子结点的区域都落在它的区域范围之内；叶结点的磁盘页中存储其区域范围之内的所有空间对象的外接矩形。每个结点所能拥有的子结点数目有上、下限，下限 保证对磁盘空间的有效利用，上限保证每个结点对应一个磁盘页，当插入新的结点导致某结点要求的空间大于一个磁盘页时，该结点一分为二(分裂)。R树是一种动态索引结构，即：它的查询可与插入或删除同时进行，而且不需要定期地对树结构进行重新组织。</li>
+</ul>
+<h3 id="图示-7">图示</h3>
+<ul>
+<li><img src="/img/2022auto/2024-01-02-17-42-34.png" alt="8.R树(R Tree)"></li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2024/01/02</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/redis">redis</a> <a href="/categories/%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86">基础原理</a> <a href="/categories/mysql">mysql</a> <a href="/categories/oracle">oracle</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

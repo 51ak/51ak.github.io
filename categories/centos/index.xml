@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>centos on Classic</title>
+    <link>/categories/centos/</link>
+    <description>Recent content in centos on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 12 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/centos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Centos7安装minnconda和常用命令</title>
+      <link>/ops/centos7%E5%AE%89%E8%A3%85minnconda%E5%92%8C%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Thu, 12 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/centos7%E5%AE%89%E8%A3%85minnconda%E5%92%8C%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</guid>
+      <description>下载  官网：https://docs.anaconda.com/miniconda/ 找到下载地方：  这里演示的是x86服务器  mkdir -p ~/miniconda3 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3 rm ~/miniconda3/miniconda.sh 使用 常用命令  验证安装  source ~/miniconda3/bin/activate conda --version  安装包   conda install package_name 例如：conda install numpy
+  安装特定版本的包   conda install package_name=versio 例如：conda install numpy=1.18.1
+  更新包   conda update package_name例如： conda update numpy
+  移除包   conda remove package_name # 例如：conda remove numpy</description>
+    </item>
+    
+    <item>
+      <title>Canal常用配置项整理</title>
+      <link>/ops/canal%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9%E6%95%B4%E7%90%86%E5%92%8C%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86/</link>
+      <pubDate>Sat, 07 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/canal%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE%E9%A1%B9%E6%95%B4%E7%90%86%E5%92%8C%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86/</guid>
+      <description>配置模板 ################################################# # 支持gtid的实例，应该打开了。以前我们默认是false canal.instance.gtidon=true # 源服务器的连接串 canal.instance.master.address=mysql3308.dboop.com:3308 canal.instance.dbUsername=canalreader canal.instance.dbPassword={password} canal.instance.connectionCharset = UTF-8 canal.instance.enableDruid=false # 下面这些项需要留空，有且只有需要丢了数据，重新指定binlog点的时候才配置，别乱写 canal.instance.master.journal.name= canal.instance.master.position= canal.instance.master.timestamp= canal.instance.master.gtid= # 启用或禁用时间序列数据库 (TSDB) 功能，用于存储 Canal 的元数据。 # 这个还挺重要的，强烈建议打开，这个在表结构变更时有用，具体可以看看原理 # 可以不写canal.instance.tsdb.url，默认保存在本地${canal.file.data.dir:../conf}/${canal.instance.destination:}路径下 canal.instance.tsdb.enable=true #canal.instance.tsdb.url=jdbc:mysql://127.0.0.1:3306/canal_tsdb #canal.instance.tsdb.dbUsername=canal #canal.instance.tsdb.dbPassword=canal # 过滤器,perl的正则表达式.用逗号分割，可以写多个 canal.instance.filter.regex=db01\\..*,db02\\..* #canal.instance.filter.black.regex= # 我们往kafka推消息的配置 canal.mq.topic=secCanal3308 canal.mq.partitionsNum=1 #我们用一个区，如果是分区 #canal.mq.partitionsNum=3 #canal.mq.partitionHash=test.table:id^name,.*\\..* # 下面几个如果行里有大json，超过1M有报错时，可以增加maxRequestSize #canal.mq.canalBatchSize = 500 #canal.mq.batchSize = 81920 #canal.mq.partitionsNum=1 #canal.mq.maxRequestSize = 2097152 ################################################# 我们没用到的配置项 # 我们不依赖与canal做这个切换，这里用不着,事实上这几项也确实不好用 # 也有可能是我们没用明白 #canal.instance.standby.address = #canal.instance.standby.journal.name = #canal.instance.standby.position = #canal.instance.standby.timestamp = #canal.</description>
+    </item>
+    
+    <item>
+      <title>Centos7安装cx_Oracle驱动</title>
+      <link>/oracle/centos7%E5%AE%89%E8%A3%85cx_oracle%E9%A9%B1%E5%8A%A8/</link>
+      <pubDate>Tue, 30 Jul 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/oracle/centos7%E5%AE%89%E8%A3%85cx_oracle%E9%A9%B1%E5%8A%A8/</guid>
+      <description>安装说明  一台cents7的机器上没有安装过oracle python脚本需要调用远程oracle数据库，需要cx_oracle数据库  python3.9 /data/script/datasec/test.py #产生报错 .... File &amp;quot;/data/script/datasec/newSQL.py&amp;quot;, line 3, in &amp;lt;module&amp;gt; import cx_Oracle ModuleNotFoundError: No module named &#39;cx_Oracle&#39;  这个cx_Oracle驱动非常不好装 以下是安装cx_Oracle的标准步骤  安装Oracle客户端  https://www.oracle.com/database/technologies/instant-client/linux-x86-64-downloads.html 在这个网站找到合适的版本，我下的是11.2版本，不同的系统下不同的版本 选择好后，需要用户名密码登陆 下载和安装   wget &amp;quot;https://download.oracle.com/otn/linux/instantclient/11204/oracle-instantclient11.2-basic-11.2.0.4.0-1.x86_64.rpm&amp;quot; rpm -ivh oracle-instantclient11.2-basic-11.2.0.4.0-1.x86_64.rpm  安装完后，会有个目录：  ll /usr/lib/oracle/11.2/client64/lib/ total 183252 -rw-r--r-- 1 root root 53865194 Aug 25 2013 libclntsh.so.11.1 -rw-r--r-- 1 root root 7996693 Aug 25 2013 libnnz11.so -rw-r--r-- 1 root root 1973074 Aug 25 2013 libocci.</description>
+    </item>
+    
+    <item>
+      <title>python报错ModuleNotFoundError_No_module_named_lzma</title>
+      <link>/ops/python%E6%8A%A5%E9%94%99modulenotfound_no_module_named_lzma/</link>
+      <pubDate>Thu, 23 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/python%E6%8A%A5%E9%94%99modulenotfound_no_module_named_lzma/</guid>
+      <description>执行Python脚本时报错  File &amp;quot;/usr/local/python3.9/lib/python3.9/site-packages/pooch/processors.py&amp;quot;, line 14, in &amp;lt;module&amp;gt; import lzma File &amp;quot;/usr/local/python3.9/lib/python3.9/lzma.py&amp;quot;, line 27, in &amp;lt;module&amp;gt; from _lzma import * ModuleNotFoundError: No module named &#39;_lzma&#39; 修复方法一：backports  安装 backports.lzma  yum install xz-devel -y yum install python-backports-lzma -y pip3.9 install backports.lzma  修改 lzma.py vim /usr/local/python3.9/lib/python3.9/lzma.py  #修改前 from _lzma import * from _lzma import _encode_filter_properties, _decode_filter_properties #修改后 try: from _lzma import * from _lzma import _encode_filter_properties, _decode_filter_properties except ImportError: from backports.</description>
+    </item>
+    
+    <item>
+      <title>安装百度飞浆PaddleSpeech</title>
+      <link>/book/%E5%AE%89%E8%A3%85%E7%99%BE%E5%BA%A6%E9%A3%9E%E6%B5%86paddlespeech/</link>
+      <pubDate>Wed, 22 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/book/%E5%AE%89%E8%A3%85%E7%99%BE%E5%BA%A6%E9%A3%9E%E6%B5%86paddlespeech/</guid>
+      <description>安装  pip3.9 install paddlepaddle -i https://mirror.baidu.com/pypi/simple pip3.9 install pytest-runner -i https://mirror.baidu.com/pypi/simple pip3.9 install paddlespeech -i https://mirror.baidu.com/pypi/simple 报错1:ImportError: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.22&#39; not found  解决：   find / -name &amp;quot;libstdc++.so.6*&amp;quot; #找到一个路径 export LD_LIBRARY_PATH=/root/anaconda3/pkgs/libstdcxx-ng-8.2.0-hdf63c60_1/lib/:$LD_LIBRARY_PATH 报错2: </description>
+    </item>
+    
+    <item>
+      <title>Centos7安装php8.1和composer</title>
+      <link>/ops/centos7%E5%AE%89%E8%A3%85php8.1%E5%92%8Ccomposer/</link>
+      <pubDate>Thu, 16 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/centos7%E5%AE%89%E8%A3%85php8.1%E5%92%8Ccomposer/</guid>
+      <description>设置yum源  yum -y install https://mirrors.tuna.tsinghua.edu.cn/remi/enterprise/remi-release-7.rpm yum -y install yum-utils 安装php8.1  yum -y install php81-php-cli php81-php-common php81-php-devel php81-php-embedded php81-php-fpm php81-php-gd php81-php-mbstring php81-php-mysqlnd php81-php-pdo php81-php-opcache php81-php-xml php81-php-soap php81-php-posix 查看是否安装成功及php配置文件以及对应目录 rpm -qa |grep php81 pm -ql php81-php-fpm 系统配置  ln -sf /opt/remi/php81/root/usr/bin/php* /usr/bin 查看PHP版本 php -v 安装：composer php -r &amp;quot;copy(&#39;https://install.phpcomposer.com/installer&#39;, &#39;composer-setup.php&#39;);&amp;quot; php composer-setup.php cp composer.phar /usr/bin/composer cd /www/wwwroot/www.top580.com/php composer install composer update </description>
+    </item>
+    
+    <item>
+      <title>安装Baichuan2百川智能大模型</title>
+      <link>/ops/%E5%AE%89%E8%A3%85baichuan2%E7%99%BE%E5%B7%9D%E6%99%BA%E8%83%BD%E5%A4%A7%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Mon, 25 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%AE%89%E8%A3%85baichuan2%E7%99%BE%E5%B7%9D%E6%99%BA%E8%83%BD%E5%A4%A7%E6%A8%A1%E5%9E%8B/</guid>
+      <description>下载模型和预安装 git clone https://github.com/baichuan-inc/Baichuan2 python3.9 -V /usr/local/python3.9/bin/python3.9 -m pip install --upgrade pip python3.9 -m venv baichuan2 source baichuan2/bin/activate python -V python3.9 -m pip install --upgrade pip pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/ vim cli_demo.py 运行和报错处理  执行python3.9 cli_demo.py 
+ 报错:urllib3 v2.0 only supports OpenSSL 1.1.1+ ImportError: urllib3 v2.0 only supports OpenSSL 1.1.1+, currently the &#39;ssl&#39; module is compiled with &#39;OpenSSL 1.0.2k-fips 26 Jan 2017&#39;. See: https://github.com/urllib3/urllib3/issues/2168 排查：  进python环境  python3.</description>
+    </item>
+    
+    <item>
+      <title>docker安装和常用命令</title>
+      <link>/ops/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</link>
+      <pubDate>Sun, 27 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</guid>
+      <description>安装  centos7 安装  安装需要的软件包  yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的  yum install -y yum-utils device-mapper-persistent-data lvm2 设置yum源 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo 可以查看所有仓库中所有docker版本，并选择特定版本安装  yum list docker-ce --showduplicates | sort -r Loading mirror speeds from cached hostfile Loaded plugins: fastestmirror docker-ce.x86_64 3:24.0.5-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.4-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.3-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.2-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.1-1.el7 docker-ce-stable docker-ce.x86_64 3:24.0.0-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.6-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.5-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.4-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.3-1.el7 docker-ce-stable docker-ce.x86_64 3:23.0.2-1.el7 docker-ce-stable docker-ce.</description>
+    </item>
+    
+    <item>
+      <title>Linux服务器如何科学的访问国外的google,git,pypi等站点</title>
+      <link>/ops/linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A6%82%E4%BD%95%E7%A7%91%E5%AD%A6%E7%9A%84%E8%AE%BF%E9%97%AE%E5%9B%BD%E5%A4%96%E7%9A%84googlegitpypi%E7%AD%89%E7%AB%99%E7%82%B9/</link>
+      <pubDate>Wed, 19 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A6%82%E4%BD%95%E7%A7%91%E5%AD%A6%E7%9A%84%E8%AE%BF%E9%97%AE%E5%9B%BD%E5%A4%96%E7%9A%84googlegitpypi%E7%AD%89%E7%AB%99%E7%82%B9/</guid>
+      <description>目的  当我们在Linux服务器上配置环境时（需要pip yum git wget go get ）经常会遇到外网资源受限 各种依赖关系非常乱，版本对不上，资源下不了。 国内的镜像站版本不全等等 非常影响工作效率和成果。 此时需要用科学的方式将这些开发资源快速配置好 以下是步骤 安装配置本地v2ray 需要使用时启v2ray,source代理 用完停v2ray,恢复正常环境  下载运行脚本 bash &amp;lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+#!/usr/bin/env bash # shellcheck disable=SC2268 # The files installed by the script conform to the Filesystem Hierarchy Standard: # https://wiki.linuxfoundation.org/lsb/fhs # The URL of the script project is: # https://github.com/v2fly/fhs-install-v2ray # The URL of the script is: # https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh # If the script executes incorrectly, go to: # https://github.</description>
+    </item>
+    
+    <item>
+      <title>安装MiniGPT-4</title>
+      <link>/ops/%E5%AE%89%E8%A3%85minigpt-4/</link>
+      <pubDate>Tue, 18 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%AE%89%E8%A3%85minigpt-4/</guid>
+      <description>克隆项目 # 安装 git-lfs curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | sudo bash yum install git-lfs git clone https://github.com/Vision-CAIR/MiniGPT-4.git git clone https://huggingface.co/lmsys/vicuna-13b-delta-v0 mv vicuna-13b-delta-v0 /data/MiniGPT-4/vicuna_weights 安装补丁 cd /data/MiniGPT-4/ cd ckp/ #https://drive.google.com/file/d/1a4zLvaiDBr-36pasffmgpvH5P7CKmpze/view #https://drive.google.com/u/0/uc?id=1a4zLvaiDBr-36pasffmgpvH5P7CKmpze&amp;amp;export=download wget https://doc-0s-08-docs.googleusercontent.com/docs/securesc/dbq4d7c2ha9354fqj5612le3gl157ov5/pcnbepjp7icjk54rrfgio602v738i398/1681803150000/09448752369347632296/09178445193473466964/1a4zLvaiDBr-36pasffmgpvH5P7CKmpze?e=download&amp;amp;ax=ALy03A4aDltm3f1TddEAJesIj7YsB_KKlm56C61-M72rzjuPpluLCR3UOUv28FXMkNc3q5s ## 修改配置 vim /data/MiniGPT-4/eval_configs/minigpt4_eval.yaml ckpt: &#39;/data/MiniGPT-4/ckp/&#39; vim /data/MiniGPT-4/minigpt4/configs/models/minigpt4.yaml llama_model: &amp;quot;/data/MiniGPT-4/vicuna_weights/&amp;quot; 安装依赖 pip3.9 install omegaconf #1681803684 yum install xz-devel -y yum install python-backports-lzma -y pip3.9 install backports.lzma yum install python-backports-lzma -y yum install -y xz-devel mesa-libGL python-backports-lzma vim /usr/local/python3.9/lib/python3.9/lzma.py pip3.9 install iopath pip3.</description>
+    </item>
+    
+    <item>
+      <title>Centos7安装nvidia显卡驱动</title>
+      <link>/ops/centos7%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</link>
+      <pubDate>Mon, 17 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/centos7%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</guid>
+      <description>1.安装依赖
+yum -y install epel-release yum -y install gcc binutils wget yum -y install kernel-devel 2.禁用Nouveau
+检查是否开启Nouveau lsmod | grep nouveau 注意：无信息输出表示已被禁用无需在操作以下步骤； echo -e &amp;quot;blacklist nouveau\noptions nouveau modeset=0&amp;quot; &amp;gt; /etc/modprobe.d/blacklist.conf mv /boot/initramfs-$(uname -r).img /boot/initramfs-$(uname -r).img.bak dracut /boot/initramfs-$(uname -r).img $(uname -r) reboot lsmod | grep nouveau 注意：无任何信息输出表示禁用成功； 3.检查驱动
+rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm yum -y install https://www.elrepo.org/elrepo-release-7.0-4.el7.elrepo.noarch.rpm yum -y install nvidia-detect nvidia-detect -v # 本来应该显示 This device requires the current.... # 结果显卡太老，显示 Probing for supported NVIDIA devices.</description>
+    </item>
+    
+    <item>
+      <title>Sysbench做压力测试</title>
+      <link>/ops/sysbench%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/</link>
+      <pubDate>Sat, 12 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/sysbench%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/</guid>
+      <description>0.环境 1.安装sysbench  curl -s https://packagecloud.io/install/repositories/akopytov/sysbench/script.rpm.sh | sudo bash yum -y install sysbench 2.执行压测 10.10.0.1 上执行 sysbench /usr/share/sysbench/oltp_read_write.lua --tables=5 --table_size=2000000 --mysql-user=dba --mysql-password******* --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest prepare sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest --tables=5 --table_size=2000000 --threads=300 --time=120 --report-interval=60 run &amp;gt;&amp;gt; /root/sb/proxy300.log sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest --tables=5 --table_size=2000000 --threads=20 --time=120 --report-interval=10 run sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.0.0.1 --mysql-port=3308 --mysql-db=dbatest --tables=5 --table_size=2000000 --threads=20 --time=120 --report-interval=10 run sysbench /usr/share/sysbench/oltp_read_write.lua --mysql-user=dba --mysql-password=****** --mysql-host=127.</description>
+    </item>
+    
+    <item>
+      <title>MacOS里的grep,sed,awk等命令不好用怎么办</title>
+      <link>/ops/macos%E9%87%8C%E7%9A%84grepawksed%E7%AD%89%E5%91%BD%E4%BB%A4%E4%B8%8D%E5%A5%BD%E7%94%A8%E6%80%8E%E4%B9%88%E5%8A%9E/</link>
+      <pubDate>Tue, 27 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/macos%E9%87%8C%E7%9A%84grepawksed%E7%AD%89%E5%91%BD%E4%BB%A4%E4%B8%8D%E5%A5%BD%E7%94%A8%E6%80%8E%E4%B9%88%E5%8A%9E/</guid>
+      <description>问题  工作用的电脑是mac 经常发现linux上常用的sed,grep命令用不起来，各种报错 后来查了一下发现mac里的sed和linux的不是一个版本的软件   Mac OS X uses BSD sed and not GNU sed. When you use a GNU sed extension with Mac OS X sed, you get different results, or failures. Classically, sed does not support numeric offsets, forwards or backwards. You&amp;rsquo;ll need to revise your script to work on Mac OS X.
+ 解决 使用以下命令安装GNU命令套件： brew install coreutils 使用以下命令安装gnu-sed： brew install gnu-sed --with-default-names 以上命令安装的gnu套件的命令都是带有g前缀的  gcat &amp;ndash;&amp;gt; linux里的cat gsed &amp;ndash;&amp;gt; linux里的sed ggrep &amp;ndash;&amp;gt; linux里的grep gawk &amp;ndash;&amp;gt; linux里的awk &amp;hellip;  如果想直接代替，不输入g前缀则 vim .</description>
+    </item>
+    
+    <item>
+      <title>git常用命令整理</title>
+      <link>/ops/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</link>
+      <pubDate>Thu, 25 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%95%B4%E7%90%86/</guid>
+      <description>重新初始化，删掉历史版本记录  1、创建并切换到lastest_branch分支 git checkout --orphan latest_branch 2、添加所有文件 git add -A 3、提交更改 git commit -am &amp;quot;删除历史版本记录，初始化仓库&amp;quot; 4、删除分支 git branch -D master 5、将当前分支重命名 git branch -m master 6、强制更新存储库 git push -f origin master 新建 Git 仓库 # 把当前目录变更成一个 Git 仓库 $ git init # 新建一个目录，将其初始化为 Git 仓库 $ git init [project-name] # 克隆远程仓库 $ git clone [url] Git 配置信息 # 显示当前的 Git 配置 $ git config --list # 编辑 Git 配置文件 $ git config -e [--global] # 设置提交代码时的用户信息 $ git config [--global] user.</description>
+    </item>
+    
+    <item>
+      <title>Linux服务器共享目录Centos7</title>
+      <link>/ops/linux%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/</link>
+      <pubDate>Sun, 21 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/linux%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/</guid>
+      <description>0.环境 服务器：
+ 10.10.0.1 源机器 10.10.0.2 目标机器1 10.10.0.3 目标机器2 目标： 将10.10.0.1机器上的 /public/downloadnew 文件夹共享给10.10.0.2/3两台机器  三台机器共享写入 /data/www/dboop/static/download目录
+1.安装nfs yum -y install nfs-utils rpcbind # 开机启动 systemctl enable rpcbind.service systemctl enable nfs-server.service # 重启服务 systemctl restart rpcbind.service systemctl restart nfs-server.service 2.共享设置 10.10.0.1 上执行 mkdir /public/downloadnew ln -s /public/downloadnew /data/www/dboop/static/download -f vim /etc/exports #输入 /public 10.10.0.2(insecure,rw,sync,no_root_squash) 10.10.0.3(insecure,rw,sync,no_root_squash) exportfs -rv 10.10.0.2/3 上执行 vim /etc/fstab #输入 10.10.0.1:/public /mnt/public nfs defaults 0 0 mkdir /mnt/public mount -a df -h ln -s /mnt/public/downloadnew /data/www/dboop/static/download -f 到此 10.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SQL Server 2005自动化删除表分区代码</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="我们的服务器的数据已经有了800g，并且每天进数据大概有120w条记录（数据空间大概为7g），而服务器现在已经没有太多的磁盘空间了，面对这样的问题，一般都是使用交换表分区来快速删除数据，并使用之前的分区来存放新进的数据，如果每次都人工的话就太麻烦了，所以我对这个如何进行交换分区删除数据来清理磁盘空间做成了自动化。分析与设计思路<br/>分区特点：分区使用了自增id作为分区字段；分区的索引进行存储SQL Server 2005自动化删除表分区代码" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a href="../sqlserver/l_1_1.htm" class="hover"　title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../sqlserverzhishi/l_2_1.htm" title="SQLServer基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../sqlserverha/l_3_1.htm" title="SQLServer高可用性和HA">高可用性和HA</a>|</li><li><a  href="../sqlserveryouhua/l_4_1.htm" title="SQLServer性能与优化">性能与优化</a>|</li><li><a  href="../sqlserverguzhang/l_5_1.htm" title="SQLServer故障与解决">故障与解决</a>|</li><li><a  href="../sqlserverbi/l_6_1.htm" title="SQLServer的BI应用">BI应用</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../sqlserver/l_1_1.htm">SQLServer</a>&nbsp;&gt;&nbsp;<a href="../sqlserverzhishi/l_2_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>SQL Server 2005自动化删除表分区代码</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   我们的服务器的数据已经有了800G，并且每天进数据大概有120W条记录（数据空间大概为7G），而服务器现在已经没有太多的磁盘空间了，面对这样的问题，一般都是使用交换表分区来快速删除数据，并使用之前的分区来存放新进的数据，如果每次都人工的话就太麻烦了，所以我对这个如何进行交换分区删除数据来清理磁盘空间做成了自动化。分析与设计思路<br />分区特点：分区使用了自增ID作为分区字段；分区的索引进行存储位置对齐；<br />设计步骤1：表分区已经确定了各个分区值，我们就用一个表保存可能存在的分区值，并插入到表中，当达到预警值（Change_Value）时，我们就执行交换分区；<br />设计步骤2：使用一个存储过程来完成交换分区；<br />1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;创建一个临时表<br />2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;交换分区数据<br />3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;删除临时表<br />4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;修改分区方案<br />5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;修改分区函数<br />设计步骤3：使用作业定时执行存储过程，实现自动化；<br />&nbsp;<br />参考脚本<br />下面是创建表的脚本和执行交换分区的存储过程，希望对你有帮助。<br />--创建表<br />CREATE&nbsp;TABLE&nbsp;[dbo].[PartitionManage](<br />&nbsp;&nbsp;&nbsp; [Id] [int]&nbsp;IDENTITY(1,1)&nbsp;NOT&nbsp;NULL,<br />&nbsp;&nbsp;&nbsp; [Change_Value] [int]&nbsp;NULL,<br />&nbsp;&nbsp;&nbsp; [Part_Value] [int]&nbsp;NULL,<br />&nbsp;&nbsp;&nbsp; [IsDone] [bit]&nbsp;NULL,<br />&nbsp;CONSTRAINT&nbsp;[PK_PartitionManage]&nbsp;PRIMARY&nbsp;KEY&nbsp;CLUSTERED<br />(<br />&nbsp;&nbsp;&nbsp; [Id]&nbsp;ASC<br />)WITH&nbsp;(IGNORE_DUP_KEY&nbsp;=&nbsp;OFF)&nbsp;ON&nbsp;[PRIMARY]<br />)&nbsp;ON&nbsp;[PRIMARY]<br />&nbsp;<br />--插入数据<br />declare&nbsp;@i&nbsp;int<br />declare&nbsp;@maxValue&nbsp;int<br />set&nbsp;@i=10<br />set&nbsp;@maxValue=100<br />while&nbsp;@i&nbsp;&lt;=&nbsp;@maxValue<br />begin<br />&nbsp;&nbsp;&nbsp;&nbsp;insert&nbsp;into&nbsp;dbo.PartitionManage&nbsp;values(@i-4,@i,0)<br />&nbsp;&nbsp;&nbsp;&nbsp;set&nbsp;@i&nbsp;=&nbsp;@i&nbsp;+&nbsp;10<br />end<br />&nbsp;<br />-- =============================================<br />-- Author:&nbsp;&nbsp;&nbsp; &lt;Viajar&gt;<br />-- Create date: &lt;2011.02.22&gt;<br />-- Description:&nbsp;&nbsp; &lt;分区管理&gt;<br />-- =============================================<br />CREATE&nbsp;PROCEDURE&nbsp;[dbo].[sp_PartitionManage]<br />AS<br />BEGIN<br />&nbsp;&nbsp;&nbsp;&nbsp;DECLARE&nbsp;@Max_value&nbsp;INT<br />&nbsp;&nbsp;&nbsp;&nbsp;DECLARE&nbsp;@Change_value&nbsp;INT<br />&nbsp;&nbsp;&nbsp;&nbsp;DECLARE&nbsp;@PARTITION_value&nbsp;INT<br />&nbsp;&nbsp;&nbsp;&nbsp;SELECT&nbsp;@Max_value&nbsp;=&nbsp;MAX(Id)&nbsp;FROM&nbsp;[dbo].[Archive]<br />&nbsp;&nbsp;&nbsp;&nbsp;SELECT&nbsp;TOP&nbsp;1 @Change_value&nbsp;=&nbsp;Change_Value,@PARTITION_value=&nbsp;Part_Value<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FROM&nbsp;[dbo].[PartitionManage]&nbsp;WHERE&nbsp;IsDone&nbsp;=&nbsp;0<br />&nbsp;&nbsp;&nbsp;&nbsp;IF(@Change_value&nbsp;&lt;=&nbsp;@Max_value)--判断是否需要整理分区<br />&nbsp;&nbsp;&nbsp;&nbsp;BEGIN<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--创建一个临时表<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DECLARE&nbsp;@sql&nbsp;VARCHAR(MAX)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET&nbsp;@sql&nbsp;=&nbsp;'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N''[dbo].[Temp_Archive]'') AND type in (N''U''))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BEGIN<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DROP TABLE [dbo].[Temp_Archive]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EXEC&nbsp;(@sql)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET&nbsp;@sql&nbsp;=&nbsp;'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N''[dbo].[Temp_Archive]'') AND type in (N''U''))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BEGIN<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CREATE TABLE [dbo].[Temp_Archive](<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Id] [int] IDENTITY(1,1) NOT FOR REPLICATION NOT NULL,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [SiteId] [int] NULL,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Title] [nvarchar](4000) NULL,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Author] [nvarchar](4000) NULL,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Content] [nvarchar](max) NULL,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;CONSTRAINT [PK_Temp_Archive] PRIMARY KEY CLUSTERED<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Id] ASC<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )WITH( PAD_INDEX = ON, FILLFACTOR = 100, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [Sch_Archive_Id](Id)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) ON [Sch_Archive_Id]([Id])<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EXEC&nbsp;(@sql)<br />&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--交换分区数据<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DECLARE&nbsp;@Min_Id&nbsp;INT<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DECLARE&nbsp;@PARTITION_num&nbsp;INT<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SELECT&nbsp;@Min_Id&nbsp;=&nbsp;MIN(Id)&nbsp;FROM&nbsp;[dbo].[Archive]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SELECT&nbsp;@PARTITION_num&nbsp;=&nbsp;[Archives].$PARTITION.Fun_Archive_Id(@Min_Id);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ALTER&nbsp;TABLE&nbsp;[dbo].[Archive] SWITCH&nbsp;PARTITION&nbsp;@PARTITION_num&nbsp;TO[dbo].[Temp_Archive]&nbsp;PARTITION&nbsp;@PARTITION_num<br />&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--删除临时表<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DROP&nbsp;TABLE&nbsp;[dbo].[Temp_Archive]<br />&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--修改分区方案<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DECLARE&nbsp;@PARTITION_string&nbsp;varchar(50)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET&nbsp;@PARTITION_string&nbsp;=&nbsp;'FG_Archive_Id_'&nbsp;+&nbsp;RIGHT('0'&nbsp;+CONVERT(NVARCHAR,@PARTITION_num),2)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET&nbsp;@sql&nbsp;=&nbsp;'ALTER PARTITION SCHEME [Sch_Archive_Id] NEXT USED ['+@PARTITION_string+']'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EXEC&nbsp;(@sql)<br />&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--修改分区函数<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SET&nbsp;@sql&nbsp;=&nbsp;'ALTER PARTITION FUNCTION Fun_Archive_Id() SPLIT RANGE ('+CONVERT(VARCHAR(50),@PARTITION_value)+')'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EXEC&nbsp;(@sql)<br />&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--更新表<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UPDATE&nbsp;[dbo].[PartitionManage]&nbsp;SET&nbsp;IsDone&nbsp;=&nbsp;1&nbsp;WHERE&nbsp;Change_Value&nbsp;=@Change_value<br />&nbsp;&nbsp;&nbsp;&nbsp;END<br />END<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

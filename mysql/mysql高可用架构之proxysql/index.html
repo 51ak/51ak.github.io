@@ -1,0 +1,308 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL高可用组件之ProxySQL| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL高可用组件之ProxySQL</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#proxysql是什么">ProxySQL是什么</a>
+      <ul>
+        <li><a href="#介绍">介绍</a></li>
+      </ul>
+    </li>
+    <li><a href="#proxysql初始化">ProxySQL初始化</a>
+      <ul>
+        <li><a href="#安装">安装</a></li>
+        <li><a href="#检查安装情况">检查安装情况</a></li>
+        <li><a href="#配置proxysqlcnf">配置proxysql.cnf</a></li>
+        <li><a href="#启动">启动</a></li>
+      </ul>
+    </li>
+    <li><a href="#设置proxy">设置proxy</a>
+      <ul>
+        <li><a href="#准备mysql节点">准备MySQL节点</a></li>
+        <li><a href="#维护proxy中的节点信息">维护proxy中的节点信息</a></li>
+        <li><a href="#验证proxy">验证proxy</a></li>
+      </ul>
+    </li>
+    <li><a href="#高可用架构">高可用架构</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="proxysql是什么">ProxySQL是什么</h2>
+<h3 id="介绍">介绍</h3>
+<ul>
+<li>MySQL一款开源的中间件的产品</li>
+<li>支持读写分离</li>
+<li>支持 Query 路由功能</li>
+<li>支持动态指定某个SQL进行缓存</li>
+<li>支持动态加载（无需重启ProxySQL服务）</li>
+<li>故障切换和SQL过滤功能。</li>
+</ul>
+<h2 id="proxysql初始化">ProxySQL初始化</h2>
+<h3 id="安装">安装</h3>
+<pre><code>wget https://github.com/sysown/proxysql/releases/download/v2.4.4/proxysql-2.4.4-1-centos7.x86_64.rpm
+rpm -ivh proxysql-2.4.4-1-centos7.x86_64.rpm 
+产生报错：
+  warning: proxysql-2.4.4-1-centos7.x86_64.rpm: Header V4 RSA/SHA512 Signature, key ID 8217c97e: NOKEY
+  error: Failed dependencies:
+          gnutls is needed by proxysql-2.4.4-1.x86_64
+          libgnutls.so.28()(64bit) is needed by proxysql-2.4.4-1.x86_64
+          libgnutls.so.28(GNUTLS_1_4)(64bit) is needed by proxysql-2.4.4-1.x86_64
+          libgnutls.so.28(GNUTLS_3_0_0)(64bit) is needed by proxysql-2.4.4-1.x86_64
+          libgnutls.so.28(GNUTLS_3_1_0)(64bit) is needed by proxysql-2.4.4-1.x86_64
+执行：
+ yum install -y gnutls
+
+rpm -ivh proxysql-2.4.4-1-centos7.x86_64.rpm 
+
+</code></pre><h3 id="检查安装情况">检查安装情况</h3>
+<pre><code> rpm -ql proxysql
+/etc/logrotate.d/proxysql
+/etc/proxysql.cnf
+/etc/systemd/system/proxysql-initial.service
+/etc/systemd/system/proxysql.service
+/usr/bin/proxysql
+/usr/share/proxysql/tools/proxysql_galera_checker.sh
+/usr/share/proxysql/tools/proxysql_galera_writer.pl
+
+</code></pre><h3 id="配置proxysqlcnf">配置proxysql.cnf</h3>
+<pre><code class="language-#" data-lang="#">    admin_credentials=&quot;admin:Proxy2022&quot;
+    mysql_ifaces=&quot;0.0.0.0:8032&quot;
+    interfaces=&quot;0.0.0.0:3347&quot;
+    monitor_password=&quot;Monitor2022&quot;
+
+
+    vim /etc/systemd/system/proxysql.service
+  #修改以下项
+  PIDFile=/data/proxysql/proxysql.pid
+
+</code></pre><h3 id="启动">启动</h3>
+<pre><code>systemctl start proxysql.service
+
+ps -ef | grep proxysql
+netstat -anlp | grep proxysql
+
+#  systemctl restart proxysql.service
+</code></pre><h2 id="设置proxy">设置proxy</h2>
+<h3 id="准备mysql节点">准备MySQL节点</h3>
+<ul>
+<li>mysql58(主)</li>
+<li>mysql59(从)</li>
+<li>mysql60(从)</li>
+</ul>
+<pre><code>#mysql58上执行
+create user 'proxysql'@'%' identified  with  mysql_native_password  by 'pxoxy123456';
+grant all on *.* to 'proxysql'@'%' ;
+
+create user 'monitor'@'%' identified with  mysql_native_password   by 'Monitor2022';
+grant select on *.* to 'monitor'@'%' ;
+ 
+
+</code></pre><h3 id="维护proxy中的节点信息">维护proxy中的节点信息</h3>
+<pre><code> mysql -uadmin -pProxy2022 -h127.0.0.1 -P8032
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 1
+Server version: 5.5.30 (ProxySQL Admin Module)
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql&gt; show databases;
++-----+---------------+----------------------------------+
+| seq | name          | file                             |
++-----+---------------+----------------------------------+
+| 0   | main          |                                  |
+| 2   | disk          | /data/proxysql/proxysql.db       |
+| 3   | stats         |                                  |
+| 4   | monitor       |                                  |
+| 5   | stats_history | /data/proxysql/proxysql_stats.db |
++-----+---------------+----------------------------------+
+5 rows in set (0.00 sec)
+
+
+insert into mysql_servers(hostgroup_id,hostname,port,weight,comment) values
+(33601,'192.168.0.58',3360,1,'Master')
+,(33602,'192.168.0.59',3360,1,'Slave1')
+,(33602,'192.168.0.60',3360,1,'Slave2');
+
+ insert into mysql_users(username,password,default_hostgroup,transaction_persistent) values('proxysql','proxysql.123456',10,1);
+
+
+
+
+insert into mysql_query_rules(rule_id,proxy_port,active,match_digest,destination_hostgroup,apply) values
+(33601,3360,1,'',33601,1),
+(33602,3360,1,'^select.*',33602,1);
+
+
+load mysql servers to run;
+save mysql servers to disk;
+
+
+load mysql users to run;
+save mysql users to disk;
+
+
+load mysql users to run;
+save mysql users to disk;
+
+
+load mysql query rules  to run;
+save mysql query rules  to disk;
+
+
+</code></pre><h3 id="验证proxy">验证proxy</h3>
+<pre><code>mysql  -h 127.0.0.1 -P 3360 -uproxysql -p 
+
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 2
+Server version: 5.5.30 (ProxySQL)
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+select @@server_id ;
+</code></pre><h2 id="高可用架构">高可用架构</h2>
+<ul>
+<li>一般proxySQL在高可用架构中的位置
+<img src="/img/2022auto/2022-10-25-18-15-41.png" alt="常见的高可用架构"></li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2022/10/25</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/mysql%E5%A4%8D%E5%88%B6">mysql复制</a> <a href="/categories/%E9%AB%98%E5%8F%AF%E7%94%A8">高可用</a> <a href="/categories/proxy">proxy</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

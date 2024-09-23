@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>专题报道：《mysql复制》 - 数据库管理员DBA学习网站 </title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a  href="../mysql/l_13_1.htm" title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li><li><a href="../zt/l_index_1.htm" class="hover">网站专题</a></li></ul><ul class="sub"><li><a  href="../zt/l_sqlserver_1.htm" title="SQLServer专题">SQLServer</a>|</li><li><a  href="../zt/l_Oracle_1.htm" title="Oracle专题">Oracle</a>|</li><li><a  href="../zt/l_mysql_1.htm" title="MySQL专题"><span class="zc_666">MySQL</span></a>|</li><li><a  href="../zt/l_othersql_1.htm" title="其他数据库专题">其他数据库</a>|</li><li><a  href="../zt/l_yunwei_1.htm" title="系统运维专题">系统运维</a>|</li><li><a  href="../zt/l_kaoshi_1.htm" title="DBA考试专题">DBA考试</a>|</li><li><a  href="../zt/l_dbahuati_1.htm" title="DBA话题专题">DBA话题</a>|</li></ul></div></div>
+<br class="clearfloat" />
+</div>
+ 
+ 
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../zt/l_index_1.htm">网站专题</a>&nbsp;&gt;&nbsp; <a href="../zt/l_mysql_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="zt_13_1.htm">mysql复制</a></div>
+  <div id="sidebar1">
+
+  <div class='div_tab_tab'>
+	<div id="div_login_title">580top数据库:</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+ &nbsp;</div>    
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+   
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+    <div class="d9"><p>&nbsp;</p></div>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+
+
+    <div class="d3"><p>&nbsp;</p></div>
+    
+    <p>&nbsp;</p>
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  
+
+        <div id="contentdiv"> 
+            <div id="news_list">
+                   <div>
+                              <div class="d2"><h1>专题报道：《mysql复制》</h1><span>每个事务更新数据完成之前，master在二日志记录这些改变。MySQL将事务串行的写入二进制日志，即使事务中的语句都是交叉执行的。在事件写入二进制日志完成后，master通知存储引擎提交事务。下一步就是slave将master的binary log拷贝到它自己的中继日志。首先，slave开始一个工作线程——I/O线程。I/O线程在master上打开一个普通的连接，然后开始binlog dump process。Binlog dump process从master的二进制日志中读取事件，如果已经跟上master，它会睡眠并等待master产生新的事件。I/O线程将这些事件写入中继日志。</span></div><UL><LI class=list_title><SPAN>2009/10/11 22:35:55</SPAN><a href="../200910/dba_1332.htm"  title="Mysql中的alter table操作原理 ">Mysql中的alter table操作原理 </a>  <LI   class="text">alter table运行时会对原表进行临时复制，在副本上进行更改，然后删除原表，再对新表进行重命名。在执行alter table时，其它用户可以阅读原表，但是对表的更新和修改的操作将被延迟，直到新表生成为止。新表生成后，这些更新和修改信息会自动转移到新表上。注意，如果您在执行alter table时使用除了rename以外的选项，则mysql会创建一个临时表。即使数据并不需要进行复制（例如当您更<a href="../200910/dba_1332.htm" title="Mysql中的alter table操作原理 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="13" title="《mysql复制》专题">mysql复制</a></SPAN><SPAN>作者：Incessant</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2009/10/29 12:05:07</SPAN><a href="../200910/dba_1270.htm"  title="mysql主从热备配置(含innodb)终极版 ">mysql主从热备配置(含innodb)终极版 </a>  <LI   class="text">mysql主从热备有2种配置方式,备份某些库或者忽略备份某些库,建议选择后者master机器以下是代码片段：vimy.cnf,添加下面的 log-bin server-id=1 #sql-bin-update-same binlog-do-db=mysql//备份的数据库名,可以添加多个或者slave机器以下是代码片段：log-bin server-id=2 #sql-bin-update-sam<a href="../200910/dba_1270.htm" title="mysql主从热备配置(含innodb)终极版 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="13" title="《mysql复制》专题">mysql复制</a></SPAN><SPAN>作者：sbear</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2009/11/30 9:10:43</SPAN><a href="../200911/dba_1234.htm"  title="truncate table 不能复制到从库 ">truncate table 不能复制到从库 </a>  <LI   class="text"> bug说明： 该bug在是mysql5.1.x中存在的一个问题。重现方法： 利用 5.1.31-enterprise-gpl-pro-log (or 5.1.31-sp1-enterprise) 搭建master/slave结构同步正常进行（确认同步进行）注意参数：事务隔级为： read-committed日值格式为： mixed然后在主库建表：create database wubx;crea<a href="../200911/dba_1234.htm" title="truncate table 不能复制到从库 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="13" title="《mysql复制》专题">mysql复制</a></SPAN><SPAN>作者：wubx</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2010/1/24 16:46:57</SPAN><a href="../201001/dba_1207.htm"  title="逻辑连接层与物理连接层 ">逻辑连接层与物理连接层 </a>  <LI   class="text"> 为了更好地利用mysql的廉价复制(slave)功能, 在datareport的数据库连接层中增加了逻辑连接层, 原来是直接指定物理边接层. 当然数据库连接池还是在物理连接层实现的, 逻辑连接层则可以指定一种关系, 然后根据关系来获得指定的数据库物理连接, 当应用使用逻辑连接层来访问时, 其实是自动根据关系挑选一个物理连接. 还是举一个例子来说明一下, 比如你有一台主mysql库(master)<a href="../201001/dba_1207.htm" title="逻辑连接层与物理连接层 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="13" title="《mysql复制》专题">mysql复制</a></SPAN><SPAN>作者：anysql</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2010/3/26 14:23:50</SPAN><a href="../201003/dba_1186.htm"  title="php获取网卡MAC地址类 ">php获取网卡MAC地址类 </a>  <LI   class="text">忽然想到，判断同机登陆的问题。记录mac是个好办法，顺便查了这个php方法，备注以便以后使用。实现很简单，就是分别调用系统命令，返回到数组中。运行代码查看代码复制代码打印关于&lt;?php classgetmacaddr { var$return_array=array();//返回带有mac地址的字串数组 var$mac_addr=array(); functiongetmacaddr() {<a href="../201003/dba_1186.htm" title="php获取网卡MAC地址类 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="13" title="《mysql复制》专题">mysql复制</a></SPAN><SPAN>作者：zhoz &lt;zhozweb@yahoo.com.cn&gt;</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2010/4/18 22:15:14</SPAN><a href="../201004/dba_1174.htm"  title="the ways to kill mysql application performance ">the ways to kill mysql application performance </a>  <LI   class="text">和普通的优化建议不同,下列的整理是告诉我们那些操作行为会影响性能.主要的理解至于存储引擎的优化1:thinking too smalla:最大的性能问题来至于书写的sql,schema的设计,索引策略.b:任何一个大型系统在不同层面都有代理及缓存.c:不要使用单个的"big box"架构.d:尽早的进行拆分及复制e:分离组件及应用程序f:performance != scalability3:ch<a href="../201004/dba_1174.htm" title="the ways to kill mysql application performance ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="13" title="《mysql复制》专题">mysql复制</a></SPAN><SPAN>作者：ywdblog</SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2010/7/6 23:31:17</SPAN><a href="../201007/dba_1141.htm"  title="mysql 主从同步原理  ">mysql 主从同步原理  </a>  <LI   class="text">转自： http://machael.blog.51cto.com/829462/239112replication 线程　 　mysql的 replication 是一个异步的复制过程，从一个 mysql instace(我们称之为 master)复制到另一个 mysql instance(我们称之 slave)。在 master 与 slave 之间的实现整个复制过程主要由三个线程来完成，其中<a href="../201007/dba_1141.htm" title="mysql 主从同步原理  ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="13" title="《mysql复制》专题">mysql复制</a></SPAN><SPAN>作者：phpor </SPAN>  </LI></UL><UL><LI class=list_title><SPAN>2010/9/6 8:46:37</SPAN><a href="../201009/dba_1110.htm"  title="mysql 主从配置中的server-id的作用 ">mysql 主从配置中的server-id的作用 </a>  <LI   class="text">server-id做什么用的，你知道吗？1、 mysql的同步的数据中是包含server-id的，用于标识该语句最初是从哪个server写入的，所以server-id一定要有的2、 每一个同步中的slave在master上都对应一个master线程，该线程就是通过slave的server-id来标识的;每个slave在master端最多有一个master线程，如果两个slave的server-id<a href="../201009/dba_1110.htm" title="mysql 主从配置中的server-id的作用 ">[阅读全文]</A>   <LI class="ot"><SPAN>专题：<a href="13" title="《mysql复制》专题">mysql复制</a></SPAN><SPAN>作者：phpor </SPAN>  </LI></UL>
+                            </div>
+                            <div class="sabrosus"><span class="disabled">首页</span><span class="disabled">上一页</span><span class="current">1</span><a href='zt_13_2.htm' title='第2页'>2</a><a href='zt_13_3.htm' title='第3页'>3</a><a href='zt_13_2.htm' title='下一页'>下一页</a><a href='zt_13_3.htm' title='尾页'>尾页</a><input type="hidden" value="1" id="page">&nbsp;&nbsp;<strong>分页：1/3页</strong></div>         
+            </div>        
+        </div>
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+	
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

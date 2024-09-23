@@ -1,0 +1,500 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>自动化流程:数据找回(一:MySQL数据闪回)| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">自动化流程:数据找回(一:MySQL数据闪回)</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#功能介绍">功能介绍</a>
+      <ul>
+        <li><a href="#解决的问题">解决的问题</a></li>
+        <li><a href="#自动化流程的作用">自动化流程的作用</a></li>
+      </ul>
+    </li>
+    <li><a href="#功能预览">功能预览</a>
+      <ul>
+        <li><a href="#设计了以下的表单填写页面用于收集信息">设计了以下的表单填写页面,用于收集信息</a></li>
+        <li><a href="#设计了两步审批">设计了两步审批</a></li>
+        <li><a href="#后端执行">后端执行</a></li>
+      </ul>
+    </li>
+    <li><a href="#代码实现">代码实现</a>
+      <ul>
+        <li><a href="#step1表单代码">step1:表单代码</a></li>
+        <li><a href="#step2负责人审批">step2:负责人审批</a></li>
+        <li><a href="#step3dba审批">step3:DBA审批</a></li>
+        <li><a href="#step4运行中">step4:运行中</a></li>
+        <li><a href="#step5执行结果展示">step5:执行结果展示</a></li>
+      </ul>
+    </li>
+    <li><a href="#小结">小结</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="功能介绍">功能介绍</h2>
+<p>数据找回,又名数据闪回,误删除回滚,误操作回滚,数据重做&hellip;</p>
+<h3 id="解决的问题">解决的问题</h3>
+<blockquote>
+<p>数据库里的数据被误删除/更新,需要定位修改的SQL语句,影响范围,回滚误操作,此时怎么办?</p>
+</blockquote>
+<ul>
+<li>方法1: DBA用前一天的数据库备份还原出来,然后找到更新前的SQL(这个通常需要花费几个小时的时间)</li>
+<li>方法2: 如果发现误操作的时间比较及时,一般7天以内,可以通过解析数据库日志(MySQL的binlog,Oracle的archivelog)比较快速的找到误操作的SQL及时回滚</li>
+</ul>
+<p>两个方法,都需要DBA参与</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>依赖文件</th>
+<th>可恢复范围</th>
+<th>操作用时</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>方法一</td>
+<td>全备</td>
+<td>1个月内</td>
+<td>1-5小时</td>
+</tr>
+<tr>
+<td>方法二</td>
+<td>日志</td>
+<td>7天</td>
+<td>0.5小时</td>
+</tr>
+</tbody>
+</table>
+<p>其中方法2,需要DBA找到并登录目标服务器,解析数据库日志,其中有研发和DBA的沟通时间,手动处理时间,我们可以通过自动化流程,让研发人员自助填写需求,在dba审批通过后系统自动执行.</p>
+<h3 id="自动化流程的作用">自动化流程的作用</h3>
+<ul>
+<li>1.提高工作效率,不再需要DBA手动去查日志,解析日志&hellip; 将原先几十分钟的工作,变成自动化</li>
+<li>2.减少误操作,减少手动处理问题时的手滑,操作命令写错了的运维风险</li>
+<li>3.减少沟通成本,自助化服务无需(dba和研发)反复沟通细节</li>
+<li>4.一般发现有数据更新错了,需要很快的得到响应,自助化流程可以减少非工作时间联系DBA的响应时长</li>
+<li>5.便于统计哪些项目成员或业务线出现这种误更新的失误.</li>
+</ul>
+<h2 id="功能预览">功能预览</h2>
+<h3 id="设计了以下的表单填写页面用于收集信息">设计了以下的表单填写页面,用于收集信息</h3>
+<p><img src="/img/2022auto/2023-01-30-20-06-44.png" alt="表单填写页面"></p>
+<h3 id="设计了两步审批">设计了两步审批</h3>
+<ul>
+<li>负责人审批: 如果该库有具体的DB负责人,则DB负责人审批.否则由提交申请的用户上级审批</li>
+<li>DBA审批:DBA审批时会看到将要自动化执行的命令,并且可以在执行前修改部分参数.(通常默认的命令是最优的)</li>
+</ul>
+<p><img src="/img/2022auto/2023-01-30-20-08-02.png" alt="两步审批"></p>
+<h3 id="后端执行">后端执行</h3>
+<ul>
+<li>执行是异步的.执行过程中会展示运行日志</li>
+<li>执行完成后,会展示以下三块内容</li>
+<li>1.后台运行日志 (用于DBA排查自动化任务时是否有异常)</li>
+<li>2.SQL内容概览 (展示符合条件的表共有多少次ins/upd/del操作. 用于验证是否符合预期,该概览目前只支持MySQL,Oracle的还没实现)</li>
+<li>3.解析出来的SQL文件 (最重要的部分)</li>
+</ul>
+<p><img src="/img/2022auto/48403.png" alt="两步审批"></p>
+<h2 id="代码实现">代码实现</h2>
+<h3 id="step1表单代码">step1:表单代码</h3>
+<pre><code>&lt;step id=&quot;1&quot; name=&quot;数据找回&quot; displaytype=&quot;input&quot;&gt;
+    &lt;form&gt;     
+      &lt;input name=&quot;dbid&quot; title=&quot;选择数据库&quot; inputtype=&quot;select_group&quot; desc=&quot;&quot; defaultvalue=&quot;&quot;  &gt;
+        &lt;style&gt;
+          &lt;div-class&gt;span24&lt;/div-class&gt;&lt;input-class&gt;input-normal,input-small,input-normal,input-normal&lt;/input-class&gt; 
+             &lt;connstr&gt;link:db_monitor&lt;/connstr&gt;
+            &lt;sqlstr&gt;
+              select b.dbid,
+              a.linktype as '库类型',
+              case a.appuse 
+              when 9 then '线上'
+              when 4 then '验证'
+              when 3 then '测试'
+              when 1 then '开发'
+              end as  '环境',
+              concat(a.linkname,'(',a.on_group,')') as '实例',
+              b.dbname as '库名' 
+              from linkset a join linkdb b on a.linkname=b.linkname 
+              where a.linktype in ('mysql','oracle')
+              order by a.linktype,a.appuse desc
+          &lt;/sqlstr&gt;
+    
+        &lt;/style&gt;
+      &lt;/input&gt; 
+
+          &lt;input name=&quot;tables&quot; title=&quot;表名&quot; inputtype=&quot;input&quot; defaultvalue=&quot;*&quot; desc=&quot;可为空,默认所有表的数据&quot;&gt;
+       &lt;style&gt;
+           &lt;div-class&gt;span12&lt;/div-class&gt;&lt;input-class&gt;input-normal&lt;/input-class&gt;
+         &lt;/style&gt;
+      &lt;/input&gt;
+ 
+        &lt;input name=&quot;sqlmode&quot; title=&quot;解析目的&quot; inputtype=&quot;select&quot; desc=&quot;&quot; defaultvalue=&quot;redo&quot;&gt;
+       &lt;style&gt;
+           &lt;div-class&gt;span12&lt;/div-class&gt;&lt;input-class&gt;input-normal&lt;/input-class&gt;
+        &lt;items text=&quot;查看SQL(redo)&quot; value=&quot;redo&quot; /&gt;
+        &lt;items text=&quot;回滚SQL(undo)&quot; value=&quot;undo&quot; /&gt;  
+         &lt;/style&gt;
+ &lt;/input&gt;
+
+
+      &lt;input name=&quot;keywords&quot; title=&quot;SQL关键字&quot; inputtype=&quot;input&quot; defaultvalue=&quot;&quot; desc=&quot;可为空,指定SQL中必须出现的关键字&quot;&gt;
+       &lt;style&gt;
+           &lt;div-class&gt;span12&lt;/div-class&gt;&lt;input-class&gt;input-normal&lt;/input-class&gt;
+         &lt;/style&gt;
+      &lt;/input&gt;
+ 
+      
+ &lt;input name=&quot;starttime&quot; title=&quot;StartTime&quot; inputtype=&quot;datetime&quot; desc=&quot;日志解析开始时间&quot;&gt;
+       &lt;style&gt;
+           &lt;div-class&gt;span12&lt;/div-class&gt;&lt;input-class&gt;input-normal&lt;/input-class&gt;
+         &lt;/style&gt;
+ &lt;/input&gt;
+      
+ &lt;input name=&quot;stoptime&quot; title=&quot;StopTime&quot; inputtype=&quot;datetime&quot; desc=&quot;日志解析结束时间&quot;&gt;
+       &lt;style&gt;
+           &lt;div-class&gt;span12&lt;/div-class&gt;&lt;input-class&gt;input-normal&lt;/input-class&gt;
+         &lt;/style&gt;
+ &lt;/input&gt;
+
+     
+  &lt;input  inputtype=&quot;lable&quot;  title=&quot;提示&quot; value=&quot;用于误操作的历史数据找回,支持最远7天的历史数据找回,请尽量缩小精确时间范围段,避免长时间扫描日志造成资源占用任务失败&quot; /&gt;
+      
+
+     &lt;btn id=&quot;tnok&quot;  title=&quot;提交解析申请&quot;  btnclass=&quot;button-warning&quot;   action=&quot;onclick_action&quot; btntype = &quot;button&quot;&gt;   
+       &lt;action  result=&quot;applyid&quot;  type=&quot;form_save&quot;&gt;
+       &lt;/action&gt;
+
+ 
+     &lt;action type=&quot;dingding&quot;&gt;
+      &lt;touser&gt;{step2owner}&lt;/touser&gt;
+      &lt;msgtype&gt;markdown&lt;/msgtype&gt;
+      &lt;content&gt;
+      &lt;title&gt;编号为{applyid}的{_formtitle}等待{step2owner}处理&lt;/title&gt;        
+          &lt;text&gt;&lt;![CDATA[
+#### 编号为{applyid}的{_formtitle}等待{step2owner}处理
+- 发起人：**{_username}**
+- 集群：{linkname_display}
+- 恢复目标：{dbname}.{tables}
+- 时间：{starttime}-{stoptime}
+- 进度：**0/3** 已提交申请
+点击[查看流程进度]({dingdingstep1url})
+]]&gt;&lt;/text&gt;&lt;/content&gt;
+     &lt;/action&gt;
+    &lt;/btn&gt;
+  &lt;/form&gt;
+&lt;/step&gt;
+</code></pre><h3 id="step2负责人审批">step2:负责人审批</h3>
+<pre><code>
+&lt;step id=&quot;2&quot; name=&quot;负责人审核&quot; displaytype=&quot;input&quot;&gt;
+    &lt;form&gt;     
+&lt;input inputtype=&quot;lable&quot; title=&quot;流程编号&quot; value=&quot;{applyid}&quot; /&gt; 
+&lt;input inputtype=&quot;lable&quot; title=&quot;环境&quot; value=&quot;{linktype},{appuse_display}&quot; /&gt; 
+&lt;input inputtype=&quot;lable&quot; title=&quot;集群&quot; value=&quot;{linkname_display}:{connstr_display}&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;库名&quot; value=&quot;{dbname}(dbid:{dbid})&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;表名&quot; value=&quot;{tables}&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;解析方式&quot; value=&quot;{sqlmode}&quot; /&gt; 
+&lt;input inputtype=&quot;lable&quot; title=&quot;SQL关键字&quot; value=&quot;{keywords}&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;StartTime&quot; value=&quot;{starttime}&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;StopTime&quot; value=&quot;{stoptime}&quot; /&gt;
+
+ &lt;input inputtype=&quot;lable&quot; title=&quot;提示&quot; value=&quot;{tips}&quot; /&gt;
+
+     &lt;btn id=&quot;tnok&quot;  title=&quot;确认信息,通过审核&quot;  btnclass=&quot;button-success&quot;   action=&quot;onclick_action&quot; btntype = &quot;button&quot;  displayuser=&quot;{step2owner}&quot;&gt;
+    
+
+       &lt;action result=&quot;tips&quot; type=&quot;data_history_pre&quot;&gt;
+          &lt;dbid&gt;{dbid}&lt;/dbid&gt;
+          &lt;applyid&gt;{applyid}&lt;/applyid&gt;
+          &lt;tablename&gt;{tables}&lt;/tablename&gt;
+          &lt;begintime&gt;{starttime}&lt;/begintime&gt;
+          &lt;endtime&gt;{stoptime}&lt;/endtime&gt;
+          &lt;keyword&gt;{keywords}&lt;/keyword&gt;
+       &lt;/action&gt;
+            
+
+    
+     &lt;action type=&quot;dingding&quot;&gt;
+      &lt;touser&gt;@dba&lt;/touser&gt;
+      &lt;msgtype&gt;markdown&lt;/msgtype&gt;
+      &lt;content&gt;
+      &lt;title&gt;编号为{applyid}的{_formtitle}等待DBA处理&lt;/title&gt;        
+          &lt;text&gt;&lt;![CDATA[
+#### 编号为{applyid}的{_formtitle}等待DBA处理
+- 发起人：**{adduser}**
+- 集群：{linkname_display}
+- 恢复目标：{dbname}.{tables}
+- 时间：{starttime}-{stoptime}
+- 进度：**1/3** 负责人已审批
+点击[查看流程进度]({dingdingstep1url})
+]]&gt;&lt;/text&gt;&lt;/content&gt;
+     &lt;/action&gt;
+
+
+    &lt;/btn&gt;
+
+
+    
+  
+       &lt;btn id=&quot;tnno&quot;  title=&quot;取消申请&quot;  btnclass=&quot;button-warning&quot;   action=&quot;onclick_action&quot; btntype = &quot;button&quot;  displayuser=&quot;{adduser}&quot;&gt;
+   
+   
+     &lt;action type=&quot;dingding&quot;&gt;
+      &lt;touser&gt;{step2owner}&lt;/touser&gt;
+      &lt;msgtype&gt;markdown&lt;/msgtype&gt;
+      &lt;content&gt;
+      &lt;title&gt;编号为{applyid}的{_formtitle}已撤回&lt;/title&gt;        
+          &lt;text&gt;&lt;![CDATA[
+#### 编号为{applyid}的{_formtitle}已撤回&lt;
+- 发起人：**{adduser}**
+- 集群：{linkname_display}
+- 恢复目标：{dbname}.{tables}
+- 时间：{starttime}-{stoptime}
+- 进度：已撤回 
+点击[查看流程进度]({dingdingstep1url})
+]]&gt;&lt;/text&gt;&lt;/content&gt;
+     &lt;/action&gt;
+     &lt;/btn&gt;      
+     
+  &lt;/form&gt;
+&lt;/step&gt;
+
+</code></pre><h3 id="step3dba审批">step3:DBA审批</h3>
+<pre><code>
+&lt;step id=&quot;3&quot; name=&quot;DBA确认&quot; displaytype=&quot;input&quot;&gt;
+    &lt;form&gt;     
+&lt;input inputtype=&quot;lable&quot; title=&quot;流程编号&quot; value=&quot;{applyid}&quot; /&gt; 
+&lt;input inputtype=&quot;lable&quot; title=&quot;环境&quot; value=&quot;{linktype},{appuse_display}&quot; /&gt; 
+&lt;input inputtype=&quot;lable&quot; title=&quot;集群&quot; value=&quot;{linkname_display}:{connstr_display}&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;库名&quot; value=&quot;{dbname}(dbid:{dbid})&quot; /&gt;
+
+&lt;input inputtype=&quot;lable&quot; title=&quot;表名&quot; value=&quot;{tables}&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;解析方式&quot; value=&quot;{sqlmode}&quot; /&gt; 
+&lt;input inputtype=&quot;lable&quot; title=&quot;SQL关键字&quot; value=&quot;{keywords}&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;StartTime&quot; value=&quot;{starttime}&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;StopTime&quot; value=&quot;{stoptime}&quot; /&gt;
+
+&lt;input inputtype=&quot;lable&quot; title=&quot;审批人&quot; value=&quot;{step2owner}({step2time})&quot; /&gt;
+
+&lt;input name=&quot;commandstr&quot; title=&quot;要执行的命令&quot; inputtype=&quot;input&quot; defaultvalue=&quot;{commandstr}&quot; desc=&quot;可修改&quot;&gt;
+       &lt;style&gt;
+           &lt;div-class&gt;span24&lt;/div-class&gt;&lt;input-class&gt;input-big&lt;/input-class&gt;
+         &lt;/style&gt;
+&lt;/input&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;提示&quot; value=&quot;{step_check_result}&quot; /&gt;
+ 
+
+     &lt;btn id=&quot;tnok&quot;  title=&quot;DBA确认&quot;  btnclass=&quot;button-success&quot;   action=&quot;onclick_action&quot; btntype = &quot;button&quot;  displayuser=&quot;@dba&quot;&gt;
+    
+        &lt;action result=&quot;tips&quot; type=&quot;data_history&quot;&gt;
+          &lt;dbid&gt;{dbid}&lt;/dbid&gt;
+          &lt;applyid&gt;{applyid}&lt;/applyid&gt;
+          &lt;commandstr&gt;{commandstr}&lt;/commandstr&gt;
+         &lt;nextstep&gt;5&lt;/nextstep&gt;
+       &lt;/action&gt;
+            
+
+     &lt;action type=&quot;dingding&quot;&gt;
+      &lt;touser&gt;{adduser}&lt;/touser&gt;
+      &lt;msgtype&gt;markdown&lt;/msgtype&gt;
+      &lt;content&gt;
+      &lt;title&gt;编号为{applyid}的{_formtitle}已完成审批&lt;/title&gt;        
+          &lt;text&gt;&lt;![CDATA[
+#### 编号为{applyid}的{_formtitle}已完成审批
+- 发起人：**{addusr}**
+- 集群：{linkname_display}
+- 恢复目标：{dbname}.{tables}
+- 时间：{starttime}-{stoptime}
+- 进度：**2/3** 正在执行
+点击[查看流程进度]({dingdingurl})
+]]&gt;&lt;/text&gt;&lt;/content&gt;
+     &lt;/action&gt;
+     
+    &lt;/btn&gt;
+
+
+    
+  
+       &lt;btn id=&quot;tnno&quot;  title=&quot;DBA拒绝&quot;  btnclass=&quot;button-warning&quot;   action=&quot;onclick_action&quot; btntype = &quot;button&quot;  displayuser=&quot;@dba&quot;&gt;
+      
+
+       &lt;action type=&quot;jumpurl&quot; url=&quot;apply.html?id={applyid}&quot; title=&quot;提交成功.&quot;&gt;&lt;/action&gt;
+    &lt;/btn&gt;
+      
+      
+      
+  &lt;/form&gt;
+&lt;/step&gt;
+
+
+</code></pre><h3 id="step4运行中">step4:运行中</h3>
+<pre><code>&lt;step id=&quot;4&quot; name=&quot;执行中&quot; displaytype=&quot;input&quot;&gt;
+    &lt;form&gt;     
+&lt;input inputtype=&quot;lable&quot; title=&quot;流程编号&quot; value=&quot;{applyid}&quot; /&gt; 
+&lt;input inputtype=&quot;lable&quot; title=&quot;环境&quot; value=&quot;{linktype},{appuse_display}&quot; /&gt; 
+&lt;input inputtype=&quot;lable&quot; title=&quot;集群&quot; value=&quot;{linkname_display}:{connstr_display}&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;库名&quot; value=&quot;{dbname}(dbid:{dbid})&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;表名&quot; value=&quot;{tables}&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;SQL关键字&quot; value=&quot;{keywords}&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;StartTime&quot; value=&quot;{starttime}&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;StopTime&quot; value=&quot;{stoptime}&quot; /&gt;
+
+&lt;input inputtype=&quot;lable&quot; title=&quot;审批人&quot; value=&quot;{step2owner}({step2time})&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;执行命令&quot; value=&quot;{commandstr}&quot; /&gt;
+&lt;input inputtype=&quot;div&quot; title=&quot;运行结果&quot; value=&quot;{command_exec_log}&quot; /&gt;
+       
+  &lt;/form&gt;
+&lt;/step&gt;
+
+</code></pre><h3 id="step5执行结果展示">step5:执行结果展示</h3>
+<pre><code>
+&lt;step id=&quot;5&quot; name=&quot;完成&quot; displaytype=&quot;input&quot;&gt;
+    &lt;form&gt;     
+&lt;input inputtype=&quot;lable&quot; title=&quot;流程编号&quot; value=&quot;{applyid}&quot; /&gt; 
+&lt;input inputtype=&quot;lable&quot; title=&quot;环境&quot; value=&quot;{linktype},{appuse_display}&quot; /&gt; 
+&lt;input inputtype=&quot;lable&quot; title=&quot;集群&quot; value=&quot;{linkname_display}:{connstr_display}&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;库名&quot; value=&quot;{dbname}(dbid:{dbid})&quot; /&gt;
+
+&lt;input inputtype=&quot;lable&quot; title=&quot;表名&quot; value=&quot;{tables}&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;SQL关键字&quot; value=&quot;{keywords}&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;StartTime&quot; value=&quot;{starttime}&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;StopTime&quot; value=&quot;{stoptime}&quot; /&gt;
+
+&lt;input inputtype=&quot;lable&quot; title=&quot;审批人&quot; value=&quot;{step2owner}({step2time})&quot; /&gt;
+&lt;input inputtype=&quot;lable&quot; title=&quot;执行命令&quot; value=&quot;{commandstr}&quot; /&gt;
+&lt;input inputtype=&quot;div&quot; title=&quot;运行结果&quot; value=&quot;{command_exec_log}&quot; /&gt;
+           
+  &lt;/form&gt;
+&lt;/step&gt;
+
+
+</code></pre><p>以上,就是实现这个自动化流程的全部代码,采有xml设计.在Dboop平台上配置和运行.对公司研发部门同事开放申请流程.符合条件的同事可以自助式的完成数据找回需求.</p>
+<h2 id="小结">小结</h2>
+<ul>
+<li>以上就是我们做数据找回自动化流程的思路和代码实现</li>
+<li>通过配置自动化流程,一次配置,终身享受,极大的提升了DBA的工作效率和幸福指数</li>
+<li>Oracle部分跟MySQL的原理类似,共用了一个流程,但底层执行的命令不同,Oracle这里用到了OGG,回头单写一篇</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/01/30</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/sql%E4%B8%8A%E7%BA%BF">SQL上线</a> <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B">自动化流程</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

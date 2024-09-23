@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySQL学习教程：MySQL 数据库存储引擎和分支现状</title>
+<link href="../../img/main.css" rel="stylesheet" type="text/css" />
+<script src="../../img/daohang.js" type="text/javascript"></script>
+<meta name="description" content="在mysql经历了2008年sun的收购和2009年oracle收购sun的过程中，基本处于停滞发展的情况，在可以预见的未来，mysql是肯定会被oracle搁置并且逐步雪藏消灭掉的。mysql随着相应的各主创和内部开发人员的离去，缔造了各个不同的引擎和分支，让mysql有希望继续发扬光大起来。<br/>本文大致讲解一下mysql目前除了主要的myisam、innodb、heap(memoMySQL学习教程：MySQL 数据库存储引擎和分支现状" />
+
+</head>
+
+<body>
+
+<div id="container">
+  <div id="header">
+<div class="dh-logo cls"> <div class="dh-logo-logo" ><a href="#"><img src="../../img/logo.gif" alt="数据库管理员DBA学习网站  LOGO"  width="251" height="58" /></a></div><div class="dh-logo-ac" id="topbar"><div class="dh-logo-nav">    <span class="f_black">Tips</span>： 亲爱的<span class="f_333" title="注：网站的访客">GUEST</span>用户，系统已为你<span class="f_333" title="注：不解释">GRANT</span>了<span class="f_333" title="注：可以查看网站上的所有文章">SELECT</span>,<a href="/add.aspx" title="注：可以发表文章" rel="nofollow">INSERT</a> 权限 </div> </div></div>
+<div id="topMain"><div id="top"><ul class="nav"><li><a href="../../index.htm">网站首页</a></li><li><a  href="../sqlserver/l_1_1.htm" title="SQLServer">SQLServer</a></li><li><a  href="../Oracle/l_7_1.htm" title="Oracle">Oracle</a></li><li><a href="../mysql/l_13_1.htm" class="hover"　title="MySQL">MySQL</a></li><li><a  href="../othersql/l_19_1.htm" title="其他数据库">其他数据库</a></li><li><a  href="../yunwei/l_26_1.htm" title="系统运维">系统运维</a></li><li><a  href="../kaoshi/l_34_1.htm" title="DBA考试">DBA考试</a></li><li><a  href="../dbahuati/l_39_1.htm" title="DBA话题">DBA话题</a></li></ul><ul class="sub"><li><a  href="../mysqlzhishi/l_14_1.htm" title="MySQL基础知识"><span class="zc_666">基础知识</span></a>|</li><li><a  href="../mysqlha/l_15_1.htm" title="MySQL高可用性和HA">高可用性和HA</a>|</li><li><a  href="../mysqlyouhua/l_16_1.htm" title="MySQL性能与优化">性能与优化</a>|</li><li><a  href="../mysqlguzhang/l_17_1.htm" title="MySQL故障与解决">故障与解决</a>|</li><li><a  href="../mysqlyuanma/l_18_1.htm" title="MySQL源码解读">源码解读</a>|</li></ul></div></div>
+<br class="clearfloat" />
+
+  </div>
+    <div class="local_daohang">您现在的位置: <a href="../../">首页</a> &nbsp;&gt;&nbsp;<a href="../mysql/l_13_1.htm">MySQL</a>&nbsp;&gt;&nbsp;<a href="../mysqlzhishi/l_14_1.htm">基础知识</a></div>
+  <div id="sidebar1">
+
+  
+  <div class='div_tab_tab'>
+	<div id="div_login_title">通行证登录</div>
+          <div id="div_login"> <iframe src="../../page/login.html" frameBorder="0" width="100%"  scrolling="no" height="190"></iframe>  
+              &nbsp;</div>     
+  </div>
+    
+  
+   <div  class='div_tab_tab'>
+  <div id="div_ran" > <span>【在线问答】</span><br /><a href="#" >[{类型}] {题干，这里会显示问题的标题}<br />点击进入答题>></a>
+	</div>
+  </div>
+  
+     
+
+    <!-- end #sidebar1 --></div>
+  <div id="mainContent">
+  		
+          
+                        <div id="contentdiv">                            
+                     <div id="atTitle"><h1>MySQL学习教程：MySQL 数据库存储引擎和分支现状</h1></div>
+					<div id="atSource"> 作者：[网上资料 ] </div>
+					
+                    <div id="viewcontent">
+                   在MySQL经历了2008年Sun的收购和2009年<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>收购Sun的过程中，基本处于停滞发 展的情况，在可以预见的未来，MySQL是肯定会被<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>搁置并且逐步雪藏消灭掉的。MySQL随着相应的各主创和内部开发人员的离去，缔造了各个 不同的引擎和分支，让MySQL有希望继续发扬光大起来。<br />本文大致讲解一下MySQL目前除了主要的 MyISAM、InnoDB、Heap(Memory)、NDB 等引擎之外的<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>引擎的发展和现状，以及MySQL主干以外的分支的状况，为了我们未来更好的使用MySQL或者<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>分支建立一个了解基础。<br />要了解主要存储引擎，请参考手册：http://dev.<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>.com/doc/refman/5.1/zh/index.html<br />【MySQL存储引擎介绍】<br />[ Falcon存储引擎 ]<br />Falcon存储引擎是MySQL当时寄以厚望的存储引擎，主要是为了面对当时<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>收购了InnoBase公司的情况，用来取代 InnoDB的一个存储引擎。Falcon引擎的主导人员是大师Jim Starkey，从2006年开始开发，到2008年发布Beta版本，至今为止也没有走入主流。2008年中旬，Falcon的主架构师Jim Starkey宣布从MySQL公司辞职，加入了一家创业公司NimbusDB担任CEO，去设计和开发运行在云计算上面的关系/语义数据库，按照 2010年目前<a href="../../html/nosql/l_20_1.htm" title="NoSQL" >NoSQL</a>市场的发展来看，他的选择是正确的，但是带来的结果是Falcon陷入一个没有主导人员的地步，导致了至今都属于性能糟糕，半死 不活的状态。<br />Falcon引擎是MySQL AB公司基于Netfrastrucure公司的产品开发的(Netfrastrucure公司被MySQL AB收购)，Falcon 当初的目标是嵌入到MySQL 6.0中用来取代InnoDB引擎，基本很多功能设计都是按照InnoDB的目标去设计的。<br />Falcon是面向多CPU、拥有大量内存的当代硬件环境和典型Web应用的 数据库操作特点而开发的，主要功能包括多版本并发控制、完善的ACID支持、支持前缀压缩的B+树索引、数据页压缩（在磁盘上以压缩形式存储，在内存中以 非压缩形式存储）、成组提交等。从功能方面来说没有什么新鲜事，大体也就实现了一个事务型存储引擎必须要有的功能（很多高级的功能如多表空间、分区等都还 没有），但其架构上却有很多独特之处。<br />通过网上的一些测试结果Falcon的性能还是很糟糕的，写入速度是 MyISAM 的 1/10 ~ 1/20，Select的优化也有问题，添加了索引感觉还会进行全表扫描。所以，我终究感觉 Falcon 是个杯具的引擎。<br />Falcon特性：http://dev.<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>.com/doc/falcon/en/se-falcon-features.htmlFalcon测试：http://blog.gslin.org/archives/2008/02/12/1425/Falcon手册：http://dev.<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>.com/doc/falcon/en/<br />数据库<br />[ SolidDB存储引擎]<br />solidDB存储引擎是由Solid Information Technology(http://www.soliddb.com) 开发的，这是一款利用MVCC来实现的事务型存储引擎。它既同时支持悲观和乐观并发控制，这一点<a href="../../html/sqlsql/l_25_1.htm" title="其他" >其他</a>的存储引擎目前都不支持。solibDB的MySQL 版本包括对外键的完全支持。它在许多方面与InnoDB很相似，比如它使用了簇索引。solidDB还包括一个没有额外开销的在线备份功能。<br />solidDB公司已经由2008年被IBM收购，主要是用于整合为IBM数据库整合方案的一部分，目前是作为一个前端数据缓存的这么一个角色存 在。IBM收购solidDB公司，主要是因为甲骨文在2005年6月收购了Solid Information Technology主要竞争对手TimesTen，为了在内存数据库这块市场上有所依托，所以收购了 solidDB公司。<br />solidDB产品是一个完整的打包程序，包括solidDB存储引擎、MyISAM存储引擎以及MySQL服务器。solidDB与MySQL之 间的结合出现于2006年的晚些时候。但是底层的技术以及代码却是经过了该公司15年的完善。Solid公司保证和支持了整个产品。它是基于GPL协议 的，并且提供了一个类似于MySQL服务器形式的商业版本。性能上来说，SolidDB for MySQL开源数据库再次被证明能够完全满足高吞吐量、关键任务级应用对系统性能和可扩展性的要求。<br />但是就 solidDB被IBM收购，MySQL对<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>收购的情况来看，基本上 solidDB for MySQL 是一个没法继续被MySQL使用的引擎，所以也是一个杯具的MySQL引擎。<br />官方网站：http://www.ibm.com/software/data/soliddb/<br />[ XtraDB存储引擎 ]<br />XtraDB存储引擎是percona公司对于innodb存储引擎进行改进加强后的产品，第一个版本发布于2008年底。XtraDB兼容innodb的所有特性，并且在IO性能，锁性能，内存管理等多个方面进行了增强。<br />Percona是一个MySQL技术咨询公司，他们有一个在MySQL领域很有名的技术博客叫做 <a href="../../html/mysql/l_13_1.htm" title="Mysql" >Mysql</a> Performance Blog，同时他们编写了一本很有名的MySQL书叫做《High Performance MySQL》，目前也出版了中文版。他们公司还有一个很有名的MySQL备份工具叫做 XtraBackup。<br />XtraDB的设计目标也是取代InnoDB作为目标，它是基于InnoDB来做的开发，XtraDB 100%的兼容 InnoDB，通常可以认为 XtraDB 是 InnoDB的升级或者替代版本。在性能上来说，目前 XtraDB 是非常高的，在大部分情况下也是比较稳定的，值得你尝试使用。同样XtraDB也是未来感觉很有前途的一个存储引擎，值得我们期待。<br />性能测试：http://www.<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>performanceblog.com/2009/07/14/performance-improvements-in-percona-5-0-83-and-xtradb/使用情况：http://www.ningoo.net/html/2009/xtradb_storage_engine.html<br />引擎介绍：http://www.percona.com/docs/wiki/percona-xtradb:start引擎下载：http://www.percona.com/percona-builds/Percona-XtraDB/公司官网：http://www.percona.com性能博客：http://www.<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>performanceblog.com<br />[ Maria存储引擎 ]<br />Maria由MySQL的创始人，MyISAM的作者Monty (Michael Widenius) 开发，命名为Maria是因为他的第三个小孩就叫Maria。Maria是Monty在MySQL公司的时候就开始开发的一个MySQL的分支引 擎，Sun收购MySQL后，因为与Sun针对MySQL团队的一些问题不和，然后在2009年初离开了Sun，成立了 Monty Program Ab 公司，专门用于针对 Maria 引擎的开发，同时开发了一个MySQL的分支，叫做 MariaDB。<br />Maria是一个MySQL的存储引擎，利用它来扩展MyISAM使之在异常退出时文件不至于损坏。Maria的主要目的是作为更好的 MyISAM，提供崩溃后的故障恢复功能。更长远的目标是成为一个全功能的事务型存储引擎，支持ACID、回滚、多版本并发控制、行级锁、成组提交，同时 也可以选择不支持事务，最终代替MyISAM成为MySQL的默认存储引擎。<br />目前Maria引擎有针对MySQL 5.1 的版本，基本上就是一个增加了崩溃恢复功能的MyISAM，使用表级锁，但可以做到读写不冲突，即在进行任何类型的更新操作的同时都可以进行读操作，但多个写操作不能并发。<br />Maria的特点：1. 多版本并发控制，ACID支持2. 通过拷贝日志就能进行增强备份3. 高效的磁盘存储<br />Maria 引擎开发之初就是用来取代MyISAM的存储引擎，并且目前按照我了解有些在使用公司的情况，运行情况挺不错，大家也可以尝试一下。Maria 在目前有MySQL创始人带领的情况下，也是一个非常有前途的的存储引擎，值得期待。<br />Maria下载：http://askmonty.org/wiki/MariaDB:DownloadMaria手册：http://askmonty.org/wiki/Maria<br />[PrimeBase XT (PBXT) 存储引擎 ]<br />PBXT 是 PrimeBase 公司推出的MySQL插件引擎，其功能和 InnoDB 类似，它是一款事务型存储引擎，并且它的设计是很独特的。它的一个很与众不同的特征就是如何来使用事务日志和数据文件来防止“write-ahead”日 志，这可以极大的减少事务提交的开销。这个架构给了PBXT很大的提高写并发的空间，并且测试也表明它在某些特定的操作下比InnoDB要快。PBXT也 使用了MVCC并且支持外键约束，但是它不使用簇索引。<br />主要特性如下：<br />MVCC的 ：多版本并发控制，使读操作没有锁定事务性 ：支持启动开始，COMMIT和ROLLBACK和恢复上ACID标准 ：原子性，一致性，隔离，持久（一次提交的更改不能丢失）行级锁定 ：更新使用行级锁的并发允许最大并发量死锁检测 ：立即通知如果客户端进程已陷入死锁参照完整性 ：外键的支持。写一次 ：PBXT避免的架构双写入使用日志。BLOB的流 ：在结合的 BLOB Streaming engine.。 (http://www.blobstreaming.org/)<br />按照有人的测试结果来看，PBXT存储引擎版本的TPS随着线程数的增长，表现比较稳定，性能上与innodb差不多，长期来看，它的目标也是作为 一个能够取代InnoDB的存储引擎。而且目前 MariaDB 这个分支已经把 PBXT 作为内置的存储引擎，所以也是可以尝试使用的一个引擎。<br />性能测试：http://i<a href="../../html/mysql/l_13_1.htm" title="mysql" >mysql</a>.cn/2008_07_25_innodb_vs_pbxt引擎下载：http://www.primebase.org/download/index.php官方网站：http://www.primebase.org/<br />【MySQL分支介绍】<br />[ MariaDB 数据库]<br />MariaDB 是一个采用 Maria 存储引擎的 MySQL 分支版本，是由原来 MySQL 的作者 Michael Widenius (Monty) 创办的Monty Program Ab公司所开发的免费开源的数据库服务器。基本上 MariaDB 的历史跟我上面讲的 Maria 存储引擎历史一样。MariaDB的设计目标就是用来取代 MySQLServer。Monty是开源数据库联盟（Open Database Alliance）的发起者，所以 MariaDB 也是开源数据库联盟的成员。<br />MariaDB基于事务的Maria存储引擎，替换了MySQL的MyISAM存储引擎，它使用了Percona的 XtraDB引擎来替换InnoDB，MariaDB的存储引擎还包括了 PrimeBase XT (PBXT) 和 FederatedX 存储引擎，MariaDB基于GPL 2.0发布。<br />Monty Widenius提供了MySQL的分支MariaDB候选版本。MariaDB 5.1完全兼容MySQL 5.1，这个版本早在2008年11月就发布了，增加了很多新的功能和若干个新的补丁程序。开发者称这个候选版本非常稳定。基本上 MySQL，MariaDB 解决了很多问题，例如“pool of threads”功能提供解决多数据连接问题。目前 MariaDB 发布的Release版本是 5.1.44，基本上应该是跟 MySQL 5.1 的版本兼容的。<br />MariaDB 基本上名门之后，加上MySQL创始人Monty的实力和号召力，是作为MySQL一个非常好的替代品，前途发展无限，值得我们尝试使用。<br />MariaDB中存储引擎介绍：Maria: http://askmonty.org/wiki/MariaXtraDB:http://www.percona.com/docs/wiki/percona-xtradb:startPBXT: http://www.primebase.org/FederatedX:https://launchpad.net/federatedx<br />MariaDB下载：http://askmonty.org/wiki/MariaDB:DownloadMariaDB网站：http://askmonty.org<br />[ Drizzle 数据库]<br />Drizzle，是从MySQL衍生出来的一个数据库服务器，一个精简版的MySQL分支，Drizzle项目的宗旨是构建一个“更精练、更轻量、 更快 速”的MySQL版本，它的扩展性和易用性与MySQL相当，但为了提高性能和扩展性，它从原来的核心系统里移除了部分功能。 Drizzle 也是开源数据库联盟（Open Database Alliance）成员。<br />MySql的架构设计总监Brian Aker在O’Reilly开放源码大会（OSCON）上对Drizzle做了介绍。Drizzle是一个能为某些特定类别的应用提供支持的数据库项目(“what if” project)。Drizzle的设计目标：1.&nbsp;Web应用。2. 云计算组件。3. 没有业务逻辑的数据库（又名存储过程）。4. 多核架构。<br />Drizzle，一个精简版的MySQL分支，在目前的MySQL代码基本之上，将存储过程、视图、触发器、查询缓存、PREPARE语句等等没什 么必要 的功能从代码中删掉，简化对数据类型和存储引擎的支持，并且进行大胆的重构。最终要实现的目的是将MySQL的代码大大简化，理顺MySQL的架构，改善 MySQL的代码质量，提高系统的稳定性和性能。将更适合 Web应用、云计算组件、没有业务逻辑的数据库（又名存储过程）、多核架构 等业务<br />Drizzle的特征有：* 基于MySQL 6.0的源码树* 无附加库* 遵守POSIX* 微内核设计* 可插拔架构，适用于视图、存储过程、UDF、存储引擎等* 跨多个节点的Sharding技术* 智能代理* 多CPU/多核CPU* 优化的字段类型* 高效的内存使用* 没有内部ACL，使用LDAP/PAM* 没有数据库数据格式化* 整理有序的Make系统* 缺省存储引擎为InnoDB* 移除Windows兼容性<br />Drizzle 缺省的存储引擎是InnoDB，支持的数据类型更少，基本上设计目标跟 MariaDB 完全不同。MariaDB的设计目标是一个取代MySQL的数据库，而 Drizzle 基本上是一个除了MySQL之外你可以选择的产品，并且基本上设计目标是针对未来的云计算和分布式Web存储的方向去的，目前可能不是太稳定，不适合在运 营环境使用，但是相当的值得期待。<br />Drizzle使用：http://database.51cto.com/art/200907/137239.htmDrizzle下载：https://launchpad.net/drizzleDrizzle网站：http://drizzle.org/【总结语】基本上来说，目前MySQL还是主流(MyISAM/InnoDB)，但是未来发 展不可预测，并且有这些除了MySQL之外的选择，也许有一天<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>把MySQL彻底消灭掉了，但是我们同样还有 MariaDB、Drizzle可以选择，这就是开源的力量。<br />对比几个MySQL的存储引擎，Maria 和 XtraDB 是值得大家目前投入逐步使用的行列的，多做一些测试，灰度放亮，获得一个合理结果然后再使用是比较合适的。MySQL的数据库分支来说，MariaDB 也是比较值得尝试使用的，毕竟目前 Drizzle 还不是太成熟稳定，并且不一定适合你所做的业务。我所了解国内部分互联网公司也有在使用 MariaDB 的，并且效果不错，大家也都可以按照自己的情况来使用。<br /><br />目前<a href="../../html/nosql/l_20_1.htm" title="NoSQL" >NoSQL</a> 运动如火如荼，有些业务更适合采用Key==&gt;Value或这是BigTable类型的数据存储方式，也许MySQL不是最好 的，当然选择最合适存储，也许未来大部分数据库市场会被<a href="../../html/nosql/l_20_1.htm" title="NoSQL" >NoSQL</a>所占领，但是我觉得关系型数据库还是未来几年很重要的存储方式。<br />在MySQL被 Sun收购，已经Sun被<a href="../../html/Oracle/l_7_1.htm" title="Oracle" >Oracle</a>收购的过程中，整个开源世界都是在翻天覆地的变化，特别是MySQL的命运一直都是所有使用和 热爱开源数据库的人们所关注的，在这些商业竞争中，那些开源斗士(比如 Monty)，都通过别的方式，继续发扬了MySQL这种开源数据库。我们长期来看，总会有一些东西会消失，比如 Falcon存储引擎，有些东西会继续发展，比如 MariaDB或Drizzle，但是这些都为开源技术做出了贡献，也为数据库领域增添了色彩。<br />
+																	|
+</div>  
+ 
+                    </div>
+                    <hr class="hrdt" />	
+<div id="res"></div>
+                        
+                        </div>
+
+<!-- end #mainContent --></div>
+	<!-- 这个用于清除浮动的元素应当紧跟 #mainContent div 之后，以便强制 #container div 包含所有的子浮动 -->
+	<br class="clearfloat" />
+
+      
+   
+	<div id="footer">
+  <ul class="green_1">		<li><div id="slogo"></div></li>		<li><div id="bline"></div></li>		<li><div id="binfo">网站名称：数据库DBA学习网站 www.580top.com<br />网络维护：51ak(微信:sohu91) <br /></div></li>	</ul>
+   <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  <!-- end #footer --></div>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

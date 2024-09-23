@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>关于数据安全_DBA篇| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">关于数据安全_DBA篇</span></h1>
+</div>
+
+
+  <main>
+    <h2 id="前言">前言</h2>
+<p>明天有个会，大家一起商量一下怎么做好数据安全。提前整理一下思路：</p>
+<h2 id="什么是数据安全">什么是数据安全</h2>
+<ul>
+<li>数据安全是指保护数据不被非法获取、篡改、破坏或泄露的一种技术和管理措施。</li>
+<li>在我这里，数据安全要更具体一点</li>
+<li>1.存储安全：数据只要写到数据库里了，就不会丢
+<ul>
+<li>1.1 存储上：多节点存储，防止物理损坏 <a href="https://www.dboop.com/mysql/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84%E4%B9%8Bproxysql/">MySQL高可用组件之ProxySQL</a></li>
+<li>1.2 数据按固定的周期进行全备和日志备份 <a href="https://www.dboop.com/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E7%AE%A1%E7%90%86%E5%88%B6%E5%BA%A6/">数据库备份管理制度</a></li>
+<li>1.3 自动化脚本检查备份成功和验证</li>
+<li>1.4 保证数据被意外删除后，还能找回来 <a href="https://www.dboop.com/dba/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B_%E6%95%B0%E6%8D%AE%E6%89%BE%E5%9B%9E%E9%97%AA%E5%9B%9E/">自动化流程:数据找回(一:MySQL数据闪回)</a> <a href="https://www.dboop.com/dba/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B_%E6%95%B0%E6%8D%AE%E6%89%BE%E5%9B%9E%E9%97%AA%E5%9B%9E_2/">自动化流程:数据找回(二:Oracle部分)</a></li>
+<li>1.5 保证数据和数据库备份是双机房异地存储 <a href="https://www.dboop.com/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E7%AE%A1%E7%90%86%E5%88%B6%E5%BA%A6/">数据库备份管理制度</a></li>
+<li>1.6 额外做孤岛备份，以防止内网机房的病毒大面积感染 <a href="https://www.dboop.com/dba/%E5%AD%A4%E5%B2%9B%E5%A4%87%E4%BB%BD%E6%9C%BA%E5%92%8C%E5%8B%92%E7%B4%A2%E7%97%85%E6%AF%92/">孤岛备份机和勒索病毒</a></li>
+</ul>
+</li>
+<li>2.账号策略：只有指定权限的用户可以访问可控范围内的数据（到库级别）
+<ul>
+<li>要求研发分业务存储库，不要混用数据库</li>
+<li>账号自动化管理，权限限制在可控范围内</li>
+<li>账号密码不分发给研发，由运维人员统一配置（这点很重要，为第三步的访问控制提供前题）</li>
+</ul>
+</li>
+<li>3.访问控制：将业务人员和运维人员隔离
+<ul>
+<li>业务人员指研发，产品，测试，大数据，风控&hellip;</li>
+<li>运维人员：DBA 运维</li>
+<li>只有运维人员可以接触到线上数据库，研发和其他人员均不可连接到数据库机器和实例</li>
+<li>将研发等业务人员和数据库的接触限定在两个方式内：1.通过程序代码操作数据库  2.通过DBA的Web平台操作数据库</li>
+<li>线上查询和线上变更。走DBA提供的平台执行</li>
+<li>限制DBA等运维人员，了解业务逻辑，杜绝DBA直接查询和修改线上业务数据  <a href="https://www.dboop.com/dba/%E6%88%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%8D%E5%AF%B9dba%E6%94%B9%E6%95%B0%E6%8D%AE/">我为什么要反对DBA参与业务(出报表/改数据)</a></li>
+</ul>
+</li>
+<li>4.安全审计：线上的数据异常，要有日志可查
+<ul>
+<li>数据变更日志（binlog，归档日志等） <a href="https://www.dboop.com/mysql/mysql%E7%9A%84binlog%E6%97%A5%E5%BF%97/">MySQL的7种日志(四):BinLog</a></li>
+<li>SQL上线日志 （记录变更新镜像和更新后结果，方便快速回滚） <a href="https://www.dboop.com/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%9A%E7%8E%AF%E5%A2%83sql%E4%B8%8A%E7%BA%BF/">数据库多环境SQL上线</a></li>
+<li>异常日志和慢日志收集到es</li>
+<li>服务器操作日志，数据库账号变更日志</li>
+<li>个人查询日志，部分线上查询审计日志</li>
+</ul>
+</li>
+<li>5.数据加密：数据库里的敏感信息应该加密存储
+<ul>
+<li>哪些属于敏感信息：手机号.卡号.身份证号.住址&hellip;</li>
+<li>首先需要把敏感信息标识出来。
+<ul>
+<li>为此我们开发了一个工具，在用户建表或者修改表结构时，会识别出来</li>
+<li>外加一个兜底脚本，定时扫描SQL查询结果，如果发现有敏感信息未标识的就会提示出来</li>
+</ul>
+</li>
+<li>敏感信息标识后，不管底层是否做了加密存储，DBA和大数据平台都可以对这些字段做针对性的掩码，防止信息泄露</li>
+<li>数据的加密存储，这个单做一节，详细说说</li>
+</ul>
+</li>
+</ul>
+<h2 id="数据加密">数据加密</h2>
+<ul>
+<li>如上一节最后说的，我们已经将敏感信息识别出来了，现在怎么做数据的加密存储。根据实际情况展开来说</li>
+</ul>
+<h3 id="新项目的数据加密">新项目的数据加密</h3>
+<ul>
+<li>如果有开发资源：架构组开发一套通用的加密服务，新项目调用</li>
+<li>如果没有开发资源： 研发用通用的加密算法对敏感信息进行可逆的加密（例AES)后入库</li>
+</ul>
+<h3 id="老项目的数据加密改造">老项目的数据加密改造</h3>
+<h4 id="方法一数据库里存的是加密数据研发存放和读取都是明文数据">方法一：数据库里存的是加密数据，研发存放和读取都是明文数据</h4>
+<ul>
+<li>应付审计之法。</li>
+<li>优点是：库里的数据确实是加密的</li>
+<li>缺点是：研发和业务人员查询时是明文的</li>
+<li>这个需要借助第三方中间件来实现：（例如SphereEx）</li>
+<li>我头一次听SphereEx讲他们的中件层加密时，觉得这个思路非常棒</li>
+<li>这可能是比较节约开发资源的，又可以应付审计的一种加密方式。</li>
+<li>这是它的优点也导致了一个缺点：研发查出来数据库里的信息还是明文，数据防泄露效果差</li>
+<li>只防住了DBA和运维人员的泄密，而更关键的业务泄露并没防住</li>
+<li>加了中间层，稳定性待考证</li>
+<li>加密收益： 2颗星 ，加密工作量：1颗星</li>
+</ul>
+<h4 id="方法二数据库里存的是明文数据研发读取到前台展示的时候是密文的">方法二：数据库里存的是明文数据，研发读取到前台展示的时候是密文的</h4>
+<ul>
+<li>防前台泄密之法</li>
+<li>在SQL层将所有的查询接口都改造一下，需要花费不少的时间（2-3周）</li>
+<li>优点是，前台用户看到的数据是加密或掩码的。解密记录是可审计的，防止信息泄漏</li>
+<li>缺点是，数据库明文存储了，治标了但没治本</li>
+<li>加密收益： 4颗星 ，加密工作量：3颗星</li>
+</ul>
+<h4 id="方法三数据库里存的是密文数据研发读取到前台展示的时候是密文的">方法三：数据库里存的是密文数据，研发读取到前台展示的时候是密文的</h4>
+<ul>
+<li>这个就是把旧项目彻底改造了，存数据和读数据的地方都要改一下</li>
+<li>这个改造的工作量非常大，但是效果是最彻底的</li>
+<li>最完整的方案是分成三个角色</li>
+<li>DBA提供存储，架构组提供加解密服务，研发存储和读取的都是密文</li>
+<li>其中架构组是核心，提供整套加解密服务</li>
+<li>研发参与成本最大，需要在写数据和读数据时修改代码</li>
+<li>加密收益： 5颗星 ，加密工作量：4颗星</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/06/15</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/dba">DBA</a> <a href="/categories/%E5%AE%89%E5%85%A8">安全</a> <a href="/categories/%E8%BF%90%E7%BB%B4">运维</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

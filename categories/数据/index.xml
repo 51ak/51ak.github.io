@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>数据 on Classic</title>
+    <link>/categories/%E6%95%B0%E6%8D%AE/</link>
+    <description>Recent content in 数据 on Classic</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 21 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E6%95%B0%E6%8D%AE/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>有趣的数据_ChatGPT的多语种训练数据集</title>
+      <link>/book/%E6%9C%89%E8%B6%A3%E7%9A%84%E6%95%B0%E6%8D%AE_%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BB%BA%E8%AE%AE%E7%94%A8%E8%8B%B1%E8%AF%AD%E5%92%8Cchatgpt%E6%B2%9F%E9%80%9A/</link>
+      <pubDate>Tue, 21 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/book/%E6%9C%89%E8%B6%A3%E7%9A%84%E6%95%B0%E6%8D%AE_%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BB%BA%E8%AE%AE%E7%94%A8%E8%8B%B1%E8%AF%AD%E5%92%8Cchatgpt%E6%B2%9F%E9%80%9A/</guid>
+      <description>为什么建议用英语和ChatGPT沟通 为什么chatGPT中文对话时候偶尔会感觉到他在胡编瞎造 为什么chatGPT中文提问专业问题时偶尔会出现英语回复  看openai公布的GPT-3训练数据集的语言占比,中文语料只占总训练量的0.1%
+   lang 语言名 训练集 占比     en 英语 181014683608 92.65%   fr 法语 3553061536 1.82%   de 德语 2870869396 1.47%   es 西班牙语 1510070974 0.77%   it 意大利语 1187784217 0.61%   pt 葡萄牙语 1025413869 0.52%   nl 荷兰语 669055061 0.34%   ru 俄语 368157074 0.19%   ro 罗马尼亚语 308182352 0.16%   pl 波兰语 303812362 0.</description>
+    </item>
+    
+    <item>
+      <title>有趣的数据_海底光缆</title>
+      <link>/book/%E6%9C%89%E8%B6%A3%E7%9A%84%E6%95%B0%E6%8D%AE_%E6%B5%B7%E5%BA%95%E5%85%89%E7%BC%86/</link>
+      <pubDate>Mon, 20 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/book/%E6%9C%89%E8%B6%A3%E7%9A%84%E6%95%B0%E6%8D%AE_%E6%B5%B7%E5%BA%95%E5%85%89%E7%BC%86/</guid>
+      <description>周末刷推，发现有人在说中国的互联网对外连接情况，原文说中国对外连接的海底光缆就那几条，一旦打起架来，断了就成局域网
+查了下各方面的数据，总结分享给大家
+从图说起 全球的海底光缆的分布图 亚洲的海底光缆的分布图 中国的海底光缆的分布图 以上信息来源于一个国外的网站：https://www.submarinecablemap.com/
+一些数据  海底光缆作为当代国际通信的重要手段，承担了90%的国际通信业务，是全球信息通信的主要载体。  海底电缆TimeLine  1850年盎格鲁-法国电报公司开始在英法之间铺设了世界第一条海底电缆，只能发送莫尔斯电报密码。 1888年中国第一条海底电缆是清朝时期台湾首任巡抚刘铭传，在1886年铺设通联台湾全岛以及大陆的水路电线，主要作为发送电报用途 1902年环球海底通信电缆建成。 1987年，中国台湾第一条海底电缆完成，即台湾淡水与日本长崎之间。（已停用） 1988年，中国大陆的第一条海底电缆是在1988年完成的，即福州川石岛与台湾（淡水）之间，长177海里。（已停用）  海底光缆  1988年，在美国与英国、法国之间铺设了越洋的海底光缆（TAT-8）系统，全长6700公里。传输速率为280Mb/s*3对，中继站距离为67公里。这是第一条跨越大西洋的通信海底光缆，标志着海底光缆时代的到来。 1993年12月，第一个在中国登陆的国际海底光缆系统是中国——日本（C-J）海底光缆系统。 1997年11月，我国参与建设的全球海底光缆系统（FLAG）建成并投入运营，这是第一条在我国登陆的洲际光缆系统，  中国大陆地区的海底光缆 由于光缆之间存在重合，所以实际上，中国大陆与Internet的所有通道，就是4个入口11条光缆。
+中国大陆的海底光缆登陆地点分别是：
+ 1、青岛（2条光缆） 2、上海（7条光缆） 3、汕头（5条光缆） 4、福州（1条光缆）  青岛1:Trans-Pacific Express（TPE，跨太平洋直达）  带宽：5.12Tbps 长度：17700km 经过地区：  青岛 上海崇明岛 日本千叶县南房总市（原丸山町） 韩国庆尚南道巨济市 台湾新北市淡水区 美国俄勒冈州尼多拿海滩    青岛2:EAC-C2C  带宽：10.24Tbps 长度：36800km 经过地区：  新加坡樟宜 香港将军澳 中国大陆青岛（后期加建） 台湾八里区 菲律宾Capepisa 南韩泰安郡 日本 志摩市 常陆那珂市阿字浦    上海1：Trans-Pacific Express（TPE，跨太平洋直达）  带宽：5.</description>
+    </item>
+    
+  </channel>
+</rss>

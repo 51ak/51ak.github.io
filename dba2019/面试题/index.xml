@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>面试题 on dboop.com</title>
+    <link>/categories/%E9%9D%A2%E8%AF%95%E9%A2%98/</link>
+    <description>Recent content in 面试题 on dboop.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 18 Mar 2016 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/%E9%9D%A2%E8%AF%95%E9%A2%98/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Mysql简单面试题(应届生)</title>
+      <link>/post/2016/03/18/mysql%E7%AE%80%E5%8D%95%E9%9D%A2%E8%AF%95%E9%A2%98%E5%BA%94%E5%B1%8A%E7%94%9F/</link>
+      <pubDate>Fri, 18 Mar 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2016/03/18/mysql%E7%AE%80%E5%8D%95%E9%9D%A2%E8%AF%95%E9%A2%98%E5%BA%94%E5%B1%8A%E7%94%9F/</guid>
+      <description>1.写出显示当前数据库版本号的SQL
+2.创建一个数据库acorder
+3.创建用户acorder_w，使之可以读写acorder数据库？
+4.创建一innodb表userinfo，字段:userid主键自增/username用户名/nickname中文姓名/createtime创建时间 ,其中username上建索引.
+5.修改表userinfo,增加一个cardno用来存放身份证号,修改createtime列名为firsttime.
+6.使用户acorder_w，只可以在192.168.100.* 网段可以登录并使用acorder数据库.
+7.什么是MySQL多实例，如何配置MySQL多实例?
+8.请解释全备、增备、冷备、热备概念及使用场景.
+9.mysql binlog有几种格式，描述其优缺点.</description>
+    </item>
+    
+  </channel>
+</rss>
