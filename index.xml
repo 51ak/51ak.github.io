@@ -6,7 +6,16 @@
     <description>Recent content on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 14 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 26 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Centos7安装ffmpeg</title>
+      <link>/ops/centos7%E5%AE%89%E8%A3%85ffmpeg/</link>
+      <pubDate>Thu, 26 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/centos7%E5%AE%89%E8%A3%85ffmpeg/</guid>
+      <description>安装 EPEL yum install epel-release -y 安装Nux Dextop 库 rpm --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro rpm -vhU http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm 安装 FFmpeg yum install ffmpeg ffmpeg-devel -y 安装验证 ffmpeg -version  安装成功  </description>
+    </item>
+    
     <item>
       <title>数据库迁移流程图</title>
       <link>/dba/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%81%E7%A7%BB%E6%B5%81%E7%A8%8B%E5%9B%BE/</link>
