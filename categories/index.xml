@@ -6,7 +6,25 @@
     <description>Recent content in Categories on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 26 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 07 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>常用脚本</title>
+      <link>/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/</link>
+      <pubDate>Thu, 07 Nov 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mysql</title>
+      <link>/categories/mysql/</link>
+      <pubDate>Wed, 30 Oct 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/mysql/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>centos</title>
       <link>/categories/centos/</link>
@@ -62,15 +80,6 @@
     </item>
     
     <item>
-      <title>mysql</title>
-      <link>/categories/mysql/</link>
-      <pubDate>Tue, 10 Sep 2024 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/mysql/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>日志</title>
       <link>/categories/%E6%97%A5%E5%BF%97/</link>
       <pubDate>Tue, 10 Sep 2024 00:00:00 +0000</pubDate>
@@ -94,15 +103,6 @@
       <pubDate>Sat, 07 Sep 2024 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E8%BF%90%E7%BB%B4/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>常用脚本</title>
-      <link>/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/</link>
-      <pubDate>Thu, 05 Sep 2024 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC/</guid>
       <description></description>
     </item>
     

@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL多实例部署报错：io_setup failed with EAGAIN| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL多实例部署报错：io_setup failed with EAGAIN</span></h1>
+</div>
+
+
+  <main>
+    <ul>
+<li>多实例部署时遇到<code>io_setup() failed with EAGAIN</code>报错</li>
+</ul>
+<pre><code>2024-10-30T14:17:28.568852+08:00 0 [System] [MY-013169] [Server] /usr/local/mysql8/bin/mysqld (mysqld 8.0.22) initializing of server in progress as process 171586
+2024-10-30T14:17:28.587654+08:00 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2024-10-30T14:17:28.593140+08:00 1 [Warning] [MY-012582] [InnoDB] io_setup() failed with EAGAIN. Will make 5 attempts before giving up.
+2024-10-30T14:17:28.593225+08:00 1 [Warning] [MY-012583] [InnoDB] io_setup() attempt 1.
+2024-10-30T14:17:29.094632+08:00 1 [Warning] [MY-012583] [InnoDB] io_setup() attempt 2.
+2024-10-30T14:17:29.595951+08:00 1 [Warning] [MY-012583] [InnoDB] io_setup() attempt 3.
+2024-10-30T14:17:30.097412+08:00 1 [Warning] [MY-012583] [InnoDB] io_setup() attempt 4.
+2024-10-30T14:17:30.598504+08:00 1 [Warning] [MY-012583] [InnoDB] io_setup() attempt 5.
+2024-10-30T14:17:31.100042+08:00 1 [ERROR] [MY-012584] [InnoDB] io_setup() failed with EAGAIN after 5 attempts.
+2024-10-30T14:17:31.100657+08:00 1 [ERROR] [MY-012954] [InnoDB] Cannot initialize AIO sub-system
+2024-10-30T14:17:31.100744+08:00 1 [ERROR] [MY-012929] [InnoDB] InnoDB Database creation was aborted with error Generic error. You may need to delete the ibdata1 file before trying to start up again.
+2024-10-30T14:17:31.101051+08:00 0 [ERROR] [MY-010020] [Server] Data Dictionary initialization failed.
+</code></pre><ul>
+<li>用<code>ulimit -a </code>确实下<code>open files</code>有没有问题</li>
+</ul>
+<pre><code>core file size          (blocks, -c) unlimited
+data seg size           (kbytes, -d) unlimited
+scheduling priority             (-e) 0
+file size               (blocks, -f) unlimited
+pending signals                 (-i) 1029413
+max locked memory       (kbytes, -l) 64
+max memory size         (kbytes, -m) unlimited
+open files                      (-n) 65535
+pipe size            (512 bytes, -p) 8
+POSIX message queues     (bytes, -q) 819200
+real-time priority              (-r) 0
+stack size              (kbytes, -s) 8192
+cpu time               (seconds, -t) unlimited
+max user processes              (-u) 65535
+virtual memory          (kbytes, -v) unlimited
+file locks                      (-x) unlimited
+</code></pre><ul>
+<li>再看下<code>aio-max-nr</code> ，发现不够用了</li>
+</ul>
+<pre><code>cat /proc/sys/fs/aio-max-nr
+65536
+</code></pre><ul>
+<li>修改配置</li>
+</ul>
+<pre><code>vi /etc/sysctl.conf
+fs.aio-max-nr=262144
+
+sysctl -p
+
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2024/10/30</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%9F%BA%E7%A1%80">基础</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

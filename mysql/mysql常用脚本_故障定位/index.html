@@ -106,11 +106,37 @@ where user not in ('replication','dba','system user')  AND HOST NOT LIKE '127.0.
  GROUP BY IP,DB,USER ORDER BY Total DESC;
 
 </code></pre><h2 id="查阻塞">查阻塞</h2>
-<pre><code>
+<pre><code>MySQL8.0:
 select waiting_pid as '被阻塞的线程',waiting_query as '被阻塞的 SQL',blocking_pid as '阻塞线程',blocking_query as '阻塞 SQL',
 wait_age as '阻塞时间',sql_kill_blocking_query as '建议操作' from sys.innodb_lock_waits 
 where (UNIX_TIMESTAMP ()-UNIX_TIMESTAMP (wait_started)) &gt; 30
 
+MySQl5.x
+SELECT 
+    r.trx_id AS 请求事务ID,
+    r.trx_mysql_thread_id AS 请求线程ID,
+    r.trx_query AS 请求的SQL语句,
+    b.trx_id AS 阻塞事务ID,
+    b.trx_mysql_thread_id AS 阻塞线程ID,
+    b.trx_query AS 阻塞的SQL语句,
+    p.id AS 阻塞者进程ID,
+    p.user AS 阻塞者用户,
+    p.host AS 阻塞者主机,
+    p.db AS 阻塞者数据库,
+    p.command AS 阻塞者命令,
+    p.time AS 阻塞者时间,
+    p.state AS 阻塞者状态,
+    p.info AS 阻塞者SQL语句
+FROM 
+    information_schema.innodb_lock_waits w
+INNER JOIN 
+    information_schema.innodb_trx b ON b.trx_id = w.blocking_trx_id
+INNER JOIN 
+    information_schema.innodb_trx r ON r.trx_id = w.requesting_trx_id
+INNER JOIN 
+    information_schema.processlist p ON p.id = b.trx_mysql_thread_id
+ORDER BY 
+    r.trx_mysql_thread_id;
 </code></pre>
     <a href="/"> >> Home</a>
   </main>

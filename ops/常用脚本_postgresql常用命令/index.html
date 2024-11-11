@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>常用脚本_PostgreSQL常用命令| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">常用脚本_PostgreSQL常用命令</span></h1>
+</div>
+
+
+  <main>
+    <ul>
+<li>进入PostgreSQL</li>
+</ul>
+<pre><code>su - postgres
+ cd /usr/local/pgsql/bin/
+
+./psql
+
+</code></pre><ul>
+<li>看当前端口号</li>
+</ul>
+<pre><code>SHOW port;
+</code></pre><ul>
+<li>列出所有数据库</li>
+</ul>
+<pre><code>\l 
+</code></pre><ul>
+<li>切换数据库</li>
+</ul>
+<pre><code>\c dbname
+</code></pre><ul>
+<li>列出当前数据库的所有表</li>
+</ul>
+<pre><code>\d 
+</code></pre><ul>
+<li>查看指定表的所有字段</li>
+</ul>
+<pre><code>\d  tablename
+</code></pre><ul>
+<li>查看指定表的基本情况</li>
+</ul>
+<pre><code>\d+  tablename
+</code></pre><ul>
+<li>确认是否是主库（false为主）</li>
+</ul>
+<pre><code>SELECT pg_is_in_recovery();
+</code></pre><ul>
+<li>有几个从库</li>
+</ul>
+<pre><code>SELECT count(*) FROM pg_stat_replication;
+</code></pre><ul>
+<li>查看从库状态</li>
+</ul>
+<pre><code>SELECT * FROM pg_stat_replication;
+</code></pre><ul>
+<li>建库</li>
+</ul>
+<pre><code>CREATE DATABASE cdt_pg_maxkb;
+</code></pre><ul>
+<li>建用户</li>
+</ul>
+<pre><code>CREATE USER pgmaxkb_owner WITH PASSWORD '「password」';
+</code></pre><ul>
+<li>给权限</li>
+</ul>
+<pre><code>GRANT ALL PRIVILEGES ON DATABASE cdt_pg_maxkb TO pgmaxkb_owner;
+</code></pre><ul>
+<li>数据库的连接信息</li>
+</ul>
+<pre><code>select * from pg_stat_activity
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2024/11/07</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC">常用脚本</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%9F%BA%E7%A1%80">基础</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

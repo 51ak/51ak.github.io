@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL为了适应大规模bi拉取数据的参数调整| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL为了适应大规模bi拉取数据的参数调整</span></h1>
+</div>
+
+
+<nav id="TableOfContents"></nav>
+
+  <main>
+    <blockquote>
+<p>线上bi实例，专门用于bi拉数或开发定位问题用的，需要调整以下参数</p>
+</blockquote>
+<ul>
+<li>设置连接空闲的超时时间（秒）。可以通过增加这些参数的值来延长连接的存活时间，以便超长查询有充足的时间完成。</li>
+</ul>
+<pre><code>SET GLOBAL wait_timeout = 28800;       -- 28800秒（8小时）
+SET GLOBAL interactive_timeout = 28800;
+</code></pre><ul>
+<li>用于控制服务器等待客户端发送数据的时间（秒），对于较大的导出操作，增大这两个参数可以防止数据传输中断。</li>
+</ul>
+<pre><code>SET GLOBAL net_read_timeout = 600;    -- 增大到10分钟，适合大查询
+SET GLOBAL net_write_timeout = 600;
+</code></pre><ul>
+<li>控制单个查询的最大执行时间（毫秒），</li>
+</ul>
+<pre><code>SET GLOBAL max_execution_time = 0;    -- 设置为0，表示不限制查询时间
+</code></pre><ul>
+<li>控制排序操作时使用的内存大小,默认值较小。对于导出大数据的查询，将其适当增大（如16M或32M）可以减少磁盘排序操作，提升查询效率。</li>
+</ul>
+<pre><code>SET GLOBAL sort_buffer_size = 167772160;    -- 160M
+</code></pre><ul>
+<li>控制全表扫描时每次读取的数据量，适合大查询时进行适度调高，通常可以设置为2M到16M。</li>
+</ul>
+<pre><code>SET GLOBAL read_buffer_size = 16777216;   
+</code></pre><ul>
+<li>控制InnoDB引擎在等待行锁的最大时间（秒）。对于长查询，适当增大可以避免锁等待超时错误。</li>
+</ul>
+<pre><code>SET GLOBAL innodb_lock_wait_timeout = 300; 
+</code></pre><ul>
+<li>控制最大通信数据包大小。对于导出大数据，可以增加此值避免错误。</li>
+</ul>
+<pre><code>SET GLOBAL max_allowed_packet = 1073741824;  
+</code></pre><p>-脚本</p>
+<pre><code>mysqlw -h  mysql6303-w.corp.dboop.com -P 6303 -e &quot;SET GLOBAL interactive_timeout = 28800;SET GLOBAL wait_timeout = 28800; SET GLOBAL net_write_timeout = 600;SET GLOBAL net_read_timeout = 600;SET GLOBAL innodb_lock_wait_timeout = 300; SET GLOBAL max_allowed_packet = 1073741824;  SET GLOBAL read_buffer_size = 16777216;   SET GLOBAL sort_buffer_size = 167772160;  SET GLOBAL max_execution_time = 0;&quot;
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2024/10/12</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%9F%BA%E7%A1%80">基础</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

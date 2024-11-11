@@ -6,7 +6,16 @@
     <description>Recent content in Ops on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 26 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="/ops/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 07 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="/ops/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>常用脚本_PostgreSQL常用命令</title>
+      <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_postgresql%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Thu, 07 Nov 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_postgresql%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</guid>
+      <description> 进入PostgreSQL  su - postgres cd /usr/local/pgsql/bin/ ./psql  看当前端口号  SHOW port;  列出所有数据库  \l  切换数据库  \c dbname  列出当前数据库的所有表  \d  查看指定表的所有字段  \d tablename  查看指定表的基本情况  \d+ tablename  确认是否是主库（false为主）  SELECT pg_is_in_recovery();  有几个从库  SELECT count(*) FROM pg_stat_replication;  查看从库状态  SELECT * FROM pg_stat_replication;  建库  CREATE DATABASE cdt_pg_maxkb;  建用户  CREATE USER pgmaxkb_owner WITH PASSWORD &#39;「password」&#39;;  给权限  GRANT ALL PRIVILEGES ON DATABASE cdt_pg_maxkb TO pgmaxkb_owner;  数据库的连接信息  select * from pg_stat_activity </description>
+    </item>
+    
     <item>
       <title>Centos7安装ffmpeg</title>
       <link>/ops/centos7%E5%AE%89%E8%A3%85ffmpeg/</link>
