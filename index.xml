@@ -6,7 +6,22 @@
     <description>Recent content on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 07 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 11 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>做数据同步程序过程的一些零散的笔记</title>
+      <link>/book/%E5%81%9A%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5%E7%A8%8B%E5%BA%8F%E8%BF%87%E7%A8%8B%E7%9A%84%E4%B8%80%E4%BA%9B%E8%AE%B0%E5%BD%95/</link>
+      <pubDate>Mon, 11 Nov 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/book/%E5%81%9A%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5%E7%A8%8B%E5%BA%8F%E8%BF%87%E7%A8%8B%E7%9A%84%E4%B8%80%E4%BA%9B%E8%AE%B0%E5%BD%95/</guid>
+      <description> 用python写了一个数据同步工作，过程零散的笔记，记录一下
+ 不要低估硬件的影响   因为中间硬件资源调整不开，运维同事给了一个sata硬盘凑数，结果慢到另人发指
+  数据同步在不同硬盘下的实际运行速度和磁盘io性能：
+  sas机械盘 iops：2k, 写入20M/s， io操作占比40%，写入速度1万行/秒
+  sata机械盘	iops：0.7k, 写入10M/s， io操作占比100%，写入速度0.4万行/秒
+  ssd盘	iops：22k, 写入262M/s， io操作占比70%，写入速度8万行/秒
+  一开始就要想到并行  同步一个实例拆 同步一个库，再拆 同步一个表，一开始需要拆到这个级别，等跑起来，还要优化 同步表中的一部分  初始化很重要  表数据初始化的速度和性能非常重要 尤其是程序可能有bug的时候，会反复用到表初始化地步 比起增量同步，全量同步难在如何提速。 线上增量的消费速度，可需要追上就行。这部分单线程就能满足，反而容易 如何将一张上亿的大表，尽可能快的全量抽到另一个实例中，这个非常重要  注意时间和日期格式和中文编码  被oracle 的 -0002-1-1 这样的公元前日期折磨得怀疑人生 不同的数据库类型的日期要求和编码。处理起来会非常麻烦  python的优势  python的胶水特性在做数据同步时非常实用 可以快速的完成试错和让应用跑起来很重要  要有验证逻辑  同步是否成功，数据量对比 是否有延时 数据关键特征是否匹配  要做好规划  如果可能一个实例一个实例的去攻克 如果可能一开始画好程序的主要路径 要充分考虑部分同步出错时的补救方法  </description>
+    </item>
+    
     <item>
       <title>常用脚本_PostgreSQL常用命令</title>
       <link>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_postgresql%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link>
