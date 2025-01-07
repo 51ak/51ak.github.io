@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ollama的安装和配置| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">Ollama的安装和配置</span></h1>
+</div>
+
+
+  <main>
+    <p><img src="/img/2022auto/2024-04-15-17-23-06.png" alt="Ollama安装和配置"></p>
+<h2 id="为什么要用ollama">为什么要用Ollama</h2>
+<ul>
+<li>几乎是最方便的本地部署Ai大模型的方式</li>
+<li>支持在 Mac、Windows、Linux 上运行</li>
+<li>支持CPU,GPU</li>
+<li>不用考虑复杂的本地环境</li>
+<li>简直是大模型里的docker</li>
+</ul>
+<blockquote>
+<p>Ollam官网的介绍是：Get up and running with large language models, locally.</p>
+</blockquote>
+<h2 id="安装ollla">安装Ollla</h2>
+<h3 id="mac">Mac</h3>
+<ul>
+<li>一行命令<code>brew install ollama</code></li>
+</ul>
+<h3 id="linux">Linux</h3>
+<ul>
+<li>一行命令 <code> curl -fsSL https://ollama.com/install.sh | sh</code></li>
+</ul>
+<h3 id="windows">Windows</h3>
+<ul>
+<li>下载ollama的安装包，<a href="https://ollama.ai/download">下载地址</a></li>
+<li><a href="https://ollama.com/download/OllamaSetup.exe">https://ollama.com/download/OllamaSetup.exe</a></li>
+<li>安装上就即可</li>
+</ul>
+<h2 id="启动">启动</h2>
+<ul>
+<li>ollama serve 启动服务</li>
+<li>ollama list 查看本地的模型</li>
+<li>ollama run <!-- raw HTML omitted --> 启动模型</li>
+</ul>
+<h2 id="配置ollama">配置Ollama</h2>
+<h3 id="设置服务">设置服务</h3>
+<ul>
+<li>vim /etc/systemd/system/ollama.service</li>
+</ul>
+<pre><code>[Unit]
+Description=Ollama Service
+After=network-online.target
+
+[Service]
+Environment=&quot;OLLAMA_HOST=0.0.0.0:11434&quot;
+ExecStart=/usr/local/bin/ollama serve
+
+#User=ollama
+#Group=ollama
+User=root
+Group=root
+Restart=always
+RestartSec=3
+Environment=&quot;PATH=/root/anaconda3/bin:....{这里是你的环境变量}&quot;
+
+[Install]
+WantedBy=default.target
+</code></pre><ul>
+<li>保存后执行</li>
+</ul>
+<pre><code>sudo systemctl daemon-reload
+sudo systemctl enable ollama
+
+systemctl start ollama
+</code></pre><ul>
+<li>可以通过以下命令来查看日志<code>journalctl -u ollama</code></li>
+<li>查看状态 <code>systemctl status ollama</code></li>
+</ul>
+<h3 id="下载模型">下载模型</h3>
+<ul>
+<li>配置Ollama需要先安装模型，目前支持的模型有：
+<img src="/img/2022auto/2024-04-15-17-26-05.png" alt="配置Ollama"></li>
+<li>可以在这个页面查找所有模型：https://ollama.ai/library</li>
+</ul>
+<h2 id="运行模型">运行模型</h2>
+<h3 id="方式1-命令行">方式1: 命令行</h3>
+<pre><code>ollama run llama2-chinese #meta开源的模型
+ollama run gemma:2b  #google 开源模型；
+ollama run qwen      #阿里开源模型
+</code></pre><ul>
+<li>此时会出现一个窗口，输入内容，然后就可以看到模型生成的内容了</li>
+<li>下载的模型会保存在 ~/.ollama/models/</li>
+<li>模型会自动下载，下载完成后，就可以直接使用</li>
+</ul>
+<h3 id="方式2-接口">方式2: 接口</h3>
+<ul>
+<li>访问http://localhost:11434/api/v1/models</li>
+<li>输入模型名称，例如llama2-chinese</li>
+</ul>
+<pre><code>curl http://localhost:11434/api/chat -d '{
+&quot;model&quot;: &quot;mistral&quot;,
+&quot;messages&quot;: [
+{ &quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;天空为什么是蓝色？&quot; }
+]
+}'
+</code></pre><ul>
+<li>访问http://localhost:11434/api/v1/generate</li>
+<li>输入模型名称，例如llama2-chinese</li>
+</ul>
+<pre><code>curl http://localhost:11434/api/generate -d '{
+&quot;model&quot;: &quot;llama2&quot;,
+&quot;prompt&quot;:&quot;天空为什么是蓝色？&quot;
+}'
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2024/04/15</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a> <a href="/categories/chatgpt">chatgpt</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

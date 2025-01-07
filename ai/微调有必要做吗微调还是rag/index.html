@@ -1,0 +1,391 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>微调有必要做吗？微调还是RAG?| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">微调有必要做吗？微调还是RAG?</span></h1>
+</div>
+
+
+  <main>
+    <blockquote>
+<ul>
+<li>我需要对大模型做微调吗？</li>
+<li>想自定义大模型时，选择：微调还是RAG还是ICL？</li>
+</ul>
+</blockquote>
+<h2 id="需要对大模型做微调">需要对大模型做微调？</h2>
+<ul>
+<li>在人工智能的世界里，大型语言模型（LLM）已经成为了我们探索未知、解决问题的得力助手。</li>
+<li>但是你想自己定义一个属于自己的大模型，它有自己特色的数据训练和回答方式。自己从头训练一个大模型的成本太高</li>
+<li>这时候可能需要考虑在已有的大模型上做：微调</li>
+<li>就像一个微整容手术一样，变得更帅</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>判断因素</th>
+<th>是</th>
+<th>否</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>是否需要特定领域的精确性？</strong></td>
+<td>如果你的应用需要处理特定领域的数据，如医疗、法律或金融，并且需要高度的准确性和对专业术语的理解，那么微调可能是必要的。</td>
+<td>如果你的应用是通用的，或者不需要深入特定领域的专业知识，那么可能不需要微调。</td>
+</tr>
+<tr>
+<td><strong>是否需要定制化模型行为？</strong></td>
+<td>如果你需要模型以特定的风格、语调或格式响应，或者需要它表现出特定的行为特征，微调可以帮助你实现这些定制化需求。</td>
+<td>如果模型的通用行为已经满足需求，或者你不需要特定的响应风格，那么微调可能不是必需的。</td>
+</tr>
+<tr>
+<td><strong>是否面临边缘案例的挑战？</strong></td>
+<td>如果你发现模型在处理某些边缘或罕见案例时表现不佳，微调可以帮助改进这些特定情况的处理。</td>
+<td>如果模型在所有常见和边缘案例中都表现良好，那么微调可能不是必要的。</td>
+</tr>
+<tr>
+<td><strong>是否需要提高模型的可靠性？</strong></td>
+<td>如果模型在遵循复杂指令或生成期望输出方面存在失败，微调可以提高其可靠性。</td>
+<td>如果模型已经足够可靠，能够满足你的输出要求，那么可能不需要微调。</td>
+</tr>
+<tr>
+<td><strong>是否需要降低成本？</strong></td>
+<td>如果你希望通过微调将大型模型的技能转移到更小的模型中，以减少计算资源的使用和成本，那么微调是有益的。</td>
+<td>如果成本不是主要考虑因素，或者你不需要优化模型的大小和性能，那么微调可能不是必需的。</td>
+</tr>
+<tr>
+<td><strong>是否需要快速部署新任务？</strong></td>
+<td>如果你需要模型快速适应新任务或能力，微调可以帮助你实现这一点。</td>
+<td>如果模型目前的任务已经足够，并且没有立即引入新任务的需求，那么微调可能不是必要的。</td>
+</tr>
+<tr>
+<td><strong>是否有足够的训练数据？</strong></td>
+<td>如果你拥有足够的、高质量的、与任务相关的训练数据，微调可以显著提高模型的性能。</td>
+<td>如果缺乏足够的训练数据，或者数据质量不高，微调可能不会带来预期的效果。</td>
+</tr>
+<tr>
+<td><strong>是否对模型的透明度有要求？</strong></td>
+<td>如果你的应用需要模型的决策过程是可解释的，微调可以帮助你更好地理解和控制模型的行为。</td>
+<td>如果模型的透明度不是关键考虑因素，那么可能不需要微调。</td>
+</tr>
+<tr>
+<td><strong>是否有足够的资源进行微调？</strong></td>
+<td>如果你有足够的计算资源和专业知识来进行微调，那么这是一个可行的选项。</td>
+<td>如果资源有限，可能需要考虑其他方法，如上下文学习或使用现成的模型。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="1-定制化风格与格式">1. 定制化风格与格式</h2>
+<p>你是否需要一个能够模仿特定人物或服务于特定受众的聊天机器人？通过使用定制数据集对LLM进行微调，我们可以使其响应更加贴近受众的具体要求或预期体验。例如，你可能需要将输出结构化为JSON、YAML或Markdown格式。</p>
+<h2 id="2-提高准确性处理边缘案例">2. 提高准确性，处理边缘案例</h2>
+<p>微调可以用来纠正那些通过提示工程和上下文学习难以修正的错误。它还可以增强模型执行新技能或任务的能力，这些任务在提示中难以表达。例如，Phi-2在金融数据分析上的准确率从34%提高到了85%，而ChatGPT在Reddit评论情感分析上的准确率提高了25个百分点。</p>
+<h2 id="3-针对小众领域的优化">3. 针对小众领域的优化</h2>
+<p>尽管LLM在大量通用数据上进行了训练，但它们可能并不总是精通每个小众领域的专业术语或特定细节。在法律、医疗或金融等多样化领域，微调已被证明可以提高下游任务的准确性。</p>
+<h2 id="4-成本降低">4. 成本降低</h2>
+<p>微调可以将大型模型（如Llama 2 70B/GPT-4）的技能提炼到更小的模型中（如Llama 2 7B），在不牺牲质量的情况下降低成本和延迟。此外，微调减少了对长或特定提示的需求，从而节省了令牌，进一步降低了成本。</p>
+<h2 id="5-新任务能力">5. 新任务/能力</h2>
+<p>微调通常可以通过以下几种方式实现新的能力：</p>
+<ul>
+<li>使LLM更好地使用给定检索器的上下文或完全忽略它。</li>
+<li>评估其他LLM的指标，如基于事实的、合规性或有用性。</li>
+<li>增加LLM的上下文窗口。</li>
+</ul>
+<h2 id="微调的五种方法">微调的五种方法：</h2>
+<h3 id="微调的五大方法">微调的五大方法</h3>
+<ul>
+<li>
+<ol>
+<li>Freeze 方法，即参数冻结，对原始模型部分参数进行冻结操作；</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>P-Tuning 方法，参考 ChatGLM 官方代码 ，是针对于大模型的 soft-prompt 方法；</li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li>LoRA 方法，的核心思想就是通过低秩分解来模拟参数的改变量，从而以极小的参数量来实现大模型的间接训练；</li>
+</ol>
+</li>
+<li>
+<ol start="4">
+<li>AdaLoRA 方法是对 LoRA 的一种改进，并根据重要性评分动态分配参数预算给权重矩阵；</li>
+</ol>
+</li>
+<li>
+<ol start="5">
+<li>QLoRA 方法，是使用一种新颖的高精度技术将预训练模型量化为 4 bit，并添加一小组可学习的低秩适配器权重。</li>
+</ol>
+</li>
+</ul>
+<h3 id="微调方法对比">微调方法对比</h3>
+<ul>
+<li>一般我们说的微调分类会简化成：</li>
+<li>1.全参数微调：贵，慢，效果最佳</li>
+<li>2.LoRa：快，偏宜，佳</li>
+<li>3.改进LoRa：快，偏宜，佳</li>
+</ul>
+<h2 id="微调与其他技术对比">微调与其他技术对比</h2>
+<h3 id="微调-vs-icl">微调 vs. ICL</h3>
+<p>上下文学习（ICL）是一种强大的提高基于LLM系统性能的方法。鉴于其简单性，应该在进行任何微调活动之前尝试ICL。此外，ICL实验可以帮助你评估微调是否会提高下游任务的性能。</p>
+<h3 id="微调-vs-rag">微调 vs. RAG</h3>
+<p>普遍的共识是，当LLM的基础性能不令人满意时，你可能会“从RAG开始，评估其性能，如果发现不足，转向微调”，或者认为“RAG可能优于微调”。然而，我们认为这种范式过于简单化了，因为有许多场景中，RAG不仅不是微调的替代品，而且更多地是微调的补充方法。</p>
+<h3 id="对比">对比</h3>
+<table>
+<thead>
+<tr>
+<th>特性/技术</th>
+<th>微调 (Fine-tuning)</th>
+<th>RAG (Retrieval-Augmented Generation)</th>
+<th>上下文学习 (In-Context Learning, ICL)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>定义</strong></td>
+<td>对预训练模型进行额外训练以适应特定任务或数据集。</td>
+<td>结合检索系统和生成模型，以提供更准确的信息。</td>
+<td>通过在输入中提供示例来指导模型完成特定任务。</td>
+</tr>
+<tr>
+<td><strong>使用成本</strong></td>
+<td>较高，因为需要额外的训练数据和计算资源。</td>
+<td>较高，需要维护检索系统和训练成本。</td>
+<td>较低，不需要额外训练，但可能需要更多的输入示例。</td>
+</tr>
+<tr>
+<td><strong>准确性</strong></td>
+<td>通常更高，特别是对于需要特定领域知识的复杂任务。</td>
+<td>可能更高，特别是在需要外部信息的任务中。</td>
+<td>可能因示例数量和质量而变化，但通常不如微调准确。</td>
+</tr>
+<tr>
+<td><strong>处理边缘案例</strong></td>
+<td>有效，可以专门针对边缘案例进行训练。</td>
+<td>有效，可以通过检索相关信息来处理。</td>
+<td>受限于提供的示例，可能无法覆盖所有边缘情况。</td>
+</tr>
+<tr>
+<td><strong>定制化</strong></td>
+<td>高度可定制，可以针对特定风格或格式进行优化。</td>
+<td>可定制，但受限于检索系统的能力。</td>
+<td>可定制，但需要精心设计的示例。</td>
+</tr>
+<tr>
+<td><strong>新任务/能力</strong></td>
+<td>可以学习新任务，但可能需要大量数据。</td>
+<td>可以处理需要外部信息的新任务。</td>
+<td>可以处理新任务，但通常需要更多示例。</td>
+</tr>
+<tr>
+<td><strong>数据依赖性</strong></td>
+<td>依赖于训练数据的质量和相关性。</td>
+<td>依赖于检索系统提供的数据。</td>
+<td>依赖于提供的示例数据。</td>
+</tr>
+<tr>
+<td><strong>更新频率</strong></td>
+<td>需要定期重新训练以保持知识更新。</td>
+<td>需要更新检索系统以保持信息最新。</td>
+<td>无需更新，但示例可能需要更新以反映新信息。</td>
+</tr>
+<tr>
+<td><strong>维护难度</strong></td>
+<td>较高，需要专业知识和资源进行训练和维护。</td>
+<td>较高，需要维护检索系统和生成模型。</td>
+<td>较低，主要涉及示例的更新和管理。</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>适合需要高度定制化和准确性的场景。</td>
+<td>适合需要结合大量外部信息的场景。</td>
+<td>适合快速原型设计和探索性任务。</td>
+</tr>
+<tr>
+<td><strong>成本效益分析</strong></td>
+<td>对于需要高度定制化的应用，成本效益可能更高。</td>
+<td>对于需要实时检索信息的应用，成本效益可能更高。</td>
+<td>对于需要快速部署和较少资源投入的应用，成本效益最高。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="结论">结论</h2>
+<p>在大多数情况下，微调和RAG的混合解决方案将产生最佳结果。问题变成了进行两者的成本、时间和额外的独立收益。参考上述问题来指导你的决策，如果需要RAG和/或微调，并通过内部实验来理解通过分析错误可能获得的指标增益。最后，微调的探索确实需要一个健全的数据收集和数据改进策略，我们建议将其作为开始微调的前奏。</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>成本</th>
+<th>优势</th>
+<th>劣势</th>
+<th>特点</th>
+<th>使用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全参数微调</td>
+<td>高</td>
+<td>- 能够捕捉到数据的细微特征<!-- raw HTML omitted -->- 模型性能通常较好</td>
+<td>- 需要大量计算资源<!-- raw HTML omitted -->- 训练时间长<!-- raw HTML omitted -->- 容易过拟合</td>
+<td>- 所有参数都参与训练</td>
+<td>- 需要大量标注数据<!-- raw HTML omitted -->- 适用于对模型性能要求极高的场景</td>
+</tr>
+<tr>
+<td>LoRA</td>
+<td>中</td>
+<td>- 减少参数量，节省计算资源<!-- raw HTML omitted -->- 保持模型性能</td>
+<td>- 可能不如全参数微调的性能</td>
+<td>- 仅对部分参数进行微调</td>
+<td>- 资源有限但需要微调的场景</td>
+</tr>
+<tr>
+<td>QLoRA</td>
+<td>中</td>
+<td>- 比LoRA更灵活<!-- raw HTML omitted -->- 可以更好地捕捉数据特征</td>
+<td>- 计算资源需求比LoRA高</td>
+<td>- 通过量化来减少参数量</td>
+<td>- 需要在保持性能的同时减少参数量的场景</td>
+</tr>
+<tr>
+<td>RAG</td>
+<td>可高可低</td>
+<td>- 能够进行检索增强学习<!-- raw HTML omitted -->- 可以处理长文本和复杂任务</td>
+<td>- 需要额外的检索系统<!-- raw HTML omitted -->- 训练复杂度增加</td>
+<td>- 结合检索和生成</td>
+<td>- 需要处理大量信息和复杂查询的场景</td>
+</tr>
+<tr>
+<td>ICL</td>
+<td>低</td>
+<td>- 通过对比学习提高模型鲁棒性<!-- raw HTML omitted -->- 可以处理不同的数据分布</td>
+<td>- 需要设计合适的对比样本</td>
+<td>- 通过对比学习进行微调</td>
+<td>- 需要提高模型泛化能力的场景</td>
+</tr>
+</tbody>
+</table>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2024/09/09</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/chatgpt">chatgpt</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

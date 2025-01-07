@@ -9,28 +9,28 @@
     <lastBuildDate>Mon, 22 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E8%A7%86%E9%A2%91/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>用ai技术来帮普通人完成扣篮</title>
-      <link>/book/%E7%94%A8ai%E6%8A%8A%E7%85%A7%E7%89%87%E5%8F%98%E6%88%90%E8%A7%86%E9%A2%91%E6%95%88%E6%9E%9C%E6%83%8A%E4%BA%BA/</link>
+      <link>/ai/%E7%94%A8ai%E6%8A%8A%E7%85%A7%E7%89%87%E5%8F%98%E6%88%90%E8%A7%86%E9%A2%91%E6%95%88%E6%9E%9C%E6%83%8A%E4%BA%BA/</link>
       <pubDate>Mon, 22 Jul 2024 00:00:00 +0000</pubDate>
       
-      <guid>/book/%E7%94%A8ai%E6%8A%8A%E7%85%A7%E7%89%87%E5%8F%98%E6%88%90%E8%A7%86%E9%A2%91%E6%95%88%E6%9E%9C%E6%83%8A%E4%BA%BA/</guid>
+      <guid>/ai/%E7%94%A8ai%E6%8A%8A%E7%85%A7%E7%89%87%E5%8F%98%E6%88%90%E8%A7%86%E9%A2%91%E6%95%88%E6%9E%9C%E6%83%8A%E4%BA%BA/</guid>
       <description> 上周朋友给我拍了一张打篮球的照片 当时我想表演一下扣篮 奈何弹跳能力有限 只留一下朴素的照片 好在有ai技术 弥补了老年人跳不起来的尴尬  原片（照片） 成片（视频）   </description>
     </item>
     
     <item>
       <title>北大法律大模型ChatLaw发布:中国法律界的智能助手</title>
-      <link>/book/%E5%8C%97%E5%A4%A7%E6%B3%95%E5%BE%8B%E5%A4%A7%E6%A8%A1%E5%9E%8Bchatlaw/</link>
+      <link>/ai/%E5%8C%97%E5%A4%A7%E6%B3%95%E5%BE%8B%E5%A4%A7%E6%A8%A1%E5%9E%8Bchatlaw/</link>
       <pubDate>Fri, 07 Jul 2023 00:00:00 +0000</pubDate>
       
-      <guid>/book/%E5%8C%97%E5%A4%A7%E6%B3%95%E5%BE%8B%E5%A4%A7%E6%A8%A1%E5%9E%8Bchatlaw/</guid>
+      <guid>/ai/%E5%8C%97%E5%A4%A7%E6%B3%95%E5%BE%8B%E5%A4%A7%E6%A8%A1%E5%9E%8Bchatlaw/</guid>
       <description>7月3日 北京大学信息工程学院袁粒课题组+北大兔展AIGC联合实验室两个团队联合发布了ChatLaw 可能是目前国内比较先进的法律大模型 从实际体验来看 1.在国内法律领域比ChatGPT回答得更专业 2.在其他回答上很勉强，比ChatGPT弱很多,有点呆 3.本地部署非常费资源,对机器要求较高 4.性能不佳，每次回答容易卡住且不流畅 考虑到6月27日幂律智能联合智谱AI法律垂直大模型 PowerLawGLM。 还有再早一点开源社区也发布了一些AI法律微调模型 由于ChatGPT的普及，LLMA的开源 而法律行业的规律性，可文本化，可预测性比较强 大语言模型的崛起为普通人的咨询法律相关问题提供了很多便利  关于ChatLaw 信息汇总  官网地址：https://www.chatlaw.cloud/ 论文地址：https://arxiv.org/pdf/2306.16092.pdf GitHub 地址：https://github.com/PKU-YuanGroup/ChatLaw 根源上这个模也还是基于meta公司的LLaMA模型(小扎的这次开源给国内的大语言模型贡献巨大，现在市面上大多数开源模型都是基于Meta开源的LLAMA） 北京大学信息工程学院袁粒课题组 北大-兔展AIGC联合实验室联合发布 主要团队成员： Jiaxi Cui Zongjian Li Yang Yan Bohua Chen Li Yuan  这是官方宣传视频   这是实际体验&amp;hellip;  问了一个踩到狗屎的问题，等了5分钟，还卡在这   ChatLaw的版本  共有三个版本，分别如下： ChatLaw-13B，为学术 demo 版，基于姜子牙 Ziya-LLaMA-13B-v1 训练而来，中文各项表现很好。但是，逻辑复杂的法律问答效果不佳，需要用更大参数的模型来解决； ChatLaw-33B，也为学术 demo 版，基于 Anima-33B 训练而来，逻辑推理能力大幅提升。但是，由于 Anima 的中文语料过少，问答时常会出现英文数据； ChatLaw-Text2Vec，使用 93w 条判决案例做成的数据集，基于 BERT 训练了一个相似度匹配模型，可以将用户提问信息和对应的法条相匹配。  普通人怎么用上ChatLaw  方法1.官网上申请内测 https://www.</description>
     </item>
     
     <item>
       <title>人工智能平台top580.com使用说明_生成视频</title>
-      <link>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_8/</link>
+      <link>/ai/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_8/</link>
       <pubDate>Tue, 27 Jun 2023 00:00:00 +0000</pubDate>
       
-      <guid>/book/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_8/</guid>
+      <guid>/ai/%E8%A6%81%E5%81%9A%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%B9%B3%E5%8F%B0_8/</guid>
       <description>准备工作  1.打开www.top580.com 2.登入系统 这一步参见文档:注册和登录的详细说明  2.登入系统  这一步参见文档:注册和登录的详细说明  教学视频   </description>
     </item>
     

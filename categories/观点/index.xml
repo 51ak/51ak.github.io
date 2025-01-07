@@ -18,19 +18,19 @@
     
     <item>
       <title>用ai技术来帮普通人完成扣篮</title>
-      <link>/book/%E7%94%A8ai%E6%8A%8A%E7%85%A7%E7%89%87%E5%8F%98%E6%88%90%E8%A7%86%E9%A2%91%E6%95%88%E6%9E%9C%E6%83%8A%E4%BA%BA/</link>
+      <link>/ai/%E7%94%A8ai%E6%8A%8A%E7%85%A7%E7%89%87%E5%8F%98%E6%88%90%E8%A7%86%E9%A2%91%E6%95%88%E6%9E%9C%E6%83%8A%E4%BA%BA/</link>
       <pubDate>Mon, 22 Jul 2024 00:00:00 +0000</pubDate>
       
-      <guid>/book/%E7%94%A8ai%E6%8A%8A%E7%85%A7%E7%89%87%E5%8F%98%E6%88%90%E8%A7%86%E9%A2%91%E6%95%88%E6%9E%9C%E6%83%8A%E4%BA%BA/</guid>
+      <guid>/ai/%E7%94%A8ai%E6%8A%8A%E7%85%A7%E7%89%87%E5%8F%98%E6%88%90%E8%A7%86%E9%A2%91%E6%95%88%E6%9E%9C%E6%83%8A%E4%BA%BA/</guid>
       <description> 上周朋友给我拍了一张打篮球的照片 当时我想表演一下扣篮 奈何弹跳能力有限 只留一下朴素的照片 好在有ai技术 弥补了老年人跳不起来的尴尬  原片（照片） 成片（视频）   </description>
     </item>
     
     <item>
       <title>AI的电力需求以及国内的电力能源情况</title>
-      <link>/book/%E8%83%BD%E6%BA%90%E4%B8%8Eai/</link>
+      <link>/ai/%E8%83%BD%E6%BA%90%E4%B8%8Eai/</link>
       <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
       
-      <guid>/book/%E8%83%BD%E6%BA%90%E4%B8%8Eai/</guid>
+      <guid>/ai/%E8%83%BD%E6%BA%90%E4%B8%8Eai/</guid>
       <description>AI的惊人耗电量  当我们说大模型AI的使用成本很贵的时候 一方面其训练和推理的硬件GPU本身很贵，另一方面其消耗的电力也很夸张 这里我们只说AI的耗电量  AI训练阶段耗电量  OpenAI的GPT-3模型一次训练的耗电量高达1287兆瓦时 谷歌于2022年发布的大语言模型PaLM一次训练需要消耗3436兆瓦时的电量 模型越大，训练所需要消耗的电量越多。现在gpt-4o,文心一言4,通义千问这些新的大模型训练用电量会更夸张  AI推理阶段的耗电量  GPT每生成1000个英文单词大约消耗0.125千瓦时的电量 OpenAI需要3,617台英伟达公司的HGX A100服务器（共有28,936个图形处理单元 (GPU)）来支持 ChatGPT，这意味着每天的能源需求为 564 兆瓦时 谷歌搜索中应用生成式AI技术，谷歌每年的耗电量将高达290亿千瓦时，也就是每天约7900万度电  AI耗电的原因及改进方向 AI耗电的原因：GPU运算   以H800 GPU PCIE 服务器整机为例：
  CPU耗电约 300W*2， 内存16根耗电约 250W 硬盘6块盘约200W 风扇耗电约150W H800GPU卡耗电约700W*8    合计：最大耗电量约为6800W（90%以上的耗电都是GPU引起的）
   这些还不包括机房空调制冷的电力消耗
@@ -50,10 +50,10 @@
     
     <item>
       <title>当程序出现了个bug</title>
-      <link>/book/%E5%BD%93%E4%BD%A0%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%87%BA%E7%8E%B0%E4%BA%86%E4%B8%AAbug/</link>
+      <link>/ai/%E5%BD%93%E4%BD%A0%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%87%BA%E7%8E%B0%E4%BA%86%E4%B8%AAbug/</link>
       <pubDate>Thu, 09 Nov 2023 00:00:00 +0000</pubDate>
       
-      <guid>/book/%E5%BD%93%E4%BD%A0%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%87%BA%E7%8E%B0%E4%BA%86%E4%B8%AAbug/</guid>
+      <guid>/ai/%E5%BD%93%E4%BD%A0%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%87%BA%E7%8E%B0%E4%BA%86%E4%B8%AAbug/</guid>
       <description>今天下午 研发有个数据误更新 需要回滚数据 在利用DBA提供的数据找回功能时 刚好我在旁边看着他在处理 眼瞅着生成的加滚SQL文件没有换行 一个大文本没有分行 所以有文字都在一行上 很难阅读 研发得自已处理下这个文件才能看 我让他换个文本编辑器试一下 结果还是不分行 我问另一个经常用这个功能的同事 以下是对话 - “你以前用的时候也是这样吗？” - 答：oracle就是不会分行,MySQL没问题 - “那怎么没跟我提起过呢“ - 答：以为就只能这样，不分行了处理下也能用 - .... -  我说这是一个bug 得处理一下 所以bug第一步  0.发现问题  一个平台或功能得有个反馈的机制 经常有同事或用户 在使用时发现了问题 不一定会主动反馈 需要有一定的鼓励措施 我在做大多数功能的时候 会强调如果使用过程中有任何问题 都可以找我沟通 每次有人找我反馈问题时 都会积极响应 （有时候是用户操作有问题引起的）  1.确认和复现问题  收到反馈后 需要自己确认和复现这个问题 要有再次触发的条件 某些极端的情况下 可能会很难触发和复现问题 此时需要自己阅读代码 找到可疑的模块 再在脑海里重构流程 从而发现问题 我知道这个能力不是所有人都具备的 但个人觉得这是一个好的程序员 应该具备的能力 在此过程中 有一定的概率会发现 这个问题可能是个bug 可能不是个bug 如果不是bug也需要找到问题所在（通常都是流程的条件不具备）  2.定位bug代码  通过现象 找到问题代码 这个定位过程有长有短 有时候甚至需要很久很久 反复的阅读代码 增加日志 才能定位到问题代码 如果是很长时间以前的代码 那简直是个灾难 也因为这个原因 我不喜欢把项目的架构设计得太复杂 因为时间长了 我可能已经记不得当时是怎么设计的了 就很头疼 在我主导的项目里 都力求简单 类设计通常都是按小模块独立 有时候我也需要阅读和调试别人的代码 讲真的 有的时候真的非常费劲 这可能就是不同人的不同表达差异 我也跟正经的研发同学 聊过这类问题 其中有非常善于review别人代码的 经常发现和定位问题的团队管理人员 他们有一种能力 就是架空与代码层去思考bug 以及某种直觉 猜到可能是哪个逻辑没有处理好 这个真的很厉害 需要长时间的一线代码管理 以及不断的定位和处理bug 才能产生的熟练程度  3.</description>
     </item>
     
@@ -125,10 +125,10 @@ We’re facing an inflection point in history. One of those moments where the de
     
     <item>
       <title>翻译Sam Altman的博客《How To Be Successful》</title>
-      <link>/book/%E7%BF%BB%E8%AF%91samaltman%E7%9A%84%E5%8D%9A%E5%AE%A2howtobesuccessful/</link>
+      <link>/ai/%E7%BF%BB%E8%AF%91samaltman%E7%9A%84%E5%8D%9A%E5%AE%A2howtobesuccessful/</link>
       <pubDate>Sun, 12 Feb 2023 00:00:00 +0000</pubDate>
       
-      <guid>/book/%E7%BF%BB%E8%AF%91samaltman%E7%9A%84%E5%8D%9A%E5%AE%A2howtobesuccessful/</guid>
+      <guid>/ai/%E7%BF%BB%E8%AF%91samaltman%E7%9A%84%E5%8D%9A%E5%AE%A2howtobesuccessful/</guid>
       <description>写在前面  这是上周看到的Sam Altman一篇博客. 原文连接是: https://blog.samaltman.com/how-to-be-successful 周末在家尝试翻译一下 别问为啥不用chatGPT翻译 周日下午15:35 开始翻译的,中间因为吃饭.看剧打断了几次 最终翻译完已经是晚上23:50了 最终用时在3个小时左右 所以机器翻译10秒的事. 我自己上手就需要2-3个小时哼哼哧哧的才能勉强完成.  作者简介  Sam Altman,1985年4月22日,出生于美国伊利诺伊州的芝加哥。 8岁时学会了编程。9岁时收到一台电脑作为生日礼物， 2005年，他选择从大学辍学，同好友合作创办了社交媒体公司 2012年，他以4300万美元的价格将其出售。 2011年，任Y Combinator的合伙人，成为世界上最富有的企业家和天使投资人之一。 2015年，与时任特斯拉和SpaceX首席执行官的埃隆·马斯克共同创立了OpenAI。他们成立这家非营利性人工智能公司的目标是——确保人工智能不会消灭人类。 现为Y Combinator 总裁、人工智能实验室OpenAI首席执行官。 美国《商业周刊》最优秀年轻企业家 被媒体称为ChatGPT之父。 他的博客地址是:https://blog.samaltman.com/  &amp;ndash; 以下是正文
 《How To Be Successful》怎么才能成功  I’ve observed thousands of founders and thought a lot about what it takes to make a huge amount of money or to create something important. Usually, people start off wanting the former and end up wanting the latter.</description>
     </item>

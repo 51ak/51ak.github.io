@@ -75,10 +75,10 @@ from pymilvus import connections # 连接到 Milvus 服务 connections.connect(a
     
     <item>
       <title>安装百度飞浆PaddleSpeech</title>
-      <link>/book/%E5%AE%89%E8%A3%85%E7%99%BE%E5%BA%A6%E9%A3%9E%E6%B5%86paddlespeech/</link>
+      <link>/ai/%E5%AE%89%E8%A3%85%E7%99%BE%E5%BA%A6%E9%A3%9E%E6%B5%86paddlespeech/</link>
       <pubDate>Wed, 22 Nov 2023 00:00:00 +0000</pubDate>
       
-      <guid>/book/%E5%AE%89%E8%A3%85%E7%99%BE%E5%BA%A6%E9%A3%9E%E6%B5%86paddlespeech/</guid>
+      <guid>/ai/%E5%AE%89%E8%A3%85%E7%99%BE%E5%BA%A6%E9%A3%9E%E6%B5%86paddlespeech/</guid>
       <description>安装  pip3.9 install paddlepaddle -i https://mirror.baidu.com/pypi/simple pip3.9 install pytest-runner -i https://mirror.baidu.com/pypi/simple pip3.9 install paddlespeech -i https://mirror.baidu.com/pypi/simple 报错1:ImportError: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.22&#39; not found  解决：   find / -name &amp;quot;libstdc++.so.6*&amp;quot; #找到一个路径 export LD_LIBRARY_PATH=/root/anaconda3/pkgs/libstdcxx-ng-8.2.0-hdf63c60_1/lib/:$LD_LIBRARY_PATH 报错2: </description>
     </item>
     

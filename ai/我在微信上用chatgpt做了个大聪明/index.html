@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>我在微信上用chatGPT做了个大聪明| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">我在微信上用chatGPT做了个大聪明</span></h1>
+</div>
+
+
+  <main>
+    <h2 id="update">update</h2>
+<ul>
+<li>2023-04-21 支持语音回复和跟读，有25种声音可选 <a href="https://www.dboop.com/book/%E5%BE%AE%E4%BF%A1%E4%B8%8A%E7%9A%84chatgpt%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%BC%80%E5%A7%8B%E6%94%AF%E6%8C%81%E8%AF%AD%E9%9F%B3%E4%BA%86/">语音的使用说明</a></li>
+<li>2023-04-04 ChatGPT自带的生成图片功能太吓人了，图片上的人脸跟鬼似的（可能是为了版权考虑，把人脸做了特殊处理），看得受不了，图片部分换成了百度的文心一言
+<ul>
+<li>大群不再踢人，不再接收新人加入（认识的朋友还是可以加的），另起一个群接受新人加入，新起的群没有实名制要求.</li>
+<li>两个群的权重是3:1 的关系，大群里的内容更容易得到更及时的反馈。</li>
+</ul>
+</li>
+<li>2023-04-02 做了以下修改
+<ul>
+<li>修改了机器人的回复框架，从底层重写了一版，回复速度更快（原始版本写得太2了）</li>
+<li>群里的聊天可以分辨出是具体的人。（这个很重要&hellip;)</li>
+<li>修改了提示词，每次都要@大聪明太费劲了。现在以“请”开头的群聊，都会触发大聪明的回复</li>
+<li>增加了生成图片的能力，例<code>生成图片:驴肉火烧</code></li>
+<li>生成语音，视频，ppt&hellip;的功能也准备就绪了，炫酷有余，但实用性不佳。先试试图片的反馈。好玩就会继续跟进放开。</li>
+<li>减少了一些功能
+<ul>
+<li>暂时停用了gpt4,bing,文心一言的功能，用得人少，稳定性不如GPT3.5</li>
+<li>停用了私聊功能，不再让大聪明一对一的回复问题（不这样做的原因是，有人在私聊里发消息略微有点频繁，机器人忙着回复私聊信息，群里的消息回得卡顿了）
+<ul>
+<li>私聊功能是个很纠结的点，我相信一定有人更愿意在私聊窗口和机器人对话，而不喜欢在群里对话，但是对我来说这个功能就很累赘。会针对几个朋友保留这个功能</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>前几天在力哥的帮助和推荐下，群里开始要求实名制，甚至把我拉进去的朋友也给踢了。有朋友表示理解，也有朋友私聊我表示很生气。
+<ul>
+<li>支持力哥的想法。力哥是个很有想法的人，我也想学习一下他看待新事情的思维和办事方法。
+<ul>
+<li>核心点是&quot;如果你的群里的人连改个名字都不愿意配合你，那这个群对他是没有价值的，你留他在群里干啥&quot;</li>
+</ul>
+</li>
+<li>也希望这个群能更好玩，不要有戾气，否则就违背初衷没意思了，拉这个群就是给朋友们感受一下chatgpt的好玩的用法。</li>
+<li>要不要多组几个群，喜欢认真的人在一个群里，喜欢瞎扯的人在另一个群里。互相不打扰。
+<ul>
+<li>谈正事的群里，会要求实名。</li>
+<li>瞎聊天的群里，就各种随意。</li>
+<li>区分是正事的群里的消息回复速度更优先一些，假如两个群里同时都有人在和大聪明交谈，那么机器人会更倾向于谈正事群（渣男算法&hellip;）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>关于群成本的问题</li>
+<li>群里回复消息调用了chatgpt的api，这个确实是收费的，但是费用极低，可以忽略不计</li>
+<li>以现在的提问频率，每天大约花费1/3个茶叶蛋的钱，这个还是负担得起的，不要慌&hellip;</li>
+<li>真正的成本在于投入时间维护和改造，好在我是个爱玩的人，这件事还挺好玩的，所以：问题不大。</li>
+</ul>
+</li>
+<li>2023-03-29 任何人都可以和大聪明发起一对一私聊了。不需要额外申请。</li>
+<li>gpt4的接口报错太多，暂时禁用了，有时间再修复。</li>
+<li>实在懒得去维护加群申请，力哥建议由他来管理群成员。</li>
+<li>群管理员交给力哥了。</li>
+<li>2023-03-23 修复百度文心一言回复不完整的bug ,增加文心一言生成图片功能
+<ul>
+<li>对于想和大聪明私聊的同学，可以一对一和大聪明发起对话了。</li>
+<li>私聊中不需要再以 @大聪明 开头了，因为是一对一对话。</li>
+<li>开通后会一直有效，不需要再次激活，以后任意时间给大聪明发的消息，默认都是机器人回复。</li>
+<li>2023-03-23 21:08 此功能试用中，等稳定了，再继续开通。</li>
+</ul>
+</li>
+<li>2023-03-20 群满员了，现在需要加微信由管理员拉进群。 群主每天会在19:00-20:00 集中处理加群邀请</li>
+</ul>
+<h2 id="怎么加入群">怎么加入群？</h2>
+<p><img src="/img/2023/dacongming.png" alt="大聪明微信回答机器人"></p>
+<ul>
+<li>扫描这个二维码，加入群</li>
+<li>免费使用，没有限制，只有一条，不要讨论或引导机器人讨论<!-- raw HTML omitted -->敏感话题<!-- raw HTML omitted -->免得群被封号。</li>
+</ul>
+<p>加大聪明的微信，进行一对一私聊（不推荐）：
+<img src="/img/2023/dacongming_pri.png" alt="加群"></p>
+<h2 id="怎么提问">怎么提问？</h2>
+<ul>
+<li>把问题写出来，然后 @大聪明。等个几十秒大聪明调用GPT3.5接口后（确实是慢哈&hellip;）。就会出来回复你。例如：</li>
+</ul>
+<pre><code>@大聪明 帮我写一封欢迎新同学的邮件
+</code></pre><ul>
+<li>如果想体验GPT-4 可以@gpt4 开头，大聪明也会回答的，不过会用GPT-4接口回复。例如：</li>
+</ul>
+<pre><code>@gpt4 帮我写一封欢迎新同学的邮件
+</code></pre><ul>
+<li>如果想体验文心一言 可以@文心一言 开头，大聪明也会用文心一言回答。例如：</li>
+</ul>
+<pre><code>@文心一言 帮我写一封欢迎新同学的邮件
+</code></pre><ul>
+<li>需要注意的理GPT-4接口借用了微软New Bing的壳，所以反应更慢，稳定性也差一些。如果不是想要最新的数据，建议用@大聪明</li>
+</ul>
+<h2 id="已知的提问技巧和问题">已知的提问技巧和问题</h2>
+<ul>
+<li>会话会自动关联上下文，不同的人在群里提问的问题，对机器人来说，是一个人在问（这个不好理解，倒也不重要）</li>
+<li>跟大聪明的对话中，如果同样的问题在与最近5条提问重复了，会被当成重复问题丢弃，这个需要格外注意，例如</li>
+</ul>
+<pre><code>A提问：@大聪明 请帮我写一篇800 字的小作文，关于春游的。
+@大聪明回复：....
+
+A提问：@大聪明 继续
+@大聪明回复：....
+
+A提问：@大聪明 继续
+这时候大聪明机器人会判断这是条重复提问，不理睬。这时候如果想让它继续的话，需要改一下措词，比如： @大聪明 请继续
+</code></pre><ul>
+<li>因为群里人多，而机器人反应慢，如果发现有其他朋友正在和机器人对话，请尽量不要插话，以免影响他们的对话连续性。（只是个建议）</li>
+<li>还是因为机器人反应慢，请不要批量提交问题，给它点反应时间，要不然容易刷屏。</li>
+<li>请尽量不要在问题中带特殊的标点符号，已知，如果问题中带有#号，会被当成注释。</li>
+</ul>
+<h2 id="大聪明是怎么回答的">大聪明是怎么回答的？</h2>
+<ul>
+<li>大聪明发现有人@他以后，会转头去chatGPT里问，把答案再转回来。</li>
+</ul>
+<h2 id="大聪明为啥反应慢">大聪明为啥反应慢</h2>
+<ul>
+<li>1.微信并没有群机器人这样的功能，所以我们做的群机器人用了定时轮询的方式去做的，本身发现问题就有延时</li>
+<li>2.GPT的接口不稳定和响应慢。因为GPT接口要生成文件，所以速度本来就有点慢</li>
+<li>3.这里面的交互界面，我也是凑合着写的，里面有巨大的优化空间。如果花点时间可以让每个回复快2-3秒。但是相比于现在10-60秒回复一个问题的时间来说，又懒得去优化。</li>
+</ul>
+<h2 id="问题反馈">问题反馈</h2>
+<ul>
+<li>每天19:00-20:00 我都在群里看消息，有问题可以在这个时间段在群里和我对话即可。</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2023/02/24</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a> <a href="/categories/chatgpt">chatgpt</a> <a href="/categories/%E5%A4%A7%E8%81%AA%E6%98%8E">大聪明</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
