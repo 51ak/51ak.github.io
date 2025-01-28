@@ -3,18 +3,33 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/book/2024%E5%B9%B4%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/</loc>
+    <lastmod>2025-01-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/book/</loc>
-    <lastmod>2025-01-10T00:00:00+00:00</lastmod>
+    <lastmod>2025-01-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/categories/</loc>
-    <lastmod>2025-01-10T00:00:00+00:00</lastmod>
+    <lastmod>2025-01-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/</loc>
-    <lastmod>2025-01-10T00:00:00+00:00</lastmod>
+    <lastmod>2025-01-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/</loc>
+    <lastmod>2025-01-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/%E6%97%A5%E8%AE%B0/</loc>
+    <lastmod>2025-01-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -273,11 +288,6 @@
   </url>
   
   <url>
-    <loc>/categories/%E6%97%A5%E8%AE%B0/</loc>
-    <lastmod>2024-06-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/book/20240606%E5%96%9C%E6%AC%A2%E7%9A%84%E4%BA%8B%E5%92%8C%E5%96%9C%E6%AC%A2%E7%9A%84%E4%BA%BA/</loc>
     <lastmod>2024-06-06T00:00:00+00:00</lastmod>
   </url>
@@ -334,11 +344,6 @@
   
   <url>
     <loc>/book/2023%E5%B9%B4%E6%80%BB%E7%BB%93%E5%B2%81%E6%9C%AB%E5%B9%B4%E7%BB%88%E5%8F%88%E4%B8%80%E5%B9%B4/</loc>
-    <lastmod>2024-02-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/</loc>
     <lastmod>2024-02-09T00:00:00+00:00</lastmod>
   </url>
   
