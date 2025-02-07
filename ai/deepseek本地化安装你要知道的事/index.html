@@ -1,0 +1,541 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DeepSeek本地化安装你需要知道的事| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20180709" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">DeepSeek本地化安装你需要知道的事</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#访问deepseek的几种方法">访问DeepSeek的几种方法</a>
+      <ul>
+        <li><a href="#方法1-访问deepseek官网">方法1: 访问DeepSeek官网</a></li>
+        <li><a href="#方法2-下载deepseek手机app">方法2: 下载DeepSeek手机APP</a></li>
+        <li><a href="#方法3-本地安装deepseek服务访问本地电脑上的deepseek大模型">方法3: 本地安装DeepSeek服务，访问本地电脑上的DeepSeek大模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#三种访问方式的对比">三种访问方式的对比：</a></li>
+    <li><a href="#哪些职业的人需要部署本地ai">哪些职业的人需要部署本地AI</a></li>
+    <li><a href="#本地部署deepseek成本">本地部署DeepSeek成本</a>
+      <ul>
+        <li><a href="#deepseek-r1的多个版本">DeepSeek R1的多个版本</a></li>
+        <li><a href="#本地deepseek-r1需要多少钱">本地DeepSeek R1需要多少钱</a></li>
+        <li><a href="#附推荐配置清单据">附推荐配置清单据</a></li>
+      </ul>
+    </li>
+    <li><a href="#硬件最核心的显卡">硬件最核心的：显卡</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="访问deepseek的几种方法">访问DeepSeek的几种方法</h2>
+<ul>
+<li><img src="/img/2024/555000000555171738921314.png" alt="访问DeepSeek的几种方法"></li>
+</ul>
+<h3 id="方法1-访问deepseek官网">方法1: 访问DeepSeek官网</h3>
+<p>通过DeepSeek的官方网站，用户可以在线使用DeepSeek模型进行各种任务，无需安装任何本地软件。</p>
+<h3 id="方法2-下载deepseek手机app">方法2: 下载DeepSeek手机APP</h3>
+<p>用户可以通过手机APP访问DeepSeek，随时随地使用模型进行任务。</p>
+<h3 id="方法3-本地安装deepseek服务访问本地电脑上的deepseek大模型">方法3: 本地安装DeepSeek服务，访问本地电脑上的DeepSeek大模型</h3>
+<p>用户可以在本地计算机上安装DeepSeek服务，直接在本地使用模型进行计算和任务处理。</p>
+<h2 id="三种访问方式的对比">三种访问方式的对比：</h2>
+<table>
+<thead>
+<tr>
+<th><strong>特征</strong></th>
+<th><strong>访问DeepSeek官网</strong></th>
+<th><strong>下载DeepSeek手机APP</strong></th>
+<th><strong>本地安装DeepSeek服务</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>成本</strong></td>
+<td>免费</td>
+<td>免费</td>
+<td>需要硬件资源和安装费用</td>
+</tr>
+<tr>
+<td><strong>易用性</strong></td>
+<td>容易</td>
+<td>容易</td>
+<td>较难</td>
+</tr>
+<tr>
+<td><strong>数据存储</strong></td>
+<td>云端</td>
+<td>云端</td>
+<td>本地</td>
+</tr>
+<tr>
+<td><strong>隐私保护</strong></td>
+<td>取决于厂商</td>
+<td>取决于厂商</td>
+<td>最大隐私保护</td>
+</tr>
+<tr>
+<td><strong>更新与维护</strong></td>
+<td>自动更新</td>
+<td>自动更新</td>
+<td>需手动更新</td>
+</tr>
+<tr>
+<td><strong>计算资源</strong></td>
+<td>依赖厂商</td>
+<td>依赖厂商</td>
+<td>取决于本地硬件配置</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>方法1（访问官网）</strong>：日常办公或在家有电脑</li>
+<li><strong>方法2（手机APP）</strong>： 拿着手机出门移动办公或在家使用。</li>
+<li><strong>方法3（本地安装服务）</strong>：适合需要处理敏感数据或高性能需求的用户，但需要一定的技术知识，并且受限于本地硬件的性能和更新维护。</li>
+</ul>
+<h2 id="哪些职业的人需要部署本地ai">哪些职业的人需要部署本地AI</h2>
+<p>在涉及到敏感数据和隐私保护的职业中，很多从业人员更倾向于使用本地部署的AI系统，以确保数据安全。以下是一些更适合访问本地AI的职业：</p>
+<table>
+<thead>
+<tr>
+<th><strong>职业</strong></th>
+<th><strong>原因</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>律师</strong></td>
+<td>处理客户资料和案件文件等敏感信息，避免数据泄露或滥用。</td>
+</tr>
+<tr>
+<td><strong>医生和医疗服务提供者</strong></td>
+<td>涉及大量个人健康数据，必须遵守严格的数据保护法规（如HIPAA），确保患者隐私。</td>
+</tr>
+<tr>
+<td><strong>金融服务从业者</strong></td>
+<td>处理客户的财务状况、交易记录等敏感数据，防止信息泄露和诈骗。</td>
+</tr>
+<tr>
+<td><strong>政府机构和安全部门</strong></td>
+<td>涉及国家安全、执法记录和敏感数据，防止泄露对国家或个人安全产生威胁。</td>
+</tr>
+<tr>
+<td><strong>企业高级管理人员HR</strong></td>
+<td>处理员工的个人档案、薪酬、绩效评估等敏感信息，确保数据机密性。</td>
+</tr>
+<tr>
+<td><strong>心理学家和心理治疗师</strong></td>
+<td>处理患者的心理健康和治疗记录，防止隐私泄露。</td>
+</tr>
+<tr>
+<td><strong>教育工作者和教育机构</strong></td>
+<td>处理学生的成绩、家庭背景等个人数据，尤其是未成年人的隐私保护。</td>
+</tr>
+<tr>
+<td><strong>制造业和工业领域的工程师</strong></td>
+<td>涉及专利技术、生产数据等敏感信息，防止技术泄露或安全问题。</td>
+</tr>
+<tr>
+<td><strong>科研人员（特别在敏感领域）</strong></td>
+<td>涉及核能、军事技术、制药等领域的研究，防止专有数据和技术泄漏。</td>
+</tr>
+</tbody>
+</table>
+<p>本地AI系统更适合处理涉及敏感信息、商业机密、个人隐私或国家安全的职业领域。在这些领域中，本地部署能够更好地保护数据的隐私和安全。</p>
+<h2 id="本地部署deepseek成本">本地部署DeepSeek成本</h2>
+<blockquote>
+<p>DeepSeek分两个大类型：DeepSeek V3 和DeepSeek R1 .V3是日常对话模型会的比较多，可以简单的理解成一个文科生。R1是推理模型，逻辑性更强，最近引起国外广泛关注的是DeepSeek推理模型R1</p>
+</blockquote>
+<h3 id="deepseek-r1的多个版本">DeepSeek R1的多个版本</h3>
+<h4 id="deepseek-r1-的7个版本各自需要的成本">DeepSeek R1 的7个版本各自需要的成本：</h4>
+<p><img src="/img/2024/428000000428171738921458.png" alt="本地DeepSeek R1需要多少钱"></p>
+<h3 id="本地deepseek-r1需要多少钱">本地DeepSeek R1需要多少钱</h3>
+<p><img src="/img/2024/357000000357171738921556.png" alt="本地DeepSeek R1需要多少钱"></p>
+<h3 id="附推荐配置清单据">附推荐配置清单据</h3>
+<h4 id="1-deepseek-r1-15b-版本配置个人临时用">1. DeepSeek R1 1.5B 版本配置(个人临时用)</h4>
+<ul>
+<li>适合低成本运行。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>型号/规格</th>
+<th>价格 (人民币)</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CPU</strong></td>
+<td>Intel i3-12100</td>
+<td>¥800</td>
+<td>4核8线程，性价比高</td>
+</tr>
+<tr>
+<td><strong>内存</strong></td>
+<td>DDR4 16GB (8GB x 2)</td>
+<td>¥300</td>
+<td>双通道，确保带宽</td>
+</tr>
+<tr>
+<td><strong>硬盘</strong></td>
+<td>512GB NVMe SSD</td>
+<td>¥200</td>
+<td>高速存储，加载模型快</td>
+</tr>
+<tr>
+<td><strong>主板</strong></td>
+<td>H610 芯片组</td>
+<td>¥500</td>
+<td>支持 DDR4 和 PCIe 4.0</td>
+</tr>
+<tr>
+<td><strong>电源</strong></td>
+<td>300W 80+ 白牌</td>
+<td>¥100</td>
+<td>稳定供电</td>
+</tr>
+<tr>
+<td><strong>机箱</strong></td>
+<td>迷你机箱</td>
+<td>¥100</td>
+<td>小巧便携</td>
+</tr>
+<tr>
+<td><strong>总计</strong></td>
+<td></td>
+<td><strong>¥2000</strong></td>
+<td>低成本配置，适合 1.5B 版本</td>
+</tr>
+</tbody>
+</table>
+<h4 id="2deepseek-r1-7b-版本配置个人日常用">2.DeepSeek R1 7B 版本配置(个人日常用)</h4>
+<ul>
+<li>适合中小规模模型推理和训练，兼顾性价比。
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>型号/规格</th>
+<th>价格 (人民币)</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CPU</strong></td>
+<td>AMD Ryzen 5 7600</td>
+<td>¥1500</td>
+<td>6核12线程，性价比高</td>
+</tr>
+<tr>
+<td><strong>内存</strong></td>
+<td>DDR5 32GB (16GB x 2)</td>
+<td>¥800</td>
+<td>双通道，确保带宽</td>
+</tr>
+<tr>
+<td><strong>显卡</strong></td>
+<td>NVIDIA RTX 3060 12GB</td>
+<td>¥2500</td>
+<td>显存充足，支持 FP16 加速</td>
+</tr>
+<tr>
+<td><strong>硬盘</strong></td>
+<td>1TB NVMe SSD</td>
+<td>¥400</td>
+<td>高速存储，加载模型快</td>
+</tr>
+<tr>
+<td><strong>主板</strong></td>
+<td>B650 芯片组</td>
+<td>¥1000</td>
+<td>支持 DDR5 和 PCIe 4.0</td>
+</tr>
+<tr>
+<td><strong>电源</strong></td>
+<td>650W 80+ 金牌</td>
+<td>¥500</td>
+<td>稳定供电</td>
+</tr>
+<tr>
+<td><strong>机箱</strong></td>
+<td>中塔机箱</td>
+<td>¥300</td>
+<td>散热良好</td>
+</tr>
+<tr>
+<td><strong>总计</strong></td>
+<td></td>
+<td><strong>¥7000</strong></td>
+<td>性价比高，适合中小规模任务</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<h4 id="3-deepseek-r1-70b-版本配置">3. DeepSeek R1 70B 版本配置</h4>
+<ul>
+<li>适合大规模模型推理和训练，性能强劲。
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>型号/规格</th>
+<th>价格 (人民币)</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CPU</strong></td>
+<td>AMD Ryzen 9 7950X</td>
+<td>¥4500</td>
+<td>16核32线程，多任务性能强</td>
+</tr>
+<tr>
+<td><strong>内存</strong></td>
+<td>DDR5 128GB (32GB x 4)</td>
+<td>¥3000</td>
+<td>大容量内存，支持多任务</td>
+</tr>
+<tr>
+<td><strong>显卡</strong></td>
+<td>NVIDIA RTX 4090 24GB</td>
+<td>¥15000</td>
+<td>顶级消费级显卡，显存充足</td>
+</tr>
+<tr>
+<td><strong>硬盘</strong></td>
+<td>2TB NVMe SSD</td>
+<td>¥1000</td>
+<td>高速存储，加载大模型快</td>
+</tr>
+<tr>
+<td><strong>主板</strong></td>
+<td>X670 芯片组</td>
+<td>¥2000</td>
+<td>支持多 GPU 和高速存储</td>
+</tr>
+<tr>
+<td><strong>电源</strong></td>
+<td>1000W 80+ 白金</td>
+<td>¥1500</td>
+<td>稳定供电，支持高功耗 GPU</td>
+</tr>
+<tr>
+<td><strong>机箱</strong></td>
+<td>全塔机箱</td>
+<td>¥800</td>
+<td>散热优秀，支持多 GPU</td>
+</tr>
+<tr>
+<td><strong>总计</strong></td>
+<td></td>
+<td><strong>¥27800</strong></td>
+<td>高性能配置，适合大规模任务</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<h4 id="4-deepseek-r1-671b-版本配置对外提供服务用">4. DeepSeek R1 671B 版本配置(对外提供服务用)</h4>
+<ul>
+<li>适合超大规模模型训练，需多 GPU 并行计算。
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>型号/规格</th>
+<th>价格 (人民币)</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CPU</strong></td>
+<td>AMD EPYC 7742</td>
+<td>¥30000</td>
+<td>64核128线程，服务器级 CPU</td>
+</tr>
+<tr>
+<td><strong>内存</strong></td>
+<td>DDR4 512GB (64GB x 8)</td>
+<td>¥10000</td>
+<td>超大容量内存，支持多任务</td>
+</tr>
+<tr>
+<td><strong>显卡</strong></td>
+<td>NVIDIA A100 80GB x 4</td>
+<td>¥400000</td>
+<td>4 张 A100，显存总计 320GB</td>
+</tr>
+<tr>
+<td><strong>硬盘</strong></td>
+<td>4TB NVMe SSD x 2</td>
+<td>¥6000</td>
+<td>高速存储，支持大模型加载</td>
+</tr>
+<tr>
+<td><strong>主板</strong></td>
+<td>服务器主板</td>
+<td>¥10000</td>
+<td>支持多 GPU 和高速存储</td>
+</tr>
+<tr>
+<td><strong>电源</strong></td>
+<td>2000W 80+ 钛金</td>
+<td>¥5000</td>
+<td>稳定供电，支持高功耗 GPU</td>
+</tr>
+<tr>
+<td><strong>机箱</strong></td>
+<td>服务器机架</td>
+<td>¥8000</td>
+<td>支持多 GPU 和散热</td>
+</tr>
+<tr>
+<td><strong>总计</strong></td>
+<td></td>
+<td><strong>¥469000</strong></td>
+<td>顶级配置，适合超大规模训练</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<h4 id="ai服务器硬件成本分摊">AI服务器硬件成本分摊</h4>
+<p><img src="/img/2024/140000000140171738921598.png" alt="AI服务器硬件成本分摊"></p>
+<h2 id="硬件最核心的显卡">硬件最核心的：显卡</h2>
+<ul>
+<li>要想大横型跑得快，还得显卡带</li>
+<li>这就是为啥英伟达高端显卡被禁用的原因</li>
+<li>对比以前的AI大模型，DeepSeek是对显卡要求最低的。</li>
+<li>DeepSeek的运行成本要远低于其他AI大模型，参见《有趣的数据：DeepSeek R1的低成本奇迹——557万美元如何改变AI行业？》</li>
+<li>这就是DeepSeek重创美股的原因</li>
+<li>同时国产ai显卡也可以用来跑DeepSeek，以下是最近几天的国产芯片适配新闻，几乎是1个星期内，国产所有的Ai显卡公司都完成了适配（除了寒武纪)</li>
+</ul>
+<p><img src="/img/2024/886000000886171738921640.png" alt="Deep Seek与国产ai显卡"></p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2025/02/07</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

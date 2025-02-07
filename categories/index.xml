@@ -6,7 +6,16 @@
     <description>Recent content in Categories on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 28 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 07 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>人工智能</title>
+      <link>/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</link>
+      <pubDate>Fri, 07 Feb 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>年终总结</title>
       <link>/categories/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/</link>
@@ -49,15 +58,6 @@
       <pubDate>Tue, 07 Jan 2025 00:00:00 +0000</pubDate>
       
       <guid>/categories/chatgpt/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>人工智能</title>
-      <link>/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</link>
-      <pubDate>Tue, 07 Jan 2025 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</guid>
       <description></description>
     </item>
     
