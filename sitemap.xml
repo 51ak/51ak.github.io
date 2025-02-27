@@ -3,22 +3,52 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/book/</loc>
-    <lastmod>2025-02-17T00:00:00+00:00</lastmod>
+    <loc>/categories/ai/</loc>
+    <lastmod>2025-02-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/ai/</loc>
+    <lastmod>2025-02-18T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/categories/</loc>
-    <lastmod>2025-02-17T00:00:00+00:00</lastmod>
+    <lastmod>2025-02-18T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/</loc>
-    <lastmod>2025-02-17T00:00:00+00:00</lastmod>
+    <lastmod>2025-02-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/deepseek/</loc>
+    <lastmod>2025-02-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/ai/deepseek%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99%E5%8C%85%E6%95%B4%E7%90%86%E6%89%93%E5%8C%85%E4%B8%8B%E8%BD%BD/</loc>
+    <lastmod>2025-02-18T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/</loc>
+    <lastmod>2025-02-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/%E6%95%B4%E7%90%86/</loc>
+    <lastmod>2025-02-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/%E8%B5%84%E6%BA%90%E4%B8%8B%E8%BD%BD/</loc>
+    <lastmod>2025-02-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/book/</loc>
     <lastmod>2025-02-17T00:00:00+00:00</lastmod>
   </url>
   
@@ -44,11 +74,6 @@
   
   <url>
     <loc>/ai/deepseek%E6%9C%AC%E5%9C%B0%E5%8C%96%E5%AE%89%E8%A3%85%E4%BD%A0%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%84%E4%BA%8B/</loc>
-    <lastmod>2025-02-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/ai/</loc>
     <lastmod>2025-02-07T00:00:00+00:00</lastmod>
   </url>
   
@@ -154,11 +179,6 @@
   
   <url>
     <loc>/ops/centos7%E5%AE%89%E8%A3%85ffmpeg/</loc>
-    <lastmod>2024-09-26T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/%E6%95%B4%E7%90%86/</loc>
     <lastmod>2024-09-26T00:00:00+00:00</lastmod>
   </url>
   
@@ -855,26 +875,6 @@
   <url>
     <loc>/book/%E6%9C%89%E8%B6%A3%E7%9A%84%E6%95%B0%E6%8D%AE_%E6%B5%B7%E5%BA%95%E5%85%89%E7%BC%86/</loc>
     <lastmod>2023-02-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/ai/</loc>
-    <lastmod>2023-02-18T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/deepseek/</loc>
-    <lastmod>2023-02-18T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/ai/deepseek%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99%E5%8C%85%E6%95%B4%E7%90%86%E6%89%93%E5%8C%85%E4%B8%8B%E8%BD%BD/</loc>
-    <lastmod>2023-02-18T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/%E8%B5%84%E6%BA%90%E4%B8%8B%E8%BD%BD/</loc>
-    <lastmod>2023-02-18T00:00:00+00:00</lastmod>
   </url>
   
   <url>
