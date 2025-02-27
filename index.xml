@@ -522,6 +522,17 @@ AI合同格式化 背景： 解决方案 挑战 收益  目前还在开发进行
     </item>
     
     <item>
+      <title>DeepSeek</title>
+      <link>/ai/deepseek%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99%E5%8C%85%E6%95%B4%E7%90%86%E6%89%93%E5%8C%85%E4%B8%8B%E8%BD%BD/</link>
+      <pubDate>Wed, 22 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/ai/deepseek%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99%E5%8C%85%E6%95%B4%E7%90%86%E6%89%93%E5%8C%85%E4%B8%8B%E8%BD%BD/</guid>
+      <description>在工作和生活中，撰写文案常为刚需。以下是我使用DeepSeek的一些技巧和文案范例，助你高效应对文案需求。
+一、DeepSeek使用技巧  关键词设置：精准设置关键词可获取更符合需求的文案结果。 模板功能：利用模板快速构建文案框架，节省时间。  二、Deepseek指令合集  涵盖营销推广、 产品介绍、 活动邀请等多场景，为文案撰写提供灵感参考。 借助这些技巧和范例，大家能更好地运用DeepSeek提升文案撰写能力。  三、视频教程  如何利用国内现有平台做方案创作的视频教程，看看就好   以下这些资料都是网上公开渠道收集整理，非原创。
+ ├─DeepSeek使用技巧 │ └─有用的，建议看 │ GenAI：国内外AI细分赛道与产品分析（198页）.pdf │ GenAI：国内外AI细分赛道与产品分析（198页）.pptx │ 浙江大学：2025年DeepSeek行业应用案例集解锁智能变革密码（153页PPT）.pdf │ 入门教程：DeepSeek 15天指导手册（25页word).pdf │ 北京大学：DeepSeek系列-DeepSeek与AIGC应用（99页PPT）.pdf │ 北京大学：DeepSeek系列-提示词工程和落地场景（86页PPT）.pdf │ 尚硅谷教育：deepseek-r1论文-中文翻译版（14页word).pdf │ 清华大学第三版：DeepSeek+DeepResearch：让科研像聊天一样简单（86页PPT）.pdf │ 清华大学第二版：DeepSeek赋能职场（36页PPT）.pdf │ 清华大学第一版：DeepSeek：从入门到精通（104页PPT）.pdf │ 尚硅谷教育：第三方平台-硅基流动部署DeepSeek R1（10页word）.pdf │ 尚硅谷教育：本地算力部署DeepSeek详细流程（19页word）.pdf │ 清华大学第四版：普通人如何抓住DeepSeek红利（65页PPT）.pdf │ 厦门大学：大模型概念、技术与应用实践（140页PPT）.pdf │ └─没啥用的，随便看看 │ 1000个DeepSeek神级提示词，让你轻松驾驭AI.docx │ 3个DeepSeek隐藏玩法，99%的人都不知道！.docx │ deepseek 应该怎样提问.docx │ Deepseek 高效使用指南.docx │ Deepseek不好用，是你真的不会用啊！.docx │ DeepSeek小白使用指南，99% 的人都不知道的使用技巧（建议收藏）docx.docx │ DeepSeek最强使用攻略，放弃复杂提示词，直接提问效果反而更好？.</description>
+    </item>
+    
+    <item>
       <title>安装百度飞浆PaddleSpeech</title>
       <link>/ai/%E5%AE%89%E8%A3%85%E7%99%BE%E5%BA%A6%E9%A3%9E%E6%B5%86paddlespeech/</link>
       <pubDate>Wed, 22 Nov 2023 00:00:00 +0000</pubDate>
