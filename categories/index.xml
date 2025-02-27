@@ -6,7 +6,25 @@
     <description>Recent content in Categories on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 07 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 17 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>数据</title>
+      <link>/categories/%E6%95%B0%E6%8D%AE/</link>
+      <pubDate>Mon, 17 Feb 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E6%95%B0%E6%8D%AE/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>有趣的</title>
+      <link>/categories/%E6%9C%89%E8%B6%A3%E7%9A%84/</link>
+      <pubDate>Mon, 17 Feb 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E6%9C%89%E8%B6%A3%E7%9A%84/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>人工智能</title>
       <link>/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/</link>
@@ -31,24 +49,6 @@
       <pubDate>Tue, 28 Jan 2025 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E6%97%A5%E8%AE%B0/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>数据</title>
-      <link>/categories/%E6%95%B0%E6%8D%AE/</link>
-      <pubDate>Fri, 10 Jan 2025 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/%E6%95%B0%E6%8D%AE/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>有趣的</title>
-      <link>/categories/%E6%9C%89%E8%B6%A3%E7%9A%84/</link>
-      <pubDate>Fri, 10 Jan 2025 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/%E6%9C%89%E8%B6%A3%E7%9A%84/</guid>
       <description></description>
     </item>
     
