@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>做了一个去O的工具：异构数据行级验证对比| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20250207" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">做了一个去O的工具：异构数据行级验证对比</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#工具有什么用">工具有什么用</a></li>
+    <li><a href="#支持异构数据源对比">支持异构数据源对比</a></li>
+    <li><a href="#双向数据对比">双向数据对比</a></li>
+    <li><a href="#双向生成修复sql">双向生成修复SQL</a></li>
+    <li><a href="#可配置的时间精度对比">可配置的时间精度对比</a></li>
+    <li><a href="#列默认值支持">列默认值支持</a></li>
+    <li><a href="#白名单支持">白名单支持</a></li>
+    <li><a href="#支持表结构变形后的对比">支持表结构变形后的对比</a></li>
+    <li><a href="#对比速度">对比速度</a></li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="工具有什么用">工具有什么用</h2>
+<ul>
+<li>当我们用一些第三方同步工具同步数据时，同步过程中可能会出现：数据不一致</li>
+<li>这时候需要一些数据对比，来验证数据同步是否按预期进行</li>
+<li>很早以前我写过类似的功能。但是一直没有做异构数据同步支持</li>
+<li>异构数据是指源数据库和目标数据库不是同一种数据库</li>
+<li>例如，从Oralce实时同步数据到MySQL</li>
+<li>这是一个常见的异构数据同步场景</li>
+<li>如何来验证和修复这个数据同步</li>
+<li>于是我开发了这个工具，用来解决这个问题</li>
+</ul>
+<p><img src="https://www.dboop.com/img/2024/844000000844181743071143.png" alt="异构数据对比工具"></p>
+<p><img src="https://www.dboop.com/img/2024/484000000484181743071378.png" alt="异构数据对比工具"></p>
+<h2 id="支持异构数据源对比">支持异构数据源对比</h2>
+<ul>
+<li>支持MySQL&lt;&mdash;-&gt;MySQL</li>
+<li>支持Oracle&lt;&mdash;-&gt;MySQL</li>
+<li>支持Oracle&lt;&mdash;-&gt;Oracle</li>
+<li>支持MySQL&lt;&mdash;-&gt;Oracle</li>
+</ul>
+<h2 id="双向数据对比">双向数据对比</h2>
+<ul>
+<li>能比较出源库有没有的数据(生成Detelte语句)</li>
+<li>能比较出源库没有，但是目标库有的数据(生成Detelte语句)</li>
+<li>能比较出主键相同，但是其他列有差异的数据(生成Update语句)</li>
+</ul>
+<h2 id="双向生成修复sql">双向生成修复SQL</h2>
+<ul>
+<li>可以生成目标库的redo SQL</li>
+<li>也可以生成源库的Undo SQL</li>
+</ul>
+<h2 id="可配置的时间精度对比">可配置的时间精度对比</h2>
+<ul>
+<li>对不同数据的不同时间精度都用同一维度对比(默认精确到分钟:YYYY-MM-DD HH:MM)</li>
+<li>对不同精度的小数格式化支持(会去掉0.6000后面的000 )</li>
+</ul>
+<h2 id="列默认值支持">列默认值支持</h2>
+<ul>
+<li>通常用于一边是Null，一边是Not Null的默认值</li>
+</ul>
+<h2 id="白名单支持">白名单支持</h2>
+<ul>
+<li>支持对列级别的白名单（这一列不参与对比）</li>
+<li>支持对值级别的白名单 (包含)</li>
+</ul>
+<h2 id="支持表结构变形后的对比">支持表结构变形后的对比</h2>
+<ul>
+<li>支持源表和目标表表结构不同（要求主键是唯一的，其他变形在sql可控范围内）</li>
+</ul>
+<h2 id="对比速度">对比速度</h2>
+<ul>
+<li>可按表级别并发执行，单表对比速度约：1万-3万行/秒</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2025/03/27</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/oracle">oracle</a> <a href="/categories/mysql">mysql</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

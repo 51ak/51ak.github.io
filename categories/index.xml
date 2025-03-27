@@ -6,7 +6,25 @@
     <description>Recent content in Categories on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 01 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 27 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>mysql</title>
+      <link>/categories/mysql/</link>
+      <pubDate>Thu, 27 Mar 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/mysql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>oracle</title>
+      <link>/categories/oracle/</link>
+      <pubDate>Thu, 27 Mar 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/oracle/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>数据</title>
       <link>/categories/%E6%95%B0%E6%8D%AE/</link>
@@ -107,15 +125,6 @@
     </item>
     
     <item>
-      <title>mysql</title>
-      <link>/categories/mysql/</link>
-      <pubDate>Wed, 30 Oct 2024 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/mysql/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>centos</title>
       <link>/categories/centos/</link>
       <pubDate>Thu, 26 Sep 2024 00:00:00 +0000</pubDate>
@@ -184,15 +193,6 @@
       <pubDate>Mon, 26 Aug 2024 00:00:00 +0000</pubDate>
       
       <guid>/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%9A%E8%AE%AE/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>oracle</title>
-      <link>/categories/oracle/</link>
-      <pubDate>Tue, 30 Jul 2024 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/oracle/</guid>
       <description></description>
     </item>
     
