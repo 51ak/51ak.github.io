@@ -6,7 +6,16 @@
     <description>Recent content in python on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 11 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/python/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 21 Apr 2025 00:00:00 +0000</lastBuildDate><atom:link href="/categories/python/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>快速用python,uv安装一个mcp服务</title>
+      <link>/ops/%E5%BF%AB%E9%80%9F%E7%94%A8pythonuv%E5%AE%89%E8%A3%85%E4%B8%80%E4%B8%AAmcp%E6%9C%8D%E5%8A%A1/</link>
+      <pubDate>Mon, 21 Apr 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%BF%AB%E9%80%9F%E7%94%A8pythonuv%E5%AE%89%E8%A3%85%E4%B8%80%E4%B8%AAmcp%E6%9C%8D%E5%8A%A1/</guid>
+      <description>安装uv  sudo -s curl &amp;quot;https://dba.corp.shiqiao.com/static/download/install_uv.sh&amp;quot; -o install_uv.sh sh install_uv.sh ln -s /Users/kouko/.local/bin/* /usr/local/bin exit 配置uv环境  uv python install 3.12 uv venv --python 3.12 uv pip install mcp uv python pin 3.12 制作简单mcp服务  from mcp.server.fastmcp import FastMCP # 创建一个启用调试模式的 MCP 服务器 mcp = FastMCP(&amp;quot;Demo&amp;quot;, debug=True) # 定义加法工具 @mcp.tool() def add(a: int, b: int) -&amp;gt; int: &amp;quot;&amp;quot;&amp;quot;Add two numbers&amp;quot;&amp;quot;&amp;quot; return a + b # 运行服务器 if __name__ == &amp;quot;__main__&amp;quot;: print(&amp;quot;Starting MCP server in stdio mode&amp;quot;) mcp.</description>
+    </item>
+    
     <item>
       <title>做数据同步程序过程的一些零散的笔记</title>
       <link>/book/%E5%81%9A%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5%E7%A8%8B%E5%BA%8F%E8%BF%87%E7%A8%8B%E7%9A%84%E4%B8%80%E4%BA%9B%E8%AE%B0%E5%BD%95/</link>
@@ -175,15 +184,6 @@ Qtdesigner：这里写入designer.app的完整路径 {这里写python的安装�
       
       <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_python/</guid>
       <description>python安装 yum install -y gcc zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel yum install -y libffi-devel cd /opt/ wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tar.xz tar -xvJf Python-3.7.0.tar.xz mkdir -p /usr/local/python3 cd Python-3.7.4 ./configure --prefix=/usr/local/python3 make &amp;amp;&amp;amp; make install ln -s /usr/local/python3/bin/python3 /usr/local/bin/python3 ln -s /usr/local/python3/bin/pip3 /usr/local/bin/pip3 python3 -V pip3 -V </description>
-    </item>
-    
-    <item>
-      <title>快速用python,uv安装一个mcp服务</title>
-      <link>/ops/%E5%BF%AB%E9%80%9F%E7%94%A8pythonuv%E5%AE%89%E8%A3%85%E4%B8%80%E4%B8%AAmcp%E6%9C%8D%E5%8A%A1/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/ops/%E5%BF%AB%E9%80%9F%E7%94%A8pythonuv%E5%AE%89%E8%A3%85%E4%B8%80%E4%B8%AAmcp%E6%9C%8D%E5%8A%A1/</guid>
-      <description>安装uv  sudo -s curl &amp;quot;https://dba.corp.shiqiao.com/static/download/install_uv.sh&amp;quot; -o install_uv.sh sh install_uv.sh ln -s /Users/kouko/.local/bin/* /usr/local/bin exit 配置uv环境  uv python install 3.12 uv venv --python 3.12 uv pip install mcp uv python pin 3.12 制作简单mcp服务  from mcp.server.fastmcp import FastMCP # 创建一个启用调试模式的 MCP 服务器 mcp = FastMCP(&amp;quot;Demo&amp;quot;, debug=True) # 定义加法工具 @mcp.tool() def add(a: int, b: int) -&amp;gt; int: &amp;quot;&amp;quot;&amp;quot;Add two numbers&amp;quot;&amp;quot;&amp;quot; return a + b # 运行服务器 if __name__ == &amp;quot;__main__&amp;quot;: print(&amp;quot;Starting MCP server in stdio mode&amp;quot;) mcp.</description>
     </item>
     
   </channel>
