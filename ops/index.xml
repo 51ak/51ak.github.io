@@ -294,5 +294,14 @@ rsync  time=$(date &#39;+%Y-%m-%d-%H-test1_binlog.0001&#39;) time1=$(date &#39;+
 1.安装nfs yum -y install nfs-utils rpcbind # 开机启动 systemctl enable rpcbind.service systemctl enable nfs-server.service # 重启服务 systemctl restart rpcbind.service systemctl restart nfs-server.service 2.共享设置 10.10.0.1 上执行 mkdir /public/downloadnew ln -s /public/downloadnew /data/www/dboop/static/download -f vim /etc/exports #输入 /public 10.10.0.2(insecure,rw,sync,no_root_squash) 10.10.0.3(insecure,rw,sync,no_root_squash) exportfs -rv 10.10.0.2/3 上执行 vim /etc/fstab #输入 10.10.0.1:/public /mnt/public nfs defaults 0 0 mkdir /mnt/public mount -a df -h ln -s /mnt/public/downloadnew /data/www/dboop/static/download -f 到此 10.</description>
     </item>
     
+    <item>
+      <title>快速用python,uv安装一个mcp服务</title>
+      <link>/ops/%E5%BF%AB%E9%80%9F%E7%94%A8pythonuv%E5%AE%89%E8%A3%85%E4%B8%80%E4%B8%AAmcp%E6%9C%8D%E5%8A%A1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%BF%AB%E9%80%9F%E7%94%A8pythonuv%E5%AE%89%E8%A3%85%E4%B8%80%E4%B8%AAmcp%E6%9C%8D%E5%8A%A1/</guid>
+      <description>安装uv  sudo -s curl &amp;quot;https://dba.corp.shiqiao.com/static/download/install_uv.sh&amp;quot; -o install_uv.sh sh install_uv.sh ln -s /Users/kouko/.local/bin/* /usr/local/bin exit 配置uv环境  uv python install 3.12 uv venv --python 3.12 uv pip install mcp uv python pin 3.12 制作简单mcp服务  from mcp.server.fastmcp import FastMCP # 创建一个启用调试模式的 MCP 服务器 mcp = FastMCP(&amp;quot;Demo&amp;quot;, debug=True) # 定义加法工具 @mcp.tool() def add(a: int, b: int) -&amp;gt; int: &amp;quot;&amp;quot;&amp;quot;Add two numbers&amp;quot;&amp;quot;&amp;quot; return a + b # 运行服务器 if __name__ == &amp;quot;__main__&amp;quot;: print(&amp;quot;Starting MCP server in stdio mode&amp;quot;) mcp.</description>
+    </item>
+    
   </channel>
 </rss>

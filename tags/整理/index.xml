@@ -329,5 +329,14 @@ rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org rpm -Uvh http://www.e
       <description>1.暂停ALWAYSON数据传送 ALTER DATABASE [db1] SET HADR SUSPEND; ALTER DATABASE [db2] SET HADR SUSPEND; ALTER DATABASE [db3] SET HADR SUSPEND; 2.生成脚本：  SELECT database_id, (sum(size)*8/1024/1024) as usedGb FROM sys.master_files WHERE database_id in ( select database_id from sys.databases where NAME NOT IN (&#39;....&#39;) ) AND physical_name LIKE &#39;E:\%&#39; group by database_id order by 2 desc 3.生成脚本2 SELECT name , physical_name AS CurrentLocation , state_desc,(size*8/1024/1024) as usedGb ,&#39;ALTER DATABASE [&#39;+DB_NAME(database_id)+&#39;] MODIFY FILE ( NAME = &#39;+name+&#39; , FILENAME = &#39;&#39;&#39;+REPLACE(physical_name,&#39;D:\&#39;,&#39;F:\&#39;)+&#39;&#39;&#39; )&#39; FROM sys.</description>
     </item>
     
+    <item>
+      <title>快速用python,uv安装一个mcp服务</title>
+      <link>/ops/%E5%BF%AB%E9%80%9F%E7%94%A8pythonuv%E5%AE%89%E8%A3%85%E4%B8%80%E4%B8%AAmcp%E6%9C%8D%E5%8A%A1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/ops/%E5%BF%AB%E9%80%9F%E7%94%A8pythonuv%E5%AE%89%E8%A3%85%E4%B8%80%E4%B8%AAmcp%E6%9C%8D%E5%8A%A1/</guid>
+      <description>安装uv  sudo -s curl &amp;quot;https://dba.corp.shiqiao.com/static/download/install_uv.sh&amp;quot; -o install_uv.sh sh install_uv.sh ln -s /Users/kouko/.local/bin/* /usr/local/bin exit 配置uv环境  uv python install 3.12 uv venv --python 3.12 uv pip install mcp uv python pin 3.12 制作简单mcp服务  from mcp.server.fastmcp import FastMCP # 创建一个启用调试模式的 MCP 服务器 mcp = FastMCP(&amp;quot;Demo&amp;quot;, debug=True) # 定义加法工具 @mcp.tool() def add(a: int, b: int) -&amp;gt; int: &amp;quot;&amp;quot;&amp;quot;Add two numbers&amp;quot;&amp;quot;&amp;quot; return a + b # 运行服务器 if __name__ == &amp;quot;__main__&amp;quot;: print(&amp;quot;Starting MCP server in stdio mode&amp;quot;) mcp.</description>
+    </item>
+    
   </channel>
 </rss>

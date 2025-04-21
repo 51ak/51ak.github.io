@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>快速用python,uv安装一个mcp服务| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20250207" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">快速用python,uv安装一个mcp服务</span></h1>
+</div>
+
+
+  <main>
+    <h2 id="安装uv">安装uv</h2>
+<pre><code>
+sudo -s
+curl &quot;https://dba.corp.shiqiao.com/static/download/install_uv.sh&quot; -o install_uv.sh
+sh install_uv.sh
+
+ln -s /Users/kouko/.local/bin/* /usr/local/bin
+
+exit
+</code></pre><h2 id="配置uv环境">配置uv环境</h2>
+<pre><code> uv python install 3.12
+ uv venv --python 3.12
+ uv pip install mcp 
+ uv python pin 3.12
+
+</code></pre><h2 id="制作简单mcp服务">制作简单mcp服务</h2>
+<pre><code>
+from mcp.server.fastmcp import FastMCP
+
+# 创建一个启用调试模式的 MCP 服务器
+mcp = FastMCP(&quot;Demo&quot;, debug=True)
+
+# 定义加法工具
+@mcp.tool()
+def add(a: int, b: int) -&gt; int:
+    &quot;&quot;&quot;Add two numbers&quot;&quot;&quot;
+    return a + b
+
+# 运行服务器
+if __name__ == &quot;__main__&quot;:
+    print(&quot;Starting MCP server in stdio mode&quot;)
+    mcp.run(transport=&quot;stdio&quot;)
+
+</code></pre><h2 id="启动">启动</h2>
+<pre><code>uv pip install mcp 
+uv run mcp_server.py
+
+
+</code></pre><h2 id="应用">应用</h2>
+<ul>
+<li>在你的mcp服务串配置以下内容，就可以得到一个mcp服务可用了</li>
+</ul>
+<pre><code>{
+  &quot;mcpServers&quot;: {
+    &quot;mcp_dboop&quot;: {
+      &quot;command&quot;: &quot;uv&quot;,
+      &quot;args&quot;: [
+        &quot;--directory&quot;,
+        &quot;{这里替换成你的项目绝对路径}/mcp_dboop&quot;,
+        &quot;run&quot;,
+        &quot;mcp_server.py&quot;
+      ]
+    }
+  }
+}
+
+</code></pre><p><img src="/img/2024/567000000567181745231819.png" alt="mcp_server"></p>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/centos">centos</a> <a href="/categories/python">python</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E6%95%B4%E7%90%86">整理</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
