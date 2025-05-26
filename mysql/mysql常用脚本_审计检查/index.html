@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL常用脚本_审计检查| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20250207" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+      <li class="pull-left ">
+        <a href="/run51ak">跑步</a>
+      </li>
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL常用脚本_审计检查</span></h1>
+</div>
+
+
+  <main>
+    <ul>
+<li>
+<p>最近做等保，反复的有评测机构联系要做MySQL审计，会扔过来一些脚本，要看执行结果。</p>
+</li>
+<li>
+<p>可以写一个这样的脚本，将他们要求执行的语句扔进去。</p>
+</li>
+<li>
+<p>节约点时间</p>
+</li>
+<li>
+<p>vim run_mysql_queries.sh</p>
+</li>
+</ul>
+<pre><code>#!/bin/bash
+
+# --- 配置 ---
+# 默认数据库名，如果需要也可以作为参数传入
+DB_NAME=&quot;dbtest01&quot;
+# MySQL 客户端命令，根据你的实际情况修改,如果用密码登录，也在这里改
+MYSQL_CMD=&quot;mysql --login-path=dba&quot;
+# ----------------
+
+# 检查是否传入了 IP 地址和端口
+if [ -z &quot;$1&quot; ] || [ -z &quot;$2&quot; ]; then
+  echo &quot;用法: $0 &lt;IP地址&gt; &lt;端口&gt;&quot;
+  echo &quot;例如: $0 10.10.0.0.1 3306&quot;
+  exit 1
+fi
+
+TARGET_IP=&quot;$1&quot;
+TARGET_PORT=&quot;$2&quot;
+
+# 根据 IP 和端口动态生成日志文件名
+LOG_FILE=&quot;output_${TARGET_IP}_${TARGET_PORT}.log&quot;
+
+# 初始化日志文件
+echo &quot;当前时间是: $(date)&quot; &gt; &quot;$LOG_FILE&quot;
+echo &quot;执行实例：${TARGET_IP}:${TARGET_PORT}&quot; &gt;&gt; &quot;$LOG_FILE&quot;
+echo &quot;&quot; &gt;&gt; &quot;$LOG_FILE&quot; # 添加一个空行，使格式更美观
+
+# 定义执行 SQL 并记录日志的函数
+# 参数1: SQL 查询语句
+execute_sql_and_log() {
+  local sql_query=&quot;$1&quot;
+
+  echo &quot;&quot; &gt;&gt; &quot;$LOG_FILE&quot;
+  echo &quot;&quot; &gt;&gt; &quot;$LOG_FILE&quot;
+  echo &quot;执行SQL：&quot; &gt;&gt; &quot;$LOG_FILE&quot;
+  echo &quot;$sql_query&quot; &gt;&gt; &quot;$LOG_FILE&quot;
+  echo &quot;-------------------------------------------------------------------------------------&quot; &gt;&gt; &quot;$LOG_FILE&quot;
+  
+  # 执行 mysql 命令并将输出追加到日志文件
+  # 注意：这里假设 mysqlw 客户端连接成功不会输出到 stderr，错误会输出到 stderr
+  # 如果需要更健壮的错误处理，可以检查 $?
+  &quot;$MYSQL_CMD&quot; -h &quot;$TARGET_IP&quot; -P &quot;$TARGET_PORT&quot; &quot;$DB_NAME&quot; -e &quot;$sql_query&quot; &gt;&gt; &quot;$LOG_FILE&quot; 2&gt;&amp;1
+  if [ $? -ne 0 ]; then
+    echo &quot;警告: 上述 SQL 命令执行可能失败，请检查日志。&quot; &gt;&gt; &quot;$LOG_FILE&quot;
+  fi
+}
+
+# 定义要执行的 SQL 查询数组
+SQL_QUERIES=(
+  &quot;select user, host, plugin from mysql.user;&quot;
+  &quot;show variables like '%connections_control%';&quot;
+  &quot;select user,host from mysql.user;&quot;
+  &quot;show variables like '%password%';&quot;
+  &quot;show variables like '%timeout%';&quot;
+  &quot;show variables like '%have_ssl%';&quot;
+  &quot;show variables where variable_name like 'version';&quot;
+  &quot;show variables like 'log_%';&quot;
+  &quot;show variables like '%logs%';&quot;
+  &quot;show global variables like '%general%';&quot;
+  &quot;show global variables like 'default_password_lifetime';&quot;
+)
+
+# 遍历 SQL 查询数组并执行
+for query in &quot;${SQL_QUERIES[@]}&quot;; do
+  execute_sql_and_log &quot;$query&quot;
+done
+
+echo &quot;&quot; &gt;&gt; &quot;$LOG_FILE&quot;
+echo &quot;所有SQL执行完毕。&quot; &gt;&gt; &quot;$LOG_FILE&quot;
+echo &quot;脚本执行完成，日志已保存到: $LOG_FILE&quot;
+
+</code></pre><ul>
+<li>
+<p><code>chmod +x run_mysql_queries.sh。</code></p>
+</li>
+<li>
+<p>运行脚本：</p>
+</li>
+</ul>
+<pre><code>./run_mysql_queries.sh 10.25.2.1 3306
+
+</code></pre>
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2021/05/25</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC">常用脚本</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%9F%BA%E7%A1%80">基础</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>
