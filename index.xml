@@ -6,7 +6,20 @@
     <description>Recent content on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 23 Apr 2025 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 25 May 2025 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL常用脚本_审计检查</title>
+      <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E5%AE%A1%E8%AE%A1%E6%A3%80%E6%9F%A5/</link>
+      <pubDate>Sun, 25 May 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E5%AE%A1%E8%AE%A1%E6%A3%80%E6%9F%A5/</guid>
+      <description>最近做等保，反复的有评测机构联系要做MySQL审计，会扔过来一些脚本，要看执行结果。
+  可以写一个这样的脚本，将他们要求执行的语句扔进去。
+  节约点时间
+  vim run_mysql_queries.sh
+  #!/bin/bash # --- 配置 --- # 默认数据库名，如果需要也可以作为参数传入 DB_NAME=&amp;quot;dbtest01&amp;quot; # MySQL 客户端命令，根据你的实际情况修改,如果用密码登录，也在这里改 MYSQL_CMD=&amp;quot;mysql --login-path=dba&amp;quot; # ---------------- # 检查是否传入了 IP 地址和端口 if [ -z &amp;quot;$1&amp;quot; ] || [ -z &amp;quot;$2&amp;quot; ]; then echo &amp;quot;用法: $0 &amp;lt;IP地址&amp;gt; &amp;lt;端口&amp;gt;&amp;quot; echo &amp;quot;例如: $0 10.10.0.0.1 3306&amp;quot; exit 1 fi TARGET_IP=&amp;quot;$1&amp;quot; TARGET_PORT=&amp;quot;$2&amp;quot; # 根据 IP 和端口动态生成日志文件名 LOG_FILE=&amp;quot;output_${TARGET_IP}_${TARGET_PORT}.log&amp;quot; # 初始化日志文件 echo &amp;quot;当前时间是: $(date)&amp;quot; &amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;执行实例：${TARGET_IP}:${TARGET_PORT}&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; # 添加一个空行，使格式更美观 # 定义执行 SQL 并记录日志的函数 # 参数1: SQL 查询语句 execute_sql_and_log() { local sql_query=&amp;quot;$1&amp;quot; echo &amp;quot;&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;执行SQL：&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;$sql_query&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;-------------------------------------------------------------------------------------&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; # 执行 mysql 命令并将输出追加到日志文件 # 注意：这里假设 mysqlw 客户端连接成功不会输出到 stderr，错误会输出到 stderr # 如果需要更健壮的错误处理，可以检查 $?</description>
+    </item>
+    
     <item>
       <title>如何用ai生成吉卜力风格的旅行图：2025年春天的旅行</title>
       <link>/book/%E5%A6%82%E4%BD%95%E7%94%A8ai%E7%94%9F%E6%88%90%E5%90%89%E5%8D%9C%E5%8A%9B%E9%A3%8E%E6%A0%BC%E7%9A%84%E6%97%85%E8%A1%8C%E5%9B%BE2025%E5%B9%B4%E6%98%A5%E5%A4%A9%E7%9A%84%E6%97%85%E8%A1%8C/</link>
@@ -2136,19 +2149,6 @@ func (t *Proxy) pipeSend(dstCon, srcCon *Conn, chSend chan int64) { defer pipeCl
       
       <guid>/ops/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_grepsedawkfind%E5%91%BD%E4%BB%A4/</guid>
       <description>grep ##zcat 是用于查看压缩的文件 ##gzip 套件包含许多可以 “在原地” 处理压缩文件的实用程序。zcat、zgrep、zless、zdiff 等实用程序的作用分别与 cat、grep、less 和 diff 相同，但是它们操作压缩的文件。 zcat web.log.gz | grep aqzt.com | head ###Grep &#39;OR&#39; 或操作 grep &amp;quot;pattern1\|pattern2&amp;quot; file.txt grep -E &amp;quot;pattern1|pattern2&amp;quot; file.txt grep -e pattern1 -e pattern2 file.txt egrep &amp;quot;pattern1|pattern2&amp;quot; file.txt awk &#39;/pattern1|pattern2/&#39; file.txt sed -e &#39;/pattern1/b&#39; -e &#39;/pattern2/b&#39; -e d file.txt #找出文件（filename）中包含123或者包含abc的行 grep -E &#39;123|abc&#39; filename #用egrep同样可以实现 egrep &#39;123|abc&#39; filename #awk 的实现方式 awk &#39;/123|abc/&#39; filename ###Grep &#39;AND&#39; 与操作 grep -E &#39;pattern1.*pattern2&#39; file.txt # in that order grep -E &#39;pattern1.</description>
-    </item>
-    
-    <item>
-      <title>MySQL常用脚本_审计检查</title>
-      <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E5%AE%A1%E8%AE%A1%E6%A3%80%E6%9F%A5/</link>
-      <pubDate>Tue, 25 May 2021 00:00:00 +0000</pubDate>
-      
-      <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E5%AE%A1%E8%AE%A1%E6%A3%80%E6%9F%A5/</guid>
-      <description>最近做等保，反复的有评测机构联系要做MySQL审计，会扔过来一些脚本，要看执行结果。
-  可以写一个这样的脚本，将他们要求执行的语句扔进去。
-  节约点时间
-  vim run_mysql_queries.sh
-  #!/bin/bash # --- 配置 --- # 默认数据库名，如果需要也可以作为参数传入 DB_NAME=&amp;quot;dbtest01&amp;quot; # MySQL 客户端命令，根据你的实际情况修改,如果用密码登录，也在这里改 MYSQL_CMD=&amp;quot;mysql --login-path=dba&amp;quot; # ---------------- # 检查是否传入了 IP 地址和端口 if [ -z &amp;quot;$1&amp;quot; ] || [ -z &amp;quot;$2&amp;quot; ]; then echo &amp;quot;用法: $0 &amp;lt;IP地址&amp;gt; &amp;lt;端口&amp;gt;&amp;quot; echo &amp;quot;例如: $0 10.10.0.0.1 3306&amp;quot; exit 1 fi TARGET_IP=&amp;quot;$1&amp;quot; TARGET_PORT=&amp;quot;$2&amp;quot; # 根据 IP 和端口动态生成日志文件名 LOG_FILE=&amp;quot;output_${TARGET_IP}_${TARGET_PORT}.log&amp;quot; # 初始化日志文件 echo &amp;quot;当前时间是: $(date)&amp;quot; &amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;执行实例：${TARGET_IP}:${TARGET_PORT}&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; # 添加一个空行，使格式更美观 # 定义执行 SQL 并记录日志的函数 # 参数1: SQL 查询语句 execute_sql_and_log() { local sql_query=&amp;quot;$1&amp;quot; echo &amp;quot;&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;执行SQL：&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;$sql_query&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;-------------------------------------------------------------------------------------&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; # 执行 mysql 命令并将输出追加到日志文件 # 注意：这里假设 mysqlw 客户端连接成功不会输出到 stderr，错误会输出到 stderr # 如果需要更健壮的错误处理，可以检查 $?</description>
     </item>
     
     <item>

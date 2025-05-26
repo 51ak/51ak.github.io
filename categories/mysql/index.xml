@@ -6,7 +6,20 @@
     <description>Recent content in mysql on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 27 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="/categories/mysql/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 25 May 2025 00:00:00 +0000</lastBuildDate><atom:link href="/categories/mysql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL常用脚本_审计检查</title>
+      <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E5%AE%A1%E8%AE%A1%E6%A3%80%E6%9F%A5/</link>
+      <pubDate>Sun, 25 May 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E5%AE%A1%E8%AE%A1%E6%A3%80%E6%9F%A5/</guid>
+      <description>最近做等保，反复的有评测机构联系要做MySQL审计，会扔过来一些脚本，要看执行结果。
+  可以写一个这样的脚本，将他们要求执行的语句扔进去。
+  节约点时间
+  vim run_mysql_queries.sh
+  #!/bin/bash # --- 配置 --- # 默认数据库名，如果需要也可以作为参数传入 DB_NAME=&amp;quot;dbtest01&amp;quot; # MySQL 客户端命令，根据你的实际情况修改,如果用密码登录，也在这里改 MYSQL_CMD=&amp;quot;mysql --login-path=dba&amp;quot; # ---------------- # 检查是否传入了 IP 地址和端口 if [ -z &amp;quot;$1&amp;quot; ] || [ -z &amp;quot;$2&amp;quot; ]; then echo &amp;quot;用法: $0 &amp;lt;IP地址&amp;gt; &amp;lt;端口&amp;gt;&amp;quot; echo &amp;quot;例如: $0 10.10.0.0.1 3306&amp;quot; exit 1 fi TARGET_IP=&amp;quot;$1&amp;quot; TARGET_PORT=&amp;quot;$2&amp;quot; # 根据 IP 和端口动态生成日志文件名 LOG_FILE=&amp;quot;output_${TARGET_IP}_${TARGET_PORT}.log&amp;quot; # 初始化日志文件 echo &amp;quot;当前时间是: $(date)&amp;quot; &amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;执行实例：${TARGET_IP}:${TARGET_PORT}&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; # 添加一个空行，使格式更美观 # 定义执行 SQL 并记录日志的函数 # 参数1: SQL 查询语句 execute_sql_and_log() { local sql_query=&amp;quot;$1&amp;quot; echo &amp;quot;&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;执行SQL：&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;$sql_query&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;-------------------------------------------------------------------------------------&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; # 执行 mysql 命令并将输出追加到日志文件 # 注意：这里假设 mysqlw 客户端连接成功不会输出到 stderr，错误会输出到 stderr # 如果需要更健壮的错误处理，可以检查 $?</description>
+    </item>
+    
     <item>
       <title>做了一个去O的工具：异构数据验证对比</title>
       <link>/oracle/%E5%81%9A%E4%BA%86%E4%B8%80%E4%B8%AA%E5%8E%BBo%E7%9A%84%E5%B7%A5%E5%85%B7%E5%BC%82%E6%9E%84%E6%95%B0%E6%8D%AE%E8%A1%8C%E7%BA%A7%E9%AA%8C%E8%AF%81%E5%AF%B9%E6%AF%94/</link>
@@ -434,19 +447,6 @@ func (t *Proxy) pipeSend(dstCon, srcCon *Conn, chSend chan int64) { defer pipeCl
 1.步骤 1.写一个Python脚本去连接（192.168.1.1:1521）上的Oracle  #!/usr/bin/env python ## coding: utf-8 import cx_Oracle conn = cx_Oracle.connect(&#39;dboopreader/dbooppassword@192.168.1.1:1521/testdb&#39;) print(&amp;quot;连接成功&amp;quot;) conn.close() print(&amp;quot;连接关闭&amp;quot;) 通过wireshark抓包，发现一次简单的连接，有38个通信包。
 2.捕获这些包，发现它的规律 挨个点开这些包，发现了一些有用的信息，然后发现wireshark的包看起来不方便， 本地模拟一个端口1522端口，劫持这些请求，打印出来，得到如下这种的tcp包
 抓到:127.0.0.1到192.168.1.1的包 二进制展示如下: 0.0x7 0xaf 0x0 0x0 0x6 0x0 0x0 0x0 0x0 0x0 0x2 0x54 0x3 0x54 0x3 0x3 0x2a 0x6 0x1 0x1 20.0x1 0x6f 0x1 0x1 0xc 0x1 0x1 0x1 0x1 0x1 0x1 0x1 0x7f 0xff 0x3 0xe 0x3 0x3 0x1 0x1 40.</description>
-    </item>
-    
-    <item>
-      <title>MySQL常用脚本_审计检查</title>
-      <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E5%AE%A1%E8%AE%A1%E6%A3%80%E6%9F%A5/</link>
-      <pubDate>Tue, 25 May 2021 00:00:00 +0000</pubDate>
-      
-      <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E5%AE%A1%E8%AE%A1%E6%A3%80%E6%9F%A5/</guid>
-      <description>最近做等保，反复的有评测机构联系要做MySQL审计，会扔过来一些脚本，要看执行结果。
-  可以写一个这样的脚本，将他们要求执行的语句扔进去。
-  节约点时间
-  vim run_mysql_queries.sh
-  #!/bin/bash # --- 配置 --- # 默认数据库名，如果需要也可以作为参数传入 DB_NAME=&amp;quot;dbtest01&amp;quot; # MySQL 客户端命令，根据你的实际情况修改,如果用密码登录，也在这里改 MYSQL_CMD=&amp;quot;mysql --login-path=dba&amp;quot; # ---------------- # 检查是否传入了 IP 地址和端口 if [ -z &amp;quot;$1&amp;quot; ] || [ -z &amp;quot;$2&amp;quot; ]; then echo &amp;quot;用法: $0 &amp;lt;IP地址&amp;gt; &amp;lt;端口&amp;gt;&amp;quot; echo &amp;quot;例如: $0 10.10.0.0.1 3306&amp;quot; exit 1 fi TARGET_IP=&amp;quot;$1&amp;quot; TARGET_PORT=&amp;quot;$2&amp;quot; # 根据 IP 和端口动态生成日志文件名 LOG_FILE=&amp;quot;output_${TARGET_IP}_${TARGET_PORT}.log&amp;quot; # 初始化日志文件 echo &amp;quot;当前时间是: $(date)&amp;quot; &amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;执行实例：${TARGET_IP}:${TARGET_PORT}&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; # 添加一个空行，使格式更美观 # 定义执行 SQL 并记录日志的函数 # 参数1: SQL 查询语句 execute_sql_and_log() { local sql_query=&amp;quot;$1&amp;quot; echo &amp;quot;&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;执行SQL：&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;$sql_query&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; echo &amp;quot;-------------------------------------------------------------------------------------&amp;quot; &amp;gt;&amp;gt; &amp;quot;$LOG_FILE&amp;quot; # 执行 mysql 命令并将输出追加到日志文件 # 注意：这里假设 mysqlw 客户端连接成功不会输出到 stderr，错误会输出到 stderr # 如果需要更健壮的错误处理，可以检查 $?</description>
     </item>
     
     <item>
