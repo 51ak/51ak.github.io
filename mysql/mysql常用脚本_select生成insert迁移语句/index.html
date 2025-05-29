@@ -1,0 +1,406 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL常用脚本_select生成insert迁移语句| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20250207" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+      <li class="pull-left ">
+        <a href="/run51ak">跑步</a>
+      </li>
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL常用脚本_select生成insert迁移语句</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#适用场景">适用场景</a></li>
+    <li><a href="#实现">实现</a></li>
+    <li><a href="#代码">代码：</a></li>
+    <li><a href="#执行">执行：</a>
+      <ul>
+        <li><a href="#把mysql的insert脚本转成oralce兼容格式">把mysql的insert脚本转成oralce兼容格式：</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="适用场景">适用场景</h2>
+<ul>
+<li>MySQL中有少量的数据，需要快速的同步到其他环境（有可能是测试环境）</li>
+<li>没有复杂的大长文本大字段，就是个简单的表</li>
+<li>不想走datax,ogg,canal&hellip;等迁移方案，甚至不想mysqldump出来脚本</li>
+</ul>
+<h2 id="实现">实现</h2>
+<ul>
+<li>提供表名，生成一个Select语句，这个select 语句将符合条件的行concat() 成insert语句</li>
+<li>拿到这个insert 语句就可以去任意地方去执行</li>
+</ul>
+<h2 id="代码">代码：</h2>
+<pre><code>#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import re
+import sys
+import argparse
+
+def parse_create_table(create_table_sql):
+    &quot;&quot;&quot;解析CREATE TABLE语句，提取列名和数据类型&quot;&quot;&quot;
+    # 移除注释和多余空白
+    sql = re.sub(r'--.*?\n|/\*.*?\*/', '', create_table_sql, flags=re.DOTALL)
+    sql = re.sub(r'\s+', ' ', sql).strip()
+    
+    # 提取表名
+    table_name_match = re.search(r'CREATE\s+TABLE\s+(?:`?([^`]+)`?|([^\s(]+))', sql, re.IGNORECASE)
+    table_name = table_name_match.group(1) or table_name_match.group(2) if table_name_match else None
+    
+    # 提取列定义
+    columns_part = re.search(r'\((.+)\)\s*(?:ENGINE|;|$)', sql, re.IGNORECASE | re.DOTALL)
+    if not columns_part:
+        return table_name, {}
+    
+    columns_text = columns_part.group(1)
+    
+    # 分割列定义，处理逗号但忽略括号内的逗号
+    column_defs = []
+    bracket_level = 0
+    current_def = &quot;&quot;
+    
+    for char in columns_text:
+        if char == '(' or char == '[':
+            bracket_level += 1
+        elif char == ')' or char == ']':
+            bracket_level -= 1
+        
+        if char == ',' and bracket_level == 0:
+            column_defs.append(current_def.strip())
+            current_def = &quot;&quot;
+        else:
+            current_def += char
+    
+    if current_def.strip():
+        column_defs.append(current_def.strip())
+    
+    # 解析每个列定义
+    columns = {}
+    for col_def in column_defs:
+        # 跳过主键、外键等非列定义
+        if re.match(r'^(?:PRIMARY|UNIQUE|FOREIGN)\s+KEY|^KEY|^INDEX|^CONSTRAINT', col_def, re.IGNORECASE):
+            continue
+        
+        # 提取列名和数据类型
+        col_match = re.match(r'`?([^`\s]+)`?\s+([^\s,]+)', col_def)
+        if col_match:
+            col_name = col_match.group(1)
+            data_type = col_match.group(2).upper()
+            columns[col_name] = data_type
+    
+    return table_name, columns
+
+def generate_select_for_insert(table_name, columns_dict, selected_columns=None, oracle_compatible=False):
+    &quot;&quot;&quot;生成用于导出INSERT语句的SELECT语句&quot;&quot;&quot;
+    if not table_name:
+        return &quot;错误：无法解析表名&quot;
+    
+    # 如果没有指定列，使用所有列
+    if not selected_columns:
+        selected_columns = list(columns_dict.keys())
+    else:
+        # 确保所有指定的列都存在
+        for col in selected_columns:
+            if col not in columns_dict:
+                return f&quot;错误：列 '{col}' 不存在于表定义中&quot;
+    
+    # 构建SELECT语句
+    select_parts = []
+    for col in selected_columns:
+        data_type = columns_dict.get(col, '').upper()
+        
+        # 根据数据类型和Oracle兼容性处理列
+        if oracle_compatible:
+            if 'DATE' in data_type or 'TIME' in data_type:
+                if 'TIMESTAMP' in data_type or ('DATE' in data_type and 'TIME' in data_type):
+                    select_parts.append(f&quot;CONCAT('TO_DATE(\'', DATE_FORMAT({col}, '%Y-%m-%d %H:%i:%s'), '\', \'YYYY-MM-DD HH24:MI:SS\')')&quot;)
+                else:
+                    select_parts.append(f&quot;CONCAT('TO_DATE(\'', DATE_FORMAT({col}, '%Y-%m-%d'), '\', \'YYYY-MM-DD\')')&quot;)
+            elif 'BOOL' in data_type or data_type == 'TINYINT(1)':
+                select_parts.append(col)  # Oracle没有布尔类型，使用数字
+            else:
+                # 字符串类型需要添加引号和转义
+                if any(t in data_type for t in ['CHAR', 'TEXT', 'VARCHAR', 'ENUM', 'SET']):
+                    select_parts.append(f&quot;CONCAT('\'', REPLACE({col}, '\'', '\'\'\''), '\'')&quot;)
+                else:
+                    select_parts.append(col)
+        else:
+            # MySQL格式
+            if any(t in data_type for t in ['CHAR', 'TEXT', 'VARCHAR', 'ENUM', 'SET']):
+                select_parts.append(f&quot;CONCAT('\'', REPLACE({col}, '\'', '\'\'\''), '\'')&quot;)
+            elif 'DATE' in data_type or 'TIME' in data_type:
+                select_parts.append(f&quot;CONCAT('\'', DATE_FORMAT({col}, '%Y-%m-%d %H:%i:%s'), '\'')&quot;)
+            elif data_type == 'TINYINT(1)' or 'BOOL' in data_type:
+                select_parts.append(col)
+            else:
+                select_parts.append(f&quot;IFNULL({col}, 'NULL')&quot;)
+    
+    # 构建完整的SELECT语句
+    columns_str = ', '.join(select_parts)
+    
+    if oracle_compatible:
+        # Oracle格式的INSERT语句
+        table_name_upper = table_name.upper()
+        return f&quot;SELECT CONCAT('INSERT INTO {table_name_upper} VALUES (', {columns_str}, ');') AS insert_statement FROM {table_name};&quot;
+    else:
+        # MySQL格式的INSERT语句
+        return f&quot;SELECT CONCAT('INSERT INTO `{table_name}` VALUES (', {columns_str}, ');') AS insert_statement FROM {table_name};&quot;
+
+def main():
+    parser = argparse.ArgumentParser(description='生成从MySQL表导出INSERT语句的SQL')
+    parser.add_argument('--table', '-t', required=True, help='MySQL表名')
+    parser.add_argument('--create-sql', '-c', required=True, help='MySQL建表SQL语句或包含SQL的文件路径')
+    parser.add_argument('--columns', '-l', help='需要导出的列名，用逗号分隔')
+    parser.add_argument('--oracle', '-o', action='store_true', help='生成兼容Oracle的INSERT语句')
+    
+    args = parser.parse_args()
+    
+    # 读取CREATE TABLE SQL
+    create_sql = args.create_sql
+    if create_sql.endswith('.sql') or '/' in create_sql or '\\' in create_sql:
+        try:
+            with open(create_sql, 'r', encoding='utf-8') as f:
+                create_sql = f.read()
+        except Exception as e:
+            print(f&quot;错误：无法读取SQL文件 - {e}&quot;, file=sys.stderr)
+            return 1
+    
+    # 解析列名
+    selected_columns = None
+    if args.columns:
+        selected_columns = [col.strip() for col in args.columns.split(',')]
+    
+    # 解析CREATE TABLE语句
+    table_name, columns_dict = parse_create_table(create_sql)
+    
+    # 如果未指定表名，使用从SQL解析出的表名
+    if args.table != table_name and table_name:
+        print(f&quot;警告：SQL中的表名 '{table_name}' 与指定的表名 '{args.table}' 不匹配，将使用指定的表名。&quot;, file=sys.stderr)
+        table_name = args.table
+    elif not table_name:
+        table_name = args.table
+    
+    # 生成SELECT语句
+    select_sql = generate_select_for_insert(table_name, columns_dict, selected_columns, args.oracle)
+    
+    print(select_sql)
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main())
+
+</code></pre><h2 id="执行">执行：</h2>
+<pre><code># 基本用法
+python3.9 generate_insert_sql.py --table 表名 --create-sql /path/to/create_table.sql 
+
+# 从文件读取CREATE TABLE语句,生成兼容Oracle的INSERT语句
+python3.9 generate_insert_sql.py --table 表名 --create-sql /path/to/create_table.sql --oracle
+</code></pre><ul>
+<li>执行结果，会输出出来一个select 语句，拿着这个select语句去执行</li>
+<li>会得到一个insert 语句</li>
+<li>这里有个选项是输出出来目标库是mysql还是oracle</li>
+<li>你也可以先生成mysql的insert语句，然后用下面的脚本改：</li>
+</ul>
+<h3 id="把mysql的insert脚本转成oralce兼容格式">把mysql的insert脚本转成oralce兼容格式：</h3>
+<pre><code>#!/bin/bash
+
+# 检查参数
+if [ $# -lt 1 ]; then
+    echo &quot;用法: $0 &lt;mysql_sql_file&gt; [output_file]&quot;
+    exit 1
+fi
+
+INPUT_FILE=$1
+OUTPUT_FILE=${2:-&quot;${INPUT_FILE%.sql}_oracle.sql&quot;}
+
+# 检查输入文件是否存在
+if [ ! -f &quot;$INPUT_FILE&quot; ]; then
+    echo &quot;错误: 输入文件 '$INPUT_FILE' 不存在&quot;
+    exit 1
+fi
+
+echo &quot;正在将MySQL INSERT语句转换为Oracle格式...&quot;
+echo &quot;输入文件: $INPUT_FILE&quot;
+echo &quot;输出文件: $OUTPUT_FILE&quot;
+
+# 创建临时文件
+TMP_FILE=$(mktemp)
+
+# 处理MySQL INSERT语句转换为Oracle格式
+cat &quot;$INPUT_FILE&quot; | sed '  
+# 将表名转换为大写并移除反引号
+s/INSERT INTO `\([^`]*\)`/INSERT INTO \U\1\E/g
+
+# 处理日期时间格式: 将MySQL格式 YYYY-MM-DD HH:MM:SS 转换为 Oracle格式 TO_DATE()
+s/&quot;\([0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\} [0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\}\)&quot;/TO_DATE(&quot;\1&quot;, &quot;YYYY-MM-DD HH24:MI:SS&quot;)/g
+
+# 处理日期格式: 将MySQL格式 YYYY-MM-DD 转换为 Oracle格式 TO_DATE()
+s/&quot;\([0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}\)&quot;/TO_DATE(&quot;\1&quot;, &quot;YYYY-MM-DD&quot;)/g
+
+# 处理布尔值: 0/1 转换为 0/1
+# 注意: 这里我们保留数字格式，如果需要转为字符串可以修改为 &quot;0&quot;/&quot;1&quot;
+s/,\([0-9]\+\),&quot;\([^&quot;]*\)&quot;,\([0-9]\+\),\([0-9]\+\),/,\1,&quot;\2&quot;,\3,\4,/g
+
+# 处理NULL值，确保格式一致
+s/,NULL)/,NULL)/g
+
+# 添加分号结束每条语句
+s/;$/;/g
+' &gt; &quot;$TMP_FILE&quot;
+
+# 添加Oracle特定的设置到输出文件开头
+cat &gt; &quot;$OUTPUT_FILE&quot; &lt;&lt; 'EOL'
+-- Oracle兼容设置
+SET DEFINE OFF;
+SET VERIFY OFF;
+SET FEEDBACK OFF;
+SET SERVEROUTPUT ON;
+
+BEGIN
+    EXECUTE IMMEDIATE 'PURGE RECYCLEBIN';
+END;
+/
+
+EOL
+
+# 将处理后的内容追加到输出文件
+cat &quot;$TMP_FILE&quot; &gt;&gt; &quot;$OUTPUT_FILE&quot;
+
+# 添加提交事务到输出文件结尾
+echo &quot;\n-- 提交事务\nCOMMIT;&quot; &gt;&gt; &quot;$OUTPUT_FILE&quot;
+
+# 清理临时文件
+rm -f &quot;$TMP_FILE&quot;
+
+echo &quot;转换完成! Oracle兼容的SQL已保存到: $OUTPUT_FILE&quot;
+
+</code></pre><ul>
+<li>这是个非常轻量化的临时数据同步方法</li>
+<li>快速而简洁</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2025/05/29</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC">常用脚本</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%9F%BA%E7%A1%80">基础</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

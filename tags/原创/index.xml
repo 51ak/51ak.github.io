@@ -250,6 +250,16 @@ GeForce将人工智能带入了世界，实现了人工智能的普及，而如�
     </item>
     
     <item>
+      <title>MySQL遇到长时间Waiting for table metadata lock</title>
+      <link>/mysql/mysql%E9%81%87%E5%88%B0%E9%95%BF%E6%97%B6%E9%97%B4waiting-for-table-metadata-lock/</link>
+      <pubDate>Tue, 10 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E9%81%87%E5%88%B0%E9%95%BF%E6%97%B6%E9%97%B4waiting-for-table-metadata-lock/</guid>
+      <description>0.前言 续：
+ MySQL的7种日志(一):概况 MySQL的7种日志(二):RedoLog MySQL的7种日志(三):UndoLog MySQL的7种日志(四):BinLog MySQL的7种日志(五):SlowLog  1.什么是Slowlog  数据库执行一个SQL时，如果超过了设定值(比如说500毫秒),数据库将此SQL和相关信息记录到日志中，这个日志就是SLowlog，我们也称为慢日志 slowLog的开启，是为了定位和发现慢SQL用的。这一点跟前几篇文章里的redbolog,undolog,binlog等日志不一样  SlowLog的超时时间long_query_time  这个需要特别注意，并不是我们通常理解的一个SQL从开始执行到执行完用了多长时间 事实上MySQL判断一个sql是否要被记到slowlog中，是这样的逻辑： 假设我们设置了超过500毫秒的SQL是慢SQl要记下来，MySQL会这样处理 实际SQL执行消耗的时间- 锁等待消耗时间 如果这个时间&amp;gt;=500毫秒，则记下SlowLog否则不记 这就相当于说开车起点到终点的时间如果超过30分钟就很慢了 但我们说的30分钟不包括路上堵车和等红绿灯的时间  # @long_query_time ：我们设置了慢日志记录时间 # sqltime ：mysql判断一个sql的执行用时 # cur_utime ：这条sql从开始执行到结束，实际消耗的时间 # utime_after_lock：锁等待消耗时间 sqltime = cur_utim- utime_after_lock if sqltime&amp;gt;=@long_query_time: recordIt() #写入慢日志 else: pass 2.MySQL慢日志的常用操作 开启  修改my.cnf  [mysqld] slow_query_log = 1 slow_query_log_file = /data/mysql3306/mysql-slow.log #指定了慢查询日志的输出文件路径； long_query_time = 1 # 超过多长时间（秒）的SQL 被记录 修改  慢日志的几个项都可以在线联机修改的  set global long_query_time=0.</description>
+    </item>
+    
+    <item>
       <title>微调有必要做吗？微调还是RAG?</title>
       <link>/ai/%E5%BE%AE%E8%B0%83%E6%9C%89%E5%BF%85%E8%A6%81%E5%81%9A%E5%90%97%E5%BE%AE%E8%B0%83%E8%BF%98%E6%98%AFrag/</link>
       <pubDate>Mon, 09 Sep 2024 00:00:00 +0000</pubDate>

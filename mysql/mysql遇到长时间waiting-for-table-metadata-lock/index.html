@@ -1,0 +1,320 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MySQL遇到长时间Waiting for table metadata lock| dboop.com</title><link rel="stylesheet" href="/css/style.css?id=20250207" />
+  
+    
+    
+   
+    
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"K2Iiv8isAYH4TLPh",ck:"K2Iiv8isAYH4TLPh"})</script>
+  
+  
+      
+  </head>
+  <body>
+
+    <header>
+
+
+  <link rel="stylesheet" href="/css/atom-one-light.min.css">
+  <script src="/js/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <nav>
+    <ul>
+      
+      
+      <li class="pull-left current">
+        <a href="/">dboop.com</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/">首页</a>
+      </li>
+      
+      
+      <li class="pull-left ">
+        <a href="/categories/">分类</a>
+      </li>
+      
+
+      
+    <li class="pull-left ">
+        <a href="/dba2019/">归档</a>
+      </li>
+      
+       
+      <li class="pull-left ">
+        <a href="/580top/html/mysql/l_13_1.htm">580top</a>
+      </li>
+      
+      <li class="pull-left ">
+        <a href="/run51ak">跑步</a>
+      </li>
+      <li class="pull-left ">
+        <a href="/post/2000/aboutdboop.html">关于</a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+    <br/>
+
+<div class="article-meta">
+<h1><span class="title">MySQL遇到长时间Waiting for table metadata lock</span></h1>
+</div>
+
+
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#0前言">0.前言</a></li>
+    <li><a href="#1什么是slowlog">1.什么是Slowlog</a>
+      <ul>
+        <li><a href="#slowlog的超时时间long_query_time">SlowLog的超时时间<code>long_query_time</code></a></li>
+      </ul>
+    </li>
+    <li><a href="#2mysql慢日志的常用操作">2.MySQL慢日志的常用操作</a>
+      <ul>
+        <li><a href="#开启">开启</a></li>
+        <li><a href="#修改">修改</a></li>
+        <li><a href="#查看">查看</a></li>
+      </ul>
+    </li>
+    <li><a href="#3slowlog的分析工具">3.SlowLog的分析工具</a>
+      <ul>
+        <li><a href="#方式一自研的实时慢日志分析工作">方式一：自研的实时慢日志分析工作</a></li>
+        <li><a href="#方式二利用第三方工具">方式二：利用第三方工具</a></li>
+        <li><a href="#方式三发现有慢查询的时候登上实例机器直接看">方式三：发现有慢查询的时候，登上实例机器，直接看</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+  <main>
+    <h2 id="0前言">0.前言</h2>
+<p>续：</p>
+<ul>
+<li><a href="https://www.dboop.com/mysql/mysql7%E7%A7%8D%E6%97%A5%E5%BF%97/">MySQL的7种日志(一):概况</a></li>
+<li><a href="https://www.dboop.com/mysql/mysql%E7%9A%84redo%E6%97%A5%E5%BF%97/">MySQL的7种日志(二):RedoLog</a></li>
+<li><a href="https://www.dboop.com/mysql/mysql%E7%9A%84undo%E6%97%A5%E5%BF%97/">MySQL的7种日志(三):UndoLog</a></li>
+<li><a href="https://www.dboop.com/mysql/mysql%E7%9A%84binlog%E6%97%A5%E5%BF%97/">MySQL的7种日志(四):BinLog</a></li>
+<li>MySQL的7种日志(五):SlowLog</li>
+</ul>
+<h2 id="1什么是slowlog">1.什么是Slowlog</h2>
+<ul>
+<li>数据库执行一个SQL时，如果超过了设定值(比如说500毫秒),数据库将此SQL和相关信息记录到日志中，这个日志就是<code>SLowlog</code>，我们也称为<code>慢日志</code></li>
+<li>slowLog的开启，是为了定位和发现慢SQL用的。这一点跟前几篇文章里的redbolog,undolog,binlog等日志不一样</li>
+</ul>
+<h3 id="slowlog的超时时间long_query_time">SlowLog的超时时间<code>long_query_time</code></h3>
+<ul>
+<li>这个需要特别注意，并不是我们通常理解的一个SQL从开始执行到执行完用了多长时间</li>
+<li>事实上MySQL判断一个sql是否要被记到slowlog中，是这样的逻辑：</li>
+<li>假设我们设置了超过500毫秒的SQL是慢SQl要记下来，MySQL会这样处理</li>
+<li><code>实际SQL执行消耗的时间</code>- <code>锁等待消耗时间</code> 如果这个时间&gt;=500毫秒，则记下SlowLog否则不记</li>
+<li>这就相当于说开车起点到终点的时间如果超过30分钟就很慢了</li>
+<li>但我们说的30分钟不包括路上堵车和等红绿灯的时间</li>
+</ul>
+<pre><code># @long_query_time ：我们设置了慢日志记录时间
+# sqltime ：mysql判断一个sql的执行用时
+# cur_utime ：这条sql从开始执行到结束，实际消耗的时间
+# utime_after_lock：锁等待消耗时间
+sqltime = cur_utim- utime_after_lock
+if sqltime&gt;=@long_query_time:
+  recordIt() #写入慢日志
+else:
+  pass
+</code></pre><h2 id="2mysql慢日志的常用操作">2.MySQL慢日志的常用操作</h2>
+<h3 id="开启">开启</h3>
+<ul>
+<li>修改my.cnf</li>
+</ul>
+<pre><code>[mysqld]
+slow_query_log = 1
+slow_query_log_file = /data/mysql3306/mysql-slow.log #指定了慢查询日志的输出文件路径；
+long_query_time = 1 # 超过多长时间（秒）的SQL 被记录
+
+</code></pre><h3 id="修改">修改</h3>
+<ul>
+<li>慢日志的几个项都可以在线联机修改的</li>
+</ul>
+<pre><code>set global long_query_time=0.5 #500毫秒
+
+
+# 同样的以下参数值得被关注
+- log_output
+# 设置慢日志输出到哪里，正常都会放到file里，极少数情况下，可以改成table ，此时的慢日志会被记录到该MySQL实例的mysql.slow_log表中（很方便，但是线上别这样用,这个很容易成为那根稻草）
+
+- log_queries_not_using_indexes
+# 启用该变量，会记录期望检索所有行的查询语句，也就是说做表全扫描。使用索引的查询也会被记录。例如，使用完整索引扫描的查询使用索引，但会记录日志，因为索引不会限制行数。默认值是false。
+
+- min_examined_row_limit
+参数规定了只有当检索的行数超过了参数值的sql语句才会被记录到慢sql日志文件中，默认值是0，没有限制。可以和上一个参数log_queries_not_using_indexes搭配使用，可以避免记录一些访问小表的查询。
+
+- log_throttle_queries_not_using_indexes
+# 该参数限制每分钟记录到慢查询日志中的查询语句数量，默认值是0，不限制。
+
+- log_slow_extra
+- 参数log_slow_extra从MySQL 8.0.14开始可用，当启用时，将记录与慢sql相关的额外信息，如状态参数Handler_%。参数默认值为off，建议打开，将参数设置为on。
+
+</code></pre><h3 id="查看">查看</h3>
+<pre><code>tail /data/mysql3306/mysql-slow.log 
+
+</code></pre><h2 id="3slowlog的分析工具">3.SlowLog的分析工具</h2>
+<h3 id="方式一自研的实时慢日志分析工作">方式一：自研的实时慢日志分析工作</h3>
+<ul>
+<li>这个是我们正在使用的方法。也是最好用的工具</li>
+<li>优点是：自定义开发，高实时性，快速多集群收纳，可以有历史数据对比&hellip;</li>
+<li>步骤如下</li>
+<li>1.在服务器上配置filebeat，收集所有实例的slowlog到kafka中</li>
+<li>2.监听kafka队列，实时收集整理归纳</li>
+<li>3.将结果入库，或产生报警</li>
+<li>4.调用第三方工具，自动优化SQL</li>
+<li>记住了，这个是最好的方式，及时发现问题很多时候依赖这个报警！！！切记</li>
+</ul>
+<h3 id="方式二利用第三方工具">方式二：利用第三方工具</h3>
+<ul>
+<li>一些工具可以帮我们快速归纳和统计长长的slowlog</li>
+</ul>
+<h4 id="pt-query-digest">pt-query-digest</h4>
+<ul>
+<li>这是pt工具包里的，可能也是早几年最常见的慢日志分析工具</li>
+<li>使用方式如下</li>
+</ul>
+<pre><code>#使用
+pt-query-digest [OPTIONS] [DSN]
+
+pt-query-digest --help
+常用参数：
+--create-review-table ：当使用--review参数把分析结果输出到表中时，如果没有表就自动创建。
+--create-history-table：当使用--history参数把分析结果输出到表中时，如果没有表就自动创建。
+--filter ：  对输入的慢查询按指定的字符串进行匹配过滤后再进行分析
+--limit：限制输出结果百分比或数量，默认值是20,即将最慢的20条语句输出，如果是95%则按总响应时间占比从大到小排序，输出到总和达到95%位置截止。
+--log=s ：指定输出的日志文件
+--history 将分析结果保存到表中，分析结果比较详细，下次再使用--history时，如果存在相同的语句，且查询所在的时间区间和历史表
+           中的不同，则会记录到数据表中，可以通过查询同一CHECKSUM来比较某类型查询的历史变化。
+--review：将分析结果保存到表中，这个分析只是对查询条件进行参数化，一个类型的查询一条记录，比较简单。
+           当下次使用--review时，如果存在相同的语句分析，就不会记录到数据表中。
+--output 分析结果输出类型，值可以是report(标准分析报告)、slowlog(Mysql slow log)、json、json-anon，一般使用report，以便于阅读。
+--since：从该指定日期开始分析。
+--until：截止时间，配合—since可以分析一段时间内的慢查询。
+</code></pre><ul>
+<li>输出结果是一个非常详细的报告，很详细很全面</li>
+</ul>
+<h4 id="mysqldumpslow-自带的分析工具">mysqldumpslow 自带的分析工具</h4>
+<ul>
+<li>使用方式：</li>
+</ul>
+<pre><code>mysqldumpslow   /data/mysql3306/mysql-slow.log
+</code></pre><ul>
+<li>返回结果：</li>
+</ul>
+<pre><code>主要功能是, 统计不同慢sql的
+出现次数(Count),
+执行最长时间(Time),
+累计总耗费时间(Time),
+等待锁的时间(Lock),
+发送给客户端的行总数(Rows),
+扫描的行总数(Rows),
+用户以及sql语句本身
+</code></pre><h4 id="mysqlsla-分析慢查询日志">mysqlsla 分析慢查询日志</h4>
+<ul>
+<li>使用方式</li>
+</ul>
+<pre><code>#查询记录最多的10条，可以指定具体的数据库 
+mysqlsla -lt slow -sort t_sum   -sf  &quot;+select,update,INSERT&quot; -db dboop  -top 10  /data/mysql3306/mysql-slow.log
+
+#查询记录最多的20个sql语句
+mysqlsla -lt slow --sort t_sum --top 20  /data/mysql3306/mysql-slow.log
+
+#统计所有select的慢查询sql，并显示执行时间最长的100条sql，并写到sql_select.log中去
+
+mysqlsla -lt slow  -sf &quot;+select&quot; -top 100 /data/mysql3306/mysql-slow.log
+
+#统计dboop库中所有select和update的慢查询sql，并查询次数最多的100条sql
+
+mysqlsla -lt slow  -sf &quot;+select,update&quot; -top 100 -sort c_sum  -db dboop /data/mysql3306/mysql-slow.log
+
+</code></pre><ul>
+<li>返回参数如下</li>
+</ul>
+<pre><code>Count, sql的执行次数及占总的slow log数量的百分比.
+Time, 执行时间, 包括总时间, 平均时间, 最小, 最大时间, 时间占到总慢sql时间的百分比.
+95% of Time, 去除最快和最慢的sql, 覆盖率占95%的sql的执行时间.
+Lock Time, 等待锁的时间.95% of Lock , 95%的慢sql等待锁时间.Rows sent, 结果行统计数量, 包括平均, 最小, 最大数量.
+Rows examined, 扫描的行数量.
+Database, 属于哪个[数据库]
+Users, 哪个用户,IP, 占到所有用户执行的sql百分比
+Query abstract, 抽象后的sql语句
+Query sample, sql语句
+</code></pre><h3 id="方式三发现有慢查询的时候登上实例机器直接看">方式三：发现有慢查询的时候，登上实例机器，直接看</h3>
+<ul>
+<li>很土的方法，但是这个是最直接接触slowlog的方法</li>
+<li>不依赖任何工具，纯靠dba手工翻日志</li>
+<li>事实上自动化工具做得足够好了，实际工作中还是会时不时的需要这样的土方法</li>
+<li>实用至上.</li>
+</ul>
+
+    <a href="/"> >> Home</a>
+  </main>
+
+  <h4 class="author">51ak</h4>
+<h4 class="date">2024/09/10</h4>
+<p class="terms">
+  
+  
+  Categories: <a href="/categories/mysql">mysql</a> <a href="/categories/%E6%97%A5%E5%BF%97">日志</a> 
+  
+  
+  
+  Tags: <a href="/tags/%E5%8E%9F%E5%88%9B">原创</a> <a href="/tags/%E7%B2%BE%E5%93%81">精品</a> 
+  
+  
+</p>
+
+
+
+<div style="margin-top:80px">
+<img src="/img/dbaweixin.jpeg" alt="《数据库工作笔记》公众号" style="width:420px;" />
+<br />
+扫描上面的二维码，关注我的《数据库工作笔记》公众号
+</div>
+
+    <footer>
+      
+<script>
+(function() {
+  function center_el(tagName) {
+    var tags = document.getElementsByTagName(tagName), i, tag;
+    for (i = 0; i < tags.length; i++) {
+      tag = tags[i];
+      var parent = tag.parentElement;
+      
+      if (parent.childNodes.length === 1) {
+        
+        if (parent.nodeName === 'A') {
+          parent = parent.parentElement;
+          if (parent.childNodes.length != 1) continue;
+        }
+        if (parent.nodeName === 'P') parent.style.textAlign = 'center';
+      }
+    }
+  }
+  var tagNames = ['img', 'embed', 'object'];
+  for (var i = 0; i < tagNames.length; i++) {
+    center_el(tagNames[i]);
+  }
+})();
+</script>
+
+      
+      <hr/>
+      Power by dboop.com Copyright 2019-2024
+      
+    </footer>
+  </body>
+</html>

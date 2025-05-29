@@ -6,7 +6,16 @@
     <description>Recent content in 基础 on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 25 May 2025 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 29 May 2025 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL常用脚本_select生成insert迁移语句</title>
+      <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_select%E7%94%9F%E6%88%90insert%E8%BF%81%E7%A7%BB%E8%AF%AD%E5%8F%A5/</link>
+      <pubDate>Thu, 29 May 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_select%E7%94%9F%E6%88%90insert%E8%BF%81%E7%A7%BB%E8%AF%AD%E5%8F%A5/</guid>
+      <description>适用场景  MySQL中有少量的数据，需要快速的同步到其他环境（有可能是测试环境） 没有复杂的大长文本大字段，就是个简单的表 不想走datax,ogg,canal&amp;hellip;等迁移方案，甚至不想mysqldump出来脚本  实现  提供表名，生成一个Select语句，这个select 语句将符合条件的行concat() 成insert语句 拿到这个insert 语句就可以去任意地方去执行  代码： #!/usr/bin/env python # -*- coding: utf-8 -*- import re import sys import argparse def parse_create_table(create_table_sql): &amp;quot;&amp;quot;&amp;quot;解析CREATE TABLE语句，提取列名和数据类型&amp;quot;&amp;quot;&amp;quot; # 移除注释和多余空白 sql = re.sub(r&#39;--.*?\n|/\*.*?\*/&#39;, &#39;&#39;, create_table_sql, flags=re.DOTALL) sql = re.sub(r&#39;\s+&#39;, &#39; &#39;, sql).strip() # 提取表名 table_name_match = re.search(r&#39;CREATE\s+TABLE\s+(?:`?([^`]+)`?|([^\s(]+))&#39;, sql, re.IGNORECASE) table_name = table_name_match.group(1) or table_name_match.group(2) if table_name_match else None # 提取列定义 columns_part = re.search(r&#39;\((.+)\)\s*(?:ENGINE|;|$)&#39;, sql, re.IGNORECASE | re.</description>
+    </item>
+    
     <item>
       <title>MySQL常用脚本_审计检查</title>
       <link>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_%E5%AE%A1%E8%AE%A1%E6%A3%80%E6%9F%A5/</link>
