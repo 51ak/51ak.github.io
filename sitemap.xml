@@ -3,13 +3,38 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/book/2025%E5%B9%B4%E7%A7%8B%E5%A4%A9%E7%9A%84%E6%97%85%E8%A1%8C/</loc>
+    <lastmod>2025-10-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/book/</loc>
+    <lastmod>2025-10-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/categories/</loc>
-    <lastmod>2025-05-29T00:00:00+00:00</lastmod>
+    <lastmod>2025-10-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/</loc>
-    <lastmod>2025-05-29T00:00:00+00:00</lastmod>
+    <lastmod>2025-10-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2025-10-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/%E5%8E%9F%E5%88%9B/</loc>
+    <lastmod>2025-10-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/%E6%97%A5%E8%AE%B0/</loc>
+    <lastmod>2025-10-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -24,11 +49,6 @@
   
   <url>
     <loc>/mysql/mysql%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC_select%E7%94%9F%E6%88%90insert%E8%BF%81%E7%A7%BB%E8%AF%AD%E5%8F%A5/</loc>
-    <lastmod>2025-05-29T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
     <lastmod>2025-05-29T00:00:00+00:00</lastmod>
   </url>
   
@@ -48,27 +68,12 @@
   </url>
   
   <url>
-    <loc>/book/</loc>
+    <loc>/book/2025%E5%B9%B4%E6%98%A5%E5%A4%A9%E7%9A%84%E6%97%85%E8%A1%8C/</loc>
     <lastmod>2025-04-23T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/categories/chatgpt/</loc>
-    <lastmod>2025-04-23T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/%E5%8E%9F%E5%88%9B/</loc>
-    <lastmod>2025-04-23T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/book/%E5%A6%82%E4%BD%95%E7%94%A8ai%E7%94%9F%E6%88%90%E5%90%89%E5%8D%9C%E5%8A%9B%E9%A3%8E%E6%A0%BC%E7%9A%84%E6%97%85%E8%A1%8C%E5%9B%BE2025%E5%B9%B4%E6%98%A5%E5%A4%A9%E7%9A%84%E6%97%85%E8%A1%8C/</loc>
-    <lastmod>2025-04-23T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/%E6%97%A5%E8%AE%B0/</loc>
     <lastmod>2025-04-23T00:00:00+00:00</lastmod>
   </url>
   
@@ -1565,6 +1570,10 @@
   <url>
     <loc>/categories/windowscluter/</loc>
     <lastmod>2020-01-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/ai/stock/</loc>
   </url>
   
 </urlset>
