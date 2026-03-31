@@ -6,7 +6,17 @@
     <description>Recent content in ai on Classic</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 18 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="/categories/ai/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 31 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="/categories/ai/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>小卡AI助手使用说明</title>
+      <link>/ai/%E5%B0%8F%E5%8D%A1%E9%BE%99%E8%99%BE%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/</link>
+      <pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate>
+      
+      <guid>/ai/%E5%B0%8F%E5%8D%A1%E9%BE%99%E8%99%BE%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/</guid>
+      <description>功能说明  集成cowork环境,集成openclaw运行环境 定位于企业内部ai助手 更加安全 更加注重数据隐私 支持SKILLS,MCP,CLI  安装说明  下载地址:https://aigateway.shiqiao.com/api/download Mac用户运行脚本完成安装,Window用户下载安装文件,双击安装   设置  首次打开软件时,点设置.进入通用设置界面   ai对话  现在你就可以正常的和ai对话了   &amp;ndash; 以上为基本功能,下面是一些进阶使用
+切换模型  不同的模型适应不同强度的任务   安全设置  我们准备了很多安全性设置,如果不清楚,可以采用默认值  在安全设置中,启用:允许 IM 远程控制, 将启用龙虾模式,允许在微信或钉钉等聊天工具控制这台电脑  龙虾模式  启用龙虾模式后,会多出来一个im龙虾 设置项   技能管理 </description>
+    </item>
+    
     <item>
       <title>DeepSeek学习资料包整理打包下载</title>
       <link>/ai/deepseek%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99%E5%8C%85%E6%95%B4%E7%90%86%E6%89%93%E5%8C%85%E4%B8%8B%E8%BD%BD/</link>
