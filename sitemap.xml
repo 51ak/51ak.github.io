@@ -3,22 +3,37 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/book/20260617%E4%B8%80%E7%9B%92%E5%B0%8F%E7%95%AA%E8%8C%84/</loc>
+    <lastmod>2026-06-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/book/</loc>
+    <lastmod>2026-06-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/</loc>
+    <lastmod>2026-06-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2026-06-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/%E6%97%A5%E8%AE%B0/</loc>
+    <lastmod>2026-06-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/categories/ai/</loc>
     <lastmod>2026-03-31T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/ai/</loc>
-    <lastmod>2026-03-31T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/</loc>
-    <lastmod>2026-03-31T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/</loc>
     <lastmod>2026-03-31T00:00:00+00:00</lastmod>
   </url>
   
@@ -48,17 +63,7 @@
   </url>
   
   <url>
-    <loc>/book/</loc>
-    <lastmod>2026-02-15T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/categories/%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/</loc>
-    <lastmod>2026-02-15T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/%E6%97%A5%E8%AE%B0/</loc>
     <lastmod>2026-02-15T00:00:00+00:00</lastmod>
   </url>
   
